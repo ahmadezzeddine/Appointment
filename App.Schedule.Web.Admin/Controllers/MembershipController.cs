@@ -19,7 +19,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 var pageNumber = page ?? 1;
                 ViewBag.search = search;
 
-                var response = await membershipService.GetMemberships();
+                var response = await membershipService.Gets();
                 if (response.Status)
                 {
                     var data = response.Data;
@@ -70,10 +70,10 @@ namespace App.Schedule.Web.Admin.Controllers
             else
             {
                 model.Data.AdministratorId = admin.Id;
-                var response = await this.membershipService.PostMembership(model.Data);
-                if (response.Status)
+                var response = await this.membershipService.Add(model.Data);
+                if (response != null)
                 {
-                    result.Status = true;
+                    result.Status = response.Status;
                     result.Message = response.Message;
                 }
                 else
@@ -91,7 +91,7 @@ namespace App.Schedule.Web.Admin.Controllers
             var model = new ServiceDataViewModel<MembershipViewModel>();
             try
             {
-                var res = await this.membershipService.GetMembershipById(id.Value);
+                var res = await this.membershipService.Get(id.Value);
                 if (res.Status)
                 {
                     var countries = await this.dashboardService.GetMemberships();
@@ -128,7 +128,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 else
                 {
                     model.Data.AdministratorId = admin.Id;
-                    var response = await this.membershipService.PutMembership(model.Data);
+                    var response = await this.membershipService.Update(model.Data);
                     if (response.Status)
                     {
                         result.Status = true;
@@ -156,7 +156,7 @@ namespace App.Schedule.Web.Admin.Controllers
             try
             {
                 model.HasError = true;
-                var res = await this.membershipService.GetMembershipById(id.Value);
+                var res = await this.membershipService.Get(id.Value);
                 if (res.Status)
                 {
                     var countries = await this.dashboardService.GetMemberships();
@@ -183,10 +183,10 @@ namespace App.Schedule.Web.Admin.Controllers
             var result = new ResponseViewModel<MembershipViewModel>();
             try
             {
-                var response = await this.membershipService.DeactiveMembership(model.Data.Id);
-                if (response.Status)
+                var response = await this.membershipService.Deactive(model.Data.Id,model.Data.IsActive);
+                if (response != null)
                 {
-                    result.Status = true;
+                    result.Status = response.Status;
                     result.Message = response.Message;
                 }
                 else

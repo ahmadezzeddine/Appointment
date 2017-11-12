@@ -19,7 +19,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 var pageNumber = page ?? 1;
                 ViewBag.search = search;
 
-                var response = await timezoneService.GetTimezones();
+                var response = await timezoneService.Gets();
                 if (response.Status)
                 {
                     var data = response.Data;
@@ -66,7 +66,7 @@ namespace App.Schedule.Web.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "Data")] ServiceDataViewModel<TimezoneViewModel> model)
         {
-            var result = new ResponseViewModel<string>();
+            var result = new ResponseViewModel<TimezoneViewModel>();
             if (!ModelState.IsValid)
             {
                 var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
@@ -76,11 +76,12 @@ namespace App.Schedule.Web.Admin.Controllers
             else
             {
                 model.Data.AdministratorId = admin.Id;
-                var response = await this.timezoneService.PostTimezone(model.Data);
-                if (response.Status)
+                var response = await this.timezoneService.Add(model.Data);
+                if (response != null)
                 {
-                    result.Status = true;
+                    result.Status = response.Status;
                     result.Message = response.Message;
+                    result.Data = response.Data;
                 }
                 else
                 {
@@ -104,7 +105,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 }
                 else
                 {
-                    var res = await this.timezoneService.GetTimezoneById(id.Value);
+                    var res = await this.timezoneService.Get(id.Value);
                     if (res.Status)
                     {
                         var countries = await this.dashboardService.GetCountries();
@@ -146,7 +147,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 else
                 {
                     model.Data.AdministratorId = admin.Id;
-                    var response = await this.timezoneService.PutTimezone(model.Data);
+                    var response = await this.timezoneService.Update(model.Data);
                     if (response.Status)
                     {
                         result.Status = true;
@@ -180,7 +181,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 }
                 else
                 {
-                    var res = await this.timezoneService.GetTimezoneById(id.Value);
+                    var res = await this.timezoneService.Get(id.Value);
                     if (res.Status)
                     {
                         var countries = await this.dashboardService.GetCountries();
@@ -213,7 +214,7 @@ namespace App.Schedule.Web.Admin.Controllers
             var result = new ResponseViewModel<TimezoneViewModel>();
             try
             {
-                var response = await this.timezoneService.DeleteTimezone(model.Data.Id);
+                var response = await this.timezoneService.Delete(model.Data.Id);
                 if (response.Status)
                 {
                     result.Status = true;

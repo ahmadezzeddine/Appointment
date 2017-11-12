@@ -53,10 +53,10 @@
                                 OrderNo.
                             </th>
                             <th>
-                                IsActive
+                                Type
                             </th>
                             <th>
-                                Type
+                                IsActive
                             </th>
                             <th class="text-right">
                                 <a onclick="@("window.location.href='" + @Url.Action("Create") + "'");" class="btn btn-info btn-sm">
@@ -70,7 +70,9 @@
                         <tbody>
                             @foreach (var item in Model.Data)
                             {
-                                <tr class="bg-default bg-border-dark">
+                                if (item != null)
+                                {
+                                <tr class="bg-default bg-border-dark" onclick="@("window.location.href='" + @Url.Action("SubIndex", "BusinessCategory", new { id = item.Id }) + "'");" >
                                     @Html.HiddenFor(modelItem => item.Id)
                                     <td class="row-bg">
                                         @Html.DisplayFor(modelItem => item.Name)
@@ -79,18 +81,27 @@
                                         @Html.DisplayFor(modelItem => item.OrderNumber)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.IsActive)
+                                        @Html.DisplayFor(modelItem => item.Type)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Type)
+                                        @Html.DisplayFor(modelItem => item.IsActive)
                                     </td>
                                     <td class="text-right">
                                         <a onclick="@("window.location.href='" + @Url.Action("Edit", new { Id = item.Id }) + "'");" class="btn btn-success btn-sm">
                                             <span class="glyphicon glyphicon-pencil"></span>
                                         </a>
-                                        <input type="button" onclick="@("window.location.href='" + @Url.Action("Delete",new { Id = item.Id }) + "'");" class="btn btn-sm btn-danger" value="De-Active" />
+                                        <input type="button" onclick="@("window.location.href='" + @Url.Action("Deactive", new { Id = item.Id }) + "'");" class="btn btn-sm btn-danger" value="De-Active" />
                                     </td>
                                 </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td class="row-bg" colspan="5">
+                                            Record is null.
+                                        </td>
+                                    </tr>
+                                }
                             }
                             <tr>
                                 <td colspan="7">
@@ -107,7 +118,7 @@
                         <tbody class="bg-default">
                             <tr>
                                 <td class="row-bg" colspan="5">
-                                    No Records. Click on Add button to add a new Timezone.
+                                    No Records. Click on Add button to add a new Business Category.
                                 </td>
                             </tr>
                         </tbody>

@@ -478,7 +478,7 @@ namespace App.Schedule.WebApi.Controllers
         [Route("Register")]
         public async Task<IHttpActionResult> Register(AdministratorViewModel model)
         {
-            var result = new ResponseViewModel<string>();
+            var result = new ResponseViewModel<tblAdministrator>();
 
             if (!ModelState.IsValid)
             {
@@ -490,9 +490,10 @@ namespace App.Schedule.WebApi.Controllers
             }
             else
             {
-                string message = "";
+                var message = "";
+                var data = new tblAdministrator();
                 var adminController = new AdministratorController();
-                var createStatus = adminController.RegisterAdmin(model, out message);
+                var createStatus = adminController.RegisterAdmin(model, out data, out message);
                 if (createStatus)
                 {
                     var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
@@ -501,15 +502,15 @@ namespace App.Schedule.WebApi.Controllers
                     if (response.Succeeded)
                     {
                         result.Status = createStatus;
-                        result.Message = message;
-                        result.Data = message;
+                        result.Message = "Saved data successfully.";
+                        result.Data = data;
                         return Ok(result);
                     }
                     else
                     {
                         result.Status = false;
                         result.Message = string.Join(", ", response.Errors);
-                        result.Data = result.Message;
+                        result.Data = null;
                         return Ok(result);
                     }
                 }
@@ -517,7 +518,7 @@ namespace App.Schedule.WebApi.Controllers
                 {
                     result.Status = false;
                     result.Message = message;
-                    result.Data = message;
+                    result.Data = null;
                     return Ok(result);
                 }
             }

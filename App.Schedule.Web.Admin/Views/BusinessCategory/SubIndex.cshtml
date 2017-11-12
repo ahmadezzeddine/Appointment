@@ -1,9 +1,9 @@
 ﻿@using PagedList;
 @using PagedList.Mvc;
-@model App.Schedule.Web.Admin.Models.ServiceDataViewModel<IPagedList<App.Schedule.Domains.ViewModel.MembershipViewModel>>
+@model App.Schedule.Web.Admin.Models.ServiceDataViewModel<IPagedList<App.Schedule.Domains.ViewModel.BusinessCategoryViewModel>>
 
 @{
-    ViewBag.Title = "Membership";
+    ViewBag.Title = "Business Sub Category";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="container">
@@ -28,11 +28,11 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="form-group input-group input-group-sm">
-                <div onclick="@("window.location.href='" + @Url.Action("Index", "Dashboard") + "'");" class="btn btn-info btn-sm input-group-addon">
+                <div onclick="@("window.location.href='" + @Url.Action("Index", "BusinessCategory") + "'");" class="btn btn-info btn-sm input-group-addon">
                     <span class="glyphicon glyphicon-arrow-left"></span>
                 </div>
                 <label class="input-group-addon">
-                    Membership
+                    Business Sub Category
                 </label>
                 <input type="text" class="form-control" id="searchKeyword" value="@ViewBag.search" placeholder="Search here" />
                 <div class="input-group-btn">
@@ -47,22 +47,19 @@
                     <thead class="bg-bluegray">
                         <tr>
                             <th>
-                                Title
+                                Name
                             </th>
                             <th>
-                                Price
-                            </th>
-                            <th style="width:500px;">
-                                Total
+                                OrderNo.
                             </th>
                             <th>
-                                IsUnlimited
+                                Type
                             </th>
                             <th>
-                                Status
+                                IsActive
                             </th>
                             <th class="text-right">
-                                <a onclick="@("window.location.href='" + @Url.Action("Create") + "'");" class="btn btn-info btn-sm">
+                                <a onclick="@("window.location.href='" + @Url.Action("SubCreate") + "'");" class="btn btn-info btn-sm">
                                     <span class="glyphicon glyphicon-plus"></span> Add New
                                 </a>
                             </th>
@@ -76,42 +73,22 @@
                                 <tr class="bg-default bg-border-dark">
                                     @Html.HiddenFor(modelItem => item.Id)
                                     <td class="row-bg">
-                                        @Html.DisplayFor(modelItem => item.Title)
+                                        @Html.DisplayFor(modelItem => item.Name)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Price)
+                                        @Html.DisplayFor(modelItem => item.OrderNumber)
                                     </td>
                                     <td>
-                                        <div class="col-md-12 bg-bluegray">
-                                            Total Allowed
-                                        </div>
-                                       <div class="col-md-12 bg-gray">
-                                           Employees: @Html.DisplayFor(modelItem => item.TotalEmployee)
-                                       </div>
-                                        <div class="col-md-12 bg-gray">
-                                            Locations: @Html.DisplayFor(modelItem => item.TotalLocation)
-                                        </div>
-                                        <div class="col-md-12 bg-gray">
-                                            Offers: @Html.DisplayFor(modelItem => item.TotalOffers)
-                                        </div>
-                                        <div class="col-md-12 bg-gray">
-                                            Customers: @Html.DisplayFor(modelItem => item.TotalCustomer)
-                                        </div>
-                                        <div class="col-md-12 bg-gray">
-                                            Appointments: @Html.DisplayFor(modelItem => item.TotalAppointment)
-                                        </div>
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.IsUnlimited)
+                                        @Html.DisplayFor(modelItem => item.Type)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.IsActive)
                                     </td>
                                     <td class="text-right">
-                                        <a onclick="@("window.location.href='" + @Url.Action("Edit", new { Id = item.Id }) + "'");" class="btn btn-success btn-sm">
+                                        <a onclick="@("window.location.href='" + @Url.Action("SubEdit", new { Id = item.Id }) + "'");" class="btn btn-success btn-sm">
                                             <span class="glyphicon glyphicon-pencil"></span>
                                         </a>
-                                        <input type="button" onclick="@("window.location.href='" + @Url.Action("Delete",new { Id = item.Id }) + "'");" class="btn btn-sm btn-danger" value="De-Active" />
+                                        <input type="button" onclick="@("window.location.href='" + @Url.Action("SubDeactive",new { Id = item.Id }) + "'");" class="btn btn-sm btn-danger" value="De-Active" />
                                     </td>
                                 </tr>
                             }
@@ -130,7 +107,7 @@
                         <tbody class="bg-default">
                             <tr>
                                 <td class="row-bg" colspan="5">
-                                    No Records. Click on Add button to add a new Membership.
+                                    No Records. Click on Add button to add a new Business Category.
                                 </td>
                             </tr>
                         </tbody>

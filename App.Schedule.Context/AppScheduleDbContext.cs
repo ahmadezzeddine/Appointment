@@ -1,9 +1,6 @@
 namespace App.Schedule.Context
 {
-    using System;
     using System.Data.Entity;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
     using App.Schedule.Domains;
 
     public partial class AppScheduleDbContext : DbContext

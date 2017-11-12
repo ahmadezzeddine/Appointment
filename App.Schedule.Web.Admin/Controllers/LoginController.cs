@@ -33,13 +33,13 @@ namespace App.Schedule.Web.Admin.Controllers
                 {
                     if (adminService != null)
                     {
-                        var response = await adminService.LoginIn(model.Data.Email, model.Data.Password);
+                        var response = await adminService.VerifyLoginCredential(model.Data.Email, model.Data.Password);
                         result.Status = response.Status;
                         result.Message = response.Message;
                         result.Data = response.Data;
                         if (response.Status)
                         {
-                            var tokenResponse = await adminService.PostAdminToken(model.Data.Email, model.Data.Password);
+                            var tokenResponse = await adminService.VerifyAndGetAdminAccessToken(model.Data.Email, model.Data.Password);
                             result.Status = result.Status;
                             result.Message = result.Message;
                             if (tokenResponse.Status)

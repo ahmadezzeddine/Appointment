@@ -1,6 +1,6 @@
-﻿@model App.Schedule.Web.Admin.Models.ServiceDataViewModel<App.Schedule.Domains.ViewModel.MembershipViewModel>
+﻿@model App.Schedule.Web.Admin.Models.ServiceDataViewModel<App.Schedule.Domains.ViewModel.BusinessCategoryViewModel>
 @{
-    ViewBag.Title = "Edit Membership";
+    ViewBag.Title = "Delete Business Category";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="container">
@@ -25,13 +25,13 @@
         </div>
 
         <div class="bg-box bg-bluegray">
-            @using (Ajax.BeginForm("Delete", new AjaxOptions { }))
+            @using (Ajax.BeginForm("Edit", new AjaxOptions { }))
             {
                 @Html.AntiForgeryToken()
-                @Html.HiddenFor(model => model.Data.Id)
+                @Html.HiddenFor(d => d.Data.Id)
                 <div class="form-group input-group input-group-lg">
                     <label class="input-lg input-group-addon">
-                        Update Status
+                        Are you sure want to deactive?
                     </label>
                 </div>
                 <div class="form-horizontal">
@@ -39,16 +39,8 @@
                     <div class="form-group">
                         <div class="col-md-12">
                             <div class="input-group">
-                                @Html.EditorFor(model => model.Data.Title, new { htmlAttributes = new { @class = "form-control", placeholder = "Title", @disabled="disabled" } })
-                                <span class="input-group-addon" id="sizing-addon2">Title</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <div class="input-group">
-                                @Html.EditorFor(model => model.Data.Price, new { htmlAttributes = new { @class = "form-control", placeholder = "Price", @disabled = "disabled" } })
-                                <span class="input-group-addon" id="sizing-addon2">Price</span>
+                                @Html.EditorFor(model => model.Data.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Title" } })
+                                <span class="input-group-addon" id="sizing-addon2">Name</span>
                             </div>
                         </div>
                     </div>
@@ -59,19 +51,21 @@
                                     @Html.CheckBoxFor(model => model.Data.IsActive, new { htmlAttributes = new { @class = "form-control" } })
                                 </span>
                                 <span class="form-control">
-                                    Do you want to change the current status?
+                                    Status
                                 </span>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-12">
-                            <input id="btnDelete" type="button" value="Yes" onclick="onSubmit(this,'@Url.Action("Index","Membership")');" class="btn btn-sm btn-danger col-md-6" />
-                            <input type="button" class="btn btn-sm btn-default col-md-6" value="No" onclick="@("window.location.href='" + @Url.Action("Index", "Membership") + "'");" />
+                            <input id="btnRemove" type="button" value="Deactive" onclick="onSubmit(this,'@Url.Action("Index","BusinessCategory")');" class="btn btn-sm btn-danger col-md-6" />
+                            <input type="button" class="btn btn-sm btn-default col-md-6" value="Back" onclick="@("window.location.href='" + @Url.Action("Index", "BusinessCategory") + "'");" />
                         </div>
                     </div>
                 </div>
+
             }
         </div>
     </div>
+
 </div>
