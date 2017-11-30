@@ -1,6 +1,6 @@
-﻿@model App.Schedule.Web.Admin.Models.ServiceDataViewModel<App.Schedule.Domains.ViewModel.BusinessCategoryViewModel>
+﻿@model App.Schedule.Domains.ViewModel.ServiceDataViewModel<App.Schedule.Domains.ViewModel.BusinessCategoryViewModel>
 @{
-    ViewBag.Title = "Delete Business Category";
+    ViewBag.Title = "Deactive Business Category";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="container">
@@ -25,7 +25,7 @@
         </div>
 
         <div class="bg-box bg-bluegray">
-            @using (Ajax.BeginForm("Edit", new AjaxOptions { }))
+            @using (Ajax.BeginForm("Deactive", new AjaxOptions { }))
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(d => d.Data.Id)

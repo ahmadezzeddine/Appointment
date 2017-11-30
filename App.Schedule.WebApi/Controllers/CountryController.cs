@@ -18,6 +18,7 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // GET: api/country
+        [AllowAnonymous]
         public IHttpActionResult Get()
         {
             try

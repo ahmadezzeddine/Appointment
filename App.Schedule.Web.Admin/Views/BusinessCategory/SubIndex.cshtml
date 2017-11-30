@@ -1,6 +1,6 @@
 ﻿@using PagedList;
 @using PagedList.Mvc;
-@model App.Schedule.Web.Admin.Models.ServiceDataViewModel<IPagedList<App.Schedule.Domains.ViewModel.BusinessCategoryViewModel>>
+@model App.Schedule.Domains.ViewModel.ServiceDataViewModel<IPagedList<App.Schedule.Domains.ViewModel.BusinessCategoryViewModel>>
 
 @{
     ViewBag.Title = "Business Sub Category";
@@ -21,6 +21,7 @@
             }
         </div>
     }
+
     <div id="errorBox" class="alert alert-danger" role="alert" style="display:none;">
         <strong id="err_head">Error: </strong>
         <span id="err_title">Please try again later.</span>
@@ -47,6 +48,9 @@
                     <thead class="bg-bluegray">
                         <tr>
                             <th>
+                                Pic.
+                            </th>
+                            <th>
                                 Name
                             </th>
                             <th>
@@ -59,7 +63,7 @@
                                 IsActive
                             </th>
                             <th class="text-right">
-                                <a onclick="@("window.location.href='" + @Url.Action("SubCreate") + "'");" class="btn btn-info btn-sm">
+                                <a onclick="@("window.location.href='" + @Url.Action("SubCreate","BusinessCategory",new { id = ViewBag.ParentId }) + "'");" class="btn btn-info btn-sm">
                                     <span class="glyphicon glyphicon-plus"></span> Add New
                                 </a>
                             </th>
@@ -73,6 +77,16 @@
                                 <tr class="bg-default bg-border-dark">
                                     @Html.HiddenFor(modelItem => item.Id)
                                     <td class="row-bg">
+                                        @if (!string.IsNullOrEmpty(item.PictureLink))
+                                        {
+                                            <img id="categoryImage" class="img-circle" src="@item.PictureLink" width="25" height="25" />
+                                        }
+                                        else
+                                        {
+                                            <img id="categoryImage" class="img-circle" src="~/Content/Images/NoImageThumb.gif" width="25" height="25" />
+                                        }
+                                    </td>
+                                    <td class="row-bg">
                                         @Html.DisplayFor(modelItem => item.Name)
                                     </td>
                                     <td>
@@ -85,7 +99,7 @@
                                         @Html.DisplayFor(modelItem => item.IsActive)
                                     </td>
                                     <td class="text-right">
-                                        <a onclick="@("window.location.href='" + @Url.Action("SubEdit", new { Id = item.Id }) + "'");" class="btn btn-success btn-sm">
+                                        <a onclick="@("window.location.href='" + @Url.Action("SubEdit", new { id = item.Id, parentId = item.ParentId }) + "'");" class="btn btn-success btn-sm">
                                             <span class="glyphicon glyphicon-pencil"></span>
                                         </a>
                                         <input type="button" onclick="@("window.location.href='" + @Url.Action("SubDeactive",new { Id = item.Id }) + "'");" class="btn btn-sm btn-danger" value="De-Active" />
@@ -106,8 +120,8 @@
                     {
                         <tbody class="bg-default">
                             <tr>
-                                <td class="row-bg" colspan="5">
-                                    No Records. Click on Add button to add a new Business Category.
+                                <td class="row-bg" colspan="6">
+                                    No Records. Click on Add button to add a new Business Sub Category.
                                 </td>
                             </tr>
                         </tbody>

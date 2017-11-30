@@ -149,7 +149,7 @@ namespace App.Schedule.Services
             var returnResponse = new ResponseViewModel<string>();
             try
             {
-                var model = "username=" + Email + "&password=" + Password + "&grant_type=password";
+                var model = "username=admin" + Email + "&password=" + Password + "&grant_type=password";
                 var content = new StringContent(model, Encoding.UTF8, "text/plain");
                 var url = String.Format(AppointmentService.GET_ADMIN_TOKEN);
                 var response = await this.appointmentService.httpClient.PostAsync(url, content);

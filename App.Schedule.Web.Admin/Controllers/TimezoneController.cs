@@ -3,7 +3,6 @@ using PagedList;
 using System.Linq;
 using System.Web.Mvc;
 using System.Threading.Tasks;
-using App.Schedule.Web.Admin.Models;
 using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Admin.Controllers

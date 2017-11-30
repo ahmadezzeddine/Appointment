@@ -257,15 +257,16 @@ namespace App.Schedule.Domains.ViewModel
     {
         public long Id { get; set; }
 
-        [Required]
-        [StringLength(250)]
+        [Required(ErrorMessage = "Please enter first name.")]
+        [MinLength(3, ErrorMessage = "FirstName should have atleast 3 character long")]
         public string FirstName { get; set; }
 
-        [Required]
-        [StringLength(250)]
+        [Required(ErrorMessage = "Please enter last name.")]
+        [MinLength(3, ErrorMessage = "LastName should have atleast 3 character long")]
         public string LastName { get; set; }
 
-        [StringLength(250)]
+        [Required(ErrorMessage = "Please enter your email id.")]
+        [EmailAddress(ErrorMessage = "Please enter a valid email id")]
         public string Email { get; set; }
 
         public int? STD { get; set; }
@@ -273,13 +274,21 @@ namespace App.Schedule.Domains.ViewModel
         [StringLength(250)]
         public string PhoneNumber { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(250)]
         public string LoginId { get; set; }
 
-        [Required]
-        [StringLength(250)]
+        [Required(ErrorMessage = "Please enter your password")]
+        [MinLength(8, ErrorMessage = "Password must be greater than 8 character")]
+        [MaxLength(50, ErrorMessage = "Password must be less than 50 character")]
         public string Password { get; set; }
+
+        [Compare("Password", ErrorMessage = "Please cheque your confirm password")]
+        public string ConfirmPassword { get; set; }
+
+        [MinLength(8, ErrorMessage = "Password must be greater than 8 character")]
+        [MaxLength(50, ErrorMessage = "Password must be less than 50 character")]
+        public string OldPassword { get; set; }
 
         public bool IsActive { get; set; }
 

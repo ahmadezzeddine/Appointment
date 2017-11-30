@@ -1,6 +1,6 @@
 ﻿@using PagedList;
 @using PagedList.Mvc;
-@model App.Schedule.Web.Admin.Models.ServiceDataViewModel<IPagedList<App.Schedule.Domains.ViewModel.BusinessCategoryViewModel>>
+@model App.Schedule.Domains.ViewModel.ServiceDataViewModel<IPagedList<App.Schedule.Domains.ViewModel.BusinessCategoryViewModel>>
 
 @{
     ViewBag.Title = "Business Category";
@@ -47,6 +47,9 @@
                     <thead class="bg-bluegray">
                         <tr>
                             <th>
+                                Pic.
+                            </th>
+                            <th>
                                 Name
                             </th>
                             <th>
@@ -72,9 +75,19 @@
                             {
                                 if (item != null)
                                 {
-                                <tr class="bg-default bg-border-dark" onclick="@("window.location.href='" + @Url.Action("SubIndex", "BusinessCategory", new { id = item.Id }) + "'");" >
+                                <tr class="bg-default bg-border-dark">
                                     @Html.HiddenFor(modelItem => item.Id)
                                     <td class="row-bg">
+                                        @if (!string.IsNullOrEmpty(item.PictureLink))
+                                        {
+                                            <img id="categoryImage" class="img-circle" src="@item.PictureLink" width="25" height="25" />
+                                        }
+                                        else
+                                        {
+                                            <img id="categoryImage" class="img-circle" src="~/Content/Images/NoImageThumb.gif" width="25" height="25" />
+                                        }
+                                    </td>
+                                    <td class="row-bg" onclick="@("window.location.href='" + @Url.Action("SubIndex", "BusinessCategory", new { id = item.Id }) + "'");">
                                         @Html.DisplayFor(modelItem => item.Name)
                                     </td>
                                     <td>
@@ -87,6 +100,9 @@
                                         @Html.DisplayFor(modelItem => item.IsActive)
                                     </td>
                                     <td class="text-right">
+                                        <a onclick="@("window.location.href='" + @Url.Action("SubIndex", "BusinessCategory", new { id = item.Id }) + "'");"  class="btn btn-info btn-sm">
+                                            Sub Category
+                                        </a>
                                         <a onclick="@("window.location.href='" + @Url.Action("Edit", new { Id = item.Id }) + "'");" class="btn btn-success btn-sm">
                                             <span class="glyphicon glyphicon-pencil"></span>
                                         </a>
@@ -97,7 +113,7 @@
                                 else
                                 {
                                     <tr>
-                                        <td class="row-bg" colspan="5">
+                                        <td class="row-bg" colspan="6">
                                             Record is null.
                                         </td>
                                     </tr>

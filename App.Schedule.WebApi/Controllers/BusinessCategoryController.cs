@@ -18,6 +18,7 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // GET: api/businesscategory
+        [AllowAnonymous]
         public IHttpActionResult Get()
         {
             try

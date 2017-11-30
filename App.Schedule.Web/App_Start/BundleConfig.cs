@@ -7,6 +7,9 @@ namespace App.Schedule.Web
     {
         public static void RegisterBundles(BundleCollection bundles)
         {
+            //bundles.UseCdn = true;
+            //var materialCDNFont = "https://fonts.googleapis.com/icon?family=Material+Icons";
+
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
                         "~/Scripts/site.js"));
@@ -22,7 +25,7 @@ namespace App.Schedule.Web
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
+                "~/Content/bootstrap.css",
                       "~/Content/site.css"));
         }
     }

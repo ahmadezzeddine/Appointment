@@ -6,6 +6,7 @@ using App.Schedule.Domains.Helpers;
 using System.Data.Entity;
 using App.Schedule.Domains.ViewModel;
 using App.Schedule.Domains;
+using System.Web;
 
 namespace App.Schedule.WebApi.Controllers
 {
@@ -54,18 +55,38 @@ namespace App.Schedule.WebApi.Controllers
             }
         }
 
-        // GET: api/businessemployee/?loginid=value&password=value
-        public IHttpActionResult Get(string loginid, string password)
+        // GET: api/businessemployee/?emailid=value&password=value
+        public IHttpActionResult Get(string email, string password)
         {
+            //try
+            //{
+            //    var pass = Security.Encrypt(password, true);
+            //    var status = _db.tblBusinessEmployees.Any(d => d.Email == email && d.Password == pass);
+            //    return Ok(new { status = status, data = status == true ? "valid credential" : "Not a valid credential" });
+            //}
+            //catch (Exception ex)
+            //{
+            //    return BadRequest(ex.Message.ToString());
+            //}
             try
             {
+                password = HttpContext.Current.Server.UrlDecode(password);
                 var pass = Security.Encrypt(password, true);
-                var status = _db.tblBusinessEmployees.Any(d => d.LoginId == loginid && d.Password == pass);
-                return Ok(new { status = status, data = status == true ? "valid credential" : "Not a valid credential" });
+                var model = _db.tblBusinessEmployees.Where(d => d.Email.ToLower() == email.ToLower() && d.Password
+                == pass && d.IsActive == true).FirstOrDefault();
+                if (model != null)
+                {
+                    model.Password = "";
+                    return Ok(new { status = true, data = model, message = "Valid credential" });
+                }
+                else
+                {
+                    return Ok(new { status = false, data = model, message = "Not a valid credential" });
+                }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = false, data = "", message = ex.Message.ToString() });
             }
         }
 

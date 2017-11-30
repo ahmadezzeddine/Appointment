@@ -6,7 +6,7 @@ using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Admin.Controllers
 {
-    public class RegisterController : AdminBaseController
+    public class RegisterController : LoginBaseController
     {
         public ActionResult Index()
         {

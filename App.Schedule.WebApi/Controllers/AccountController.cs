@@ -1,24 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
 using System.Web;
-using System.Web.Http;
-using System.Web.Http.ModelBinding;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.OAuth;
-using App.Schedule.WebApi.Models;
-using App.Schedule.WebApi.Providers;
-using App.Schedule.WebApi.Results;
-using App.Schedule.Domains.ViewModel;
 using System.Linq;
+using System.Net.Http;
+using System.Web.Http;
 using App.Schedule.Domains;
+using System.Threading.Tasks;
+using System.Security.Claims;
+using Microsoft.Owin.Security;
+using Microsoft.AspNet.Identity;
+using App.Schedule.WebApi.Models;
+using System.Collections.Generic;
+using App.Schedule.WebApi.Results;
+using System.Security.Cryptography;
+using Microsoft.Owin.Security.OAuth;
+using App.Schedule.WebApi.Providers;
+using App.Schedule.Domains.ViewModel;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace App.Schedule.WebApi.Controllers
 {
@@ -494,6 +493,7 @@ namespace App.Schedule.WebApi.Controllers
                 var data = new tblAdministrator();
                 var adminController = new AdministratorController();
                 var createStatus = adminController.RegisterAdmin(model, out data, out message);
+                model.Email = "admin" + model.Email;
                 if (createStatus)
                 {
                     var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
@@ -558,6 +558,93 @@ namespace App.Schedule.WebApi.Controllers
             }
             return Ok(result);
         }
+
+
+        // POST api/Account/Register
+        [AllowAnonymous]
+        [Route("RegisterBusinessEmployee")]
+        public async Task<IHttpActionResult> RegisterBusinessEmployee(RegisterViewModel model)
+        {
+            var result = new ResponseViewModel<RegisterViewModel>();
+
+            if (!ModelState.IsValid)
+            {
+                var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
+                result.Status = false;
+                result.Message = errMessage;
+                result.Data = null;
+                return Ok(result);
+            }
+            else
+            {
+                var message = "";
+                var status = false;
+                var businessController = new BusinessController();
+                var business = businessController.Register(model, out status, out message);
+                model.Employee.Email = "emp" + model.Employee.Email;
+                if (status)
+                {
+                    var user = new ApplicationUser() { UserName = model.Employee.Email, Email = model.Employee.Email };
+
+                    var response = await UserManager.CreateAsync(user, model.Employee.Password);
+                    if (response.Succeeded)
+                    {
+                        result.Status = status;
+                        result.Message = "User has registered successfully.";
+                        result.Data = business;
+                        return Ok(result);
+                    }
+                    else
+                    {
+                        result.Status = false;
+                        result.Message = string.Join(", ", response.Errors);
+                        result.Data = null;
+                        return Ok(result);
+                    }
+                }
+                else
+                {
+                    result.Status = false;
+                    result.Message = message;
+                    result.Data = null;
+                    return Ok(result);
+                }
+            }
+        }
+
+        //// POST api/Account/UpdateAdmin
+        //[Route("UpdateBusinessEmployee")]
+        //public async Task<IHttpActionResult> UpdateBusinessEmployee(RegisterViewModel model)
+        //{
+        //    var result = new ResponseViewModel<AdministratorViewModel>();
+        //    if (!ModelState.IsValid)
+        //    {
+        //        var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
+        //        result.Status = false;
+        //        result.Message = errMessage;
+        //    }
+        //    var user = await UserManager.FindByEmailAsync(model.Email);
+        //    var response = await UserManager.ChangePasswordAsync(user.Id, model.OldPassword, model.Password);
+        //    if (response.Succeeded)
+        //    {
+        //        string message = "";
+        //        var adminController = new AdministratorController();
+        //        var updateStatus = adminController.UpdateAdmin(model, out message);
+        //        if (updateStatus)
+        //        {
+        //            result.Status = updateStatus;
+        //            result.Message = message;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        result.Status = false;
+        //        result.Message = string.Join(", ", response.Errors).ToLower();
+        //        if (result.Message.Contains("incorrect password"))
+        //            result.Message = "Please check your old password.";
+        //    }
+        //    return Ok(result);
+        //}
 
         //[AllowAnonymous]
         //[HttpGet]

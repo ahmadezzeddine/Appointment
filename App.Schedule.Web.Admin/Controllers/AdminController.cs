@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Threading.Tasks;
 using App.Schedule.Domains.ViewModel;
-using App.Schedule.Web.Admin.Models;
 
 namespace App.Schedule.Web.Admin.Controllers
 {

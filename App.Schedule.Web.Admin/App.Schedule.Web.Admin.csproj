@@ -166,8 +166,6 @@
     </Compile>
     <Compile Include="Models\DashboardViewModel.cs" />
     <Compile Include="Models\ForgotViewModel.cs" />
-    <Compile Include="Models\LoginViewModel.cs" />
-    <Compile Include="Models\ServiceDataViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -249,6 +247,9 @@
     <Content Include="Views\BusinessCategory\Edit.cshtml" />
     <Content Include="Views\BusinessCategory\Deactive.cshtml" />
     <Content Include="Views\BusinessCategory\SubIndex.cshtml" />
+    <Content Include="Views\BusinessCategory\SubCreate.cshtml" />
+    <Content Include="Views\BusinessCategory\SubEdit.cshtml" />
+    <Content Include="Views\BusinessCategory\SubDeactive.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -18,6 +18,7 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // GET: api/membership
+        [AllowAnonymous]
         public IHttpActionResult Get()
         {
             try

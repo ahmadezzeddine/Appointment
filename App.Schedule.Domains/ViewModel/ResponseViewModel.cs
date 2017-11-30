@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-
+﻿
 namespace App.Schedule.Domains.ViewModel
 {
     public class ResponseViewModel<T>
@@ -9,14 +8,14 @@ namespace App.Schedule.Domains.ViewModel
         public string Message { get; set; }
     }
 
-    public class ModelState
-    {
-        public List<string> Message { get; set; }
-    }
+    //public class ModelState
+    //{
+    //    public List<string> Message { get; set; }
+    //}
 
-    public class AspIdentityModelStateViewModel
-    {
-        public string Message { get; set; }
-        public ModelState ModelState { get; set; }
-    }
+    //public class AspIdentityModelStateViewModel
+    //{
+    //    public string Message { get; set; }
+    //    public ModelState ModelState { get; set; }
+    //}
 }

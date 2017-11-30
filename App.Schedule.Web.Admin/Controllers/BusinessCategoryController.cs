@@ -3,7 +3,6 @@ using PagedList;
 using System.Linq;
 using System.Web.Mvc;
 using System.Threading.Tasks;
-using App.Schedule.Web.Admin.Models;
 using App.Schedule.Domains.ViewModel;
 using System.IO;
 
@@ -57,11 +56,6 @@ namespace App.Schedule.Web.Admin.Controllers
         {
             var model = new ServiceDataViewModel<BusinessCategoryViewModel>();
             var businessCategories = await this.dashboardService.GetBusinessCategories();
-            ViewBag.ParentId = businessCategories.Where(d => d.ParentId == null).Select(d => new SelectListItem()
-            {
-                Value = Convert.ToString(d.Id),
-                Text = d.Name
-            });
             return View(model);
         }
 
@@ -111,11 +105,6 @@ namespace App.Schedule.Web.Admin.Controllers
                     if (res.Status)
                     {
                         var businessCategories = await this.dashboardService.GetBusinessCategories();
-                        ViewBag.ParentId = businessCategories.Select(d => new SelectListItem()
-                        {
-                            Value = Convert.ToString(d.Id),
-                            Text = d.Name
-                        });
                         model.HasError = false;
                         model.Data = res.Data;
                     }
@@ -188,7 +177,7 @@ namespace App.Schedule.Web.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Deactive(long? id)
+        public async Task<ActionResult> Deactive(int? id)
         {
             var model = new ServiceDataViewModel<BusinessCategoryViewModel>();
             try
@@ -248,8 +237,8 @@ namespace App.Schedule.Web.Admin.Controllers
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
 
-        public async Task<ActionResult> SubIndex(int? page, string search, long? id)
-        {
+        public async Task<ActionResult> SubIndex(int? page, string search, int? id)
+         {
             var model = new ServiceDataViewModel<IPagedList<BusinessCategoryViewModel>>();
             try
             {
@@ -257,13 +246,21 @@ namespace App.Schedule.Web.Admin.Controllers
                 var pageNumber = page ?? 1;
                 ViewBag.search = search;
 
+                if(id.HasValue)
+                    ViewBag.ParentId = id.Value;
+                else
+                {
+                    return RedirectToAction("Index");
+                }
+
                 var response = await businessCategoryService.Gets();
                 if (response.Status)
                 {
                     var data = response.Data.Where(d => d.ParentId != null && d.ParentId == id.Value).ToList();
                     if (search == null)
                     {
-                        model.Data = data.ToPagedList<BusinessCategoryViewModel>(pageNumber, 10);
+                        if (data.Count > 0)
+                            model.Data = data.ToPagedList<BusinessCategoryViewModel>(pageNumber, 10);
                         return View(model);
                     }
                     else
@@ -288,5 +285,191 @@ namespace App.Schedule.Web.Admin.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> SubCreate(int? id)
+        {
+            if (!id.HasValue)
+                return RedirectToAction("Index");
+
+            var model = new ServiceDataViewModel<BusinessCategoryViewModel>();
+            var businessCategories = await this.dashboardService.GetBusinessCategories();
+            ViewBag.ParentId = businessCategories.Where(d => d.ParentId == null && d.Id == id.Value).Select(d => new SelectListItem()
+            {
+                Value = Convert.ToString(d.Id),
+                Text = d.Name
+            });
+            model.Data = new BusinessCategoryViewModel()
+            {
+                ParentId = id.Value
+            };
+            return View(model);
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SubCreate([Bind(Include = "Data")] ServiceDataViewModel<BusinessCategoryViewModel> model)
+        {
+            var result = new ResponseViewModel<BusinessCategoryViewModel>();
+            if (!ModelState.IsValid)
+            {
+                var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
+                result.Status = false;
+                result.Message = errMessage;
+            }
+            else
+            {
+                model.Data.AdministratorId = admin.Id;
+                var response = await this.businessCategoryService.Add(model.Data);
+                if (response != null)
+                {
+                    result.Status = response.Status;
+                    result.Message = response.Message;
+                    result.Data = response.Data;
+                }
+                else
+                {
+                    result.Status = false;
+                    result.Message = "There was a problem. Please try again later.";
+                }
+            }
+            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SubEdit(long? id, int? parentId)
+        {
+            var model = new ServiceDataViewModel<BusinessCategoryViewModel>();
+            try
+            {
+                model.HasError = true;
+                if (!id.HasValue)
+                {
+                    model.Error = "Please provide a valid id.";
+                }
+                else
+                {
+                    var res = await this.businessCategoryService.Get(id.Value);
+                    if (res.Status)
+                    {
+                        var businessCategories = await this.dashboardService.GetBusinessCategories();
+                        ViewBag.ParentId = businessCategories.Select(d => new SelectListItem()
+                        {
+                            Value = Convert.ToString(d.Id),
+                            Text = d.Name
+                        });
+                        model.HasError = false;
+                        model.Data = res.Data;
+                        model.Data.ParentId = parentId.Value;
+                    }
+                    else
+                    {
+                        model.Error = res.Message;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                model.HasError = true;
+                model.Error = "There was a problem. Please try again later.";
+                model.ErrorDescription = ex.Message.ToString();
+            }
+            return View(model);
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SubEdit([Bind(Include = "Data")] ServiceDataViewModel<BusinessCategoryViewModel> model)
+        {
+            var result = new ResponseViewModel<BusinessCategoryViewModel>();
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
+                    result.Status = false;
+                    result.Message = errMessage;
+                }
+                else
+                {
+                    model.Data.AdministratorId = admin.Id;
+                    var response = await this.businessCategoryService.Update(model.Data);
+                    if (response.Status)
+                    {
+                        result.Status = true;
+                        result.Message = response.Message;
+                    }
+                    else
+                    {
+                        result.Status = false;
+                        result.Message = response.Message;
+                    }
+                }
+            }
+            catch
+            {
+                result.Status = false;
+                result.Message = "There was a problem. Please try again later.";
+            }
+            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SubDeactive(int? id)
+        {
+            var model = new ServiceDataViewModel<BusinessCategoryViewModel>();
+            try
+            {
+                model.HasError = true;
+                if (!id.HasValue)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    var res = await this.businessCategoryService.Get(id.Value);
+                    if (res.Status)
+                    {
+                        var businessCategories = await this.dashboardService.GetBusinessCategories();
+                        model.HasError = false;
+                        model.Data = res.Data;
+                    }
+                    else
+                    {
+                        model.Error = res.Message;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                model.HasError = true;
+                model.Error = "There was a problem. Please try again later.";
+                model.ErrorDescription = ex.Message.ToString();
+            }
+            return View(model);
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SubDeactive([Bind(Include = "Data")] ServiceDataViewModel<BusinessCategoryViewModel> model)
+        {
+            var result = new ResponseViewModel<TimezoneViewModel>();
+            try
+            {
+                var response = await this.businessCategoryService.Deactive(model.Data.Id, model.Data.IsActive);
+                if (response.Status)
+                {
+                    result.Status = true;
+                    result.Message = response.Message;
+                }
+                else
+                {
+                    result.Status = false;
+                    result.Message = response.Message;
+                }
+            }
+            catch
+            {
+                result.Status = false;
+                result.Message = "There was a problem. Please try again later.";
+            }
+            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

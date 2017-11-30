@@ -18,6 +18,7 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // GET: api/timezone
+        [AllowAnonymous]
         public IHttpActionResult Get()
         {
             try
