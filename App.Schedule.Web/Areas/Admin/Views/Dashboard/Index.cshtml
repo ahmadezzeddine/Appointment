@@ -1,53 +1,78 @@
-﻿@{
+﻿@using FullCalendar
+@{
     ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
 }
-<div class="container pad20">
-    <div class="row">
-        <div class="col-lg-3">
-            <div class="list-group">
-                <button type="button" class="list-group-item bga-primary-text" data-toggle="collapse" href="#calendar" aria-expanded="true" aria-controls="calendar"><b>Calendar</b></button>
-                <div id="calendar" class="panel-collapse collapse in">
-                    <button type="button" class="list-group-item">Month</button>
-                    <button type="button" class="list-group-item">Timeline</button>
-                    <button type="button" class="list-group-item">Reports</button>
-                </div>
-                <button type="button" class="list-group-item bga-primary-text" data-toggle="collapse" href="#appointment" aria-expanded="false" aria-controls="appointment"><b>Appointments</b></button>
-                <div id="appointment" class="panel-collapse collapse in">
-                    <button type="button" class="list-group-item">New</button>
-                    <button type="button" class="list-group-item">Search</button>
-                    <button type="button" class="list-group-item">Block</button>
-                    <button type="button" class="list-group-item">Close</button>
-                </div>
 
-                <button type="button" class="list-group-item bga-primary-text" data-toggle="collapse" href="#employee" aria-expanded="true" aria-controls="employee"><b>Employee</b></button>
-                <div id="employee" class="panel-collapse collapse in">
-                    <button type="button" class="list-group-item">Search</button>
-                    <button type="button" class="list-group-item">New</button>
-                    <button type="button" class="list-group-item">Browse</button>
-                    <button type="button" class="list-group-item">Index</button>
-                </div>
-                <button type="button" class="list-group-item bga-primary-text" data-toggle="collapse" href="#customer" aria-expanded="false" aria-controls="customer"><b>Customer</b></button>
-                <div id="customer" class="panel-collapse collapse in">
-                    <button type="button" class="list-group-item">Search</button>
-                    <button type="button" class="list-group-item">New</button>
-                    <button type="button" class="list-group-item">Browse</button>
-                    <button type="button" class="list-group-item">Index</button>
-                </div>
-                <button type="button" class="list-group-item bga-primary-text" data-toggle="collapse" href="#setup" aria-expanded="false" aria-controls="setup"><b>Setup</b></button>
-                <div id="setup" class="panel-collapse collapse in">
-                    <button type="button" class="list-group-item">Account Center</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-9"></div>
+@Styles.Render("~/bundles/fullcalendar/css")
+
+
+<div class="panel panel-danger">
+    <div class="panel-heading"><b>Your free trail has expired.</b></div>
+    <div class="panel-body">
+        <p class="text-danger">
+            Free trial for account #32457342 has expired. If you would like to continue using Ap Online Appointment Scheduler, please activate your account. You will be asked to provide your credit card information to set up automatic billing on your account. Once you submit your credit card information to <b>Ap</b>, your account will be activated immediately.
+        </p>
+        <a class="btn btn-sm btn-danger" href="@Url.Action("Membership","Account",new { area="admin" })">
+            Activate Account
+        </a>
+
+    </div>
+    <div class="panel-footer">
+        <p class="text-info">
+            <b>* Note:</b> If you have updated your credit card information but your account is still not activated,
+            please contact <b>Ap</b> Customer Service for assistance.
+        </p>
     </div>
 </div>
-<hr />
-<div class="container" style="padding-bottom:20px;">
-    <div class="row">
-        <div class="col-sm-12 col-md-10">
-            &copy; @DateTime.Now.Year.ToString() Copyright Ap.
-        </div>
+<div class="panel panel-success">
+    <div class="panel-heading"><b>Appointment Calendar</b></div>
+    <div class="panel-body">
+        @Html.FullCalendar(settings =>
+   {
+       settings.Name = "ApCalendar";
+       settings.CssClass = "css-test";
+       settings.Header = new Header
+       {
+           Left = new ControlsBuilder().AddButton(HeaderButton.Prev).AddSeparator(HeaderSeparator.Adjacent)
+                       .AddButton(HeaderButton.Next).AddSeparator(HeaderSeparator.Gap).AddButton(HeaderButton.Today),
+           Center = new ControlsBuilder().AddTitle(),
+           Right = new ControlsBuilder("month,agendaWeek,agendaDay ")
+       };
+       settings.DefaultView = Enum.GetName(typeof (AvailableView), AvailableView.Month);
+       settings.Editable = true;
+       settings.AllDaySlot = false;
+       settings.Selectable = true;
+       settings.SlotDuration = TimeSpan.FromMinutes(15);
+       settings.Events = new EventCollection(Url.Action("GetDiaryEvents", "Dashboard", new { start=DateTime.Now, end = DateTime.Now.AddDays(2), area = "Admin" }), EventCollectionType.JsonFeed);
+       })
     </div>
 </div>
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <b>Upcomming Appoitnments</b>
+    </div>
+    <div class="panel-body">
+        <p>
+            @Html.FullCalendar(settings =>
+         {
+             settings.Name = "ApCalendarList";
+             settings.CssClass = "css-test";
+             settings.Header = new Header
+             {
+                 Left = new ControlsBuilder().AddButton(HeaderButton.Prev).AddSeparator(HeaderSeparator.Adjacent)
+                             .AddButton(HeaderButton.Next).AddSeparator(HeaderSeparator.Gap).AddButton(HeaderButton.Today),
+                 Center = new ControlsBuilder().AddTitle(),
+                 Right = new ControlsBuilder().AddView(AvailableView.ListMonth)
+             };
+             settings.DefaultView = Enum.GetName(typeof(AvailableView), AvailableView.ListMonth);
+             settings.Editable = true;
+             settings.AllDaySlot = false;
+             settings.Selectable = true;
+             settings.SlotDuration = TimeSpan.FromMinutes(15);
+             settings.Events = new EventCollection(Url.Action("GetDiaryEvents", "Dashboard", new { start = DateTime.Now, end = DateTime.Now.AddDays(2), area = "Admin" }), EventCollectionType.JsonFeed);
+         })
+        </p>
+    </div>
+</div>
+@Scripts.Render("~/bundles/fullcalendar/jquery")

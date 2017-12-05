@@ -12,11 +12,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 {
                     filterContext.Result = RedirectToAction("Index", "Dashboard", new { area = "Admin" });
                 }
-
             }
             catch
             {
-
             }
         }
     }

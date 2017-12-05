@@ -10,7 +10,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
     {
         protected string Token;
         protected HttpCookie AdminCookie;
-        protected BusinessEmployeeViewModel BusinessEmployee;
+        protected RegisterViewModel RegisterViewModel;
         protected CountryService CountryService;
         protected BusinessCategoryService BusinessCategoryService;
         protected TimezoneService TimezoneService;
@@ -20,15 +20,15 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
         public AdminBaseController()
         {
-            BusinessEmployee = new BusinessEmployeeViewModel();
+            RegisterViewModel = new RegisterViewModel();
         }
 
         [NonAction]
-        public bool SetAdminSession(BusinessEmployeeViewModel model, bool isKeepLoggedIn, string token)
+        public bool SetAdminSession(RegisterViewModel model, bool isKeepLoggedIn, string token)
         {
             try
             {
-                Session["aEmail"] = model.Email;
+                Session["aEmail"] = model.Employee.Email;
                 var businessEmployee = new HttpCookie("aadminappointment");
 
                 if (isKeepLoggedIn)
@@ -36,14 +36,19 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 else
                     businessEmployee.Expires = DateTime.Now.AddDays(365);
 
-                businessEmployee.Values["aFirstName"] = model.FirstName;
-                businessEmployee.Values["aLastName"] = model.LastName;
-                businessEmployee.Values["aEmail"] = model.Email;
-                businessEmployee.Values["aPassword"] = model.Password;
-                businessEmployee.Values["aIsAdmin"] = model.IsAdmin ? "true" : "false";
-                businessEmployee.Values["aIsActive"] = model.IsActive ? "true" : "false";
+                businessEmployee.Values["aFirstName"] = model.Employee.FirstName;
+                businessEmployee.Values["aLastName"] = model.Employee.LastName;
+                businessEmployee.Values["aEmail"] = model.Employee.Email;
+                businessEmployee.Values["aPassword"] = model.Employee.Password;
+                businessEmployee.Values["aIsAdmin"] = model.Employee.IsAdmin ? "true" : "false";
+                businessEmployee.Values["aIsActive"] = model.Employee.IsActive ? "true" : "false";
                 businessEmployee.Values["aToken"] = token;
-                businessEmployee.Values["aId"] = Convert.ToString(model.Id);
+                businessEmployee.Values["aEmpId"] = Convert.ToString(model.Employee.Id);
+                businessEmployee.Values["aBusinessId"] =Convert.ToString(model.Business.Id);
+                businessEmployee.Values["aMembershipId"] = Convert.ToString(model.Business.MembershipId);
+                businessEmployee.Values["aBusinessCategoryId"] = Convert.ToString(model.Business.BusinessCategoryId);
+                businessEmployee.Values["aTimezoneId"] = Convert.ToString(model.Business.TimezoneId);
+
                 Response.Cookies.Add(businessEmployee);
 
                 return true;
@@ -55,24 +60,33 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         }
 
         [NonAction]
-        public BusinessEmployeeViewModel GetAdminSession()
+        public RegisterViewModel GetAdminSession()
         {
             try
             {
-                BusinessEmployee = new BusinessEmployeeViewModel();
+                RegisterViewModel = new RegisterViewModel()
+                {
+                    Business = new BusinessViewModel(),
+                    Employee = new BusinessEmployeeViewModel()
+                };
                 if (Request.Cookies["aadminappointment"] != null)
                 {
                     AdminCookie = HttpContext.Request.Cookies["aadminappointment"];
                     if (AdminCookie != null)
                     {
-                        BusinessEmployee.FirstName = AdminCookie.Values["aFirstName"];
-                        BusinessEmployee.LastName = AdminCookie.Values["aLastName"];
-                        BusinessEmployee.Email = AdminCookie.Values["aEmail"];
-                        BusinessEmployee.IsActive = Convert.ToBoolean(AdminCookie.Values["aIsActive"]);
-                        BusinessEmployee.IsAdmin = Convert.ToBoolean(AdminCookie.Values["aIsAdmin"]);
+                        RegisterViewModel.Employee.FirstName = AdminCookie.Values["aFirstName"];
+                        RegisterViewModel.Employee.LastName = AdminCookie.Values["aLastName"];
+                        RegisterViewModel.Employee.Email = AdminCookie.Values["aEmail"];
+                        RegisterViewModel.Employee.IsActive = Convert.ToBoolean(AdminCookie.Values["aIsActive"]);
+                        RegisterViewModel.Employee.IsAdmin = Convert.ToBoolean(AdminCookie.Values["aIsAdmin"]);
                         Token = AdminCookie.Values["aToken"];
-                        BusinessEmployee.Id = Convert.ToInt64(AdminCookie.Values["aId"]);
-                        return BusinessEmployee;
+                        RegisterViewModel.Employee.Id = Convert.ToInt64(AdminCookie.Values["aEmpId"]);
+                        RegisterViewModel.Business.Id = Convert.ToInt64(AdminCookie.Values["aBusinessId"]);
+                        RegisterViewModel.Business.TimezoneId = Convert.ToInt32(AdminCookie.Values["aTimezoneId"]);
+                        RegisterViewModel.Business.BusinessCategoryId = Convert.ToInt32(AdminCookie.Values["aBusinessCategoryId"]);
+                        RegisterViewModel.Business.MembershipId = Convert.ToInt32(AdminCookie.Values["aMembershipId"]);
+
+                        return RegisterViewModel;
                     }
                     else
                         return null;
@@ -91,7 +105,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         {
             try
             {
-                BusinessEmployee = GetAdminSession();
+                RegisterViewModel = GetAdminSession();
                 this.CountryService = new CountryService(Token);
                 this.BusinessCategoryService = new BusinessCategoryService(Token);
                 this.TimezoneService = new TimezoneService(Token);
@@ -99,7 +113,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 this.BusinessService = new BusinessService(Token);
                 this.BusinessEmployeeService = new BusinessEmployeeService(Token);
                 //Call service;
-                if (BusinessEmployee != null)
+                if (RegisterViewModel != null)
                     return true;
                 else
                     return false;

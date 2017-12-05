@@ -11,14 +11,17 @@ namespace App.Schedule.Web.Services
     public class AppointmentUserService
     {
         public HttpClient httpClient;
-        private const string baseUrl = "http://appointment.why-fi.com";
+        //private const string baseUrl = "http://appointment.why-fi.com";
         //public static string baseUrl = "http://localhost/appointmentapi/";
-        //public static string baseUrl = "http://localhost:57433/";
+        public static string baseUrl = "http://localhost:57433/";
 
         //Admin Identity Token API
         public const string POST_API_ACCOUNT_REGISTER = "api/account/RegisterBusinessEmployee";
         //public const string PUT_API_ACCOUNT_REGISTER = "api/account/updateadmin";
         public const string GET_ADMIN_TOKEN = "token";
+
+        //Business
+        public const string GET_BUSINESS_BYID = "api/business?id={0}";
 
         //Country
         public const string GET_COUNTRIES = "api/country";
@@ -29,16 +32,17 @@ namespace App.Schedule.Web.Services
         //Timezone
         public const string GET_TIMEZONES = "api/timezone";
 
-        //Membership
-        public const string GET_MEMBERSHIPS = "api/membership";
-
         //Administrator API
         //public const string GET_EMPS = "api/administrator";
-        //public const string GET_BUSINESS_EMP_BYID = "api/administrator?Id={0}";
+        public const string GET_BUSINESS_EMP_BYID = "api/businessemployee?id={0}";
         public const string GET_BUSINESS_EMP_BYLOGINID = "api/businessemployee?email={0}&password={1}";
         //public const string POST_EMP = "api/administrator";
         //public const string DELETE_EMP = "api/administrator";
         //public const string DEACTIVE_EMP = "api/administrator?id={0}&status={1}";
+
+        //Membership API
+        public const string GET_MEMBERSHIPS = "api/membership";
+        public const string GET_MEMBERSHIP_BYID = "api/membership?id={0}";
 
         public AppointmentUserService()
         {

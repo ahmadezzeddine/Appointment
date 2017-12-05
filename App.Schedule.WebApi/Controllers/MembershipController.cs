@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Web.Http;
-using System.Data.Entity;
-using App.Schedule.Context;
+﻿using App.Schedule.Context;
 using App.Schedule.Domains;
 using App.Schedule.Domains.ViewModel;
+using System;
+using System.Data.Entity;
+using System.Linq;
+using System.Web.Http;
 
 namespace App.Schedule.WebApi.Controllers
 {
@@ -28,7 +28,7 @@ namespace App.Schedule.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
+                return Ok(new { status = false, data = "", message = ex.Message.ToString() });
             }
         }
 
@@ -38,19 +38,19 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "", message = "Please provide a valid id." });
+                    return Ok(new { status = false, data = "", message = "Please provide a valid id" });
                 else
                 {
                     var model = _db.tblMemberships.Find(id);
                     if (model != null)
-                        return Ok(new { status = true, data = model, message = "Transaction successed." });
+                        return Ok(new { status = true, data = model, message = "success" });
                     else
-                        return Ok(new { status = false, data = "", message = "Not found." });
+                        return Ok(new { status = false, data = "", message = "Not found" });
                 }
             }
             catch (Exception ex)
             {
-                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
+                return Ok(new { status = false, data = "", message =  ex.Message.ToString() });
             }
         }
 

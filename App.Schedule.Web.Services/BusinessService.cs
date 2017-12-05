@@ -16,6 +16,39 @@ namespace App.Schedule.Web.Services
             base.SetUpAppointmentService(token);
         }
 
+        public async Task<ResponseViewModel<RegisterViewModel>> Get(long? id)
+        {
+            var returnResponse = new ResponseViewModel<RegisterViewModel>()
+            {
+                Status = false,
+                Message = "",
+                Data = new RegisterViewModel()
+            };
+            try
+            {
+                var url = String.Format(AppointmentUserService.GET_BUSINESS_BYID, id);
+                var response = await this.appointmentUserService.httpClient.GetAsync(url);
+                var result = await base.GetHttpResponse<BusinessViewModel>(response);
+
+                returnResponse.Status = result.Status;
+                returnResponse.Message = result.Message;
+                returnResponse.Data.Business = result.Data;
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+
+            return returnResponse;
+        }
+
+        public Task<ResponseViewModel<List<RegisterViewModel>>> Gets()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<ResponseViewModel<RegisterViewModel>> Add(RegisterViewModel model)
         {
             var returnResponse = new ResponseViewModel<RegisterViewModel>();
@@ -47,16 +80,6 @@ namespace App.Schedule.Web.Services
         }
 
         public Task<ResponseViewModel<RegisterViewModel>> Find(Predicate<RegisterViewModel> pridict)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ResponseViewModel<RegisterViewModel>> Get(long? id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ResponseViewModel<List<RegisterViewModel>>> Gets()
         {
             throw new NotImplementedException();
         }

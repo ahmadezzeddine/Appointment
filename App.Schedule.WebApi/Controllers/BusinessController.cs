@@ -1,12 +1,11 @@
-﻿using App.Schedule.Context;
+﻿using System;
+using System.Linq;
+using System.Web.Http;
+using System.Data.Entity;
+using App.Schedule.Context;
 using App.Schedule.Domains;
 using App.Schedule.Domains.Helpers;
 using App.Schedule.Domains.ViewModel;
-using Newtonsoft.Json;
-using System;
-using System.Data.Entity;
-using System.Linq;
-using System.Web.Http;
 
 namespace App.Schedule.WebApi.Controllers
 {
@@ -39,19 +38,23 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "Please provide valid ID." });
+                    return Ok(new { status = false, data = "", message = "Please provide valid ID." });
                 else
                 {
-                    var model = _db.tblBusinesses.Find(id);
+                    var model = _db.tblBusinesses.Find(id.Value);
+                    model.tblBusinessCategory = _db.tblBusinessCategories.Find(model.BusinessCategoryId);
+                    model.tblMembership = _db.tblMemberships.Find(model.MembershipId);
+                    model.tblTimezone = _db.tblTimezones.Find(model.TimezoneId);
+
                     if (model != null)
-                        return Ok(new { status = true, data = model });
+                        return Ok(new { status = true, data = model, message = "success" });
                     else
-                        return Ok(new { status = false, data = "Not found." });
+                        return Ok(new { status = false, data = "", message = "Not found" });
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = false, data = "", message = ex.Message.ToString() });
             }
         }
 
@@ -203,7 +206,8 @@ namespace App.Schedule.WebApi.Controllers
                 status = false;
                 message = "This business email has been taken. Please try another email id.";
             }
-            else {
+            else
+            {
                 using (System.Data.Entity.DbContextTransaction dbTran = _db.Database.BeginTransaction())
                 {
                     try

@@ -14,6 +14,34 @@ namespace App.Schedule.Web.Services
             base.SetUpAppointmentService(token);
         }
 
+        public async Task<ResponseViewModel<MembershipViewModel>> Get(long? id)
+        {
+            var returnResponse = new ResponseViewModel<MembershipViewModel>()
+            {
+                Status = false,
+                Message = "",
+                Data = new MembershipViewModel()
+            };
+            try
+            {
+                var url = String.Format(AppointmentUserService.GET_MEMBERSHIP_BYID, id);
+                var response = await this.appointmentUserService.httpClient.GetAsync(url);
+                var result = await base.GetHttpResponse<MembershipViewModel>(response);
+
+                returnResponse.Status = result.Status;
+                returnResponse.Message = result.Message;
+                returnResponse.Data = result.Data;
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+
+            return returnResponse;
+        }
+
         public async Task<ResponseViewModel<List<MembershipViewModel>>> Gets()
         {
             var returnResponse = new ResponseViewModel<List<MembershipViewModel>>();
@@ -51,12 +79,6 @@ namespace App.Schedule.Web.Services
         {
             throw new NotImplementedException();
         }
-
-        public Task<ResponseViewModel<MembershipViewModel>> Get(long? id)
-        {
-            throw new NotImplementedException();
-        }
-        
 
         public Task<ResponseViewModel<MembershipViewModel>> Update(MembershipViewModel model)
         {

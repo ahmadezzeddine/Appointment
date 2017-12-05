@@ -39,49 +39,49 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "Please provide valid ID." });
+                    return Ok(new { status = false, data = "", message = "Please provide valid ID." });
                 else
                 {
                     var model = _db.tblBusinessEmployees.Find(id);
                     if (model != null)
-                        return Ok(new { status = true, data = model });
+                        return Ok(new { status = true, data = model, message = "success" });
                     else
-                        return Ok(new { status = false, data = "Not found." });
+                        return Ok(new { status = false, data = "", message = "Not found" });
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = false, data = "", message = ex.Message.ToString() });
             }
         }
 
         // GET: api/businessemployee/?emailid=value&password=value
         public IHttpActionResult Get(string email, string password)
         {
-            //try
-            //{
-            //    var pass = Security.Encrypt(password, true);
-            //    var status = _db.tblBusinessEmployees.Any(d => d.Email == email && d.Password == pass);
-            //    return Ok(new { status = status, data = status == true ? "valid credential" : "Not a valid credential" });
-            //}
-            //catch (Exception ex)
-            //{
-            //    return BadRequest(ex.Message.ToString());
-            //}
             try
             {
+                var loginSession = new LoginSessionViewModel();
                 password = HttpContext.Current.Server.UrlDecode(password);
                 var pass = Security.Encrypt(password, true);
-                var model = _db.tblBusinessEmployees.Where(d => d.Email.ToLower() == email.ToLower() && d.Password
+                loginSession.Employee = _db.tblBusinessEmployees.Where(d => d.Email.ToLower() == email.ToLower() && d.Password
                 == pass && d.IsActive == true).FirstOrDefault();
-                if (model != null)
+                if (loginSession.Employee != null)
                 {
-                    model.Password = "";
-                    return Ok(new { status = true, data = model, message = "Valid credential" });
+                    loginSession.Employee.Password = "";
+                    var serviceLocation = _db.tblServiceLocations.Find(loginSession.Employee.ServiceLocationId);
+                    if (serviceLocation != null)
+                    {
+                        loginSession.Business = _db.tblBusinesses.Find(serviceLocation.BusinessId);
+                        return Ok(new { status = true, data = loginSession, message = "Valid credential" });
+                    }
+                    else
+                    {
+                        return Ok(new { status = false, data = "", message = "Not a valid credential" });
+                    }
                 }
                 else
                 {
-                    return Ok(new { status = false, data = model, message = "Not a valid credential" });
+                    return Ok(new { status = false, data = "", message = "Not a valid credential" });
                 }
             }
             catch (Exception ex)

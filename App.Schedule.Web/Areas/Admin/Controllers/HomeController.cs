@@ -17,7 +17,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<ActionResult> Login(ServiceDataViewModel<LoginViewModel> model)
         {
-            var result = new ResponseViewModel<BusinessEmployeeViewModel>();
+            var result = new ResponseViewModel<RegisterViewModel>();
             try
             {
                 if (!ModelState.IsValid)
