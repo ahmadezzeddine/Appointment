@@ -6,10 +6,7 @@
 }
 
 <ul class="nav nav-tabs">
-    <li><a href="@Url.Action("index","account",new { area = "admin"})">Account Profile</a></li>
-    <li><a href="@Url.Action("administrator","account",new { area = "admin"})">Administrator</a></li>
     <li class="active"><a href="@Url.Action("membership","account",new { area = "admin"})">Membership</a></li>
-    <li><a href="@Url.Action("billing","account",new { area = "admin"})">Billing</a></li>
 </ul>
 <div class="tab-content" style="padding:0px 10px;">
     <div class="tab-pane active">
@@ -58,6 +55,7 @@
                         </tr>
                     </table>
                 }
+
             </div>
         </div>
     </div>

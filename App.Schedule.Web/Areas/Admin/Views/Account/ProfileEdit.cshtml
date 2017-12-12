@@ -1,7 +1,7 @@
 ﻿@model App.Schedule.Domains.ViewModel.ResponseViewModel<App.Schedule.Domains.ViewModel.BusinessViewModel>
 
 @{
-    ViewBag.Title = "Account Profile";
+    ViewBag.Title = "Update Account Profile";
     Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
 }
 <ul class="nav nav-tabs">
@@ -32,74 +32,74 @@
                                     <td>
                                         @if (Model.Data != null && Model.Data.tblBusinessCategory != null)
                                         {
-                                        <text>@Model.Data.tblBusinessCategory.Name</text>
+                                            <text>@Model.Data.tblBusinessCategory.Name</text>
                                         }
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-right">Business Name</td>
                                     <td>
-                                        @Html.EditorFor(model => model.Data.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Business Name", disabled = "true" } })
+                                        @Html.EditorFor(model => model.Data.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Business Name"} })
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-right">Short Name</td>
                                     <td>
-                                        @Html.EditorFor(model => model.Data.ShortName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Short Name", disabled = "true" } })
+                                        @Html.EditorFor(model => model.Data.ShortName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Short Name"} })
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-right">Phone No.</td>
                                     <td>
-                                        @Html.EditorFor(model => model.Data.PhoneNumbers, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone No.", disabled = "true" } })
+                                        @Html.EditorFor(model => model.Data.PhoneNumbers, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone No."} })
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-right">Fax No.</td>
                                     <td>
-                                        @Html.EditorFor(model => model.Data.FaxNumbers, new { htmlAttributes = new { @class = "form-control", @placeholder = "Fax No.", disabled = "true" } })
+                                        @Html.EditorFor(model => model.Data.FaxNumbers, new { htmlAttributes = new { @class = "form-control", @placeholder = "Fax No."} })
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-right">Email Id</td>
                                     <td>
-                                        @Html.EditorFor(model => model.Data.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Business Email", disabled = "true" } })
+                                        @Html.EditorFor(model => model.Data.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Business Email"} })
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-right">Website</td>
                                     <td>
-                                        @Html.EditorFor(model => model.Data.Website, new { htmlAttributes = new { @class = "form-control", @placeholder = "Business Website", disabled = "true" } })
+                                        @Html.EditorFor(model => model.Data.Website, new { htmlAttributes = new { @class = "form-control", @placeholder = "Business Website"} })
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-right">Address 1</td>
                                     <td>
-                                        @Html.EditorFor(model => model.Data.Add1, new { htmlAttributes = new { @class = "form-control", @placeholder = "Address 1", disabled = "true" } })
+                                        @Html.EditorFor(model => model.Data.Add1, new { htmlAttributes = new { @class = "form-control", @placeholder = "Address 1"} })
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-right">Address 2</td>
                                     <td>
-                                        @Html.EditorFor(model => model.Data.Add2, new { htmlAttributes = new { @class = "form-control", @placeholder = "Address 2", disabled = "true" } })
+                                        @Html.EditorFor(model => model.Data.Add2, new { htmlAttributes = new { @class = "form-control", @placeholder = "Address 2"} })
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-right">City</td>
                                     <td>
-                                        @Html.EditorFor(model => model.Data.City, new { htmlAttributes = new { @class = "form-control", @placeholder = "City", disabled = "true" } })
+                                        @Html.EditorFor(model => model.Data.City, new { htmlAttributes = new { @class = "form-control", @placeholder = "City"} })
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-right">City</td>
                                     <td>
-                                        @Html.EditorFor(model => model.Data.State, new { htmlAttributes = new { @class = "form-control", @placeholder = "State", disabled = "true" } })
+                                        @Html.EditorFor(model => model.Data.State, new { htmlAttributes = new { @class = "form-control", @placeholder = "State"} })
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-right">Zipcode</td>
                                     <td>
-                                        @Html.EditorFor(model => model.Data.Zip, new { htmlAttributes = new { @class = "form-control", @placeholder = "Zip Code", disabled = "true" } })
+                                        @Html.EditorFor(model => model.Data.Zip, new { htmlAttributes = new { @class = "form-control", @placeholder = "Zip Code"} })
                                     </td>
                                 </tr>
                                 <tr>
@@ -113,20 +113,20 @@
                                     <td>
                                         @if (Model.Data.tblTimezone != null)
                                         {
-                                        <text>@Model.Data.tblTimezone.Title</text>
+                                            <text>@Model.Data.tblTimezone.Title</text>
                                         }
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-right">Is International</td>
                                     <td>
-                                        @Html.CheckBoxFor(model => model.Data.IsInternational, new { htmlAttributes = new { @type = "checkbox", disabled = "true" } })
+                                        @Html.CheckBoxFor(model => model.Data.IsInternational, new { htmlAttributes = new { @type = "checkbox"} })
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-right"></td>
                                     <td>
-                                        <a href="@Url.Action("profileedit","accountsetup",new { area="admin"})"  class="btn btn-success col-lg-4">Edit</a>
+                                        <a class="btn btn-success col-lg-4 disabled" href="#">Edit</a>
                                         <a href="@Url.Action("index","accountsetup",new { area="admin"})" class="btn btn-default col-lg-4" style="margin-left:10px;">Back</a>
                                     </td>
                                 </tr>

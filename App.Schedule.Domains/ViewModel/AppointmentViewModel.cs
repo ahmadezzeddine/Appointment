@@ -776,14 +776,26 @@ namespace App.Schedule.Domains.ViewModel
 
     public enum DayType
     {
-        Sun = 1,
-        Mon = 2,
-        Tue = 3,
-        Wed = 4,
-        Thu = 5,
-        Fri = 6,
-        Sat = 7
+        Sun = 0,
+        Mon = 1,
+        Tue = 2,
+        Wed = 3,
+        Thu = 4,
+        Fri = 5,
+        Sat = 6
     }
+
+    public enum DayFullType
+    {
+        Sunday = 0,
+        Monday = 1,
+        Tuesday = 2,
+        Wednesday = 3,
+        Thursday = 4,
+        Friday = 5,
+        Saturday = 6
+    }
+
 
     public enum PhoneNumberType
     {

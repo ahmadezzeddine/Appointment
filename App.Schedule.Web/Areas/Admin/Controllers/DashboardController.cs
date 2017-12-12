@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Web;
+using System.Linq;
 using System.Web.Mvc;
-using FullCalendar;
 using System.Collections.Generic;
 using App.Schedule.Domains.ViewModel;
-using System.Linq;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {

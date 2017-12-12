@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
-using App.Schedule.Domains.ViewModel;
 using System.Threading.Tasks;
+using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
@@ -43,5 +43,17 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         {
             return View();
         }
+
+        public async Task<ActionResult> ProfileEdit()
+        {
+            var response = new ResponseViewModel<BusinessViewModel>();
+            var result = await BusinessService.Get(RegisterViewModel.Business.Id);
+            response.Status = result.Status;
+            response.Message = result.Message;
+            if (result.Data != null)
+                response.Data = result.Data.Business;
+            return View(response);
+        }
+
     }
 }

@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Account Setup";
     Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
 }
 <div class="row">
@@ -11,17 +11,17 @@
                 <div class="panel-body">
                     <ul class="fc-list-item">
                         <li>
-                            <a href="@Url.Action("Index","Account",new { area="Admin"})" class="btn btn-link">
+                            <a href="@Url.Action("index","account",new { area="admin"})" class="btn btn-link">
                                 Profile setup
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="btn btn-link">
+                            <a href="@Url.Action("index","membership",new { area = "admin" })" class="btn btn-link">
                                 Membership setup
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="btn btn-link">
+                            <a href="@Url.Action("index","businessadmin",new { area = "admin" })" class="btn btn-link">
                                 Administrator setup
                             </a>
                         </li>
@@ -35,7 +35,7 @@
                 <div class="panel-body">
                     <ul class="fc-list-item">
                         <li>
-                            <a href="#" class="btn btn-link">
+                            <a href="@Url.Action("index","hour",new { area = "admin" })"  class="btn btn-link">
                                 Business Hours setup
                             </a>
                         </li>

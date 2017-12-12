@@ -1,14 +1,11 @@
 ﻿@model App.Schedule.Domains.ViewModel.ResponseViewModel<App.Schedule.Domains.ViewModel.BusinessEmployeeViewModel>
 
 @{
-    ViewBag.Title = "Administrator";
+    ViewBag.Title = "Change Administrator";
     Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
 }
 <ul class="nav nav-tabs">
-    <li><a href="@Url.Action("index","account",new { area = "admin"})">Account Profile</a></li>
     <li class="active"><a href="@Url.Action("administrator", "account", new { area = "admin" })">Administrator</a></li>
-    <li><a href="@Url.Action("membership","account",new { area = "admin"})">Membership</a></li>
-    <li><a href="@Url.Action("billing","account",new { area = "admin"})">Billing</a></li>
 </ul>
 <div class="tab-content" style="padding:0px 10px;">
     <div class="tab-pane active">
@@ -27,31 +24,37 @@
                         <tr>
                             <td class="text-right">First Name</td>
                             <td>
-                                @Html.EditorFor(d => d.Data.FirstName, new { htmlAttributes = new { @class = "form-control", @placeholder = "First Name", @disabled = "true" } })
+                                @Html.EditorFor(d => d.Data.FirstName, new { htmlAttributes = new { @class = "form-control", @placeholder = "First Name" } })
                             </td>
                         </tr>
                         <tr>
                             <td class="text-right">Last Name</td>
                             <td>
-                                @Html.EditorFor(d => d.Data.LastName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Last Name", @disabled = "true" } })
+                                @Html.EditorFor(d => d.Data.LastName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Last Name" } })
                             </td>
                         </tr>
                         <tr>
                             <td class="text-right">Phone No.</td>
                             <td>
-                                @Html.EditorFor(d => d.Data.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone No.", @disabled = "true" } })
+                                @Html.EditorFor(d => d.Data.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone No." } })
                             </td>
                         </tr>
                         <tr>
                             <td class="text-right">Email Id</td>
                             <td>
-                                @Html.EditorFor(d => d.Data.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email Id", @disabled = "true" } })
+                                @Html.EditorFor(d => d.Data.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email Id" } })
                             </td>
                         </tr>
                         <tr>
                             <td class="text-right">Password</td>
                             <td>
-                                @Html.EditorFor(d => d.Data.Password, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Password", @disabled = "true" } }) (protected)
+                                @Html.EditorFor(d => d.Data.Password, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Password" } })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">Confirm</td>
+                            <td>
+                                @Html.EditorFor(d => d.Data.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Confirm Password" } })
                             </td>
                         </tr>
                         <tr>

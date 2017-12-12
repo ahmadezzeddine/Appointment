@@ -26,9 +26,9 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 var model = _db.tblAdministrators.ToList();
-                return Ok(new { status = true, data = model, message = "Transaction successed."});
+                return Ok(new { status = true, data = model, message = "Transaction successed." });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
@@ -41,7 +41,7 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data ="", message = "Please provide a valid id." });
+                    return Ok(new { status = false, data = "", message = "Please provide a valid id." });
                 else
                 {
                     var model = _db.tblAdministrators.Find(id);
@@ -77,9 +77,9 @@ namespace App.Schedule.WebApi.Controllers
                     return Ok(new { status = false, data = model, message = "Not a valid credential" });
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return Ok(new { status = false, data = "", message = "ex: "  + ex.Message.ToString()});
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 
@@ -91,7 +91,7 @@ namespace App.Schedule.WebApi.Controllers
                 if (!ModelState.IsValid)
                 {
                     var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
-                    return Ok(new { status = false, data = "", message = errMessage});
+                    return Ok(new { status = false, data = "", message = errMessage });
                 }
 
                 var isAny = _db.tblAdministrators.Any(d => d.Email.ToLower() == model.Email.ToLower());
@@ -121,9 +121,9 @@ namespace App.Schedule.WebApi.Controllers
                 }
                 return Ok(new { status = false, data = "", message = "Transaction failed." });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return Ok(new { status = false, data = "", message = "ex: "+ex.Message.ToString()});
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 
@@ -151,22 +151,22 @@ namespace App.Schedule.WebApi.Controllers
                             _db.Entry(admin).State = EntityState.Modified;
                             var response = _db.SaveChanges();
                             if (response > 0)
-                                return Ok(new { status = true, data = admin, message = "Transaction successed."});
+                                return Ok(new { status = true, data = admin, message = "Transaction successed." });
                             else
                                 return Ok(new { status = false, data = "", message = "Transaction failed." });
                         }
                         else
                         {
-                            return Ok(new { status = false, data ="", message = "Please provide a valid administrator id." });
+                            return Ok(new { status = false, data = "", message = "Please provide a valid administrator id." });
                         }
                     }
                     else
                     {
-                        return Ok(new { status = false, data ="", message = "Not a valid data to update. Please provide a valid id." });
+                        return Ok(new { status = false, data = "", message = "Not a valid data to update. Please provide a valid id." });
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
@@ -289,11 +289,51 @@ namespace App.Schedule.WebApi.Controllers
                     message = "It is not a valid Admin information.";
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 message = "ex: " + ex.Message.ToString();
             }
             return status;
         }
+
+        [NonAction]
+        public bool BusinessHourDefaultSetup(long serviceLocationId)
+        {
+            var result = false;
+            try
+            {
+                var now = DateTime.Now;
+                for (var i = 0; i < 7; i++)
+                {
+                    var businessHour = new tblBusinessHour()
+                    {
+                        WeekDayId = i,
+                        IsStartDay = i == 1 ? true : false,
+                        IsHoliday = i == 1 ? true : false,
+                        From = new DateTime(now.Year, now.Month, now.Day, 8, 0, 0, DateTimeKind.Utc),
+                        To = new DateTime(now.Year, now.Month, now.Day, 18, 0, 0, DateTimeKind.Utc),
+                        IsSplit1 = false,
+                        FromSplit1 = new DateTime(now.Year, now.Month, now.Day, 8, 0, 0, DateTimeKind.Utc),
+                        ToSplit1 = new DateTime(now.Year, now.Month, now.Day, 18, 0, 0, DateTimeKind.Utc),
+                        IsSplit2 = false,
+                        FromSplit2 = new DateTime(now.Year, now.Month, now.Day, 8, 0, 0, DateTimeKind.Utc),
+                        ToSplit2 = new DateTime(now.Year, now.Month, now.Day, 18, 0, 0, DateTimeKind.Utc),
+                        ServiceLocationId = serviceLocationId
+                    };
+                    _db.tblBusinessHours.Add(businessHour);
+                }
+                var response = _db.SaveChanges();
+                if (response > 0)
+                    result = true;
+                else
+                    result = false;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
+        }
+
     }
 }

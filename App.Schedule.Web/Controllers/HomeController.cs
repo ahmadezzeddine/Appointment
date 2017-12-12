@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using App.Schedule.Domains.ViewModel;
 using App.Schedule.Web.Areas.Admin.Controllers;
-using System.Threading.Tasks;
 
 namespace App.Schedule.Web.Controllers
 {
     public class HomeController : LoginBaseController
     {
-
+        [HttpGet]
         public ActionResult Index()
         {
             return View();
         }
 
+        [HttpGet]
         public ActionResult Login()
         {
             return View();
@@ -129,12 +130,13 @@ namespace App.Schedule.Web.Controllers
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
         public ActionResult Contact()
         {
             return View();
         }
 
-
+        [NonAction]
         private async Task<List<CountryViewModel>> GetCountries()
         {
             var response = await this.CountryService.Gets();
@@ -148,6 +150,7 @@ namespace App.Schedule.Web.Controllers
             }
         }
 
+        [NonAction]
         private async Task<List<TimezoneViewModel>> GetTimeZone()
         {
             var response = await this.TimezoneService.Gets();
@@ -161,6 +164,7 @@ namespace App.Schedule.Web.Controllers
             }
         }
 
+        [NonAction]
         private async Task<List<BusinessCategoryViewModel>> GetBusinessCategories()
         {
             var response = await this.BusinessCategoryService.Gets();
@@ -174,6 +178,7 @@ namespace App.Schedule.Web.Controllers
             }
         }
 
+        [NonAction]
         private async Task<List<MembershipViewModel>> GetMemberships()
         {
             var response = await this.MembershipService.Gets();

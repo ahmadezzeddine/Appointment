@@ -148,9 +148,12 @@
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountSetupController.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminBaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BusinessAdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\HourController.cs" />
     <Compile Include="Areas\Admin\Controllers\LoginBaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\MembershipController.cs" />
     <Compile Include="Areas\Customer\Controllers\HomeController.cs" />
     <Compile Include="Areas\Customer\CustomerAreaRegistration.cs" />
     <Compile Include="Areas\Employee\Controllers\HomeController.cs" />
@@ -202,6 +205,13 @@
     <Content Include="Areas\Admin\Views\Account\Membership.cshtml" />
     <Content Include="Areas\Admin\Views\Account\Billing.cshtml" />
     <Content Include="Areas\Admin\Views\Account\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Membership\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\BusinessAdmin\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Membership\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\BusinessAdmin\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\ProfileEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Hour\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Hour\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
