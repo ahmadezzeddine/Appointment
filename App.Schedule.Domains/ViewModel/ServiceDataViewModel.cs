@@ -1,5 +1,9 @@
 ﻿namespace App.Schedule.Domains.ViewModel
 {
+    /// <summary>
+    /// Class is used to hold service data information.
+    /// </summary>
+    /// <typeparam name="T">any type to get data response.</typeparam>
     public class ServiceDataViewModel<T>
     {
         public bool HasError { get; set; }

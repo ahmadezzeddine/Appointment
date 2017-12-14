@@ -2,6 +2,9 @@
 
 namespace App.Schedule.Domains.ViewModel
 {
+    /// <summary>
+    /// Class is used to hold Login information.
+    /// </summary>
     public class LoginViewModel
     {
         [Required(ErrorMessage = "Please enter your email id")]

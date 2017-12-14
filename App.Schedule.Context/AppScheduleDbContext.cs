@@ -3,6 +3,9 @@ namespace App.Schedule.Context
     using System.Data.Entity;
     using App.Schedule.Domains;
 
+    /// <summary>
+    /// Class is used to hold db context of appointment scheduler.
+    /// </summary>
     public partial class AppScheduleDbContext : DbContext
     {
         public AppScheduleDbContext()

@@ -44,6 +44,13 @@ namespace App.Schedule.Web.Services
         public const string GET_MEMBERSHIPS = "api/membership";
         public const string GET_MEMBERSHIP_BYID = "api/membership?id={0}";
 
+        //Business Category
+        public const string GET_BUSINESSHOURS = "api/businesshour";
+        public const string GET_BUSINESSHOURSBYId = "api/businesshour?id={0}";
+        public const string GET_BUSINESSHOURSBYTYPE = "api/businesshour?id={0}&type={1}";
+        public const string PUT_BUSINESSHOUR = "api/businesshour?id={0}";
+
+
         public AppointmentUserService()
         {
             this.httpClient = new HttpClient() { BaseAddress = new Uri(baseUrl) };

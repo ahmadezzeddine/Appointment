@@ -47,6 +47,7 @@
     <Compile Include="AppointmentUserService.cs" />
     <Compile Include="BusinessCategoryService.cs" />
     <Compile Include="BusinessEmployeeService.cs" />
+    <Compile Include="BusinessHourService.cs" />
     <Compile Include="BusinessService.cs" />
     <Compile Include="CountryService.cs" />
     <Compile Include="IAppointmentUserService.cs" />

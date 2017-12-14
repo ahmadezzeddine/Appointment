@@ -17,6 +17,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         protected MembershipService MembershipService;
         protected BusinessService BusinessService;
         protected BusinessEmployeeService BusinessEmployeeService;
+        protected BusinessHourService BusinessHourService;
 
         public AdminBaseController()
         {
@@ -48,6 +49,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 businessEmployee.Values["aMembershipId"] = Convert.ToString(model.Business.MembershipId);
                 businessEmployee.Values["aBusinessCategoryId"] = Convert.ToString(model.Business.BusinessCategoryId);
                 businessEmployee.Values["aTimezoneId"] = Convert.ToString(model.Business.TimezoneId);
+                businessEmployee.Values["aServiceLocationId"] = Convert.ToString(model.Employee.ServiceLocationId);
 
                 Response.Cookies.Add(businessEmployee);
 
@@ -85,7 +87,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                         RegisterViewModel.Business.TimezoneId = Convert.ToInt32(AdminCookie.Values["aTimezoneId"]);
                         RegisterViewModel.Business.BusinessCategoryId = Convert.ToInt32(AdminCookie.Values["aBusinessCategoryId"]);
                         RegisterViewModel.Business.MembershipId = Convert.ToInt32(AdminCookie.Values["aMembershipId"]);
-
+                        RegisterViewModel.Employee.ServiceLocationId = Convert.ToInt64(AdminCookie.Values["aServiceLocationId"]);
                         return RegisterViewModel;
                     }
                     else
@@ -112,6 +114,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 this.MembershipService = new MembershipService(Token);
                 this.BusinessService = new BusinessService(Token);
                 this.BusinessEmployeeService = new BusinessEmployeeService(Token);
+                this.BusinessHourService = new BusinessHourService(Token);
                 //Call service;
                 if (RegisterViewModel != null)
                     return true;

@@ -8,20 +8,35 @@ using App.Schedule.Web.Areas.Admin.Controllers;
 
 namespace App.Schedule.Web.Controllers
 {
+    /// <summary>
+    /// Home controller is used to interact with home, login, register, contatct pages.
+    /// </summary>
     public class HomeController : LoginBaseController
     {
+        /// <summary>
+        /// Get method to display home page for user.
+        /// </summary>
+        /// <returns>Actionre result class.</returns>
         [HttpGet]
         public ActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        /// Get method to display login page.
+        /// </summary>
+        /// <returns>Action result class.</returns>
         [HttpGet]
         public ActionResult Login()
         {
             return View();
         }
 
+        /// <summary>
+        /// Get method to display register UI page.
+        /// </summary>
+        /// <returns>Task of action result.</returns>
         [HttpGet]
         public async Task<ActionResult> Register()
         {
@@ -101,6 +116,11 @@ namespace App.Schedule.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Post method to register Business admin.
+        /// </summary>
+        /// <param name="model">Provide the business, admin service location and timezone information.</param>
+        /// <returns>Task of action result.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register([Bind(Include ="Data")]ServiceDataViewModel<RegisterViewModel> model)
@@ -136,6 +156,10 @@ namespace App.Schedule.Web.Controllers
             return View();
         }
 
+        /// <summary>
+        /// To get the list of countries in the database using web api call.
+        /// </summary>
+        /// <returns>Task of country list.</returns>
         [NonAction]
         private async Task<List<CountryViewModel>> GetCountries()
         {
@@ -150,6 +174,10 @@ namespace App.Schedule.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// To get the list of Timezones in the database using web api call.
+        /// </summary>
+        /// <returns>Task of timezone list.</returns>
         [NonAction]
         private async Task<List<TimezoneViewModel>> GetTimeZone()
         {
@@ -164,6 +192,10 @@ namespace App.Schedule.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// To get the list of business category in the database using web api call.
+        /// </summary>
+        /// <returns>Task of business category list.</returns>
         [NonAction]
         private async Task<List<BusinessCategoryViewModel>> GetBusinessCategories()
         {
@@ -178,6 +210,10 @@ namespace App.Schedule.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// To get the list of membership in the database using web api call.
+        /// </summary>
+        /// <returns>Task of membership list.</returns>
         [NonAction]
         private async Task<List<MembershipViewModel>> GetMemberships()
         {

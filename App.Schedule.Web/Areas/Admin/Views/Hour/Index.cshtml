@@ -24,49 +24,67 @@
                     <table class="table table-striped">
                         <tr>
                             <td>
-                                Day
+                                Week Day
+                            </td>
+                            <td colspan="2">
+                                Business Hour
                             </td>
                             <td>
-                                Start Day
-                            </td>
-                            <td>
-                                From
-                            </td>
-                            <td>
-                                To
+                                Setup
                             </td>
                         </tr>
-                        @for (var i = 0; i < 7; i++)
+                        @foreach (var item in Model.Data)
                         {
-                            <tr>
-                                <td class="text-left">
-                                    @Enum.GetName(typeof(App.Schedule.Domains.ViewModel.DayFullType), (int)i)
-                                    @Html.EditorFor(d => d.Data.FirstOrDefault().WeekDayId, new { htmlAttributes = new { @class = "form-control hidden", @placeholder = "From", text = i } })
-                                </td>
-                                <td>
-                                    @Html.RadioButtonFor(d => d.Data.FirstOrDefault().IsStartDay, new { htmlAttributes = new { @type = "checkbox" } })
-                                </td>
-                                <td>
-                                    @Html.EditorFor(d => d.Data.FirstOrDefault().From, new { htmlAttributes = new { @class = "form-control", @placeholder = "From", @disabled = "true" } })
-                                </td>
-                                <td>
-                                    @Html.EditorFor(d => d.Data.FirstOrDefault().To, new { htmlAttributes = new { @class = "form-control", @placeholder = "To", @disabled = "true" } })
-                                </td>
-                            </tr>
+                            if (item != null)
+                            {
+                                <tr>
+                                    <td class="text-left">
+                                        @Enum.GetName(typeof(App.Schedule.Domains.ViewModel.DayFullType), (int)item.WeekDayId)
+                                        @Html.EditorFor(d => item.WeekDayId, new { htmlAttributes = new { @class = "form-control hidden", @placeholder = "From", text = item.WeekDayId } })
+                                    </td>
+                                    <td>
+                                        <div>
+                                            @item.From.ToString("hh:mm tt")
+                                        </div>
+                                        @if (item.IsSplit1.Value && item.FromSplit1.HasValue)
+                                        {
+                                            <div>
+                                                @item.FromSplit1.Value.ToString("hh:mm tt")
+                                            </div>
+                                        }
+                                        @if (item.IsSplit2.Value && item.FromSplit2.HasValue)
+                                        {
+                                            <div>
+                                                @item.FromSplit2.Value.ToString("hh:mm tt")
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div>
+                                            @item.To.ToString("hh:mm tt")
+                                        </div>
+                                        @if (item.IsSplit1.Value && item.ToSplit1.HasValue)
+                                        {
+                                            <div>
+                                                @item.ToSplit1.Value.ToString("hh:mm tt")
+                                            </div>
+                                        }
+                                        @if (item.IsSplit2.Value && item.ToSplit2.HasValue)
+                                        {
+                                            <div>
+                                                @item.ToSplit2.Value.ToString("hh:mm tt")
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("edit","hour",new { area="admin", id = item.Id})" class="btn btn-success">Edit</a>
+                                    </td>
+                                </tr>
+                            }
                         }
-                        <tr>
-                            <td class="text-right"></td>
-                            <td></td>
-                            <td>
-                                <a href="@Url.Action("edit","hour",new { area="admin"})" class="btn btn-success col-lg-4">Edit</a>
-                                <a href="@Url.Action("index","accountsetup",new { area="admin"})" class="btn btn-default col-lg-4" style="margin-left:10px;">Back</a>
-                            </td>
-                            <td></td>
-                        </tr>
                     </table>
                 }
             </div>
         </div>
     </div>
 </div>
-

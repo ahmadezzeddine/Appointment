@@ -9,6 +9,10 @@ using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.WebApi.Controllers
 {
+    /// <summary>
+    /// crud API for business.
+    /// You can call "api/business" for GET,POST,PUT and DELETE.
+    /// </summary>
     public class BusinessController : ApiController
     {
         private readonly AppScheduleDbContext _db;
@@ -188,6 +192,7 @@ namespace App.Schedule.WebApi.Controllers
             }
         }
 
+
         [NonAction]
         [AllowAnonymous]
         public RegisterViewModel Register(RegisterViewModel model, out bool status, out string message)
@@ -257,6 +262,33 @@ namespace App.Schedule.WebApi.Controllers
                         _db.tblServiceLocations.Add(serviceLocation);
                         var responseServiceLocation = _db.SaveChanges();
 
+                        //Setup default business hours
+                        //var businessHourController = new BusinessHourController();
+                        //var responseBusinessHour = businessHourController.SetupBusinessHours(serviceLocation.Id);
+                        var today = DateTime.Now;
+                        var date = new DateTime(today.Year, today.Month, today.Day, 8, 00, 00, DateTimeKind.Utc);
+                        for (int i = 0; i < 7; i++)
+                        {
+                            var businessHour = new tblBusinessHour()
+                            {
+                                WeekDayId = i,
+                                IsStartDay = i == 0 ? true : false,
+                                IsHoliday = false,
+                                From = date,
+                                To = date.AddHours(10),
+                                IsSplit1 = false,
+                                FromSplit1 = null,
+                                ToSplit1 = null,
+                                IsSplit2 = false,
+                                FromSplit2 = null,
+                                ToSplit2 = null,
+                                ServiceLocationId = serviceLocation.Id
+                            };
+                            _db.tblBusinessHours.Add(businessHour);
+                        }
+                        var responseBusinessHour = _db.SaveChanges();
+                        //End
+
                         var businessEmployee = new tblBusinessEmployee()
                         {
                             FirstName = model.Employee.FirstName,
@@ -313,7 +345,7 @@ namespace App.Schedule.WebApi.Controllers
                             STD = businessEmployee.STD
                         };
 
-                        if (responseBusiness > 0 && responseServiceLocation > 0 && responseBusinessEmployee > 0)
+                        if (responseBusiness > 0 && responseServiceLocation > 0 && responseBusinessEmployee > 0 && responseBusinessHour > 0)
                         {
                             status = true;
                             message = "Transaction successed.";
@@ -324,7 +356,17 @@ namespace App.Schedule.WebApi.Controllers
                         else
                         {
                             status = false;
-                            message = "Transaction failed.";
+                            var reason = "";
+                            if (responseBusiness <= 0)
+                                reason += "Business setup issue. ";
+                            if (responseServiceLocation <= 0)
+                                reason += " Service location issue.";
+                            if (responseBusinessEmployee <= 0)
+                                reason += " Business employee issue.";
+                            if (responseBusinessHour <= 0)
+                                reason += " Business hour issue.";
+
+                            message = "Registration failed. reason: " + reason;
                             data.Business = new BusinessViewModel();
                             data.Employee = new BusinessEmployeeViewModel();
                             dbTran.Rollback();
@@ -333,7 +375,7 @@ namespace App.Schedule.WebApi.Controllers
                     catch (Exception ex)
                     {
                         status = false;
-                        message = "ex: " + ex.Message.ToString();
+                        message = "Registration failed. ex: " + ex.Message.ToString();
                         data.Business = new BusinessViewModel();
                         data.Employee = new BusinessEmployeeViewModel();
                         dbTran.Rollback();
