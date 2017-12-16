@@ -56,9 +56,22 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
-        public Task<ResponseViewModel<List<BusinessHourViewModel>>> Gets()
+        public async Task<ResponseViewModel<List<BusinessHourViewModel>>> Gets()
         {
-            throw new NotImplementedException();
+            var returnResponse = new ResponseViewModel<List<BusinessHourViewModel>>();
+            try
+            {
+                var url = String.Format(AppointmentUserService.GET_BUSINESSHOURSBYTYPE, 0, TableType.None);
+                var response = await this.appointmentUserService.httpClient.GetAsync(url);
+                returnResponse = await base.GetHttpResponse<List<BusinessHourViewModel>>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
         }
 
         public Task<ResponseViewModel<BusinessHourViewModel>> Add(BusinessHourViewModel model)

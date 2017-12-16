@@ -1,4 +1,5 @@
-﻿@model App.Schedule.Domains.ViewModel.ResponseViewModel<App.Schedule.Domains.ViewModel.BusinessHourViewModel>
+﻿@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<BusinessHourViewModel>
 
 @{
     ViewBag.Title = "Update Business Hour Setup";
@@ -27,6 +28,7 @@
                         {
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(d => d.Data.Id)
+                            @Html.HiddenFor(d => d.Data.WeekDayId)
                             @Html.HiddenFor(d => d.Data.ServiceLocationId)
                             <div id="errorBox" class="alert alert-danger" role="alert" style="display:none;">
                                 <strong id="err_head">Error: </strong>
@@ -59,10 +61,10 @@
                                         <table>
                                             <tr style="display:block;">
                                                 <td>
-                                                    @Html.DropDownListFor(d => d.Data.From, new SelectList(ViewBag.FromHours, "Value", "Text"), "-- From --", new { @class = "form-control" })
+                                                    @Html.DropDownListFor(d => d.Data.From, new SelectList(ViewBag.FromHours, "Value", "Text"), new { @class = "form-control" })
                                                 </td>
                                                 <td>
-                                                    @Html.DropDownListFor(d => d.Data.To, new SelectList(ViewBag.ToHours, "Value", "Text"), "-- To --", new { @class = "form-control" })
+                                                    @Html.DropDownListFor(d => d.Data.To, new SelectList(ViewBag.ToHours, "Value", "Text"), new { @class = "form-control" })
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-default" onclick="showSplit(1)">Split</button>
@@ -78,10 +80,10 @@
                                             <tr id="split1" style=@isSplit1>
                                                 @Html.HiddenFor(d => d.Data.IsSplit1)
                                                 <td>
-                                                    @Html.DropDownListFor(d => d.Data.FromSplit1, new SelectList(ViewBag.FromHours, "Value", "Text"), "-- From --", new { @class = "form-control" })
+                                                    @Html.DropDownListFor(d => d.Data.FromSplit1, new SelectList(ViewBag.FromHours, "Value", "Text"), new { @class = "form-control" })
                                                 </td>
                                                 <td>
-                                                    @Html.DropDownListFor(d => d.Data.ToSplit1, new SelectList(ViewBag.ToHours, "Value", "Text"), "-- To --", new { @class = "form-control" })
+                                                    @Html.DropDownListFor(d => d.Data.ToSplit1, new SelectList(ViewBag.ToHours, "Value", "Text"), new { @class = "form-control" })
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-default" onclick="showSplit(2)">Split</button>
@@ -98,10 +100,10 @@
                                             <tr id="split2" style=@isSplit2>
                                                 @Html.HiddenFor(d => d.Data.IsSplit2)
                                                 <td>
-                                                    @Html.DropDownListFor(d => d.Data.FromSplit2, new SelectList(ViewBag.FromHours, "Value", "Text"), "-- From --", new { @class = "form-control" })
+                                                    @Html.DropDownListFor(d => d.Data.FromSplit2, new SelectList(ViewBag.FromHours, "Value", "Text"), new { @class = "form-control" })
                                                 </td>
                                                 <td>
-                                                    @Html.DropDownListFor(d => d.Data.ToSplit2, new SelectList(ViewBag.ToHours, "Value", "Text"), "-- To --", new { @class = "form-control" })
+                                                    @Html.DropDownListFor(d => d.Data.ToSplit2, new SelectList(ViewBag.ToHours, "Value", "Text"), new { @class = "form-control" })
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-default" onclick="hideSplit(2)">Close</button>

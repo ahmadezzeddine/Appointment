@@ -150,6 +150,7 @@
     <Compile Include="Areas\Admin\Controllers\AdminBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\BusinessAdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Admin\Controllers\HolidayController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\HourController.cs" />
     <Compile Include="Areas\Admin\Controllers\LoginBaseController.cs" />
@@ -212,6 +213,10 @@
     <Content Include="Areas\Admin\Views\Account\ProfileEdit.cshtml" />
     <Content Include="Areas\Admin\Views\Hour\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Hour\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Holiday\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Holiday\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\Holiday\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Holiday\Delete.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />

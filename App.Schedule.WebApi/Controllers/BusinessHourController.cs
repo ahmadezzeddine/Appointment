@@ -111,6 +111,15 @@ namespace App.Schedule.WebApi.Controllers
                     return Ok(new { status = false, data = "", message = "Please provide a valid ID." });
                 else
                 {
+                    if (model.IsStartDay)
+                    {
+                        var hasStartDay = _db.tblBusinessHours.Any(d => d.ServiceLocationId == model.ServiceLocationId && d.IsStartDay == true && d.Id != model.Id);
+                        if (hasStartDay)
+                        {
+                            return Ok(new { status = false, data = "", message = "You can not set start day more than one." });
+                        }
+                    }
+
                     var businessHour = _db.tblBusinessHours.Find(id);
                     if (businessHour != null)
                     {

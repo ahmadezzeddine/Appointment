@@ -18,6 +18,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         protected BusinessService BusinessService;
         protected BusinessEmployeeService BusinessEmployeeService;
         protected BusinessHourService BusinessHourService;
+        protected BusinessHolidayService BusinessHolidayService;
 
         public AdminBaseController()
         {
@@ -115,6 +116,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 this.BusinessService = new BusinessService(Token);
                 this.BusinessEmployeeService = new BusinessEmployeeService(Token);
                 this.BusinessHourService = new BusinessHourService(Token);
+                this.BusinessHolidayService = new BusinessHolidayService(Token);
                 //Call service;
                 if (RegisterViewModel != null)
                     return true;

@@ -44,11 +44,19 @@ namespace App.Schedule.Web.Services
         public const string GET_MEMBERSHIPS = "api/membership";
         public const string GET_MEMBERSHIP_BYID = "api/membership?id={0}";
 
-        //Business Category
+        //Business Hour
         public const string GET_BUSINESSHOURS = "api/businesshour";
         public const string GET_BUSINESSHOURSBYId = "api/businesshour?id={0}";
         public const string GET_BUSINESSHOURSBYTYPE = "api/businesshour?id={0}&type={1}";
         public const string PUT_BUSINESSHOUR = "api/businesshour?id={0}";
+
+        //Business Holiday
+        public const string GET_BUSINESSHOLIDAY = "api/businessholiday";
+        public const string GET_BUSINESSHOLIDAYBYId = "api/businessholiday?id={0}";
+        public const string GET_BUSINESSHOLIDAYSBYTYPE = "api/businessholiday?id={0}&type={1}";
+        public const string POST_BUSINESSHOLIDAY = "api/businessholiday";
+        public const string PUT_BUSINESSHOLIDAY = "api/businessholiday?id={0}";
+        public const string DELETE_BUSINESSHOLIDAYBYId = "api/businessholiday?id={0}";
 
 
         public AppointmentUserService()
