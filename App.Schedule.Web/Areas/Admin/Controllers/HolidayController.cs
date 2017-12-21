@@ -1,54 +1,24 @@
 ﻿using System;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Collections.Generic;
-using App.Schedule.Domains.ViewModel;
 using System.Threading.Tasks;
+using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
-    public class HolidayController : AdminBaseController
+    public class HolidayController : HolidayBaseController
     {
-        // GET: Admin/Holiday
+        [HttpGet]
         public async Task<ActionResult> Index()
         {
-            //var model = new ResponseViewModel<List<BusinessHolidayViewModel>>();
-            var model = await this.BusinessHolidayService.Gets(RegisterViewModel.Employee.ServiceLocationId, TableType.ServiceLocationId);
-            //model.Status = true;
-            //if (model.Data == null)
-            //    model.Data = new List<BusinessHolidayViewModel>()
-            //    {
-            //        new BusinessHolidayViewModel()
-            //        {
-            //            Id=1,
-            //            OnDate = new DateTime(2017,12,2),
-            //            Type = (int)HolidayType.Specified,
-            //            ServiceLocationId = 1
-            //        },
-            //         new BusinessHolidayViewModel()
-            //        {
-            //            Id=2,
-            //            OnDate = new DateTime(2017,12,2),
-            //            Type = (int)HolidayType.RpeatEveryWeek,
-            //            ServiceLocationId = 1
-            //        },
-            //          new BusinessHolidayViewModel()
-            //        {
-            //            Id=3,
-            //            OnDate = new DateTime(2017,12,2),
-            //            Type = (int)HolidayType.RepeatEveryMonth,
-            //            ServiceLocationId = 1
-            //        },
-            //           new BusinessHolidayViewModel()
-            //        {
-            //            Id=4,
-            //            OnDate = new DateTime(2017,12,2),
-            //            Type = (int)HolidayType.RepeatEveryYear,
-            //            ServiceLocationId = 1
-            //        }
-            //    };
-            return View(model);
+            var result = await this.BusinessHolidayService.Gets(RegisterViewModel.Employee.ServiceLocationId, TableType.ServiceLocationId);
+            if (result != null && result.Status)
+                return View(result);
+            else
+            {
+                var response = this.ResponseHelper.GetResponse<BusinessHolidayViewModel>();
+                return View(Response);
+            }
         }
 
         [HttpGet]
@@ -112,7 +82,6 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             }
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
-
 
         [HttpGet]
         public async Task<ActionResult> Edit(long? id)
@@ -194,7 +163,6 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete([Bind(Include = "Data")] ResponseViewModel<BusinessHolidayViewModel> model)
@@ -223,8 +191,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
 
-
-
+        [NonAction]
         private bool ValidateDate(BusinessHolidayViewModel model)
         {
             if (model != null)

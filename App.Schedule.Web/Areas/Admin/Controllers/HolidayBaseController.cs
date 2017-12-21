@@ -3,9 +3,9 @@ using App.Schedule.Web.Services;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
-    public class AdminBaseController : BaseController
+    public class HolidayBaseController : BaseController
     {
-        protected BusinessEmployeeService BusinessEmployeeService;
+        protected BusinessHolidayService BusinessHolidayService;
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -16,7 +16,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             }
             else
             {
-                this.BusinessEmployeeService = new BusinessEmployeeService(this.Token);
+                this.BusinessHolidayService = new BusinessHolidayService(this.Token);
             }
         }
     }

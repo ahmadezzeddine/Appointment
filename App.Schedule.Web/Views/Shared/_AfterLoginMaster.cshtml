@@ -11,8 +11,9 @@
         .list-menu {
             padding: 10px;
         }
+
         .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
-            vertical-align:middle;
+            vertical-align: middle;
         }
     </style>
 </head>
@@ -58,22 +59,32 @@
         </div>
     </nav>
     <div class="container-fluid padd60">
+        <div id="errorBox" class="alert alert-danger container margin20" role="alert" style="display:none;">
+            <strong id="err_head">Info: </strong>
+            <span id="err_title">Please try again later.</span>
+            <div id="err_process" class="pull-right" style="display:none;">
+                <img src="~/Content/Images/loading2.gif" width="35" />
+            </div>
+            <div id="err_process" class="pull-right" style="display:none;">
+                <img src="~/Content/Images/loading2.gif" width="35" />
+            </div>
+        </div>
         <div class="container">
             <div class="row middle-layout">
                 <div class="col-lg-3">
                     <div class="row">
                         <div class="list-group">
                             <div class="list-group-item clearfix">
-                             <span class="pull-left">
-                                 <b>Menu</b>
-                             </span>
-                             <span class="pull-right">
-                                 <a class="navbar-toggle" data-toggle="collapse" data-target="#toggle-left-side-menu" aria-expanded="false">
-                                     <span class="icon-bar"></span>
-                                     <span class="icon-bar"></span>
-                                     <span class="icon-bar"></span>
-                                 </a>
-                             </span>
+                                <span class="pull-left">
+                                    <b>Menu</b>
+                                </span>
+                                <span class="pull-right">
+                                    <a class="navbar-toggle" data-toggle="collapse" data-target="#toggle-left-side-menu" aria-expanded="false">
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                    </a>
+                                </span>
                             </div>
                             <div id="toggle-left-side-menu" class="collapse navbar-collapse row">
                                 <button type="button" class="list-group-item" data-toggle="collapse" href="#dashboard" aria-expanded="true" aria-controls="calendar"><b>Dashboard</b></button>

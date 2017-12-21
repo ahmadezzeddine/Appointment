@@ -543,10 +543,11 @@ namespace App.Schedule.WebApi.Controllers
                 string message = "";
                 var adminController = new AdministratorController();
                 var updateStatus = adminController.UpdateAdmin(model, out message);
-                if (updateStatus)
-                {
                     result.Status = updateStatus;
                     result.Message = message;
+                if (!updateStatus)
+                {
+                    var rollbackResponse = await UserManager.ChangePasswordAsync(user.Id, model.Password, model.OldPassword);
                 }
             }
             else
@@ -577,7 +578,7 @@ namespace App.Schedule.WebApi.Controllers
             }
             else
             {
-                var message = "";
+                var message = string.Empty;
                 var status = false;
                 var businessController = new BusinessController();
                 var business = businessController.Register(model, out status, out message);
@@ -585,7 +586,7 @@ namespace App.Schedule.WebApi.Controllers
                 if (status)
                 {
                     var user = new ApplicationUser() { UserName = model.Employee.Email, Email = model.Employee.Email };
-
+                    
                     var response = await UserManager.CreateAsync(user, model.Employee.Password);
                     if (response.Succeeded)
                     {
@@ -612,39 +613,31 @@ namespace App.Schedule.WebApi.Controllers
             }
         }
 
-        //// POST api/Account/UpdateAdmin
-        //[Route("UpdateBusinessEmployee")]
-        //public async Task<IHttpActionResult> UpdateBusinessEmployee(RegisterViewModel model)
-        //{
-        //    var result = new ResponseViewModel<AdministratorViewModel>();
-        //    if (!ModelState.IsValid)
-        //    {
-        //        var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
-        //        result.Status = false;
-        //        result.Message = errMessage;
-        //    }
-        //    var user = await UserManager.FindByEmailAsync(model.Email);
-        //    var response = await UserManager.ChangePasswordAsync(user.Id, model.OldPassword, model.Password);
-        //    if (response.Succeeded)
-        //    {
-        //        string message = "";
-        //        var adminController = new AdministratorController();
-        //        var updateStatus = adminController.UpdateAdmin(model, out message);
-        //        if (updateStatus)
-        //        {
-        //            result.Status = updateStatus;
-        //            result.Message = message;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        result.Status = false;
-        //        result.Message = string.Join(", ", response.Errors).ToLower();
-        //        if (result.Message.Contains("incorrect password"))
-        //            result.Message = "Please check your old password.";
-        //    }
-        //    return Ok(result);
-        //}
+        // PUT api/Account/UpdateAdmin
+        [Route("UpdateBusinessEmployee")]
+        public async Task<IHttpActionResult> UpdateBusinessEmployee(BusinessEmployeeViewModel model)
+        {
+            var result = new ResponseViewModel<BusinessEmployeeViewModel>();
+            if (!ModelState.IsValid)
+            {
+                var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
+                result.Status = false;
+                result.Message = errMessage;
+            }
+            var message = string.Empty;
+            var adminController = new BusinessEmployeeController();
+            var updateStatus = adminController.UpdateEmployee(model, out message);
+            result.Status = updateStatus;
+            result.Message = message;
+            result.Data = model;
+            if (updateStatus)
+            {
+                var email = string.Concat("emp", model.Email);
+                var user = await UserManager.FindByEmailAsync(email);
+                var rollbackResponse =await UserManager.ChangePasswordAsync(user.Id, model.OldPassword, model.Password);
+            }
+            return Ok(result);
+        }
 
         //[AllowAnonymous]
         //[HttpGet]

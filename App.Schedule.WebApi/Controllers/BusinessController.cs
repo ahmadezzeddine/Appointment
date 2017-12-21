@@ -110,47 +110,51 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // PUT: api/business/5
-        public IHttpActionResult Put(long? id, [FromBody]BusinessViewModel model)
+        public IHttpActionResult Put(long? id,FieldType type , [FromBody]BusinessViewModel model)
         {
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "Please provide a valid ID." });
+                    return Ok(new { status = false, data = "", message = "Please provide a valid id." });
                 else
                 {
                     var business = _db.tblBusinesses.Find(id);
                     if (business != null)
                     {
-                        business.Name = model.Name;
-                        business.ShortName = model.ShortName;
-                        business.IsInternational = model.IsInternational;
-                        business.FaxNumbers = model.FaxNumbers;
-                        business.PhoneNumbers = model.PhoneNumbers;
-                        business.Logo = model.Logo;
-                        business.Add1 = model.Add1;
-                        business.Add2 = model.Add2;
-                        business.City = model.City;
-                        business.State = model.State;
-                        business.CountryId = model.CountryId;
-                        business.Email = model.Email;
-                        business.Website = model.Website;
-                        business.Created = DateTime.Now.ToUniversalTime();
-                        business.IsActive = model.IsActive;
-                        business.Zip = model.Zip;
-                        business.MembershipId = model.MembershipId;
-                        business.BusinessCategoryId = model.BusinessCategoryId;
-                        business.TimezoneId = model.TimezoneId;
+                        if (type == FieldType.All)
+                        {
+                            business.Name = model.Name;
+                            business.ShortName = model.ShortName;
+                            business.IsInternational = model.IsInternational;
+                            business.FaxNumbers = model.FaxNumbers;
+                            business.PhoneNumbers = model.PhoneNumbers;
+                            business.Logo = model.Logo;
+                            business.Add1 = model.Add1;
+                            business.Add2 = model.Add2;
+                            business.City = model.City;
+                            business.State = model.State;
+                            business.CountryId = model.CountryId;
+                            business.Email = model.Email;
+                            business.Website = model.Website;
+                            business.Zip = model.Zip;
+                            business.MembershipId = model.MembershipId;
+                            business.BusinessCategoryId = model.BusinessCategoryId;
+                            business.TimezoneId = model.TimezoneId;
+                        }
+                        else if(type == FieldType.Membership){
+                            business.MembershipId = model.MembershipId;
+                        }
 
                         _db.Entry(business).State = EntityState.Modified;
                         var response = _db.SaveChanges();
                         if (response > 0)
-                            return Ok(new { status = true, data = business });
+                            return Ok(new { status = true, data = business, message = "Success" });
                         else
-                            return Ok(new { status = false, data = "There was a problem to update the data." });
+                            return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
                     }
                     else
                     {
-                        return Ok(new { status = false, data = "Not a valid data to update. Please provide a valid id." });
+                        return Ok(new { status = false, data = "", message = "Not a valid data to update. Please provide a valid id." });
                     }
                 }
             }

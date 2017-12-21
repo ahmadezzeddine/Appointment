@@ -18,8 +18,8 @@
                     {
                         if (!Model.Status)
                         {
-                            <div id="errorBox" class="alert alert-danger" role="alert">
-                                <strong id="err_head">Error: </strong>
+                            <div class="alert alert-danger" role="alert">
+                                <strong id="err_head">Info: </strong>
                                 <span id="err_title">@Model.Message</span>
                             </div>
                         }
@@ -30,10 +30,6 @@
                                 @Html.AntiForgeryToken()
                                 @Html.HiddenFor(d => d.Data.Id)
                                 @Html.HiddenFor(d => d.Data.ServiceLocationId)
-                                <div id="errorBox" class="alert alert-danger" role="alert" style="display:none;">
-                                    <strong id="err_head">Error: </strong>
-                                    <span id="err_title">Please try again later.</span>
-                                </div>
                                 <table class="table table-striped">
                                     <tr>
                                         <td class="text-right">Date</td>

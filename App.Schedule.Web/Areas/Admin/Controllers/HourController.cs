@@ -7,7 +7,7 @@ using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
-    public class HourController : AdminBaseController
+    public class HourController : HourBaseController
     {
 
         // GET: Admin/Hour

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using System.Linq;
 using System.Web.Mvc;
 using System.Collections.Generic;
@@ -7,8 +6,24 @@ using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
-    public class DashboardController : AdminBaseController
+    public class DashboardController : DashboardBaseController
     {
+        [HttpGet]
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            if (this.LogoutStatus())
+                return RedirectToAction("Login", "Home", new { area = "Admin" });
+            else
+                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+        }
+
+        [NonAction]
         public List<AppointmentViewModel> SampleTestData(DateTime start, DateTime end)
         {
             return new List<AppointmentViewModel>()
@@ -36,6 +51,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             };
         }
 
+        [HttpGet]
         public JsonResult GetDiaryEvents(DateTime start, DateTime end)
         {
             var result = SampleTestData(start, end).Select(x => new
@@ -50,25 +66,6 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 allDay = x.IsAllDayEvent
             }).ToArray();
             return Json(result, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
-        public ActionResult Logout()
-        {
-            if (Request.Cookies["aadminappointment"] != null)
-            {
-                var admin = new HttpCookie("aadminappointment");
-                Session["aEmail"] = "";
-                admin.Expires = DateTime.Now.AddDays(-1d);
-                Response.Cookies.Add(admin);
-                return RedirectToAction("Login", "Home", new { area = "Admin" });
-            }
-            return RedirectToAction("Login", "Home", new { area = "Admin" });
-        }
-
-        public ActionResult Index()
-        {
-            return View();
         }
     }
 }

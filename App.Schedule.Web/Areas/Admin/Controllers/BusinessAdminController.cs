@@ -1,33 +1,85 @@
 ﻿using System.Web.Mvc;
 using System.Threading.Tasks;
 using App.Schedule.Domains.ViewModel;
+using System.Linq;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
     public class BusinessAdminController : AdminBaseController
     {
-        // GET: Admin/BusinessAdmin
+        [HttpGet]
         public async Task<ActionResult> Index()
         {
-            var response = new ResponseViewModel<BusinessEmployeeViewModel>();
             var result = await BusinessEmployeeService.Get(RegisterViewModel.Employee.Id);
-            response.Status = result.Status;
-            response.Message = result.Message;
-            if (result.Data != null)
-                response.Data = result.Data;
-            return View(response);
+            if (result != null && result.Status)
+                return View(result);
+            else
+            {
+                var response = this.ResponseHelper.GetResponse<BusinessEmployeeViewModel>();
+                return View(Response);
+            }
         }
 
-        // GET: Admin/BusinessAdmin
+        [HttpGet]
         public async Task<ActionResult> Edit()
         {
-            var response = new ResponseViewModel<BusinessEmployeeViewModel>();
             var result = await BusinessEmployeeService.Get(RegisterViewModel.Employee.Id);
-            response.Status = result.Status;
-            response.Message = result.Message;
-            if (result.Data != null)
-                response.Data = result.Data;
-            return View(response);
+            if (result != null && result.Status)
+            {
+                result.Data.Password = "";
+                return View(result);
+            }
+            else
+            {
+                var response = this.ResponseHelper.GetResponse<BusinessEmployeeViewModel>();
+                return View(Response);
+            }
         }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit([Bind(Include = "Data")] ResponseViewModel<BusinessEmployeeViewModel> model)
+        {
+            var result = new ResponseViewModel<BusinessHourViewModel>();
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
+                    result.Status = false;
+                    result.Message = errMessage;
+                }
+                else
+                {
+                    if (model.Data.Password == model.Data.ConfirmPassword)
+                    {
+                        var response = await this.BusinessEmployeeService.Update(model.Data);
+                        if (response.Status)
+                        {
+                            result.Status = true;
+                            result.Message = response.Message;
+                        }
+                        else
+                        {
+                            result.Status = false;
+                            result.Message = response.Message;
+                        }
+                    }
+                    else
+                    {
+                        result.Status = false;
+                        result.Message = "Please confirm your password.";
+                    }
+                }
+            }
+            catch
+            {
+                result.Status = false;
+                result.Message = "There was a problem. Please try again later.";
+            }
+            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

@@ -1,12 +1,13 @@
-﻿@model App.Schedule.Domains.ViewModel.ResponseViewModel<App.Schedule.Domains.ViewModel.MembershipViewModel>
+﻿@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<BusinessViewModel>
 
 @{
-    ViewBag.Title = "Change Membership";
+    ViewBag.Title = "Update Membership";
     Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
 }
 
 <ul class="nav nav-tabs">
-    <li class="active"><a href="@Url.Action("Membership","Account",new { area = "admin"})">Membership</a></li>
+    <li class="active"><a href="@Url.Action("membership","account",new { area = "admin"})">Membership</a></li>
 </ul>
 <div class="tab-content" style="padding:0px 10px;">
     <div class="tab-pane active">
@@ -16,32 +17,37 @@
                 {
                     if (!Model.Status)
                     {
-                        <div id="errorBox" class="alert alert-danger" role="alert">
-                            <strong id="err_head">Error: </strong>
+                        <div class="alert alert-danger" role="alert">
+                            <strong id="err_head">Info: </strong>
                             <span id="err_title">@Model.Message</span>
                         </div>
                     }
-                    <table class="table table-striped">
-                        <tr>
-                            <td class="text-right">Membership Name</td>
-                            <td>
-                                @Html.DropDownListFor(d => d.Data.Id, new SelectList(ViewBag.MembershipId, "Value", "Text"), "--Select Membership --", new { @class = "form-control" })
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-right">Details</td>
-                            <td>
-                                <a href="#">More information</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-right"></td>
-                            <td>
-                                <a href="@Url.Action("Edit","Membership",new { area="admin"})" class="btn btn-success col-lg-4">Edit</a>
-                                <a href="@Url.Action("Index","Membership",new { area="admin"})" class="btn btn-default col-lg-4" style="margin-left:10px;">Back</a>
-                            </td>
-                        </tr>
-                    </table>
+                    using (Ajax.BeginForm("edit", "membership", new AjaxOptions { }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(d => d.Data.Id)
+                        <table class="table table-striped">
+                            <tr>
+                                <td class="col-lg-4 col-md-4 col-sm-4 text-right">Membership Name</td>
+                                <td class="col-lg-8 col-md-8 col-sm-8">
+                                    @Html.DropDownListFor(d => d.Data.MembershipId, new SelectList(ViewBag.MembershipId, "Value", "Text"), "--Select Membership --", new { @class = "form-control" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-lg-4 col-md-4 col-sm-4  text-right">Details</td>
+                                <td class="col-lg-8 col-md-8 col-sm-8">
+                                    <a href="#">More information</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-lg-4 col-md-4 col-sm-4 text-right"></td>
+                                <td class="col-lg-8 col-md-8 col-sm-8">
+                                    <button onclick="onSubmit(this,'@Url.Action("index","membership", new { area = "admin" })')" class="btn btn-default">Edit</button>
+                                    <a href="@Url.Action("index", "membership", new { area = "admin" })" class="btn btn-default">Back</a>
+                                </td>
+                            </tr>
+                        </table>
+                    }
                 }
             </div>
         </div>

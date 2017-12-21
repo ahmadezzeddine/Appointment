@@ -10,7 +10,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Login()
         {
-            var model = new ServiceDataViewModel<LoginViewModel>();
+            var model = new ResponseViewModel<LoginViewModel>();
             return View(model);
         }
 
@@ -64,11 +64,13 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             return Json(new { status = result.Status, message = result.Message, data = result.Data }, JsonRequestBehavior.AllowGet);
         }
 
-
         [HttpGet]
         public ActionResult Forgot()
         {
             return View();
         }
+
+      
+
     }
 }

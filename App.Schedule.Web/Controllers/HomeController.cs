@@ -11,7 +11,7 @@ namespace App.Schedule.Web.Controllers
     /// <summary>
     /// Home controller is used to interact with home, login, register, contatct pages.
     /// </summary>
-    public class HomeController : LoginBaseController
+    public class HomeController : HomeBaseController
     {
         /// <summary>
         /// Get method to display home page for user.
@@ -75,22 +75,7 @@ namespace App.Schedule.Web.Controllers
                                            Group = groupCategories.First(a => a.Name == parentCategories[x.ParentId.Value])
                                        }).ToList();
 
-
-                //var data = BusinessCategories.Select(s => new
-                //{
-                //    Id = s.ParentId != null ? s.Id : -1,
-                //    Name = s.ParentId != null ? " - "+ s.Name : "+ "+s.Name,
-                //    ParentId = s.Id,
-                //    OrderNumber = s.OrderNumber
-                //}).OrderBy(o => o.ParentId).OrderBy(o => o.OrderNumber).ToList();
-
-
                 ViewBag.BusinessCategoryId = groupedData;
-                //data.Select(s => new SelectListItem()
-                //{
-                //    Value = Convert.ToString(s.Id),
-                //    Text = s.Name
-                //});
 
                 var Memberships = await this.GetMemberships();
                 ViewBag.MembershipId = Memberships.Select(s => new SelectListItem()

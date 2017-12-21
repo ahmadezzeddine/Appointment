@@ -1,4 +1,5 @@
-﻿@model App.Schedule.Domains.ViewModel.ResponseViewModel<App.Schedule.Domains.ViewModel.MembershipViewModel>
+﻿@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<MembershipViewModel>
 
 @{
     ViewBag.Title = "Membership";
@@ -19,41 +20,44 @@
                 {
                     if (!Model.Status)
                     {
-                        <div id="errorBox" class="alert alert-danger" role="alert">
-                            <strong id="err_head">Error: </strong>
+                        <div class="alert alert-danger" role="alert">
+                            <strong id="err_head">Info: </strong>
                             <span id="err_title">@Model.Message</span>
                         </div>
                     }
                     <table class="table table-striped">
                         <tr>
-                            <td class="text-right">Membership Name</td>
-                            <td>
-                                @Html.EditorFor(d => d.Data.Title, new { htmlAttributes = new { @class = "form-control", @placeholder = "Membership Name", disabled = "true" } })
+                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">Name</td>
+                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                <b>@Model.Data.Title</b>
                             </td>
                         </tr>
                         <tr>
-                            <td class="text-right">About</td>
-                            <td>
-                                @Html.EditorFor(d => d.Data.Description, new { htmlAttributes = new { @class = "form-control", @placeholder = "About", disabled = "true" } })
+                            <td class="col-lg-4 col-md-4 col-sm-4  text-right">About</td>
+                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                @Model.Data.Description.Substring(0, 50) <a href="#">More...</a>
                             </td>
                         </tr>
                         <tr>
-                            <td class="text-right">Benifits</td>
-                            <td>
-                                @Html.EditorFor(d => d.Data.Benifits, new { htmlAttributes = new { @class = "form-control", @placeholder = "Benifits", disabled = "true" } })
+                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">Benifits</td>
+                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                @Model.Data.Benifits
                             </td>
                         </tr>
                         <tr>
-                            <td class="text-right">Unlimited Account</td>
-                            <td>
-                                @Html.CheckBoxFor(d => d.Data.IsUnlimited, new { htmlAttributes = new { @type = "checkbox" } })
+                            <td class="col-lg-4 col-md-4 col-sm-4  text-right">Unlimited</td>
+                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                @{ 
+                                    var isUnlimited = Model.Data.IsUnlimited ? "Yes" : "No";
+                                }
+                                @isUnlimited
                             </td>
                         </tr>
                         <tr>
                             <td class="text-right"></td>
                             <td>
-                                <a href="@Url.Action("edit","membership",new { area="admin"})" class="btn btn-success col-lg-4">Edit</a>
-                                <a href="@Url.Action("index","accountsetup",new { area="admin"})" class="btn btn-default col-lg-4" style="margin-left:10px;">Back</a>
+                                <a href="@Url.Action("edit","membership",new { area="admin"})" class="btn btn-default">Edit</a>
+                                <a href="@Url.Action("index","accountsetup",new { area="admin"})" class="btn btn-default" >Back</a>
                             </td>
                         </tr>
                     </table>

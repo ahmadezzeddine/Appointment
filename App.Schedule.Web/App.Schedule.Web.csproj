@@ -145,24 +145,34 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\AccountBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountSetupController.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminBaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\BusinessAdminController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DashboardBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Admin\Controllers\HolidayBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\HolidayController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\HourBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\HourController.cs" />
     <Compile Include="Areas\Admin\Controllers\LoginBaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\MembershipBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\MembershipController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProfileController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProfileBaseController.cs" />
     <Compile Include="Areas\Customer\Controllers\HomeController.cs" />
     <Compile Include="Areas\Customer\CustomerAreaRegistration.cs" />
     <Compile Include="Areas\Employee\Controllers\HomeController.cs" />
     <Compile Include="Areas\Employee\EmployeeAreaRegistration.cs" />
+    <Compile Include="Controllers\HomeBaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ResponseHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -173,6 +183,7 @@
     <Content Include="Content\fullcalendar.css" />
     <Content Include="Content\fullcalendar.min.css" />
     <Content Include="Content\fullcalendar.print.css" />
+    <Content Include="Content\Images\loading2.gif" />
     <Content Include="Content\Images\logo.png" />
     <Content Include="Content\Images\NoImageThumb.gif" />
     <Content Include="Content\no-border.css" />
@@ -210,13 +221,13 @@
     <Content Include="Areas\Admin\Views\BusinessAdmin\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Membership\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\BusinessAdmin\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\Account\ProfileEdit.cshtml" />
     <Content Include="Areas\Admin\Views\Hour\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Hour\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Holiday\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Holiday\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Holiday\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Holiday\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Profile\Index.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -353,12 +364,14 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Admin\Views\ProfileBase\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Customer\Models\" />
     <Folder Include="Areas\Customer\Views\Shared\" />
     <Folder Include="Areas\Employee\Models\" />
     <Folder Include="Areas\Employee\Views\Shared\" />
     <Folder Include="Models\" />
+    <Folder Include="Views\HomeBase\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

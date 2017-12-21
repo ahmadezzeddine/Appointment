@@ -17,11 +17,13 @@ namespace App.Schedule.Web.Services
 
         //Admin Identity Token API
         public const string POST_API_ACCOUNT_REGISTER = "api/account/RegisterBusinessEmployee";
-        //public const string PUT_API_ACCOUNT_REGISTER = "api/account/updateadmin";
+        public const string PUT_API_ACCOUNT = "api/account/UpdateBusinessEmployee";
         public const string GET_ADMIN_TOKEN = "token";
 
         //Business
         public const string GET_BUSINESS_BYID = "api/business?id={0}";
+        public const string PUT_BUSINESS = "api/business?id={0}";
+        public const string PUT_BUSINESS_BYTPE = "api/business?id={0}&type={1}";
 
         //Country
         public const string GET_COUNTRIES = "api/country";
@@ -36,6 +38,7 @@ namespace App.Schedule.Web.Services
         //public const string GET_EMPS = "api/administrator";
         public const string GET_BUSINESS_EMP_BYID = "api/businessemployee?id={0}";
         public const string GET_BUSINESS_EMP_BYLOGINID = "api/businessemployee?email={0}&password={1}";
+        public const string PUT_BUSINESS_EMP = "api/businessemployee?id={0}";
         //public const string POST_EMP = "api/administrator";
         //public const string DELETE_EMP = "api/administrator";
         //public const string DEACTIVE_EMP = "api/administrator?id={0}&status={1}";
@@ -105,13 +108,13 @@ namespace App.Schedule.Web.Services
                 else
                 {
                     returnResponse.Status = false;
-                    returnResponse.Message = "There was a problem. Please try agian later. reason:" + response.ReasonPhrase;
+                    returnResponse.Message = response.ReasonPhrase;
                 }
             }
             catch (Exception ex)
             {
                 returnResponse.Status = false;
-                returnResponse.Message = "There was a problem. Please try agian later. reason:" + ex.Message.ToString();
+                returnResponse.Message = ex.Message.ToString();
             }
             return returnResponse;
         }

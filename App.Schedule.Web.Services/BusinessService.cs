@@ -83,9 +83,69 @@ namespace App.Schedule.Web.Services
             throw new NotImplementedException();
         }
 
-        public Task<ResponseViewModel<RegisterViewModel>> Update(RegisterViewModel model)
+        public async Task<ResponseViewModel<RegisterViewModel>> Update(RegisterViewModel model)
         {
-            throw new NotImplementedException();
+            var returnResponse = new ResponseViewModel<RegisterViewModel>()
+            {
+                Data = new RegisterViewModel()
+            };
+            try
+            {
+                var jsonContent = JsonConvert.SerializeObject(model.Business);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var url = String.Format(AppointmentUserService.PUT_BUSINESS_BYTPE, model.Business.Id, FieldType.All);
+                var response = await this.appointmentUserService.httpClient.PutAsync(url, content);
+                var business = await base.GetHttpResponse<BusinessViewModel>(response);
+                if(business != null && business.Status)
+                {
+                    returnResponse.Status = business.Status;
+                    returnResponse.Message = business.Message;
+                    returnResponse.Data.Business = business.Data;
+                }
+                else
+                {
+                    returnResponse.Status = false;
+                    returnResponse.Message = "Please try again later.";
+                }
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
+        public async Task<ResponseViewModel<BusinessViewModel>> Update(FieldType type, BusinessViewModel model)
+        {
+            var returnResponse = new ResponseViewModel<BusinessViewModel>();
+            try
+            {
+                var jsonContent = JsonConvert.SerializeObject(model);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var url = String.Format(AppointmentUserService.PUT_BUSINESS_BYTPE, model.Id, type);
+                var response = await this.appointmentUserService.httpClient.PutAsync(url, content);
+                var business = await base.GetHttpResponse<BusinessViewModel>(response);
+                if (business != null && business.Status)
+                {
+                    returnResponse.Status = business.Status;
+                    returnResponse.Message = business.Message;
+                    returnResponse.Data = business.Data;
+                }
+                else
+                {
+                    returnResponse.Status = false;
+                    returnResponse.Message = "Please try again later.";
+                }
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
         }
     }
 }

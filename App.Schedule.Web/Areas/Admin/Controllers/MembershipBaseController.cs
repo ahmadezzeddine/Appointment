@@ -3,20 +3,22 @@ using App.Schedule.Web.Services;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
-    public class AdminBaseController : BaseController
+    public class MembershipBaseController : BaseController
     {
-        protected BusinessEmployeeService BusinessEmployeeService;
+        protected MembershipService MembershipService;
+        protected BusinessService BusinessService;
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            var status = LoginStatus();
+            var status = this.LoginStatus();
             if (!status)
             {
                 filterContext.Result = RedirectToAction("Login", "Home", new { area = "Admin" });
             }
             else
             {
-                this.BusinessEmployeeService = new BusinessEmployeeService(this.Token);
+                this.MembershipService = new MembershipService(this.Token);
+                this.BusinessService = new BusinessService(this.Token);
             }
         }
     }

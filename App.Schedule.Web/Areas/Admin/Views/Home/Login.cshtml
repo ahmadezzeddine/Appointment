@@ -1,22 +1,16 @@
-﻿@model App.Schedule.Domains.ViewModel.ServiceDataViewModel<App.Schedule.Domains.ViewModel.LoginViewModel>
+﻿@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<LoginViewModel>
 
 @{
     ViewBag.Title = "Admin Login";
     Layout = "~/Views/Shared/_NotAuthLayout.cshtml";
 }
-@if (Model != null && Model.HasError)
+@if (Model != null && Model.Status)
 {
     <div class="container margin20">
         <div id="errorBox" class="alert alert-danger" role="alert">
-            <strong id="err_head">Error: </strong>
-            <span id="err_title">@Model.Error</span>
-            @if (Model.HasMore)
-            {
-                <button data-toggle="collapse" data-target="#moreError">More</button>
-                <div id="moreError" class="collapse">
-                    @Model.ErrorDescription
-                </div>
-            }
+            <strong id="err_head">Info: </strong>
+            <span id="err_title">@Model.Message</span>
         </div>
     </div>
 }
@@ -24,8 +18,14 @@
 {
     @Html.AntiForgeryToken()
     <div id="errorBox" class="alert alert-danger container margin20" role="alert" style="display:none;">
-        <strong id="err_head">Error: </strong>
+        <strong id="err_head">Info: </strong>
         <span id="err_title">Please try again later.</span>
+        <div id="err_process" class="pull-right" style="display:none;">
+            <img src="~/Content/Images/loading2.gif" width="35" />
+        </div>
+        <div id="err_process" class="pull-right" style="display:none;">
+            <img src="~/Content/Images/loading2.gif" width="35" />
+        </div>
     </div>
     <div class="absolute-center is-center is-login">
         <div class="logo-container">Admin Login</div>

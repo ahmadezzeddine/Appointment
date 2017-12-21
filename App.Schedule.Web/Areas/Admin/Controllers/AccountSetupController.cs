@@ -2,7 +2,7 @@
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
-    public class AccountSetupController : AdminBaseController
+    public class AccountSetupController : BaseController
     {
         public ActionResult Index()
         {

@@ -1,4 +1,5 @@
-﻿@model App.Schedule.Domains.ViewModel.ResponseViewModel<App.Schedule.Domains.ViewModel.BusinessViewModel>
+﻿@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<BusinessViewModel>
 
 @{
     ViewBag.Title = "Account Profile";
@@ -19,8 +20,8 @@
                     {
                         if (!Model.Status)
                         {
-                            <div id="errorBox" class="alert alert-danger" role="alert">
-                                <strong id="err_head">Error: </strong>
+                            <div class="alert alert-danger" role="alert">
+                                <strong id="err_head">Info: </strong>
                                 <span id="err_title">@Model.Message</span>
                             </div>
                         }
@@ -37,80 +38,82 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right">Business Name</td>
-                                    <td>
-                                        @Html.EditorFor(model => model.Data.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Business Name", disabled = "true" } })
+                                    <td class="col-lg-4 col-md-4 col-sm-4  text-right">Business Name</td>
+                                    <td class="col-lg-8 col-md-8 col-sm-8">
+                                        <b>
+                                            @Model.Data.Name
+                                        </b>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right">Short Name</td>
-                                    <td>
-                                        @Html.EditorFor(model => model.Data.ShortName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Short Name", disabled = "true" } })
+                                    <td class="col-lg-4 col-md-4 col-sm-4  text-right">Short Name</td>
+                                    <td class="col-lg-8 col-md-8 col-sm-8">
+                                        @Model.Data.ShortName
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right">Phone No.</td>
-                                    <td>
-                                        @Html.EditorFor(model => model.Data.PhoneNumbers, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone No.", disabled = "true" } })
+                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Phone No.</td>
+                                    <td class="col-lg-8 col-md-8 col-sm-8">
+                                        @Model.Data.PhoneNumbers
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right">Fax No.</td>
-                                    <td>
-                                        @Html.EditorFor(model => model.Data.FaxNumbers, new { htmlAttributes = new { @class = "form-control", @placeholder = "Fax No.", disabled = "true" } })
+                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Fax No.</td>
+                                    <td class="col-lg-8 col-md-8 col-sm-8">
+                                        @Model.Data.FaxNumbers
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right">Email Id</td>
-                                    <td>
-                                        @Html.EditorFor(model => model.Data.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Business Email", disabled = "true" } })
+                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Email Id</td>
+                                    <td class="col-lg-8 col-md-8 col-sm-8">
+                                        @Model.Data.Email
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right">Website</td>
-                                    <td>
-                                        @Html.EditorFor(model => model.Data.Website, new { htmlAttributes = new { @class = "form-control", @placeholder = "Business Website", disabled = "true" } })
+                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Website</td>
+                                    <td class="col-lg-8 col-md-8 col-sm-8">
+                                        @Model.Data.Website
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right">Address 1</td>
-                                    <td>
-                                        @Html.EditorFor(model => model.Data.Add1, new { htmlAttributes = new { @class = "form-control", @placeholder = "Address 1", disabled = "true" } })
+                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Address 1</td>
+                                    <td class="col-lg-8 col-md-8 col-sm-8">
+                                        @Model.Data.Add1
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right">Address 2</td>
-                                    <td>
-                                        @Html.EditorFor(model => model.Data.Add2, new { htmlAttributes = new { @class = "form-control", @placeholder = "Address 2", disabled = "true" } })
+                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Address 2</td>
+                                    <td class="col-lg-8 col-md-8 col-sm-8">
+                                        @Model.Data.Add2
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right">City</td>
-                                    <td>
-                                        @Html.EditorFor(model => model.Data.City, new { htmlAttributes = new { @class = "form-control", @placeholder = "City", disabled = "true" } })
+                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">City</td>
+                                    <td class="col-lg-8 col-md-8 col-sm-8">
+                                        @Model.Data.City
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right">City</td>
-                                    <td>
-                                        @Html.EditorFor(model => model.Data.State, new { htmlAttributes = new { @class = "form-control", @placeholder = "State", disabled = "true" } })
+                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">State</td>
+                                    <td class="col-lg-8 col-md-8 col-sm-8">
+                                        @Model.Data.State
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right">Zipcode</td>
-                                    <td>
-                                        @Html.EditorFor(model => model.Data.Zip, new { htmlAttributes = new { @class = "form-control", @placeholder = "Zip Code", disabled = "true" } })
+                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Zipcode</td>
+                                    <td class="col-lg-8 col-md-8 col-sm-8">
+                                        @Model.Data.Zip
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right">Country</td>
-                                    <td>
+                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Country</td>
+                                    <td class="col-lg-8 col-md-8 col-sm-8">
                                         @Model.Data.CountryId
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right">Timezone</td>
-                                    <td>
+                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Timezone</td>
+                                    <td class="col-lg-8 col-md-8 col-sm-8">
                                         @if (Model.Data.tblTimezone != null)
                                         {
                                         <text>@Model.Data.tblTimezone.Title</text>
@@ -118,16 +121,19 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right">Is International</td>
-                                    <td>
-                                        @Html.CheckBoxFor(model => model.Data.IsInternational, new { htmlAttributes = new { @type = "checkbox", disabled = "true" } })
+                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Is International</td>
+                                    <td class="col-lg-8 col-md-8 col-sm-8">
+                                        @{
+                                            var isInternational = Model.Data.IsInternational ? "Yes" : "No";
+                                        }
+                                        @isInternational
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-right"></td>
                                     <td>
-                                        <a href="@Url.Action("profileedit","accountsetup",new { area="admin"})"  class="btn btn-success col-lg-4">Edit</a>
-                                        <a href="@Url.Action("index","accountsetup",new { area="admin"})" class="btn btn-default col-lg-4" style="margin-left:10px;">Back</a>
+                                        <a href="@Url.Action("index","profile",new { area="admin"})"  class="btn btn-default">Edit</a>
+                                        <a href="@Url.Action("index","accountsetup",new { area="admin"})" class="btn btn-default">Back</a>
                                     </td>
                                 </tr>
                             </table>

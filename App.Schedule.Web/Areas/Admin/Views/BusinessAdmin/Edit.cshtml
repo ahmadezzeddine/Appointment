@@ -1,7 +1,8 @@
-﻿@model App.Schedule.Domains.ViewModel.ResponseViewModel<App.Schedule.Domains.ViewModel.BusinessEmployeeViewModel>
+﻿@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<BusinessEmployeeViewModel>
 
 @{
-    ViewBag.Title = "Change Administrator";
+    ViewBag.Title = "Update Administrator";
     Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
 }
 <ul class="nav nav-tabs">
@@ -15,56 +16,70 @@
                 {
                     if (!Model.Status)
                     {
-                        <div id="errorBox" class="alert alert-danger" role="alert">
-                            <strong id="err_head">Error: </strong>
+                        <div class="alert alert-danger" role="alert">
+                            <strong id="err_head">Info: </strong>
                             <span id="err_title">@Model.Message</span>
                         </div>
                     }
-                    <table class="table table-striped">
-                        <tr>
-                            <td class="text-right">First Name</td>
-                            <td>
-                                @Html.EditorFor(d => d.Data.FirstName, new { htmlAttributes = new { @class = "form-control", @placeholder = "First Name" } })
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-right">Last Name</td>
-                            <td>
-                                @Html.EditorFor(d => d.Data.LastName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Last Name" } })
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-right">Phone No.</td>
-                            <td>
-                                @Html.EditorFor(d => d.Data.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone No." } })
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-right">Email Id</td>
-                            <td>
-                                @Html.EditorFor(d => d.Data.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email Id" } })
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-right">Password</td>
-                            <td>
-                                @Html.EditorFor(d => d.Data.Password, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Password" } })
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-right">Confirm</td>
-                            <td>
-                                @Html.EditorFor(d => d.Data.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Confirm Password" } })
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-right"></td>
-                            <td>
-                                <a href="@Url.Action("edit","businessadmin",new { area="admin"})" class="btn btn-success col-lg-4">Edit</a>
-                                <a href="@Url.Action("index","accountsetup",new { area="admin"})" class="btn btn-default col-lg-4" style="margin-left:10px;">Back</a>
-                            </td>
-                        </tr>
-                    </table>
+                    using (Ajax.BeginForm("edit", "businessadmin", new AjaxOptions { }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(d => d.Data.Id)
+                        @Html.HiddenFor(d => d.Data.ServiceLocationId)
+                        @Html.HiddenFor(d => d.Data.Email)
+                        @Html.HiddenFor(d => d.Data.LoginId)
+                        <table class="table table-striped">
+                            <tr>
+                                <td class="text-right">Email Id</td>
+                                <td>
+                                    <b>@Model.Data.Email</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">First Name</td>
+                                <td>
+                                    @Html.EditorFor(d => d.Data.FirstName, new { htmlAttributes = new { @class = "form-control", @placeholder = "First Name" } })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Last Name</td>
+                                <td>
+                                    @Html.EditorFor(d => d.Data.LastName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Last Name" } })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Phone No.</td>
+                                <td>
+                                    @Html.EditorFor(d => d.Data.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone No." } })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Old Password</td>
+                                <td>
+                                    @Html.EditorFor(d => d.Data.OldPassword, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Old Password" } })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Password</td>
+                                <td>
+                                    @Html.EditorFor(d => d.Data.Password, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Password" } })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Confirm</td>
+                                <td>
+                                    @Html.EditorFor(d => d.Data.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Confirm Password" } })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right"></td>
+                                <td>
+                                    <button onclick="onSubmit(this,'@Url.Action("administrator","account", new { area = "admin" })')" class="btn btn-default">Edit</button>
+                                    <a href="@Url.Action("index", "accountsetup", new { area = "admin" })" class="btn btn-default">Back</a>
+                                </td>
+                            </tr>
+                        </table>
+                    }
                 }
             </div>
         </div>

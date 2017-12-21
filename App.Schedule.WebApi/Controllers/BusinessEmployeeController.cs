@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Web.Http;
-using App.Schedule.Context;
-using System.Linq;
-using App.Schedule.Domains.Helpers;
-using System.Data.Entity;
-using App.Schedule.Domains.ViewModel;
-using App.Schedule.Domains;
 using System.Web;
+using System.Linq;
+using System.Web.Http;
+using System.Data.Entity;
+using App.Schedule.Domains;
+using App.Schedule.Context;
+using App.Schedule.Domains.Helpers;
+using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.WebApi.Controllers
 {
@@ -135,7 +135,7 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "Please provide a valid ID." });
+                    return Ok(new { status = false, data = "", message= "Please provide a valid id." });
                 else
                 {
                     var businessEmployee = _db.tblBusinessEmployees.Find(id);
@@ -147,29 +147,25 @@ namespace App.Schedule.WebApi.Controllers
                             businessEmployee.LastName = model.LastName;
                             businessEmployee.LoginId = model.LoginId;
                             businessEmployee.Password = Security.Encrypt(model.Password, true);
-                            businessEmployee.Email = model.Email;
                             businessEmployee.STD = model.STD;
                             businessEmployee.PhoneNumber = model.PhoneNumber;
                             businessEmployee.ServiceLocationId = model.ServiceLocationId;
-                            businessEmployee.IsAdmin = model.IsAdmin;
-                            businessEmployee.Created = DateTime.Now.ToUniversalTime();
-                            businessEmployee.IsActive = model.IsActive;
 
                             _db.Entry(businessEmployee).State = EntityState.Modified;
                             var response = _db.SaveChanges();
                             if (response > 0)
-                                return Ok(new { status = true, data = businessEmployee });
+                                return Ok(new { status = true, data = businessEmployee, message = "success"});
                             else
-                                return Ok(new { status = false, data = "There was a problem to update the data." });
+                                return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
                         }
                         else
                         {
-                            return Ok(new { status = false, data = "Please provide a valid login id to update." });
+                            return Ok(new { status = false, data ="", message = "Please provide a valid login id to update." });
                         }
                     }
                     else
                     {
-                        return Ok(new { status = false, data = "Not a valid data to update. Please provide a valid id." });
+                        return Ok(new { status = false, data = "", message = "Not a valid data to update. Please provide a valid id." });
                     }
                 }
             }
@@ -209,6 +205,62 @@ namespace App.Schedule.WebApi.Controllers
             {
                 return Ok(new { status = false, data = "", message = ex.Message.ToString() });
             }
+        }
+
+        [NonAction]
+        public bool UpdateEmployee(BusinessEmployeeViewModel model, out string message)
+        {
+            var status = false;
+            try
+            {
+                var businessEmployee = _db.tblBusinessEmployees.Find(model.Id);
+                if (businessEmployee != null)
+                {
+                    var password = Security.Decrypt(businessEmployee.Password, true);
+                    if (password == model.OldPassword)
+                    {
+                        if (businessEmployee.Email.ToLower() == model.Email.ToLower())
+                        {
+                            businessEmployee.FirstName = model.FirstName;
+                            businessEmployee.LastName = model.LastName;
+                            businessEmployee.LoginId = model.LoginId;
+                            businessEmployee.Password = Security.Encrypt(model.Password, true);
+                            businessEmployee.STD = model.STD;
+                            businessEmployee.PhoneNumber = model.PhoneNumber;
+                            businessEmployee.ServiceLocationId = model.ServiceLocationId;
+
+                            _db.Entry(businessEmployee).State = EntityState.Modified;
+                            var response = _db.SaveChanges();
+                            if (response > 0)
+                            {
+                                status = true;
+                                message = "Transaction successed.";
+                            }
+                            else
+                            {
+                                message = "Transaction failed.";
+                            }
+                        }
+                        else
+                        {
+                            message = "Please enter a valid email id.";
+                        }
+                    }
+                    else
+                    {
+                        message = "Please enter your valid old password.";
+                    }
+                }
+                else
+                {
+                    message = "It is not a valid Admin information.";
+                }
+            }
+            catch (Exception ex)
+            {
+                message = "ex: " + ex.Message.ToString();
+            }
+            return status;
         }
     }
 }

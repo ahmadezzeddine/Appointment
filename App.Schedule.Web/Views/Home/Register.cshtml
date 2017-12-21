@@ -10,7 +10,7 @@
     </div>
     @if (Model != null && Model.HasError)
     {
-        <div id="errorBox" class="alert alert-danger" role="alert">
+        <div class="alert alert-danger" role="alert">
             <strong id="err_head">Error: </strong>
             <span id="err_title">@Model.Error</span>
             @if (Model.HasMore)

@@ -17,8 +17,8 @@
                 {
                     if (!Model.Status)
                     {
-                        <div id="errorBox" class="alert alert-danger" role="alert">
-                            <strong id="err_head">Error: </strong>
+                        <div class="alert alert-danger" role="alert">
+                            <strong id="err_head">Info: </strong>
                             <span id="err_title">@Model.Message</span>
                         </div>
                     }
@@ -58,8 +58,12 @@
                                             }
                                         </td>
                                         <td class="text-right">
-                                            <a href="@Url.Action("edit", "holiday", new { area = "admin", id = item.Id })" class="btn btn-success">Edit</a>
-                                            <a href="@Url.Action("delete", "holiday", new { area = "admin", id = item.Id })" class="btn btn-danger">Delete</a>
+                                            <a href="@Url.Action("edit", "holiday", new { area = "admin", id = item.Id })" class="btn btn-success">
+                                                <span class="glyphicon glyphicon-pencil"></span>
+                                            </a>
+                                            <a href="@Url.Action("delete", "holiday", new { area = "admin", id = item.Id })" class="btn btn-danger">
+                                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                            </a>
                                         </td>
                                     </tr>
                                 }
@@ -67,7 +71,7 @@
                          }
                          else
                          {
-                                                     <tr>
+                         <tr>
                             <td>
                                 No Holiday, Please Setup your business holiday.
                             </td>

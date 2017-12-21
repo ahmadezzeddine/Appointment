@@ -1,22 +1,23 @@
-﻿using System.Web.Mvc;
-using App.Schedule.Web.Services;
+﻿using App.Schedule.Web.Services;
+using System;
+using System.Web.Mvc;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
-    public class AdminBaseController : BaseController
+    public class HourBaseController : BaseController
     {
-        protected BusinessEmployeeService BusinessEmployeeService;
+        protected BusinessHourService BusinessHourService;
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            var status = LoginStatus();
+            var status = this.LoginStatus();
             if (!status)
             {
                 filterContext.Result = RedirectToAction("Login", "Home", new { area = "Admin" });
             }
             else
             {
-                this.BusinessEmployeeService = new BusinessEmployeeService(this.Token);
+                this.BusinessHourService = new BusinessHourService(this.Token);
             }
         }
     }

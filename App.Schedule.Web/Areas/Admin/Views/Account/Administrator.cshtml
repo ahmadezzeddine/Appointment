@@ -1,4 +1,5 @@
-﻿@model App.Schedule.Domains.ViewModel.ResponseViewModel<App.Schedule.Domains.ViewModel.BusinessEmployeeViewModel>
+﻿@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<BusinessEmployeeViewModel>
 
 @{
     ViewBag.Title = "Administrator";
@@ -18,47 +19,47 @@
                 {
                     if (!Model.Status)
                     {
-                        <div id="errorBox" class="alert alert-danger" role="alert">
-                            <strong id="err_head">Error: </strong>
+                        <div class="alert alert-danger" role="alert">
+                            <strong id="err_head">Info: </strong>
                             <span id="err_title">@Model.Message</span>
                         </div>
                     }
                     <table class="table table-striped">
                         <tr>
-                            <td class="text-right">First Name</td>
-                            <td>
-                                @Html.EditorFor(d => d.Data.FirstName, new { htmlAttributes = new { @class = "form-control", @placeholder = "First Name", @disabled = "true" } })
+                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">First Name</td>
+                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                <b>@Model.Data.FirstName</b>
                             </td>
                         </tr>
                         <tr>
-                            <td class="text-right">Last Name</td>
-                            <td>
-                                @Html.EditorFor(d => d.Data.LastName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Last Name", @disabled = "true" } })
+                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">Last Name</td>
+                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                @Model.Data.LastName
                             </td>
                         </tr>
                         <tr>
-                            <td class="text-right">Phone No.</td>
-                            <td>
-                                @Html.EditorFor(d => d.Data.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone No.", @disabled = "true" } })
+                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">Phone No.</td>
+                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                @Model.Data.PhoneNumber
                             </td>
                         </tr>
                         <tr>
-                            <td class="text-right">Email Id</td>
-                            <td>
-                                @Html.EditorFor(d => d.Data.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email Id", @disabled = "true" } })
+                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">Email Id</td>
+                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                @Model.Data.Email
                             </td>
                         </tr>
                         <tr>
-                            <td class="text-right">Password</td>
-                            <td>
-                                @Html.EditorFor(d => d.Data.Password, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Password", @disabled = "true" } }) (protected)
+                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">Password</td>
+                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                <b>(protected)</b>
                             </td>
                         </tr>
                         <tr>
                             <td class="text-right"></td>
                             <td>
-                                <a href="@Url.Action("edit","businessadmin",new { area="admin"})" class="btn btn-success col-lg-4">Edit</a>
-                                <a href="@Url.Action("index","accountsetup",new { area="admin"})" class="btn btn-default col-lg-4" style="margin-left:10px;">Back</a>
+                                <a href="@Url.Action("edit","businessadmin",new { area="admin"})" class="btn btn-default">Edit</a>
+                                <a href="@Url.Action("index","accountsetup",new { area="admin"})" class="btn btn-default">Back</a>
                             </td>
                         </tr>
                     </table>

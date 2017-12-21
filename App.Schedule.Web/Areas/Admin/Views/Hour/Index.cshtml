@@ -1,4 +1,4 @@
-﻿@using App.Schedule.Domains.ViewModel
+﻿@using App.Schedule.Domains.ViewModel;
 @model ResponseViewModel<List<BusinessHourViewModel>>
 @{
     ViewBag.Title = "Business Hour Setup";
@@ -16,8 +16,8 @@
                 {
                     if (!Model.Status)
                     {
-                        <div id="errorBox" class="alert alert-danger" role="alert">
-                            <strong id="err_head">Error: </strong>
+                        <div class="alert alert-danger" role="alert">
+                            <strong id="err_head">Info: </strong>
                             <span id="err_title">@Model.Message</span>
                         </div>
                     }

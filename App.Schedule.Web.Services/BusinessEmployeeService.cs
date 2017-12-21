@@ -120,9 +120,24 @@ namespace App.Schedule.Web.Services
             throw new NotImplementedException();
         }
 
-        public Task<ResponseViewModel<BusinessEmployeeViewModel>> Update(BusinessEmployeeViewModel model)
+        public async Task<ResponseViewModel<BusinessEmployeeViewModel>> Update(BusinessEmployeeViewModel model)
         {
-            throw new NotImplementedException();
+            var returnResponse = new ResponseViewModel<BusinessEmployeeViewModel>();
+            try
+            {
+                var jsonContent = JsonConvert.SerializeObject(model);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var url = String.Format(AppointmentUserService.PUT_API_ACCOUNT);
+                var response = await this.appointmentUserService.httpClient.PostAsync(url, content);
+                returnResponse = await base.GetHttpResponse<BusinessEmployeeViewModel>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
         }
 
         public Task<ResponseViewModel<BusinessEmployeeViewModel>> Delete(long? id)
