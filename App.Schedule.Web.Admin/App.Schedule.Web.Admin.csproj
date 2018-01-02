@@ -151,15 +151,22 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AdminProfileController.cs" />
     <Compile Include="Controllers\AdminBaseController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\BusinessCategoryBaseController.cs" />
     <Compile Include="Controllers\BusinessCategoryController.cs" />
+    <Compile Include="Controllers\CountryBaseController.cs" />
     <Compile Include="Controllers\CountryController.cs" />
+    <Compile Include="Controllers\DashboardBaseController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\ForgotController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginBaseController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\MembershipBaseController.cs" />
     <Compile Include="Controllers\MembershipController.cs" />
+    <Compile Include="Controllers\RegisterBaseController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
+    <Compile Include="Controllers\TimezoneBaseController.cs" />
     <Compile Include="Controllers\TimezoneController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -173,6 +180,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\loading2.gif" />
     <Content Include="Content\Images\logo.png" />
     <Content Include="Content\Images\NoImageThumb.gif" />
     <Content Include="Content\PagedList.css" />
@@ -250,10 +258,18 @@
     <Content Include="Views\BusinessCategory\SubCreate.cshtml" />
     <Content Include="Views\BusinessCategory\SubEdit.cshtml" />
     <Content Include="Views\BusinessCategory\SubDeactive.cshtml" />
+    <Content Include="Views\SubViews\_Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Services\" />
+    <Folder Include="Views\Base\" />
+    <Folder Include="Views\BusinessCategoryBase\" />
+    <Folder Include="Views\CountryBase\" />
+    <Folder Include="Views\DashboardBase\" />
+    <Folder Include="Views\MembershipBase\" />
+    <Folder Include="Views\RegisterBase\" />
+    <Folder Include="Views\TimezoneBase\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

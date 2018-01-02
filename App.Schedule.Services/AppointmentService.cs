@@ -23,7 +23,7 @@ namespace App.Schedule.Services
         //Administrator API
         public const string GET_ADMINS = "api/administrator";
         public const string GET_ADMIN_BYID = "api/administrator?Id={0}";
-        public const string GET_ADMIN_BYLOGINID = "api/administrator?loginid={0}&password={1}";
+        public const string GET_ADMIN_BYEMAIL = "api/administrator?email={0}&password={1}";
         public const string POST_ADMIN = "api/administrator";
         public const string DELETE_ADMIN = "api/administrator";
         public const string DEACTIVE_ADMIN = "api/administrator?id={0}&status={1}";

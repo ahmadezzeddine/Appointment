@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Web.Http;
-using App.Schedule.Context;
 using System.Linq;
-using App.Schedule.Domains.Helpers;
+using System.Web.Http;
 using System.Data.Entity;
-using App.Schedule.Domains.ViewModel;
+using App.Schedule.Context;
 using App.Schedule.Domains;
+using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.WebApi.Controllers
 {
@@ -24,13 +23,35 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 var model = _db.tblServiceLocations.ToList();
-                return Ok(new { status = true, data = model });
+                return Ok(new { status = true, data = model, message = "success" });
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = false, data = "", message = ex.Message.ToString() });
             }
         }
+
+        public IHttpActionResult Get(long?id, TableType type)
+        {
+            try
+            {
+                if (type == TableType.BusinessId)
+                {
+                    var model = _db.tblServiceLocations.Where(d => d.BusinessId == id.Value).ToList();
+                    return Ok(new { status = true, data = model, message = "success" });
+                }
+                else
+                {
+                    var model = _db.tblServiceLocations.ToList();
+                    return Ok(new { status = true, data = model, message = "success" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, data = "", message = ex.Message.ToString() });
+            }
+        }
+
 
         // GET: api/servicelocation/5
         public IHttpActionResult Get(long? id)
@@ -38,19 +59,19 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "Please provide valid ID." });
+                    return Ok(new { status = false, message = "Please provide valid ID." });
                 else
                 {
                     var model = _db.tblServiceLocations.Find(id);
                     if (model != null)
-                        return Ok(new { status = true, data = model });
+                        return Ok(new { status = true, data = model, message = "success" });
                     else
-                        return Ok(new { status = false, data = "Not found." });
+                        return Ok(new { status = false, data = "", message = "Not found." });
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = false, data = "", message = ex.Message.ToString() });
             }
         }
 
@@ -74,16 +95,51 @@ namespace App.Schedule.WebApi.Controllers
                     BusinessId = model.BusinessId,
                     TimezoneId = model.TimezoneId
                 };
-                _db.tblServiceLocations.Add(serviceLocation);
-                var response = _db.SaveChanges();
-                if (response > 0)
-                    return Ok(new { status = true, data = serviceLocation });
-                else
-                    return Ok(new { status = false, data = "There was a problem." });
+
+                using (var dbTrans = _db.Database.BeginTransaction())
+                {
+                    _db.tblServiceLocations.Add(serviceLocation);
+                    var responseLocation = _db.SaveChanges();
+
+                    var today = DateTime.Now;
+                    var date = new DateTime(today.Year, today.Month, today.Day, 8, 00, 00, DateTimeKind.Utc);
+                    for (int i = 0; i < 7; i++)
+                    {
+                        var businessHour = new tblBusinessHour()
+                        {
+                            WeekDayId = i,
+                            IsStartDay = i == 0 ? true : false,
+                            IsHoliday = false,
+                            From = date,
+                            To = date.AddHours(10),
+                            IsSplit1 = false,
+                            FromSplit1 = null,
+                            ToSplit1 = null,
+                            IsSplit2 = false,
+                            FromSplit2 = null,
+                            ToSplit2 = null,
+                            ServiceLocationId = serviceLocation.Id
+                        };
+                        _db.tblBusinessHours.Add(businessHour);
+                    }
+                    var responseHour = _db.SaveChanges();
+                    if (responseHour > 0 && responseLocation > 0)
+                    {
+                        dbTrans.Commit();
+                        return Ok(new { status = true, data = serviceLocation, message = "success" });
+
+                    }
+                    else
+                    {
+                        dbTrans.Rollback();
+                        return Ok(new { status = false, data = "", message = "There was a problem." });
+
+                    }
+                }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = false, data = "", message = ex.Message.ToString() });
             }
         }
 
@@ -93,7 +149,7 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "Please provide a valid ID." });
+                    return Ok(new { status = false, data = "", message = "Please provide a valid ID." });
                 else
                 {
                     var serviceLocation = _db.tblServiceLocations.Find(id);
@@ -115,51 +171,58 @@ namespace App.Schedule.WebApi.Controllers
                         _db.Entry(serviceLocation).State = EntityState.Modified;
                         var response = _db.SaveChanges();
                         if (response > 0)
-                            return Ok(new { status = true, data = serviceLocation });
+                            return Ok(new { status = true, data = serviceLocation, message = "success" });
                         else
-                            return Ok(new { status = false, data = "There was a problem to update the data." });
+                            return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
                     }
                     else
                     {
-                        return Ok(new { status = false, data = "Not a valid data to update. Please provide a valid id." });
+                        return Ok(new { status = false, data = "", message = "Not a valid data to update. Please provide a valid id." });
                     }
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = false, data = "", message = ex.Message.ToString() });
             }
         }
 
         // DELETE: api/servicelocation/5
-        public IHttpActionResult Delete(int? id)
+        public IHttpActionResult Delete(int? id, DeleteType type)
         {
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "Please provide a valid ID." });
+                    return Ok(new { status = false, data = "", message = "Please provide a valid ID." });
                 else
                 {
                     var serviceLocation = _db.tblServiceLocations.Find(id);
                     if (serviceLocation != null)
                     {
-                        serviceLocation.IsActive = !serviceLocation.IsActive;
-                        _db.Entry(serviceLocation).State = EntityState.Modified;
+                        if (type == DeleteType.DeleteRecord)
+                        {
+                            _db.Entry(serviceLocation).State = EntityState.Deleted;
+                        }
+                        else
+                        {
+                            serviceLocation.IsActive = !serviceLocation.IsActive;
+                            _db.Entry(serviceLocation).State = EntityState.Modified;
+                        }
                         var response = _db.SaveChanges();
                         if (response > 0)
-                            return Ok(new { status = true, data = serviceLocation });
+                            return Ok(new { status = true, data = serviceLocation, message = "success" });
                         else
-                            return Ok(new { status = false, data = "There was a problem to update the data." });
+                            return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
                     }
                     else
                     {
-                        return Ok(new { status = false, data = "Not a valid data to update. Please provide a valid id." });
+                        return Ok(new { status = false, data = "", message = "Not a valid data to update. Please provide a valid id." });
                     }
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = false, data = "", message = ex.Message.ToString() });
             }
         }
     }

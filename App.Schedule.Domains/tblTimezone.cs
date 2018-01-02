@@ -26,9 +26,9 @@ namespace App.Schedule.Domains
 
         public bool IsDST { get; set; }
 
-        public int CountryId { get; set; }
+        public int? CountryId { get; set; }
 
-        public long AdministratorId { get; set; }
+        public long? AdministratorId { get; set; }
 
         public virtual tblAdministrator tblAdministrator { get; set; }
 

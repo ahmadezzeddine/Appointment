@@ -15,7 +15,7 @@ namespace App.Schedule.Domains
 
         public int Type { get; set; }
 
-        public long ServiceLocationId { get; set; }
+        public long? ServiceLocationId { get; set; }
 
         public virtual tblServiceLocation tblServiceLocation { get; set; }
     }

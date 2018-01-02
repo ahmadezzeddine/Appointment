@@ -22,11 +22,11 @@ namespace App.Schedule.Domains
         [Column(TypeName = "ntext")]
         public string Feedback { get; set; }
 
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
 
-        public DateTime? Created { get; set; }
+        public DateTime Created { get; set; }
 
-        public long AppointmentId { get; set; }
+        public long? AppointmentId { get; set; }
 
         public virtual tblAppointment tblAppointment { get; set; }
 

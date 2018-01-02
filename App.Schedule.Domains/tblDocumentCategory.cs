@@ -28,9 +28,9 @@ namespace App.Schedule.Domains
         [StringLength(50)]
         public string Type { get; set; }
 
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
 
-        public DateTime? Created { get; set; }
+        public DateTime Created { get; set; }
 
         public bool IsParent { get; set; }
 

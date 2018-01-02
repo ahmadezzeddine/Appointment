@@ -73,7 +73,6 @@ namespace App.Schedule.WebApi.Controllers
                         City = model.City,
                         State = model.State,
                         Zip = model.Zip,
-                        LoginId = model.LoginId,
                         Password = model.Password,
                         IsActive = model.IsActive,
                         Created = model.Created,
@@ -123,7 +122,6 @@ namespace App.Schedule.WebApi.Controllers
                             businessCustomer.City = model.City;
                             businessCustomer.State = model.State;
                             businessCustomer.Zip = model.Zip;
-                            businessCustomer.LoginId = model.LoginId;
                             businessCustomer.Password = model.Password;
                             businessCustomer.IsActive = model.IsActive;
                             businessCustomer.Created = model.Created;

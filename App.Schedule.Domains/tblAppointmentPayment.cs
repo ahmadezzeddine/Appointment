@@ -42,9 +42,9 @@ namespace App.Schedule.Domains
 
         public DateTime? CCExpirationDate { get; set; }
 
-        public DateTime? Created { get; set; }
+        public DateTime Created { get; set; }
 
-        public long AppointmentId { get; set; }
+        public long? AppointmentId { get; set; }
 
         public virtual tblAppointment tblAppointment { get; set; }
     }

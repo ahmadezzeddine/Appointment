@@ -14,7 +14,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            var model = await this.BusinessHourService.Gets(RegisterViewModel.Employee.ServiceLocationId, TableType.ServiceLocationId);
+            var model = await this.BusinessHourService.Gets(RegisterViewModel.Employee.ServiceLocationId.Value, TableType.ServiceLocationId);
             model.Status = true;
             if (model.Data == null)
                 model.Data = new List<BusinessHourViewModel>();

@@ -57,15 +57,15 @@ namespace App.Schedule.WebApi.Controllers
             }
         }
 
-        // GET: api/administrator/?loginid=value&password=value
+        // GET: api/administrator/?email=value&password=value
         [AllowAnonymous]
-        public IHttpActionResult Get(string loginid, string password)
+        public IHttpActionResult Get(string email, string password)
         {
             try
             {
                 password = HttpContext.Current.Server.UrlDecode(password);
                 var pass = Security.Encrypt(password, true);
-                var model = _db.tblAdministrators.Where(d => d.Email.ToLower() == loginid.ToLower() && d.Password
+                var model = _db.tblAdministrators.Where(d => d.Email.ToLower() == email.ToLower() && d.Password
                 == pass && d.IsActive == true).FirstOrDefault();
                 if (model != null)
                 {
@@ -103,7 +103,6 @@ namespace App.Schedule.WebApi.Controllers
                     Email = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    LoginId = model.LoginId,
                     Password = Security.Encrypt(model.Password, true),
                     IsAdmin = model.IsAdmin,
                     IsActive = model.IsActive,
@@ -139,7 +138,7 @@ namespace App.Schedule.WebApi.Controllers
                     var admin = _db.tblAdministrators.Find(id);
                     if (admin != null)
                     {
-                        if (admin.LoginId.ToLower() == model.LoginId.ToLower())
+                        if (admin.Email.ToLower() == model.Email.ToLower())
                         {
                             admin.FirstName = model.FirstName;
                             admin.LastName = model.LastName;
@@ -220,7 +219,6 @@ namespace App.Schedule.WebApi.Controllers
                     Email = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    LoginId = model.Email,
                     Password = Security.Encrypt(model.Password, true),
                     IsAdmin = model.IsAdmin,
                     IsActive = model.IsActive,

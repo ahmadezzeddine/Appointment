@@ -45,7 +45,7 @@ namespace App.Schedule.Domains
 
         public DateTime Created { get; set; }
 
-        public long AdministratorId { get; set; }
+        public long? AdministratorId { get; set; }
 
         public virtual tblAdministrator tblAdministrator { get; set; }
 

@@ -7,7 +7,7 @@ using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Admin.Controllers
 {
-    public class CountryController : AdminBaseController
+    public class CountryController : CountryBaseController
     {
         public async Task<ActionResult> Index(int? page, string search)
         {
@@ -18,7 +18,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 var pageNumber = page ?? 1;
                 ViewBag.search = search;
 
-                var response = await countryService.Gets();
+                var response = await this.CountryService.Gets();
                 if (response.Status)
                 {
                     var data = response.Data;
@@ -69,7 +69,7 @@ namespace App.Schedule.Web.Admin.Controllers
             else
             {
                 model.Data.AdministratorId = admin.Id;
-                var response = await this.countryService.Add(model.Data);
+                var response = await this.CountryService.Add(model.Data);
                 if (response != null)
                 {
                     result.Status = response.Status;
@@ -97,7 +97,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 }
                 else
                 {
-                    var res = await this.countryService.Get(id.Value);
+                    var res = await this.CountryService.Get(id.Value);
                     if (res.Status)
                     {
                         model.HasError = false;
@@ -133,7 +133,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 else
                 {
                     model.Data.AdministratorId = admin.Id;
-                    var response = await this.countryService.Update(model.Data);
+                    var response = await this.CountryService.Update(model.Data);
                     if (response.Status)
                     {
                         result.Status = true;
@@ -167,7 +167,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 }
                 else
                 {
-                    var res = await this.countryService.Get(id.Value);
+                    var res = await this.CountryService.Get(id.Value);
                     if (res.Status)
                     {
                         model.HasError = false;
@@ -194,7 +194,7 @@ namespace App.Schedule.Web.Admin.Controllers
             var result = new ResponseViewModel<CountryViewModel>();
             try
             {
-                var response = await this.countryService.Delete(model.Data.Id);
+                var response = await this.CountryService.Delete(model.Data.Id);
                 if (response.Status)
                 {
                     result.Status = true;

@@ -17,7 +17,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 Session["HomeLink"] = "Administrator";
                 var pageNumber = page ?? 1;
                 ViewBag.search = search;
-                var response = await adminService.Gets();
+                var response = await this.AdminService.Gets();
                 if (response.Status)
                 {
                     var data = response.Data;
@@ -67,10 +67,9 @@ namespace App.Schedule.Web.Admin.Controllers
             }
             else
             {
-                model.Data.LoginId = model.Data.Email;
                 model.Data.Created = DateTime.Now.ToUniversalTime();
                 model.Data.AdministratorId = admin.Id;
-                var response = await this.adminService.Add(model.Data);
+                var response = await this.AdminService.Add(model.Data);
                 if (response.Status)
                 {
                     result.Status = true;
@@ -98,7 +97,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 }
                 else
                 {
-                    var res = await this.adminService.Get(id.Value);
+                    var res = await this.AdminService.Get(id.Value);
                     if (res.Status)
                     {
                         model.HasError = false;
@@ -137,7 +136,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 {
                     model.Data.Created = DateTime.Now.ToUniversalTime();
                     model.Data.AdministratorId = admin.Id;
-                    var response = await this.adminService.Update(model.Data);
+                    var response = await this.AdminService.Update(model.Data);
                     if (response.Status)
                     {
                         result.Status = true;
@@ -171,7 +170,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 }
                 else
                 {
-                    var res = await this.adminService.Get(id.Value);
+                    var res = await this.AdminService.Get(id.Value);
                     if (res.Status)
                     {
                         model.HasError = false;
@@ -202,8 +201,7 @@ namespace App.Schedule.Web.Admin.Controllers
             {
                 if (!string.IsNullOrEmpty(model.Data.Email))
                 {
-                    //model.Data.AdministratorId = admin.Id;
-                    var response = await this.adminService.Deactive(model.Data.Id, model.Data.IsActive);
+                    var response = await this.AdminService.Deactive(model.Data.Id, model.Data.IsActive);
                     if (response.Status)
                     {
                         result.Status = true;

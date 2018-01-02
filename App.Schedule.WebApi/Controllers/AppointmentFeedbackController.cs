@@ -64,7 +64,7 @@ namespace App.Schedule.WebApi.Controllers
                     {
                         BusinessCustomerId = model.BusinessCustomerId,
                         BusinessEmployeeId = model.BusinessEmployeeId,
-                        Created = (model.Created.HasValue) ? model.Created.Value.ToUniversalTime() : model.Created,
+                        Created = model.Created.ToUniversalTime(),
                         Feedback = model.Feedback,
                         IsActive = model.IsActive,
                         IsEmployee = model.IsEmployee,
@@ -105,7 +105,7 @@ namespace App.Schedule.WebApi.Controllers
                         {
                             appointmentFeedback.BusinessCustomerId = model.BusinessCustomerId;
                             appointmentFeedback.BusinessEmployeeId = model.BusinessEmployeeId;
-                            appointmentFeedback.Created = (model.Created.HasValue) ? model.Created.Value.ToUniversalTime() : model.Created;
+                            appointmentFeedback.Created = model.Created.ToUniversalTime();
                             appointmentFeedback.Feedback = model.Feedback;
                             appointmentFeedback.IsActive = model.IsActive;
                             appointmentFeedback.IsEmployee = model.IsEmployee;

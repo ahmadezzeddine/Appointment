@@ -61,6 +61,13 @@ namespace App.Schedule.Web.Services
         public const string PUT_BUSINESSHOLIDAY = "api/businessholiday?id={0}";
         public const string DELETE_BUSINESSHOLIDAYBYId = "api/businessholiday?id={0}";
 
+        //Service Location
+        public const string GET_SERVICELOCATION = "api/servicelocation";
+        public const string GET_SERVICELOCATIONBYIDANDTYPE = "api/servicelocation?id={0}&type={1}";
+        public const string GET_SERVICELOCATIONBYID = "api/servicelocation?id={0}";
+        public const string DELETE_SERVICELOCATIONBYID = "api/servicelocation?id={0}&type={1}";
+        public const string POST_SERVICELOCATION = "api/servicelocation";
+
 
         public AppointmentUserService()
         {

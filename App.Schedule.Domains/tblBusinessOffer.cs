@@ -36,9 +36,9 @@ namespace App.Schedule.Domains
 
         public bool IsActive { get; set; }
 
-        public DateTime? Created { get; set; }
+        public DateTime Created { get; set; }
 
-        public long BusinessEmployeeId { get; set; }
+        public long? BusinessEmployeeId { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblAppointment> tblAppointments { get; set; }

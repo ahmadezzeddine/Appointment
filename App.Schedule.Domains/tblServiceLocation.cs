@@ -13,8 +13,6 @@ namespace App.Schedule.Domains
         public tblServiceLocation()
         {
             tblAppointments = new HashSet<tblAppointment>();
-            tblBusinessCustomers = new HashSet<tblBusinessCustomer>();
-            tblBusinessEmployees = new HashSet<tblBusinessEmployee>();
             tblBusinessHolidays = new HashSet<tblBusinessHoliday>();
             tblBusinessHours = new HashSet<tblBusinessHour>();
             tblBusinessOfferServiceLocations = new HashSet<tblBusinessOfferServiceLocation>();
@@ -43,26 +41,20 @@ namespace App.Schedule.Domains
         [StringLength(10)]
         public string Zip { get; set; }
 
-        public int CountryId { get; set; }
+        public int? CountryId { get; set; }
 
         public bool IsActive { get; set; }
 
         public DateTime Created { get; set; }
 
-        public int TimezoneId { get; set; }
+        public int? TimezoneId { get; set; }
 
-        public long BusinessId { get; set; }
+        public long? BusinessId { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblAppointment> tblAppointments { get; set; }
 
         public virtual tblBusiness tblBusiness { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblBusinessCustomer> tblBusinessCustomers { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblBusinessEmployee> tblBusinessEmployees { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBusinessHoliday> tblBusinessHolidays { get; set; }

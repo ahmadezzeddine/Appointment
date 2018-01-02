@@ -1,4 +1,5 @@
-﻿@model App.Schedule.Domains.ViewModel.ServiceDataViewModel<App.Schedule.Domains.ViewModel.LoginViewModel>
+﻿@using App.Schedule.Domains.ViewModel;
+@model ServiceDataViewModel<LoginViewModel>
 
 @{
     ViewBag.Title = "Admin Login";
@@ -6,27 +7,11 @@
 }
 <div class="container">
     <div class="row">
-        @if (Model != null && Model.HasError)
-            {
-            <div id="errorBox" class="alert alert-danger" role="alert">
-                <strong id="err_head">Error: </strong>
-                <span id="err_title">@Model.Error</span>
-                @if (Model.HasMore)
-                {
-                    <button data-toggle="collapse" data-target="#moreError">More</button>
-                    <div id="moreError" class="collapse">
-                        @Model.ErrorDescription
-                    </div>
-                }
-            </div>
-        }
+        @Html.Partial("~/Views/SubViews/_Error.cshtml", Model)
+
         @using (Ajax.BeginForm("Index", "Login", new AjaxOptions { }))
         {
             @Html.AntiForgeryToken()
-            <div id="errorBox" class="alert alert-danger" role="alert" style="display:none;">
-                <strong id="err_head">Error: </strong>
-                <span id="err_title">Please try again later.</span>
-            </div>
             <div class="absolute-center is-login alert">
                 <div id="logo-container">Admin Login</div>
                 <div class="col-sm-12 col-md-10 col-md-offset-1">

@@ -497,8 +497,8 @@ namespace App.Schedule.WebApi.Controllers
                 if (createStatus)
                 {
                     var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
-
-                    var response = await UserManager.CreateAsync(user, model.Password);
+                    var password = HttpContext.Current.Server.UrlDecode(model.Password);
+                    var response = await UserManager.CreateAsync(user, password);
                     if (response.Succeeded)
                     {
                         result.Status = createStatus;

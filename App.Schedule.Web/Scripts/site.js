@@ -42,10 +42,14 @@ function onSubmit(btnSubmit, target) {
         },
         success: function (data) {
             btnSubmitvar.removeAttr('disabled');
+            console.log(data);
+            console.log(JSON.stringify(data));
+
             if (data.status) {
-                errorDiv.text("Successed! Please wait...")
+                err_head.text("Info: ");
+                err_title.text("Successed! Please wait...");
                 setTimeout(function () {
-                    //errorDiv.hide();
+                    errorDiv.hide();
                     location.href = target;
                     err_process.css("display", "none");
                 }, 3000);
@@ -82,7 +86,7 @@ function onUpdate(btnSubmit, Id, url, refreshCallback) {
         success: function (data) {
             btnSubmitvar.removeAttr('disabled');
             if (data.status) {
-                errorDiv.text("Successed! Please wait...")
+                errorDiv.text("Successed! Please wait...");
                 setTimeout(function () {
                     //errorDiv.hide();
                     location.href = target;
@@ -99,6 +103,6 @@ function onUpdate(btnSubmit, Id, url, refreshCallback) {
             err_title.text(data.message);
             errorDiv.show();
             btnSubmitvar.removeAttr("disabled");
-        },
+        }
     });
 }

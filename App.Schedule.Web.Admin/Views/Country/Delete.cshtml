@@ -1,29 +1,12 @@
-﻿@model App.Schedule.Domains.ViewModel.ServiceDataViewModel<App.Schedule.Domains.ViewModel.CountryViewModel>
+﻿@using App.Schedule.Domains.ViewModel;
+@model ServiceDataViewModel<CountryViewModel>
 @{
     ViewBag.Title = "Delete Country";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="container">
     <div class="row">
-        @if (Model != null && Model.HasError)
-        {
-            <div id="errorBox" class="alert alert-danger" role="alert">
-                <strong id="err_head">Error: </strong>
-                <span id="err_title">@Model.Error</span>
-                @if (Model.HasMore)
-                {
-                    <button data-toggle="collapse" data-target="#moreError">More</button>
-                    <div id="moreError" class="collapse">
-                        @Model.ErrorDescription
-                    </div>
-                }
-            </div>
-        }
-        <div id="errorBox" class="alert alert-danger" role="alert" style="display:none;">
-            <strong id="err_head">Error: </strong>
-            <span id="err_title">Please try again later.</span>
-        </div>
-
+        @Html.Partial("~/Views/SubViews/_Error.cshtml", Model)
         <div class="bg-box bg-bluegray">
             @using (Ajax.BeginForm("Delete", new AjaxOptions { }))
             {

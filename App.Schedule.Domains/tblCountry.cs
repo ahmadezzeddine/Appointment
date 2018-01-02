@@ -35,7 +35,7 @@ namespace App.Schedule.Domains
 
         public int PhoneCode { get; set; }
 
-        public long AdministratorId { get; set; }
+        public long? AdministratorId { get; set; }
 
         public virtual tblAdministrator tblAdministrator { get; set; }
 

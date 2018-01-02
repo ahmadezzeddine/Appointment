@@ -13,16 +13,16 @@ namespace App.Schedule.Domains
         public tblAppointment()
         {
             tblAppointmentDocuments = new HashSet<tblAppointmentDocument>();
-            tblAppointmentPayments = new HashSet<tblAppointmentPayment>();
             tblAppointmentFeedbacks = new HashSet<tblAppointmentFeedback>();
             tblAppointmentInvitees = new HashSet<tblAppointmentInvitee>();
+            tblAppointmentPayments = new HashSet<tblAppointmentPayment>();
         }
 
         public long Id { get; set; }
 
         public long GlobalAppointmentId { get; set; }
 
-        public long BusinessServiceId { get; set; }
+        public long? BusinessServiceId { get; set; }
 
         public string Title { get; set; }
 
@@ -68,6 +68,12 @@ namespace App.Schedule.Domains
         public virtual ICollection<tblAppointmentDocument> tblAppointmentDocuments { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblAppointmentFeedback> tblAppointmentFeedbacks { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblAppointmentInvitee> tblAppointmentInvitees { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblAppointmentPayment> tblAppointmentPayments { get; set; }
 
         public virtual tblBusinessCustomer tblBusinessCustomer { get; set; }
@@ -77,11 +83,5 @@ namespace App.Schedule.Domains
         public virtual tblBusinessService tblBusinessService { get; set; }
 
         public virtual tblServiceLocation tblServiceLocation { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblAppointmentFeedback> tblAppointmentFeedbacks { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tblAppointmentInvitee> tblAppointmentInvitees { get; set; }
     }
 }

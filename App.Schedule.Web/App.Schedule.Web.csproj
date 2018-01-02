@@ -163,6 +163,8 @@
     <Compile Include="Areas\Admin\Controllers\MembershipController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProfileController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProfileBaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ServiceLocationBaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ServiceLocationController.cs" />
     <Compile Include="Areas\Customer\Controllers\HomeController.cs" />
     <Compile Include="Areas\Customer\CustomerAreaRegistration.cs" />
     <Compile Include="Areas\Employee\Controllers\HomeController.cs" />
@@ -228,6 +230,13 @@
     <Content Include="Areas\Admin\Views\Holiday\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Holiday\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\Profile\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ServiceLocation\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ServiceLocation\Hour.cshtml" />
+    <Content Include="Areas\Admin\Views\ServiceLocation\Location.cshtml" />
+    <Content Include="Areas\Admin\Views\ServiceLocation\Holiday.cshtml" />
+    <Content Include="Areas\Admin\Views\ServiceLocation\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\ServiceLocation\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ServiceLocation\Delete.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -365,6 +374,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Admin\Views\ProfileBase\" />
+    <Folder Include="Areas\Admin\Views\ServiceLocationBase\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Customer\Models\" />
     <Folder Include="Areas\Customer\Views\Shared\" />

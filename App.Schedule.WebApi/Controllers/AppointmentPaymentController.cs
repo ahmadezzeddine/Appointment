@@ -72,7 +72,7 @@ namespace App.Schedule.WebApi.Controllers
                         CCLastName = model.CCLastName,
                         CCSecurityCode = model.CCSecurityCode,
                         ChequeNumber = model.ChequeNumber,
-                        Created = (model.Created.HasValue == true) ? model.Created.Value.ToUniversalTime() : model.Created,
+                        Created = model.Created.ToUniversalTime(),
                         IsPaid = model.IsPaid,
                         PaidDate = model.PaidDate.ToUniversalTime(),
                         PurchaseOrderNo = model.PurchaseOrderNo
@@ -119,7 +119,7 @@ namespace App.Schedule.WebApi.Controllers
                             appointmentPayment.CCLastName = model.CCLastName;
                             appointmentPayment.CCSecurityCode = model.CCSecurityCode;
                             appointmentPayment.ChequeNumber = model.ChequeNumber;
-                            appointmentPayment.Created = (model.Created.HasValue == true) ? model.Created.Value.ToUniversalTime() : model.Created;
+                            appointmentPayment.Created = model.Created.ToUniversalTime();
                             appointmentPayment.IsPaid = model.IsPaid;
                             appointmentPayment.PaidDate = model.PaidDate.ToUniversalTime();
                             appointmentPayment.PurchaseOrderNo = model.PurchaseOrderNo;

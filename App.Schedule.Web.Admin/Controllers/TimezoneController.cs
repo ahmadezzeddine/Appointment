@@ -7,7 +7,7 @@ using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Admin.Controllers
 {
-    public class TimezoneController : AdminBaseController  
+    public class TimezoneController : TimezoneBaseController
     {
         public async Task<ActionResult> Index(int? page, string search)
         {
@@ -18,7 +18,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 var pageNumber = page ?? 1;
                 ViewBag.search = search;
 
-                var response = await timezoneService.Gets();
+                var response = await TimezoneService.Gets();
                 if (response.Status)
                 {
                     var data = response.Data;
@@ -53,7 +53,7 @@ namespace App.Schedule.Web.Admin.Controllers
         public async Task<ActionResult> Create()
         {
             var model = new ServiceDataViewModel<TimezoneViewModel>();
-            var countries = await this.dashboardService.GetCountries();
+            var countries = await this.DashboardService.GetCountries();
             ViewBag.CountryId = countries.Select(d => new SelectListItem()
             {
                 Value = Convert.ToString(d.Id),
@@ -75,7 +75,7 @@ namespace App.Schedule.Web.Admin.Controllers
             else
             {
                 model.Data.AdministratorId = admin.Id;
-                var response = await this.timezoneService.Add(model.Data);
+                var response = await this.TimezoneService.Add(model.Data);
                 if (response != null)
                 {
                     result.Status = response.Status;
@@ -104,10 +104,10 @@ namespace App.Schedule.Web.Admin.Controllers
                 }
                 else
                 {
-                    var res = await this.timezoneService.Get(id.Value);
+                    var res = await this.TimezoneService.Get(id.Value);
                     if (res.Status)
                     {
-                        var countries = await this.dashboardService.GetCountries();
+                        var countries = await this.DashboardService.GetCountries();
                         ViewBag.CountryId = countries.Select(d => new SelectListItem()
                         {
                             Value = Convert.ToString(d.Id),
@@ -146,7 +146,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 else
                 {
                     model.Data.AdministratorId = admin.Id;
-                    var response = await this.timezoneService.Update(model.Data);
+                    var response = await this.TimezoneService.Update(model.Data);
                     if (response.Status)
                     {
                         result.Status = true;
@@ -180,10 +180,10 @@ namespace App.Schedule.Web.Admin.Controllers
                 }
                 else
                 {
-                    var res = await this.timezoneService.Get(id.Value);
+                    var res = await this.TimezoneService.Get(id.Value);
                     if (res.Status)
                     {
-                        var countries = await this.dashboardService.GetCountries();
+                        var countries = await this.DashboardService.GetCountries();
                         ViewBag.CountryId = countries.Select(d => new SelectListItem()
                         {
                             Value = Convert.ToString(d.Id),
@@ -213,7 +213,7 @@ namespace App.Schedule.Web.Admin.Controllers
             var result = new ResponseViewModel<TimezoneViewModel>();
             try
             {
-                var response = await this.timezoneService.Delete(model.Data.Id);
+                var response = await this.TimezoneService.Delete(model.Data.Id);
                 if (response.Status)
                 {
                     result.Status = true;

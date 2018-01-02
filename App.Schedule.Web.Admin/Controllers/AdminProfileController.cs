@@ -3,7 +3,7 @@ using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Admin.Controllers
 {
-    public class AdminProfileController : AdminBaseController
+    public class AdminProfileController : BaseController
     {
         public ActionResult Index()
         {
@@ -12,7 +12,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 Data = admin,
                 HasError = false
             };
-            ViewBag.Token = token;
+            ViewBag.Token = this.Token;
             return View(model);
         }
     }

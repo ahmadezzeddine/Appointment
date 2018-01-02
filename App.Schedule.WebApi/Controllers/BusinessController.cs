@@ -217,7 +217,7 @@ namespace App.Schedule.WebApi.Controllers
             }
             else
             {
-                using (System.Data.Entity.DbContextTransaction dbTran = _db.Database.BeginTransaction())
+                using (var dbTran = _db.Database.BeginTransaction())
                 {
                     try
                     {
@@ -297,7 +297,6 @@ namespace App.Schedule.WebApi.Controllers
                         {
                             FirstName = model.Employee.FirstName,
                             LastName = model.Employee.LastName,
-                            LoginId = model.Employee.Email,
                             Password = Security.Encrypt(model.Employee.Password, true),
                             Email = model.Employee.Email,
                             STD = model.Employee.STD,
@@ -343,7 +342,6 @@ namespace App.Schedule.WebApi.Controllers
                             IsActive = businessEmployee.IsActive,
                             IsAdmin = businessEmployee.IsAdmin,
                             LastName = businessEmployee.LastName,
-                            LoginId = businessEmployee.LoginId,
                             PhoneNumber = businessEmployee.PhoneNumber,
                             ServiceLocationId = businessEmployee.ServiceLocationId,
                             STD = businessEmployee.STD

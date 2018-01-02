@@ -7,7 +7,7 @@ using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Admin.Controllers
 {
-    public class MembershipController : AdminBaseController
+    public class MembershipController : MembershipBaseController
     {
         public async Task<ActionResult> Index(int? page, string search)
         {
@@ -18,7 +18,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 var pageNumber = page ?? 1;
                 ViewBag.search = search;
 
-                var response = await membershipService.Gets();
+                var response = await MembershipService.Gets();
                 if (response.Status)
                 {
                     var data = response.Data;
@@ -69,7 +69,7 @@ namespace App.Schedule.Web.Admin.Controllers
             else
             {
                 model.Data.AdministratorId = admin.Id;
-                var response = await this.membershipService.Add(model.Data);
+                var response = await this.MembershipService.Add(model.Data);
                 if (response != null)
                 {
                     result.Status = response.Status;
@@ -90,10 +90,10 @@ namespace App.Schedule.Web.Admin.Controllers
             var model = new ServiceDataViewModel<MembershipViewModel>();
             try
             {
-                var res = await this.membershipService.Get(id.Value);
+                var res = await this.MembershipService.Get(id.Value);
                 if (res.Status)
                 {
-                    var countries = await this.dashboardService.GetMemberships();
+                    var countries = await this.DashboardService.GetMemberships();
                     model.HasError = false;
                     model.Data = res.Data;
                 }
@@ -127,7 +127,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 else
                 {
                     model.Data.AdministratorId = admin.Id;
-                    var response = await this.membershipService.Update(model.Data);
+                    var response = await this.MembershipService.Update(model.Data);
                     if (response.Status)
                     {
                         result.Status = true;
@@ -155,10 +155,10 @@ namespace App.Schedule.Web.Admin.Controllers
             try
             {
                 model.HasError = true;
-                var res = await this.membershipService.Get(id.Value);
+                var res = await this.MembershipService.Get(id.Value);
                 if (res.Status)
                 {
-                    var countries = await this.dashboardService.GetMemberships();
+                    var countries = await this.DashboardService.GetMemberships();
                     model.HasError = false;
                     model.Data = res.Data;
                 }
@@ -182,7 +182,7 @@ namespace App.Schedule.Web.Admin.Controllers
             var result = new ResponseViewModel<MembershipViewModel>();
             try
             {
-                var response = await this.membershipService.Deactive(model.Data.Id,model.Data.IsActive);
+                var response = await this.MembershipService.Deactive(model.Data.Id, model.Data.IsActive);
                 if (response != null)
                 {
                     result.Status = response.Status;

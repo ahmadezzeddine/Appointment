@@ -38,12 +38,6 @@
                             <li><a href="@Url.Action("Index","Timezone")">TimeZone</a></li>
                             <li><a href="@Url.Action("Index","Membership")">Membership</a></li>
                             <li><a href="@Url.Action("Index","BusinessCategory")">Business Category</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">Business</a></li>
-                            <li><a href="#">Business Admin</a></li>
-                            <li><a href="#">Business Employee</a></li>
-                            <li><a href="#">Business Customer</a></li>
-                            <li><a href="#">Appointment</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -77,6 +71,16 @@
         </div><!-- /.container-fluid -->
     </nav>
     <div class="container-fluid">
+        <div id="errorBox" class="alert alert-danger container margin20" role="alert" style="display:none;">
+            <strong id="err_head">Info: </strong>
+            <span id="err_title">Please try again later.</span>
+            <div id="err_process" class="pull-right" style="display:none;">
+                <img src="~/Content/Images/loading2.gif" width="35" />
+            </div>
+            <div id="err_process" class="pull-right" style="display:none;">
+                <img src="~/Content/Images/loading2.gif" width="35" />
+            </div>
+        </div>
         @RenderBody()
     </div>
 

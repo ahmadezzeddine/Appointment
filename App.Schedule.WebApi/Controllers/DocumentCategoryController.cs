@@ -62,7 +62,7 @@ namespace App.Schedule.WebApi.Controllers
                 {
                     var documentCategory = new tblDocumentCategory()
                     {
-                        Created = model.Created.HasValue ? model.Created.Value.ToUniversalTime() : model.Created,
+                        Created = model.Created.ToUniversalTime(),
                         IsActive = model.IsActive,
                         IsParent = model.IsParent,
                         Name = model.Name,
@@ -103,8 +103,8 @@ namespace App.Schedule.WebApi.Controllers
                         var documentCategory = _db.tblDocumentCategories.Find(id);
                         if (documentCategory != null)
                         {
-                            documentCategory.Created = model.Created.HasValue ? model.Created.Value.ToUniversalTime() : model.Created;
-                        documentCategory.IsActive = model.IsActive;
+                            documentCategory.Created = model.Created.ToUniversalTime();
+                            documentCategory.IsActive = model.IsActive;
                             documentCategory.IsParent = model.IsParent;
                             documentCategory.Name = model.Name;
                             documentCategory.OrderNo = model.OrderNo;

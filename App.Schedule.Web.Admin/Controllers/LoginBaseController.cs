@@ -1,21 +1,20 @@
 ﻿using System.Web.Mvc;
+using App.Schedule.Services;
 
 namespace App.Schedule.Web.Admin.Controllers
 {
-    public class LoginBaseController : AdminBaseController
+    public class LoginBaseController : BaseController
     {
+        protected AdminService AdminService;
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            try
+            if (LoginStatus())
             {
-                if (LoginStatus())
-                {
-                    filterContext.Result = RedirectToAction("Index", "Dashboard");
-                }
+                filterContext.Result = RedirectToAction("Index", "Dashboard");
             }
-            catch
+            else
             {
-
+                this.AdminService = new AdminService(this.Token);
             }
         }
     }

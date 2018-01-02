@@ -3,17 +3,15 @@ namespace App.Schedule.Context
     using System.Data.Entity;
     using App.Schedule.Domains;
 
-    /// <summary>
-    /// Class is used to hold db context of appointment scheduler.
-    /// </summary>
     public partial class AppScheduleDbContext : DbContext
     {
         public AppScheduleDbContext()
-            : base("name=AppScheduleDbContext")
+           : base("name=AppScheduleDbContext")
         {
             Configuration.ProxyCreationEnabled = false;
             Configuration.LazyLoadingEnabled = false;
         }
+
         public virtual DbSet<tblAdministrator> tblAdministrators { get; set; }
         public virtual DbSet<tblAppointment> tblAppointments { get; set; }
         public virtual DbSet<tblAppointmentDocument> tblAppointmentDocuments { get; set; }
@@ -39,44 +37,42 @@ namespace App.Schedule.Context
         {
             modelBuilder.Entity<tblAdministrator>()
                 .HasMany(e => e.tblCountries)
-                .WithRequired(e => e.tblAdministrator)
-                .HasForeignKey(e => e.AdministratorId)
-                .WillCascadeOnDelete(false);
+                .WithOptional(e => e.tblAdministrator)
+                .HasForeignKey(e => e.AdministratorId);
 
             modelBuilder.Entity<tblAdministrator>()
                 .HasMany(e => e.tblMemberships)
-                .WithRequired(e => e.tblAdministrator)
-                .HasForeignKey(e => e.AdministratorId)
-                .WillCascadeOnDelete(false);
+                .WithOptional(e => e.tblAdministrator)
+                .HasForeignKey(e => e.AdministratorId);
 
             modelBuilder.Entity<tblAdministrator>()
                 .HasMany(e => e.tblTimezones)
-                .WithRequired(e => e.tblAdministrator)
-                .HasForeignKey(e => e.AdministratorId)
-                .WillCascadeOnDelete(false);
+                .WithOptional(e => e.tblAdministrator)
+                .HasForeignKey(e => e.AdministratorId);
 
             modelBuilder.Entity<tblAppointment>()
                 .HasMany(e => e.tblAppointmentDocuments)
                 .WithOptional(e => e.tblAppointment)
-                .HasForeignKey(e => e.AppointmentId);
-
-            modelBuilder.Entity<tblAppointment>()
-                .HasMany(e => e.tblAppointmentPayments)
-                .WithRequired(e => e.tblAppointment)
                 .HasForeignKey(e => e.AppointmentId)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete();
 
             modelBuilder.Entity<tblAppointment>()
                 .HasMany(e => e.tblAppointmentFeedbacks)
-                .WithRequired(e => e.tblAppointment)
+                .WithOptional(e => e.tblAppointment)
                 .HasForeignKey(e => e.AppointmentId)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete();
 
             modelBuilder.Entity<tblAppointment>()
                 .HasMany(e => e.tblAppointmentInvitees)
-                .WithRequired(e => e.tblAppointment)
+                .WithOptional(e => e.tblAppointment)
                 .HasForeignKey(e => e.AppointmentId)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete();
+
+            modelBuilder.Entity<tblAppointment>()
+                .HasMany(e => e.tblAppointmentPayments)
+                .WithOptional(e => e.tblAppointment)
+                .HasForeignKey(e => e.AppointmentId)
+                .WillCascadeOnDelete();
 
             modelBuilder.Entity<tblAppointmentPayment>()
                 .Property(e => e.Amount)
@@ -84,15 +80,14 @@ namespace App.Schedule.Context
 
             modelBuilder.Entity<tblBusiness>()
                 .HasMany(e => e.tblServiceLocations)
-                .WithRequired(e => e.tblBusiness)
+                .WithOptional(e => e.tblBusiness)
                 .HasForeignKey(e => e.BusinessId)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete();
 
             modelBuilder.Entity<tblBusinessCategory>()
                 .HasMany(e => e.tblBusinesses)
-                .WithRequired(e => e.tblBusinessCategory)
-                .HasForeignKey(e => e.BusinessCategoryId)
-                .WillCascadeOnDelete(false);
+                .WithOptional(e => e.tblBusinessCategory)
+                .HasForeignKey(e => e.BusinessCategoryId);
 
             modelBuilder.Entity<tblBusinessCategory>()
                 .HasMany(e => e.tblBusinessCategory1)
@@ -116,21 +111,18 @@ namespace App.Schedule.Context
 
             modelBuilder.Entity<tblBusinessEmployee>()
                 .HasMany(e => e.tblAppointmentInvitees)
-                .WithRequired(e => e.tblBusinessEmployee)
-                .HasForeignKey(e => e.BusinessEmployeeId)
-                .WillCascadeOnDelete(false);
+                .WithOptional(e => e.tblBusinessEmployee)
+                .HasForeignKey(e => e.BusinessEmployeeId);
 
             modelBuilder.Entity<tblBusinessEmployee>()
                 .HasMany(e => e.tblBusinessOffers)
-                .WithRequired(e => e.tblBusinessEmployee)
-                .HasForeignKey(e => e.BusinessEmployeeId)
-                .WillCascadeOnDelete(false);
+                .WithOptional(e => e.tblBusinessEmployee)
+                .HasForeignKey(e => e.BusinessEmployeeId);
 
             modelBuilder.Entity<tblBusinessEmployee>()
                 .HasMany(e => e.tblBusinessServices)
-                .WithRequired(e => e.tblBusinessEmployee)
-                .HasForeignKey(e => e.EmployeeId)
-                .WillCascadeOnDelete(false);
+                .WithOptional(e => e.tblBusinessEmployee)
+                .HasForeignKey(e => e.EmployeeId);
 
             modelBuilder.Entity<tblBusinessOffer>()
                 .HasMany(e => e.tblAppointments)
@@ -139,9 +131,8 @@ namespace App.Schedule.Context
 
             modelBuilder.Entity<tblBusinessOffer>()
                 .HasMany(e => e.tblBusinessOfferServiceLocations)
-                .WithRequired(e => e.tblBusinessOffer)
-                .HasForeignKey(e => e.BusinessOfferId)
-                .WillCascadeOnDelete(false);
+                .WithOptional(e => e.tblBusinessOffer)
+                .HasForeignKey(e => e.BusinessOfferId);
 
             modelBuilder.Entity<tblBusinessService>()
                 .Property(e => e.Cost)
@@ -149,15 +140,13 @@ namespace App.Schedule.Context
 
             modelBuilder.Entity<tblBusinessService>()
                 .HasMany(e => e.tblAppointments)
-                .WithRequired(e => e.tblBusinessService)
-                .HasForeignKey(e => e.BusinessServiceId)
-                .WillCascadeOnDelete(false);
+                .WithOptional(e => e.tblBusinessService)
+                .HasForeignKey(e => e.BusinessServiceId);
 
             modelBuilder.Entity<tblCountry>()
                 .HasMany(e => e.tblServiceLocations)
-                .WithRequired(e => e.tblCountry)
-                .HasForeignKey(e => e.CountryId)
-                .WillCascadeOnDelete(false);
+                .WithOptional(e => e.tblCountry)
+                .HasForeignKey(e => e.CountryId);
 
             modelBuilder.Entity<tblDocumentCategory>()
                 .Property(e => e.Type)
@@ -179,9 +168,8 @@ namespace App.Schedule.Context
 
             modelBuilder.Entity<tblMembership>()
                 .HasMany(e => e.tblBusinesses)
-                .WithRequired(e => e.tblMembership)
-                .HasForeignKey(e => e.MembershipId)
-                .WillCascadeOnDelete(false);
+                .WithOptional(e => e.tblMembership)
+                .HasForeignKey(e => e.MembershipId);
 
             modelBuilder.Entity<tblServiceLocation>()
                 .HasMany(e => e.tblAppointments)
@@ -189,45 +177,31 @@ namespace App.Schedule.Context
                 .HasForeignKey(e => e.ServiceLocationId);
 
             modelBuilder.Entity<tblServiceLocation>()
-                .HasMany(e => e.tblBusinessCustomers)
-                .WithRequired(e => e.tblServiceLocation)
-                .HasForeignKey(e => e.ServiceLocationId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<tblServiceLocation>()
-                .HasMany(e => e.tblBusinessEmployees)
-                .WithRequired(e => e.tblServiceLocation)
-                .HasForeignKey(e => e.ServiceLocationId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<tblServiceLocation>()
                 .HasMany(e => e.tblBusinessHolidays)
-                .WithRequired(e => e.tblServiceLocation)
+                .WithOptional(e => e.tblServiceLocation)
                 .HasForeignKey(e => e.ServiceLocationId)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete();
 
             modelBuilder.Entity<tblServiceLocation>()
                 .HasMany(e => e.tblBusinessHours)
                 .WithOptional(e => e.tblServiceLocation)
-                .HasForeignKey(e => e.ServiceLocationId);
+                .HasForeignKey(e => e.ServiceLocationId)
+                .WillCascadeOnDelete();
 
             modelBuilder.Entity<tblServiceLocation>()
                 .HasMany(e => e.tblBusinessOfferServiceLocations)
-                .WithRequired(e => e.tblServiceLocation)
-                .HasForeignKey(e => e.ServiceLocationId)
-                .WillCascadeOnDelete(false);
+                .WithOptional(e => e.tblServiceLocation)
+                .HasForeignKey(e => e.ServiceLocationId);
 
             modelBuilder.Entity<tblTimezone>()
                 .HasMany(e => e.tblBusinesses)
-                .WithRequired(e => e.tblTimezone)
-                .HasForeignKey(e => e.TimezoneId)
-                .WillCascadeOnDelete(false);
+                .WithOptional(e => e.tblTimezone)
+                .HasForeignKey(e => e.TimezoneId);
 
             modelBuilder.Entity<tblTimezone>()
                 .HasMany(e => e.tblServiceLocations)
-                .WithRequired(e => e.tblTimezone)
-                .HasForeignKey(e => e.TimezoneId)
-                .WillCascadeOnDelete(false);
+                .WithOptional(e => e.tblTimezone)
+                .HasForeignKey(e => e.TimezoneId);
         }
     }
 }

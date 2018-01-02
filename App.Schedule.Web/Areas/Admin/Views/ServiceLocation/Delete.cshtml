@@ -1,0 +1,53 @@
+﻿@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<ServiceLocationViewModel>
+
+@{
+    ViewBag.Title = "Remove Service Location";
+    Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
+}
+
+<ul class="nav nav-tabs">
+    <li class="active"><a href="@Url.Action("index","servicelocation",new { area = "admin"})">Service Location</a></li>
+</ul>
+<div class="tab-content" style="padding:0px 10px;">
+    <div class="tab-pane active">
+        <div class="col-lg-12 margin10">
+            <div class="row">
+                @if (Model != null)
+                {
+                    if (!Model.Status)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <strong id="err_head">Info: </strong>
+                            <span id="err_title">@Model.Message</span>
+                        </div>
+                    }
+                    using (Ajax.BeginForm("delete", "servicelocation", new AjaxOptions { }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(d => d.Data.BusinessId)
+                        @Html.HiddenFor(d => d.Data.Id)
+                        <div class="alert alert-danger" style="width:500px; margin:0px auto;">
+                            <p>
+                                Name: @Model.Data.Name
+                            </p>
+                            <p>
+                                Are you sure want to delete?
+                            </p>
+                           <div class="row margin20">
+                               <div class="col-lg-12">
+                                   <div class="col-lg-6">
+                                       <button onclick="onSubmit(this,'@Url.Action("index","servicelocation", new { area = "admin" })')" class="btn btn-danger btn-block">Delete</button>
+                                   </div>
+                                   <div class="col-lg-6">
+                                       <a href="@Url.Action("index", "servicelocation", new { area = "admin" })" class="btn btn-default btn-block">Back</a>
+                                   </div>
+                               </div>
+                           </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

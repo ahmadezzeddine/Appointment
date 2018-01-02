@@ -8,10 +8,6 @@
         @using (Ajax.BeginForm("Index", "Forgot", new AjaxOptions { }))
         {
             @Html.AntiForgeryToken()
-            <div id="errorBox" class="alert alert-danger" role="alert" style="display:none;">
-                <strong id="err_head">Error: </strong>
-                <span id="err_title">Please try again later.</span>
-            </div>
             <div class="absolute-center is-forgot alert">
                 <div id="logo-container">Forgot Password</div>
                 <div class="col-sm-12 col-md-10 col-md-offset-1">

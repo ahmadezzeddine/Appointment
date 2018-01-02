@@ -9,6 +9,16 @@
 </head>
 <body>
     <div class="container-fluid">
+        <div id="errorBox" class="alert alert-danger container margin20" role="alert" style="display:none;">
+            <strong id="err_head">Info: </strong>
+            <span id="err_title">Please try again later.</span>
+            <div id="err_process" class="pull-right" style="display:none;">
+                <img src="~/Content/Images/loading2.gif" width="35" />
+            </div>
+            <div id="err_process" class="pull-right" style="display:none;">
+                <img src="~/Content/Images/loading2.gif" width="35" />
+            </div>
+        </div>
         @RenderBody()
     </div>
     @Scripts.Render("~/bundles/jquery")

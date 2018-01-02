@@ -61,19 +61,19 @@ namespace App.Schedule.Domains
 
         public DateTime Created { get; set; }
 
-        public int MembershipId { get; set; }
+        public int? MembershipId { get; set; }
 
-        public int BusinessCategoryId { get; set; }
+        public int? BusinessCategoryId { get; set; }
 
-        public int TimezoneId { get; set; }
-
-        public virtual tblTimezone tblTimezone { get; set; }
-
-        public virtual tblMembership tblMembership { get; set; }
-
-        public virtual tblBusinessCategory tblBusinessCategory { get; set; }
+        public int? TimezoneId { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblServiceLocation> tblServiceLocations { get; set; }
+
+        public virtual tblBusinessCategory tblBusinessCategory { get; set; }
+
+        public virtual tblMembership tblMembership { get; set; }
+
+        public virtual tblTimezone tblTimezone { get; set; }
     }
 }

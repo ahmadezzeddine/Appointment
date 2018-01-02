@@ -78,7 +78,6 @@ namespace App.Schedule.Services
             var returnResponse = new ResponseViewModel<AdministratorViewModel>();
             try
             {
-                model.LoginId = model.Email;
                 //model.Password = HttpContext.Current.Server.UrlEncode(model.Password);
                 var jsonContent = JsonConvert.SerializeObject(model);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
@@ -125,13 +124,13 @@ namespace App.Schedule.Services
             return returnResponse;
         }
 
-        public async Task<ResponseViewModel<AdministratorViewModel>> VerifyLoginCredential(string LoginId, string Password)
+        public async Task<ResponseViewModel<AdministratorViewModel>> VerifyLoginCredential(string Email, string Password)
         {
             var returnResponse = new ResponseViewModel<AdministratorViewModel>();
             try
             {
                 Password = HttpContext.Current.Server.UrlEncode(Password);
-                var url = String.Format(AppointmentService.GET_ADMIN_BYLOGINID, LoginId, Password);
+                var url = String.Format(AppointmentService.GET_ADMIN_BYEMAIL, Email, Password);
                 var response = await this.appointmentService.httpClient.GetAsync(url);
                 returnResponse = await base.GetHttpResponse<AdministratorViewModel>(response);
             }
@@ -149,6 +148,7 @@ namespace App.Schedule.Services
             var returnResponse = new ResponseViewModel<string>();
             try
             {
+                Password = HttpContext.Current.Server.UrlEncode(Password);
                 var model = "username=admin" + Email + "&password=" + Password + "&grant_type=password";
                 var content = new StringContent(model, Encoding.UTF8, "text/plain");
                 var url = String.Format(AppointmentService.GET_ADMIN_TOKEN);

@@ -3,7 +3,7 @@ using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Admin.Controllers
 {
-    public class HomeController : AdminBaseController
+    public class HomeController : BaseController
     {
         public ActionResult Index()
         {

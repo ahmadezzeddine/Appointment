@@ -11,9 +11,9 @@ namespace App.Schedule.Domains
     {
         public long Id { get; set; }
 
-        public long BusinessOfferId { get; set; }
+        public long? BusinessOfferId { get; set; }
 
-        public long ServiceLocationId { get; set; }
+        public long? ServiceLocationId { get; set; }
 
         public virtual tblBusinessOffer tblBusinessOffer { get; set; }
 

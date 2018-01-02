@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
@@ -11,12 +12,12 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            var result = await this.BusinessHolidayService.Gets(RegisterViewModel.Employee.ServiceLocationId, TableType.ServiceLocationId);
+            var result = await this.BusinessHolidayService.Gets(RegisterViewModel.Employee.ServiceLocationId.Value, TableType.ServiceLocationId);
             if (result != null && result.Status)
                 return View(result);
             else
             {
-                var response = this.ResponseHelper.GetResponse<BusinessHolidayViewModel>();
+                var response = this.ResponseHelper.GetResponse<List<BusinessHolidayViewModel>>();
                 return View(Response);
             }
         }

@@ -28,6 +28,7 @@ namespace App.Schedule.Domains
         [StringLength(250)]
         public string LastName { get; set; }
 
+        [Required]
         [StringLength(250)]
         public string Email { get; set; }
 
@@ -35,10 +36,6 @@ namespace App.Schedule.Domains
 
         [StringLength(250)]
         public string PhoneNumber { get; set; }
-
-        [Required]
-        [StringLength(250)]
-        public string LoginId { get; set; }
 
         [Required]
         [StringLength(250)]
@@ -50,15 +47,13 @@ namespace App.Schedule.Domains
 
         public bool IsAdmin { get; set; }
 
-        public long ServiceLocationId { get; set; }
+        public long? ServiceLocationId { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblAppointmentFeedback> tblAppointmentFeedbacks { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblAppointmentInvitee> tblAppointmentInvitees { get; set; }
-
-        public virtual tblServiceLocation tblServiceLocation { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblBusinessOffer> tblBusinessOffers { get; set; }

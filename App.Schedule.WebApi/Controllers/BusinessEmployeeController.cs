@@ -101,7 +101,6 @@ namespace App.Schedule.WebApi.Controllers
                     {
                         FirstName = model.FirstName,
                         LastName = model.LastName,
-                        LoginId = model.LoginId,
                         Password = Security.Encrypt(model.Password, true),
                         Email = model.Email,
                         STD = model.STD,
@@ -141,11 +140,10 @@ namespace App.Schedule.WebApi.Controllers
                     var businessEmployee = _db.tblBusinessEmployees.Find(id);
                     if (businessEmployee != null)
                     {
-                        if (businessEmployee.LoginId.ToLower() == model.LoginId.ToLower())
+                        if (businessEmployee.Email.ToLower() == model.Email.ToLower())
                         {
                             businessEmployee.FirstName = model.FirstName;
                             businessEmployee.LastName = model.LastName;
-                            businessEmployee.LoginId = model.LoginId;
                             businessEmployee.Password = Security.Encrypt(model.Password, true);
                             businessEmployee.STD = model.STD;
                             businessEmployee.PhoneNumber = model.PhoneNumber;
@@ -223,7 +221,6 @@ namespace App.Schedule.WebApi.Controllers
                         {
                             businessEmployee.FirstName = model.FirstName;
                             businessEmployee.LastName = model.LastName;
-                            businessEmployee.LoginId = model.LoginId;
                             businessEmployee.Password = Security.Encrypt(model.Password, true);
                             businessEmployee.STD = model.STD;
                             businessEmployee.PhoneNumber = model.PhoneNumber;

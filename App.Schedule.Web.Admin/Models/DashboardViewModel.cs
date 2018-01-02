@@ -1,11 +1,9 @@
-﻿namespace App.Schedule.Web.Admin.Models
+﻿using App.Schedule.Domains.ViewModel;
+
+namespace App.Schedule.Web.Admin.Models
 {
-    public class DashboardViewModel
+    public class DashboardViewModel : ErrorViewModel
     {
-        public bool HasError { get; set; }
-        public string Error { get; set; }
-        public bool HasMore { get; set; }
-        public string ErrorDescription { get; set; }
         public long AdminsCount { get; set; }
         public long CountryCount { get; set; }
         public long TimezonCount { get; set; }

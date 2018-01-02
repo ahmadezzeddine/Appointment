@@ -31,7 +31,7 @@ namespace App.Schedule.Domains
 
         public bool IsActive { get; set; }
 
-        public DateTime? Created { get; set; }
+        public DateTime Created { get; set; }
 
         public int? OrderNumber { get; set; }
 

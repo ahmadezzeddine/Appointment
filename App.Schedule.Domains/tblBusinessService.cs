@@ -30,7 +30,7 @@ namespace App.Schedule.Domains
 
         public DateTime Created { get; set; }
 
-        public long EmployeeId { get; set; }
+        public long? EmployeeId { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblAppointment> tblAppointments { get; set; }

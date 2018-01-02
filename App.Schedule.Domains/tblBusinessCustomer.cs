@@ -54,10 +54,6 @@ namespace App.Schedule.Domains
 
         [Required]
         [StringLength(250)]
-        public string LoginId { get; set; }
-
-        [Required]
-        [StringLength(250)]
         public string Password { get; set; }
 
         public DateTime Created { get; set; }
@@ -66,14 +62,12 @@ namespace App.Schedule.Domains
 
         public int? TimezoneId { get; set; }
 
-        public long ServiceLocationId { get; set; }
+        public long? ServiceLocationId { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblAppointment> tblAppointments { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblAppointmentFeedback> tblAppointmentFeedbacks { get; set; }
-
-        public virtual tblServiceLocation tblServiceLocation { get; set; }
     }
 }

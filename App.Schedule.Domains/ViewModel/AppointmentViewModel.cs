@@ -19,10 +19,6 @@ namespace App.Schedule.Domains.ViewModel
         [MinLength(3, ErrorMessage = "LastName should have atleast 3 character long")]
         public string LastName { get; set; }
 
-        //[Required(ErrorMessage = "Please enter your email id.")]
-        [EmailAddress(ErrorMessage = "Please enter a valid email id")]
-        public string LoginId { get; set; }
-
         [MinLength(8, ErrorMessage = "Password must be greater than 8 character")]
         [MaxLength(50, ErrorMessage = "Password must be less than 50 character")]
         public string OldPassword { get; set; }
@@ -48,9 +44,10 @@ namespace App.Schedule.Domains.ViewModel
 
         public bool IsActive { get; set; }
 
+        [Column(TypeName = "date")]
         public DateTime Created { get; set; }
 
-        public long AdministratorId { get; set; }
+        public long? AdministratorId { get; set; }
     }
 
     /// <summary>
@@ -84,7 +81,7 @@ namespace App.Schedule.Domains.ViewModel
 
         public int? PhoneCode { get; set; }
 
-        public long AdministratorId { get; set; }
+        public long? AdministratorId { get; set; }
 
         //public List<tblServiceLocation> tblServiceLocations { get; set; }
     }
@@ -106,9 +103,9 @@ namespace App.Schedule.Domains.ViewModel
         public bool IsDST { get; set; }
 
         [Required(ErrorMessage = "Please enter country id.")]
-        public int CountryId { get; set; }
+        public int? CountryId { get; set; }
 
-        public long AdministratorId { get; set; }
+        public long? AdministratorId { get; set; }
 
         public virtual AdministratorViewModel Administrator { get; }
 
@@ -142,7 +139,8 @@ namespace App.Schedule.Domains.ViewModel
 
         public bool IsActive { get; set; }
 
-        public DateTime? Created { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime Created { get; set; }
 
         public int? OrderNumber { get; set; }
 
@@ -192,9 +190,10 @@ namespace App.Schedule.Domains.ViewModel
 
         public bool IsActive { get; set; }
 
+        [Column(TypeName = "date")]
         public DateTime Created { get; set; }
 
-        public long AdministratorId { get; set; }
+        public long? AdministratorId { get; set; }
 
         //public virtual tblAdministrator tblAdministrator { get; set; }
 
@@ -253,13 +252,14 @@ namespace App.Schedule.Domains.ViewModel
 
         public bool IsActive { get; set; }
 
+        [Column(TypeName = "date")]
         public DateTime Created { get; set; }
 
-        public int MembershipId { get; set; }
+        public int? MembershipId { get; set; }
 
-        public int BusinessCategoryId { get; set; }
+        public int? BusinessCategoryId { get; set; }
 
-        public int TimezoneId { get; set; }
+        public int? TimezoneId { get; set; }
 
         public virtual TimezoneViewModel tblTimezone { get; set; }
 
@@ -295,10 +295,6 @@ namespace App.Schedule.Domains.ViewModel
         [StringLength(250)]
         public string PhoneNumber { get; set; }
 
-        //[Required]
-        [StringLength(250)]
-        public string LoginId { get; set; }
-
         [Required(ErrorMessage = "Please enter your password")]
         [MinLength(8, ErrorMessage = "Password must be greater than 8 character")]
         [MaxLength(50, ErrorMessage = "Password must be less than 50 character")]
@@ -313,11 +309,12 @@ namespace App.Schedule.Domains.ViewModel
 
         public bool IsActive { get; set; }
 
+        [Column(TypeName = "date")]
         public DateTime Created { get; set; }
 
         public bool IsAdmin { get; set; }
 
-        public long ServiceLocationId { get; set; }
+        public long? ServiceLocationId { get; set; }
 
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<tblAppointmentFeedback> tblAppointmentFeedbacks { get; set; }
@@ -362,15 +359,16 @@ namespace App.Schedule.Domains.ViewModel
         [StringLength(10)]
         public string Zip { get; set; }
 
-        public int CountryId { get; set; }
+        public int? CountryId { get; set; }
 
         public bool IsActive { get; set; }
 
+        [Column(TypeName = "date")]
         public DateTime Created { get; set; }
 
-        public int TimezoneId { get; set; }
+        public int? TimezoneId { get; set; }
 
-        public long BusinessId { get; set; }
+        public long? BusinessId { get; set; }
 
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<tblAppointment> tblAppointments { get; set; }
@@ -449,7 +447,7 @@ namespace App.Schedule.Domains.ViewModel
 
         public int Type { get; set; }
 
-        public long ServiceLocationId { get; set; }
+        public long? ServiceLocationId { get; set; }
 
         //public virtual tblServiceLocation tblServiceLocation { get; set; }
     }
@@ -479,9 +477,10 @@ namespace App.Schedule.Domains.ViewModel
 
         public bool IsActive { get; set; }
 
-        public DateTime? Created { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime Created { get; set; }
 
-        public long BusinessEmployeeId { get; set; }
+        public long? BusinessEmployeeId { get; set; }
 
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<tblAppointment> tblAppointments { get; set; }
@@ -510,9 +509,10 @@ namespace App.Schedule.Domains.ViewModel
 
         public bool IsActive { get; set; }
 
+        [Column(TypeName = "date")]
         public DateTime Created { get; set; }
 
-        public long EmployeeId { get; set; }
+        public long? EmployeeId { get; set; }
 
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<tblAppointment> tblAppointments { get; set; }
@@ -543,6 +543,7 @@ namespace App.Schedule.Domains.ViewModel
         [StringLength(250)]
         public string PhoneNumber { get; set; }
 
+        [Required]
         [StringLength(250)]
         public string Email { get; set; }
 
@@ -563,19 +564,16 @@ namespace App.Schedule.Domains.ViewModel
 
         [Required]
         [StringLength(250)]
-        public string LoginId { get; set; }
-
-        [Required]
-        [StringLength(250)]
         public string Password { get; set; }
 
+        [Column(TypeName = "date")]
         public DateTime Created { get; set; }
 
         public bool IsActive { get; set; }
 
         public int? TimezoneId { get; set; }
 
-        public long ServiceLocationId { get; set; }
+        public long? ServiceLocationId { get; set; }
 
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<tblAppointment> tblAppointments { get; set; }
@@ -597,7 +595,7 @@ namespace App.Schedule.Domains.ViewModel
 
         public long GlobalAppointmentId { get; set; }
 
-        public long BusinessServiceId { get; set; }
+        public long? BusinessServiceId { get; set; }
 
         public string Title { get; set; }
 
@@ -619,6 +617,7 @@ namespace App.Schedule.Domains.ViewModel
 
         public int? EndAfter { get; set; }
 
+        [Column(TypeName = "date")]
         public DateTime? EndAfterDate { get; set; }
 
         public int? StatusType { get; set; }
@@ -664,9 +663,9 @@ namespace App.Schedule.Domains.ViewModel
     {
         public long Id { get; set; }
 
-        public long BusinessEmployeeId { get; set; }
+        public long? BusinessEmployeeId { get; set; }
 
-        public long AppointmentId { get; set; }
+        public long? AppointmentId { get; set; }
 
         //public virtual tblAppointment tblAppointment { get; set; }
 
@@ -709,11 +708,13 @@ namespace App.Schedule.Domains.ViewModel
         [StringLength(250)]
         public string CCSecurityCode { get; set; }
 
+        [Column(TypeName = "date")]
         public DateTime? CCExpirationDate { get; set; }
 
-        public DateTime? Created { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime Created { get; set; }
 
-        public long AppointmentId { get; set; }
+        public long? AppointmentId { get; set; }
 
         //public virtual tblAppointment tblAppointment { get; set; }
     }
@@ -736,11 +737,12 @@ namespace App.Schedule.Domains.ViewModel
         [Column(TypeName = "ntext")]
         public string Feedback { get; set; }
 
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
 
-        public DateTime? Created { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime Created { get; set; }
 
-        public long AppointmentId { get; set; }
+        public long? AppointmentId { get; set; }
 
         //public virtual tblAppointment tblAppointment { get; set; }
 
@@ -766,9 +768,10 @@ namespace App.Schedule.Domains.ViewModel
         [StringLength(50)]
         public string Type { get; set; }
 
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
 
-        public DateTime? Created { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime Created { get; set; }
 
         public bool IsParent { get; set; }
 

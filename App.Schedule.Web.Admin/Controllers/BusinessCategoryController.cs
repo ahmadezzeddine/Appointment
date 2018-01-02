@@ -1,14 +1,14 @@
 ﻿using System;
 using PagedList;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using System.Threading.Tasks;
 using App.Schedule.Domains.ViewModel;
-using System.IO;
 
 namespace App.Schedule.Web.Admin.Controllers
 {
-    public class BusinessCategoryController : AdminBaseController
+    public class BusinessCategoryController : BusinessCategoryBaseController
     {
         public async Task<ActionResult> Index(int? page, string search)
         {
@@ -19,7 +19,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 var pageNumber = page ?? 1;
                 ViewBag.search = search;
 
-                var response = await businessCategoryService.Gets();
+                var response = await this.BusinessCategoryService.Gets();
                 if (response.Status)
                 {
                     //var data = response.Data.Where(d => d.ParentId == null).ToList();
@@ -55,7 +55,7 @@ namespace App.Schedule.Web.Admin.Controllers
         public async Task<ActionResult> Create()
         {
             var model = new ServiceDataViewModel<BusinessCategoryViewModel>();
-            var businessCategories = await this.dashboardService.GetBusinessCategories();
+            var businessCategories = await this.DashboardService.GetBusinessCategories();
             return View(model);
         }
 
@@ -72,7 +72,7 @@ namespace App.Schedule.Web.Admin.Controllers
             else
             {
                 model.Data.AdministratorId = admin.Id;
-                var response = await this.businessCategoryService.Add(model.Data);
+                var response = await this.BusinessCategoryService.Add(model.Data);
                 if (response != null)
                 {
                     result.Status = response.Status;
@@ -101,10 +101,10 @@ namespace App.Schedule.Web.Admin.Controllers
                 }
                 else
                 {
-                    var res = await this.businessCategoryService.Get(id.Value);
+                    var res = await this.BusinessCategoryService.Get(id.Value);
                     if (res.Status)
                     {
-                        var businessCategories = await this.dashboardService.GetBusinessCategories();
+                        var businessCategories = await this.DashboardService.GetBusinessCategories();
                         model.HasError = false;
                         model.Data = res.Data;
                     }
@@ -138,7 +138,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 else
                 {
                     model.Data.AdministratorId = admin.Id;
-                    var response = await this.businessCategoryService.Update(model.Data);
+                    var response = await this.BusinessCategoryService.Update(model.Data);
                     if (response.Status)
                     {
                         result.Status = true;
@@ -189,10 +189,10 @@ namespace App.Schedule.Web.Admin.Controllers
                 }
                 else
                 {
-                    var res = await this.businessCategoryService.Get(id.Value);
+                    var res = await this.BusinessCategoryService.Get(id.Value);
                     if (res.Status)
                     {
-                        var businessCategories = await this.dashboardService.GetBusinessCategories();
+                        var businessCategories = await this.DashboardService.GetBusinessCategories();
                         model.HasError = false;
                         model.Data = res.Data;
                     }
@@ -217,7 +217,7 @@ namespace App.Schedule.Web.Admin.Controllers
             var result = new ResponseViewModel<TimezoneViewModel>();
             try
             {
-                var response = await this.businessCategoryService.Deactive(model.Data.Id,model.Data.IsActive);
+                var response = await this.BusinessCategoryService.Deactive(model.Data.Id, model.Data.IsActive);
                 if (response.Status)
                 {
                     result.Status = true;
@@ -238,7 +238,7 @@ namespace App.Schedule.Web.Admin.Controllers
         }
 
         public async Task<ActionResult> SubIndex(int? page, string search, int? id)
-         {
+        {
             var model = new ServiceDataViewModel<IPagedList<BusinessCategoryViewModel>>();
             try
             {
@@ -246,14 +246,14 @@ namespace App.Schedule.Web.Admin.Controllers
                 var pageNumber = page ?? 1;
                 ViewBag.search = search;
 
-                if(id.HasValue)
+                if (id.HasValue)
                     ViewBag.ParentId = id.Value;
                 else
                 {
                     return RedirectToAction("Index");
                 }
 
-                var response = await businessCategoryService.Gets();
+                var response = await BusinessCategoryService.Gets();
                 if (response.Status)
                 {
                     var data = response.Data.Where(d => d.ParentId != null && d.ParentId == id.Value).ToList();
@@ -292,7 +292,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 return RedirectToAction("Index");
 
             var model = new ServiceDataViewModel<BusinessCategoryViewModel>();
-            var businessCategories = await this.dashboardService.GetBusinessCategories();
+            var businessCategories = await this.DashboardService.GetBusinessCategories();
             ViewBag.ParentId = businessCategories.Where(d => d.ParentId == null && d.Id == id.Value).Select(d => new SelectListItem()
             {
                 Value = Convert.ToString(d.Id),
@@ -318,7 +318,7 @@ namespace App.Schedule.Web.Admin.Controllers
             else
             {
                 model.Data.AdministratorId = admin.Id;
-                var response = await this.businessCategoryService.Add(model.Data);
+                var response = await this.BusinessCategoryService.Add(model.Data);
                 if (response != null)
                 {
                     result.Status = response.Status;
@@ -347,10 +347,10 @@ namespace App.Schedule.Web.Admin.Controllers
                 }
                 else
                 {
-                    var res = await this.businessCategoryService.Get(id.Value);
+                    var res = await this.BusinessCategoryService.Get(id.Value);
                     if (res.Status)
                     {
-                        var businessCategories = await this.dashboardService.GetBusinessCategories();
+                        var businessCategories = await this.DashboardService.GetBusinessCategories();
                         ViewBag.ParentId = businessCategories.Select(d => new SelectListItem()
                         {
                             Value = Convert.ToString(d.Id),
@@ -390,7 +390,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 else
                 {
                     model.Data.AdministratorId = admin.Id;
-                    var response = await this.businessCategoryService.Update(model.Data);
+                    var response = await this.BusinessCategoryService.Update(model.Data);
                     if (response.Status)
                     {
                         result.Status = true;
@@ -424,10 +424,10 @@ namespace App.Schedule.Web.Admin.Controllers
                 }
                 else
                 {
-                    var res = await this.businessCategoryService.Get(id.Value);
+                    var res = await this.BusinessCategoryService.Get(id.Value);
                     if (res.Status)
                     {
-                        var businessCategories = await this.dashboardService.GetBusinessCategories();
+                        var businessCategories = await this.DashboardService.GetBusinessCategories();
                         model.HasError = false;
                         model.Data = res.Data;
                     }
@@ -452,7 +452,7 @@ namespace App.Schedule.Web.Admin.Controllers
             var result = new ResponseViewModel<TimezoneViewModel>();
             try
             {
-                var response = await this.businessCategoryService.Deactive(model.Data.Id, model.Data.IsActive);
+                var response = await this.BusinessCategoryService.Deactive(model.Data.Id, model.Data.IsActive);
                 if (response.Status)
                 {
                     result.Status = true;

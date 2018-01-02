@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Linq;
 using System.Web;
+using System.Linq;
 using System.Web.Mvc;
 using System.Threading.Tasks;
 using App.Schedule.Web.Admin.Models;
 
 namespace App.Schedule.Web.Admin.Controllers
 {
-    public class DashboardController : AdminBaseController
+    public class DashboardController : DashboardBaseController
     {
         public ActionResult Logout()
         {
@@ -30,16 +30,16 @@ namespace App.Schedule.Web.Admin.Controllers
                 Session["HomeLink"] = "Dashboard";
                 if (admin != null)
                 {
-                    var admins = await this.dashboardService.GetAdmins();
-                    var countries = await this.dashboardService.GetCountries();
-                    var timezones = await this.dashboardService.GetTimezones();
-                    var memberships = await this.dashboardService.GetMemberships();
-                    var businessCategories = await this.dashboardService.GetBusinessCategories();
+                    var admins = await this.DashboardService.GetAdmins();
+                    var countries = await this.DashboardService.GetCountries();
+                    var timezones = await this.DashboardService.GetTimezones();
+                    var memberships = await this.DashboardService.GetMemberships();
+                    var businessCategories = await this.DashboardService.GetBusinessCategories();
                     if (admins != null)
                     {
                         model.AdminsCount = admins.Count();
                     }
-                    if(countries != null)
+                    if (countries != null)
                     {
                         model.CountryCount = countries.Count();
                     }
@@ -47,11 +47,11 @@ namespace App.Schedule.Web.Admin.Controllers
                     {
                         model.TimezonCount = timezones.Count();
                     }
-                    if(memberships != null)
+                    if (memberships != null)
                     {
                         model.MembershipCount = memberships.Count();
                     }
-                    if(businessCategories != null)
+                    if (businessCategories != null)
                     {
                         model.BusinessCategoryCount = businessCategories.Count();
                     }
