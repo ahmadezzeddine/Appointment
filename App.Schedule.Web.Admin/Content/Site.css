@@ -1,12 +1,26 @@
 ﻿body {
-    background: #4D606E;
-    color: white;
+    background: #F4F4F4;
 }
 
-div.well {
+.well {
     height: 250px;
 }
 
+.text-overflow{
+    overflow:hidden;
+    line-height:25px;
+}
+
+.navbar-brand-title {
+    float: left;
+    height: 50px;
+    font-size: 18px;
+    line-height: 20px;
+    padding: 15px 0;
+}
+.pagination {
+    margin:0px;
+}
 .absolute-center {
     margin: auto;
     position: absolute;
@@ -97,50 +111,6 @@ div.well {
 .bg-border-dark {
     border-bottom: 1px solid #4D606E !important;
 }
-
-.navbar-dark {
-    background-color: #D3D4D8;
-    color: #fff;
-}
-
-.navbar-custom {
-    background-color:#D3D4D8;
-    color:#4D606E;
-    border:0;
-}
-
-
-.navbar-custom .navbar-nav > li > a {
-    color:#4D606E;
-}
-
-.navbar-custom .navbar-nav > a {
-    color: #4D606E;
-    background-color:transparent;
-}
-
-.navbar-custom .navbar-nav > li.active,
-.navbar-custom .navbar-nav > li > a:hover,
-.navbar-custom .navbar-nav > li > a:focus,
-.navbar-custom .navbar-nav > .open >a {
-    color: #ffffff !important;
-    background-color: #4D606E;
-}
-
-.navbar-custom .navbar-brand {
-    color: #eeeeee;
-}
-
-.nav-a{
-    color:#ffffff !important;
-}
-.navbar-custom .navbar-toggle {
-    background-color:#eeeeee;
-}
-.navbar-custom .icon-bar {
-    background-color:#4D606E;
-}
-
 
 .bg-box{
     padding:10px;

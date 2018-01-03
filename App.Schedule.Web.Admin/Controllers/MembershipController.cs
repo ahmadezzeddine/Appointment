@@ -29,7 +29,7 @@ namespace App.Schedule.Web.Admin.Controllers
                     }
                     else
                     {
-                        model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                        model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                         return View(model);
                     }
                 }
@@ -178,6 +178,60 @@ namespace App.Schedule.Web.Admin.Controllers
 
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete([Bind(Include = "Data")] ServiceDataViewModel<MembershipViewModel> model)
+        {
+            var result = new ResponseViewModel<MembershipViewModel>();
+            try
+            {
+                var response = await this.MembershipService.Delete(model.Data.Id);
+                if (response != null)
+                {
+                    result.Status = response.Status;
+                    result.Message = response.Message;
+                }
+                else
+                {
+                    result.Status = false;
+                    result.Message = response.Message;
+                }
+            }
+            catch
+            {
+                result.Status = false;
+                result.Message = "There was a problem. Please try again later.";
+            }
+            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Deactive(long? id)
+        {
+            var model = new ServiceDataViewModel<MembershipViewModel>();
+            try
+            {
+                model.HasError = true;
+                var res = await this.MembershipService.Get(id.Value);
+                if (res.Status)
+                {
+                    var countries = await this.DashboardService.GetMemberships();
+                    model.HasError = false;
+                    model.Data = res.Data;
+                }
+                else
+                {
+                    model.Error = res.Message;
+                }
+            }
+            catch (Exception ex)
+            {
+                model.HasError = true;
+                model.Error = "There was a problem. Please try again later.";
+                model.ErrorDescription = ex.Message.ToString();
+            }
+            return View(model);
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Deactive([Bind(Include = "Data")] ServiceDataViewModel<MembershipViewModel> model)
         {
             var result = new ResponseViewModel<MembershipViewModel>();
             try

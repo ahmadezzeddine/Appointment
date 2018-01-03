@@ -25,8 +25,8 @@ namespace App.Schedule.Services
         public const string GET_ADMIN_BYID = "api/administrator?Id={0}";
         public const string GET_ADMIN_BYEMAIL = "api/administrator?email={0}&password={1}";
         public const string POST_ADMIN = "api/administrator";
-        public const string DELETE_ADMIN = "api/administrator";
-        public const string DEACTIVE_ADMIN = "api/administrator?id={0}&status={1}";
+        public const string DELETE_ADMIN = "api/administrator?id={0}&status={1}&type={2}";
+        public const string DEACTIVE_ADMIN = "api/administrator?id={0}&status={1}&type={2}";
 
         //Country API
         public const string GET_COUNTRIES = "api/country";
@@ -47,15 +47,15 @@ namespace App.Schedule.Services
         public const string POST_MEMBERSHIP = "api/membership";
         public const string GET_MEMBERSHIP_BYID = "api/membership?id={0}";
         public const string PUT_MEMBERSHIP = "api/membership?id={0}";
-        public const string DELETE_MEMBERSHIP = "api/membership?id={0}";
-        public const string DEACTIVE_MEMBERSHIP = "api/membership?id={0}";
+        public const string DELETE_MEMBERSHIP = "api/membership?id={0}&status={1}&type={2}";
+        public const string DEACTIVE_MEMBERSHIP = "api/membership?id={0}&status={1}&type={2}";
 
         //BUSINESSCATEGORY API
         public const string GET_BUSINESSCATEGORIES = "api/businesscategory";
         public const string POST_BUSINESSCATEGORY = "api/businesscategory";
         public const string GET_BUSINESSCATEGORY_BYID = "api/businesscategory?id={0}";
-        public const string PUT_BUSINESSCATEGORY = "api/businesscategory?id={0}";
-        public const string DELETE_BUSINESSCATEGORY = "api/businesscategory?id={0}";
+        public const string PUT_BUSINESSCATEGORY = "api/businesscategory?id={0}&status={1}&type={2}";
+        public const string DELETE_BUSINESSCATEGORY = "api/businesscategory?id={0}&status={1}&type={2}";
 
         public AppointmentService()
         {

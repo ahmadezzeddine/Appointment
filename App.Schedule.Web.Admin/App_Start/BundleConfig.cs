@@ -21,9 +21,16 @@ namespace App.Schedule.Web.Admin
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
+            //Metis Menu
+            bundles.Add(new ScriptBundle("~/bundles/metismenu").Include(
+                      "~/Scripts/metisMenu.js",
+                      "~/Scripts/vendor/js/sb-admin-2.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/bootstrap-theme.css",
+                      "~/Scripts/vendor/css/sb-admin-2.css",
+                      "~/Content/vendor/font-awesome.css",
                       "~/Content/site.css"));
         }
     }

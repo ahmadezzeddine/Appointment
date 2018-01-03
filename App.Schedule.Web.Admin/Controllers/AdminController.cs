@@ -201,6 +201,76 @@ namespace App.Schedule.Web.Admin.Controllers
             {
                 if (!string.IsNullOrEmpty(model.Data.Email))
                 {
+                    var response = await this.AdminService.Delete(model.Data.Id);
+                    if (response.Status)
+                    {
+                        result.Status = true;
+                        result.Message = response.Message;
+                    }
+                    else
+                    {
+                        result.Status = false;
+                        result.Message = response.Message;
+                    }
+                }
+                else
+                {
+                    result.Status = false;
+                    result.Message = "Please provide a valid email id.";
+                }
+            }
+            catch
+            {
+                result.Status = false;
+                result.Message = "There was a problem. Please try again later.";
+            }
+            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Deactive(long? id)
+        {
+            var model = new ServiceDataViewModel<AdministratorViewModel>();
+            try
+            {
+                model.HasError = true;
+                if (!id.HasValue)
+                {
+                    model.Error = "Please provide a valid id.";
+                }
+                else
+                {
+                    var res = await this.AdminService.Get(id.Value);
+                    if (res.Status)
+                    {
+                        model.HasError = false;
+                        model.Data = res.Data;
+                        model.Data.Password = "";
+                        model.Data.ConfirmPassword = "";
+                    }
+                    else
+                    {
+                        model.Error = res.Message;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                model.HasError = true;
+                model.Error = "There was a problem. Please try again later.";
+                model.ErrorDescription = ex.Message.ToString();
+            }
+            return View(model);
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Deactive([Bind(Include = "Data")] ServiceDataViewModel<AdministratorViewModel> model)
+        {
+            var result = new ResponseViewModel<string>();
+            try
+            {
+                if (!string.IsNullOrEmpty(model.Data.Email))
+                {
                     var response = await this.AdminService.Deactive(model.Data.Id, model.Data.IsActive);
                     if (response.Status)
                     {

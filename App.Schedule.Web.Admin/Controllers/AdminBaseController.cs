@@ -14,7 +14,7 @@ namespace App.Schedule.Web.Admin.Controllers
             var status = this.LoginStatus();
             if (!status)
             {
-                filterContext.Result = RedirectToAction("Login", "Home", new { area = "Admin" });
+                filterContext.Result = RedirectToAction("Index", "Login");
             }
             else
             {

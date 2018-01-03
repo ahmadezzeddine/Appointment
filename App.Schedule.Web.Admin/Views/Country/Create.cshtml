@@ -4,76 +4,63 @@
     ViewBag.Title = "New Country";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="container">
-    <div class="row">
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Country</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
         @Html.Partial("~/Views/SubViews/_Error.cshtml", Model)
-        <div class="bg-box bg-bluegray">
-            @using (Ajax.BeginForm("Create", new AjaxOptions { }))
-            {
-                @Html.AntiForgeryToken()
-                <div class="form-group input-group input-group-lg">
-                    <label class="input-lg input-group-addon">
-                        Add a new Country
-                    </label>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        @using (Ajax.BeginForm("Create", new AjaxOptions { }))
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-globe fa-fw"></i> New Country
                 </div>
-                <div class="form-horizontal">
+                <div class="panel-body">
 
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <div class="input-group">
-                                @Html.EditorFor(model => model.Data.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Country name" } })
-                                <span class="input-group-addon" id="sizing-addon2">Name</span>
-                            </div>
-                        </div>
+                    @Html.AntiForgeryToken()
+                    <div class="form-group col-lg-6">
+                        <label>Name</label>
+                        @Html.EditorFor(model => model.Data.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Country Name" } })
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <div class="input-group">
-                                @Html.EditorFor(model => model.Data.ISO, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter 2 character ISO name" } })
-                                <span class="input-group-addon" id="sizing-addon2">ISO2</span>
-                            </div>
-                        </div>
+                    <div class="form-group col-lg-6">
+                        <label>ISO(2)</label>
+                        @Html.EditorFor(model => model.Data.ISO, new { htmlAttributes = new { @class = "form-control", placeholder = "ISO2 ex. IN, US, UK" } })
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <div class="input-group">
-                                @Html.EditorFor(model => model.Data.ISO3, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter 3 character ISO name" } })
-                                <span class="input-group-addon" id="sizing-addon2">ISO3</span>
-                            </div>
-                        </div>
+                    <div class="form-group col-lg-6">
+                        <label>ISO(3)</label>
+                        @Html.EditorFor(model => model.Data.ISO3, new { htmlAttributes = new { @class = "form-control", placeholder = "ISO 3 ex. IND, USA" } })
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <div class="input-group">
-                                @Html.EditorFor(model => model.Data.CurrencyCode, new { htmlAttributes = new { @class = "form-control", placeholder = "Corrency Code" } })
-                                <span class="input-group-addon" id="sizing-addon2">Currency Code</span>
-                            </div>
-                        </div>
+                    <div class="form-group col-lg-6">
+                        <label>Corrency Code</label>
+                        @Html.EditorFor(model => model.Data.CurrencyCode, new { htmlAttributes = new { @class = "form-control", placeholder = "Currency Code" } })
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <div class="input-group">
-                                @Html.EditorFor(model => model.Data.CurrencyName, new { htmlAttributes = new { @class = "form-control", placeholder = "Currency Name"} })
-                                <span class="input-group-addon" id="sizing-addon2">Currency Name</span>
-                            </div>
-                        </div>
+                    <div class="form-group col-lg-6">
+                        <label>Currency Name</label>
+                        @Html.EditorFor(model => model.Data.CurrencyName, new { htmlAttributes = new { @class = "form-control", placeholder = "Currency Name" } })
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <div class="input-group">
-                                @Html.EditorFor(model => model.Data.PhoneCode, new { htmlAttributes = new { @class = "form-control", placeholder = "Phone Code" } })
-                                <span class="input-group-addon" id="sizing-addon2">Phone Code</span>
-                            </div>
-                        </div>
+                    <div class="form-group col-lg-6">
+                        <label>Phone Code</label>
+                        @Html.EditorFor(model => model.Data.PhoneCode, new { htmlAttributes = new { @class = "form-control", placeholder = "Phone Code" } })
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <input id="btnSave" type="button" value="Save" onclick="onSubmit(this,'@Url.Action("Index","Country")');" class="btn btn-sm btn-dark col-md-6" />
-                            <input type="button" class="btn btn-sm btn-default col-md-6" value="Back" onclick="@("window.location.href='" + @Url.Action("Index", "Country") + "'");" />
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="col-lg-12">
+                                <input id="btnSave" class="btn btn-info btn-sm " type="button" value="Save" onclick="onSubmit(this,'@Url.Action("Index", "Country")');" />
+                                <input type="button" class="btn btn-default btn-sm" value="Back" onclick="@("window.location.href='" + @Url.Action("Index", "Country") + "'");" />
+                            </div>
                         </div>
                     </div>
                 </div>
-            }
-        </div>
+            </div>
+        }
     </div>
 </div>

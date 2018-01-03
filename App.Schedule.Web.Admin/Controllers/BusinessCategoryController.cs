@@ -31,7 +31,7 @@ namespace App.Schedule.Web.Admin.Controllers
                     }
                     else
                     {
-                        model.Data = data.Where(d => d.Name.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                        model.Data = data.Where(d => d.Name.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                         return View(model);
                     }
                 }
@@ -236,6 +236,68 @@ namespace App.Schedule.Web.Admin.Controllers
             }
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> Delete(int? id)
+        {
+            var model = new ServiceDataViewModel<BusinessCategoryViewModel>();
+            try
+            {
+                model.HasError = true;
+                if (!id.HasValue)
+                {
+                    model.Error = "Please provide a valid id.";
+                }
+                else
+                {
+                    var res = await this.BusinessCategoryService.Get(id.Value);
+                    if (res.Status)
+                    {
+                        var businessCategories = await this.DashboardService.GetBusinessCategories();
+                        model.HasError = false;
+                        model.Data = res.Data;
+                    }
+                    else
+                    {
+                        model.Error = res.Message;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                model.HasError = true;
+                model.Error = "There was a problem. Please try again later.";
+                model.ErrorDescription = ex.Message.ToString();
+            }
+            return View(model);
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Delete([Bind(Include = "Data")] ServiceDataViewModel<BusinessCategoryViewModel> model)
+        {
+            var result = new ResponseViewModel<TimezoneViewModel>();
+            try
+            {
+                var response = await this.BusinessCategoryService.Delete(model.Data.Id);
+                if (response.Status)
+                {
+                    result.Status = true;
+                    result.Message = response.Message;
+                }
+                else
+                {
+                    result.Status = false;
+                    result.Message = response.Message;
+                }
+            }
+            catch
+            {
+                result.Status = false;
+                result.Message = "There was a problem. Please try again later.";
+            }
+            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+        }
+
 
         public async Task<ActionResult> SubIndex(int? page, string search, int? id)
         {

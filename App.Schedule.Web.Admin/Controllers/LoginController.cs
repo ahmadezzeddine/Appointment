@@ -63,5 +63,12 @@ namespace App.Schedule.Web.Admin.Controllers
             }
             return Json(new { status = result.Status, message = result.Message, data = result.Data }, JsonRequestBehavior.AllowGet);
         }
+
+
+        [HttpGet]
+        public ActionResult TestPage()
+        {
+            return View();
+        }
     }
 }

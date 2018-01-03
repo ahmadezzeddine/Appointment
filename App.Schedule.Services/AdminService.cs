@@ -15,8 +15,7 @@ namespace App.Schedule.Services
         {
             base.SetUpAppointmentService(token);
         }
-        
-        //IAppointmentService Implementation
+
         public async Task<ResponseViewModel<AdministratorViewModel>> Get(long? id)
         {
             var returnResponse = new ResponseViewModel<AdministratorViewModel>();
@@ -29,7 +28,7 @@ namespace App.Schedule.Services
             catch (Exception ex)
             {
                 returnResponse.Data = null;
-                returnResponse.Message = "There was a problem. Please try again return. reason: "+ex.Message.ToString();
+                returnResponse.Message = "There was a problem. Please try again return. reason: " + ex.Message.ToString();
                 returnResponse.Status = false;
             }
             return returnResponse;
@@ -94,9 +93,29 @@ namespace App.Schedule.Services
             return returnResponse;
         }
 
-        public Task<ResponseViewModel<AdministratorViewModel>> Delete(long? id)
+        public async Task<ResponseViewModel<AdministratorViewModel>> Delete(long? id)
         {
-            return Task.FromResult(new ResponseViewModel<AdministratorViewModel>());
+            var returnResponse = new ResponseViewModel<AdministratorViewModel>();
+            try
+            {
+                if (!id.HasValue)
+                {
+                    returnResponse.Status = false;
+                    returnResponse.Message = "Please provide a valid admin id.";
+                }
+                else
+                {
+                    var url = string.Format(AppointmentService.DELETE_ADMIN, id.Value, false, DeleteType.DeleteRecord);
+                    var response = await this.appointmentService.httpClient.DeleteAsync(url);
+                    returnResponse = await base.GetHttpResponse<AdministratorViewModel>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Message = "There was a problem. Please try again return. reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
         }
 
         public async Task<ResponseViewModel<AdministratorViewModel>> Deactive(long? id, bool status)
@@ -111,7 +130,7 @@ namespace App.Schedule.Services
                 }
                 else
                 {
-                    var url = string.Format(AppointmentService.DEACTIVE_ADMIN, id.Value, status);
+                    var url = string.Format(AppointmentService.DEACTIVE_ADMIN, id.Value, status, DeleteType.UpdateStatus);
                     var response = await this.appointmentService.httpClient.DeleteAsync(url);
                     returnResponse = await base.GetHttpResponse<AdministratorViewModel>(response);
                 }

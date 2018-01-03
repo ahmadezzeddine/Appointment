@@ -35,16 +35,13 @@ function onSubmit(btnSubmit, target) {
         data: $form.serialize(),
         error: function (response) {
             err_head.text("Error: ");
-            err_title.text(data.message);
+            err_title.text("Internal server error.");
             errorDiv.show();
             btnSubmitvar.removeAttr("disabled");
             err_process.css("display", "none");
         },
         success: function (data) {
             btnSubmitvar.removeAttr('disabled');
-            console.log(data);
-            console.log(JSON.stringify(data));
-
             if (data.status) {
                 err_head.text("Info: ");
                 err_title.text("Successed! Please wait...");

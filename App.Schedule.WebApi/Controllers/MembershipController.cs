@@ -24,7 +24,7 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 var model = _db.tblMemberships.ToList();
-                return Ok(new { status = true, data = model, message = "Transaction successed." });
+                return Ok(new { status = true, data = model, message = "success" });
             }
             catch (Exception ex)
             {
@@ -38,7 +38,7 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "", message = "Please provide a valid id" });
+                    return Ok(new { status = false, data = "", message = "please provide a valid id" });
                 else
                 {
                     var model = _db.tblMemberships.Find(id);
@@ -67,7 +67,7 @@ namespace App.Schedule.WebApi.Controllers
 
                 var isAny = _db.tblMemberships.Any(d => d.Title.ToLower() == model.Title.ToLower());
                 if (isAny)
-                    return Ok(new { status = false, data = "", message = "Please try another name." });
+                    return Ok(new { status = false, data = "", message = "please try another name." });
 
                 var membership = new tblMembership()
                 {
@@ -90,9 +90,9 @@ namespace App.Schedule.WebApi.Controllers
 
                 if (response > 0)
                 {
-                    return Ok(new { status = true, data = membership, message = "Transaction successed." });
+                    return Ok(new { status = true, data = membership, message = "success" });
                 }
-                return Ok(new { status = false, data = "", message = "Transaction failed." });
+                return Ok(new { status = false, data = "", message = "failed" });
             }
             catch (Exception ex)
             {
@@ -106,7 +106,7 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "", message = "Please provide a valid id." });
+                    return Ok(new { status = false, data = "", message = "please provide a valid id." });
                 else
                 {
                     var membership = _db.tblMemberships.Find(id);
@@ -129,13 +129,13 @@ namespace App.Schedule.WebApi.Controllers
                         _db.Entry(membership).State = EntityState.Modified;
                         var response = _db.SaveChanges();
                         if (response > 0)
-                            return Ok(new { status = true, data = membership, message = "Transaction successed." });
+                            return Ok(new { status = true, data = membership, message = "success" });
                         else
-                            return Ok(new { status = false, data = "", message = "Transaction failed." });
+                            return Ok(new { status = false, data = "", message = "failed" });
                     }
                     else
                     {
-                        return Ok(new { status = false, data = "", message = "Please provide a valid administrator id." });
+                        return Ok(new { status = false, data = "", message = "please provide a valid administrator id." });
                     }
                 }
             }
@@ -146,24 +146,31 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // DELETE: api/membership/5
-        public IHttpActionResult Delete(int? id)
+        public IHttpActionResult Delete(int? id, bool status, DeleteType type)
         {
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "", message = "Please provide a valid id." });
+                    return Ok(new { status = false, data = "", message = "please provide a valid id." });
                 else
                 {
                     var membership = _db.tblMemberships.Find(id);
                     if (membership != null)
                     {
                         membership.IsActive = !membership.IsActive;
-                        _db.Entry(membership).State = EntityState.Modified;
+                        if(type == DeleteType.DeleteRecord)
+                        {
+                            _db.Entry(membership).State = EntityState.Deleted;
+                        }
+                        else
+                        {
+                            _db.Entry(membership).State = EntityState.Modified;
+                        }
                         var response = _db.SaveChanges();
                         if (response > 0)
-                            return Ok(new { status = true, data = membership, message = "Transaction successed." });
+                            return Ok(new { status = true, data = membership, message = "success" });
                         else
-                            return Ok(new { status = false, data = "", message = "Transaction failed." });
+                            return Ok(new { status = false, data = "", message = "failed" });
                     }
                     else
                     {

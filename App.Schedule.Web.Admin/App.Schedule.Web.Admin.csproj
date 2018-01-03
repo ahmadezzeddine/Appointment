@@ -159,7 +159,6 @@
     <Compile Include="Controllers\DashboardBaseController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\ForgotController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginBaseController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MembershipBaseController.cs" />
@@ -180,10 +179,15 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\Images\loading2.gif" />
     <Content Include="Content\Images\logo.png" />
     <Content Include="Content\Images\NoImageThumb.gif" />
+    <Content Include="Content\metisMenu.css" />
+    <Content Include="Content\metisMenu.min.css" />
     <Content Include="Content\PagedList.css" />
+    <Content Include="Content\vendor\font-awesome.css" />
+    <Content Include="Content\vendor\font-awesome.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -199,6 +203,12 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\vendor\font-awesome.css.map" />
+    <Content Include="Content\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\fonts\FontAwesome.otf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -210,10 +220,16 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\metisMenu.js" />
+    <Content Include="Scripts\metisMenu.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\site.js" />
+    <Content Include="Scripts\vendor\css\sb-admin-2.css" />
+    <Content Include="Scripts\vendor\css\sb-admin-2.min.css" />
+    <Content Include="Scripts\vendor\js\sb-admin-2.js" />
+    <Content Include="Scripts\vendor\js\sb-admin-2.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -232,7 +248,6 @@
     <Content Include="Views\Forgot\Index.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Register\Index.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\Create.cshtml" />
     <Content Include="Views\AdminProfile\Index.cshtml" />
@@ -259,17 +274,16 @@
     <Content Include="Views\BusinessCategory\SubEdit.cshtml" />
     <Content Include="Views\BusinessCategory\SubDeactive.cshtml" />
     <Content Include="Views\SubViews\_Error.cshtml" />
+    <Content Include="Scripts\metisMenu.js.map" />
+    <Content Include="Views\Login\TestPage.cshtml" />
+    <Content Include="Views\Admin\Deactive.cshtml" />
+    <Content Include="Views\SubViews\_ScriptError.cshtml" />
+    <Content Include="Views\Membership\Deactive.cshtml" />
+    <Content Include="Views\BusinessCategory\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Services\" />
-    <Folder Include="Views\Base\" />
-    <Folder Include="Views\BusinessCategoryBase\" />
-    <Folder Include="Views\CountryBase\" />
-    <Folder Include="Views\DashboardBase\" />
-    <Folder Include="Views\MembershipBase\" />
-    <Folder Include="Views\RegisterBase\" />
-    <Folder Include="Views\TimezoneBase\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

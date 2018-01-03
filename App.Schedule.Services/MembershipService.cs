@@ -91,9 +91,29 @@ namespace App.Schedule.Services
             return returnResponse;
         }
 
-        public Task<ResponseViewModel<MembershipViewModel>> Delete(long? id)
+        public async Task<ResponseViewModel<MembershipViewModel>> Delete(long? id)
         {
-            return Task.FromResult(new ResponseViewModel<MembershipViewModel>());
+            var returnResponse = new ResponseViewModel<MembershipViewModel>();
+            try
+            {
+                if (!id.HasValue)
+                {
+                    returnResponse.Status = false;
+                    returnResponse.Message = "Please enter a valid membership id.";
+                }
+                else
+                {
+                    var url = String.Format(AppointmentService.DELETE_MEMBERSHIP, id.Value,false,DeleteType.DeleteRecord);
+                    var response = await this.appointmentService.httpClient.DeleteAsync(url);
+                    returnResponse = await base.GetHttpResponse<MembershipViewModel>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Message = "There was a problem. Please try again return. reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
         }
 
         public async Task<ResponseViewModel<MembershipViewModel>> Deactive(long? id, bool status)
@@ -108,7 +128,7 @@ namespace App.Schedule.Services
                 }
                 else
                 {
-                    var url = String.Format(AppointmentService.DEACTIVE_MEMBERSHIP, id.Value);
+                    var url = String.Format(AppointmentService.DEACTIVE_MEMBERSHIP, id.Value,status,DeleteType.UpdateStatus);
                     var response = await this.appointmentService.httpClient.DeleteAsync(url);
                     returnResponse = await base.GetHttpResponse<MembershipViewModel>(response);
                 }

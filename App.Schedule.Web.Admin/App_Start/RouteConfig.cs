@@ -13,12 +13,12 @@ namespace App.Schedule.Web.Admin
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.MapRoute(
-                "Home",
-                "{controller}/{action}/{id}",
-                new { controller = "Home", action = "Index", id = UrlParameter.Optional },
-                namespaces: new[] { "App.Schedule.Web.Admin.Controllers" }
-            );
+            //routes.MapRoute(
+            //    "Home",
+            //    "{controller}/{action}/{id}",
+            //    new { controller = "Dashboard", action = "Index", id = UrlParameter.Optional },
+            //    namespaces: new[] { "App.Schedule.Web.Admin.Controllers" }
+            //);
 
             routes.MapRoute(
                 name: "Default",

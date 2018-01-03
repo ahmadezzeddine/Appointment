@@ -1,94 +1,87 @@
 ﻿@using App.Schedule.Domains.ViewModel;
 @model ServiceDataViewModel<AdministratorViewModel>
 @{
-    ViewBag.Title = "Admin Profile";
+    ViewBag.Title = "Profile";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="container">
-    <div class="row">
-        <div class="bg-box bg-bluegray">
-            @using (Ajax.BeginForm("Edit", new AjaxOptions { }))
-            {
-                @Html.AntiForgeryToken()
-                <div class="form-group input-group input-group-lg">
-                    <label class="input-lg input-group-addon">
-                        Admin Profile
-                    </label>
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Profile</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/SubViews/_Error.cshtml", Model)
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/SubViews/_ScriptError.cshtml")
+        @using (Ajax.BeginForm("Edit", new AjaxOptions { }))
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-user fa-fw"></i> Admin Profile
                 </div>
-                <div class="form-horizontal">
-                    @Html.Partial("~/Views/SubViews/_Error.cshtml", Model)
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <div class="input-group">
-                                @Html.EditorFor(model => model.Data.FirstName, new { htmlAttributes = new { @class = "form-control", placeholder = "First Name", @disabled = "disabled" } })
-                                <span class="input-group-addon" id="sizing-addon2">FirstName</span>
-                            </div>
+                <div class="panel-body">
+
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.Data.Id)
+                    @Html.HiddenFor(model => model.Data.AdministratorId)
+                    <div class="form-group col-lg-6">
+                        <label>FirstName</label>
+                        <div class="form-control text-overflow">
+                            @Model.Data.FirstName
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <div class="input-group">
-                                @Html.EditorFor(model => model.Data.LastName, new { htmlAttributes = new { @class = "form-control", placeholder = "Last Name", @disabled = "disabled" } })
-                                <span class="input-group-addon" id="sizing-addon2">LastName</span>
-                            </div>
+                    <div class="form-group col-lg-6">
+                        <label>Last Name</label>
+                        <div class="form-control text-overflow">
+                            @Model.Data.LastName
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <div class="input-group">
-                                @Html.EditorFor(model => model.Data.ContactNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Contact Number", @disabled = "disabled" } })
-                                <span class="input-group-addon" id="sizing-addon2">Contact Number</span>
-                            </div>
+                    <div class="form-group col-lg-6">
+                        <label>Contact Number</label>
+                        <div class="form-control text-overflow">
+                            @Model.Data.ContactNumber
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <div class="input-group">
-                                @Html.EditorFor(model => model.Data.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Email", @disabled = "disabled" } })
-                                <span class="input-group-addon" id="sizing-addon2">Email</span>
-                            </div>
+                    <div class="form-group col-lg-6">
+                        <label>Email</label>
+                        <div class="form-control text-overflow">
+                            @Model.Data.Email
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <div class="input-group">
-                                <input class="form-control" disabled = "disabled" value="@ViewBag.Token" />
-                                <span class="input-group-addon" id="sizing-addon2">Token</span>
-                            </div>
+                    <div class="form-group col-lg-12">
+                        <label>Token</label>
+                        <div class="form-control text-overflow">
+                            @ViewBag.Token
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    @Html.CheckBoxFor(model => model.Data.IsAdmin, new { htmlAttributes = new { @class = "form-control" } })
-                                </span>
-                                <span class="form-control">
-                                    Admin
-                                </span>
-                            </div>
+                    <div class="form-group col-lg-6">
+                        <label>Admin</label>
+                        <div class="form-control text-overflow">
+                            @Model.Data.IsAdmin
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    @Html.CheckBoxFor(model => model.Data.IsActive, new { htmlAttributes = new { @class = "form-control" } })
-                                </span>
-                                <span class="form-control">
-                                    Status
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <input type="btnUpdate" class="btn btn-sm btn-dark col-md-6" value="Change" onclick="@("window.location.href='" + @Url.Action("Edit", "Admin", new { Id = Model.Data.Id }) + "'");" />
-                            <input type="button" class="btn btn-sm btn-default col-md-6" value="Back" onclick="@("window.location.href='" + @Url.Action("Index", "Home") + "'");" />
+                    <div class="form-group col-lg-6">
+                        <label>Status</label>
+                        <div class="form-control text-overflow">
+                            @Model.Data.IsActive
                         </div>
                     </div>
                 </div>
-            }
-        </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="col-lg-12">
+                                <input id="btnUpdate" type="button" class="btn btn-info btn-sm" value="Update" onclick="@("window.location.href='" + @Url.Action("Edit", "Admin", new { Id = Model.Data.Id }) + "'");" />
+                                <input id="buttonBack" type="button" class="btn btn-default btn-sm" value="Back" onclick="@("window.location.href='" + @Url.Action("Index", "Dashboard") + "'");" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 </div>

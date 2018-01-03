@@ -91,9 +91,29 @@ namespace App.Schedule.Services
             return returnResponse;
         }
 
-        public Task<ResponseViewModel<BusinessCategoryViewModel>> Delete(long? id)
+        public async Task<ResponseViewModel<BusinessCategoryViewModel>> Delete(long? id)
         {
-            return Task.FromResult(new ResponseViewModel<BusinessCategoryViewModel>());
+            var returnResponse = new ResponseViewModel<BusinessCategoryViewModel>();
+            try
+            {
+                if (!id.HasValue)
+                {
+                    returnResponse.Status = false;
+                    returnResponse.Message = "Please provide a valid admin id.";
+                }
+                else
+                {
+                    var url = String.Format(AppointmentService.DELETE_BUSINESSCATEGORY, id.Value,false,DeleteType.DeleteRecord);
+                    var response = await this.appointmentService.httpClient.DeleteAsync(url);
+                    returnResponse = await base.GetHttpResponse<BusinessCategoryViewModel>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Message = "There was a problem. Please try again return. reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
         }
 
         public async Task<ResponseViewModel<BusinessCategoryViewModel>> Deactive(long? id, bool status)
@@ -108,7 +128,7 @@ namespace App.Schedule.Services
                 }
                 else
                 {
-                    var url = String.Format(AppointmentService.DELETE_BUSINESSCATEGORY, id.Value);
+                    var url = String.Format(AppointmentService.DELETE_BUSINESSCATEGORY, id.Value,status,DeleteType.UpdateStatus);
                     var response = await this.appointmentService.httpClient.DeleteAsync(url);
                     returnResponse = await base.GetHttpResponse<BusinessCategoryViewModel>(response);
                 }

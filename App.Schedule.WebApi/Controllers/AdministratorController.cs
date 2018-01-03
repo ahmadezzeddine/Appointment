@@ -26,7 +26,7 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 var model = _db.tblAdministrators.ToList();
-                return Ok(new { status = true, data = model, message = "Transaction successed." });
+                return Ok(new { status = true, data = model, message = "success" });
             }
             catch (Exception ex)
             {
@@ -46,9 +46,9 @@ namespace App.Schedule.WebApi.Controllers
                 {
                     var model = _db.tblAdministrators.Find(id);
                     if (model != null)
-                        return Ok(new { status = true, data = model, message = "Transaction successed." });
+                        return Ok(new { status = true, data = model, message = "success" });
                     else
-                        return Ok(new { status = false, data = "", message = "Not found." });
+                        return Ok(new { status = false, data = "", message = "not found" });
                 }
             }
             catch (Exception ex)
@@ -70,11 +70,11 @@ namespace App.Schedule.WebApi.Controllers
                 if (model != null)
                 {
                     model.Password = "";
-                    return Ok(new { status = true, data = model, message = "Valid credential" });
+                    return Ok(new { status = true, data = model, message = "valid credential" });
                 }
                 else
                 {
-                    return Ok(new { status = false, data = model, message = "Not a valid credential" });
+                    return Ok(new { status = false, data = model, message = "not a valid credential" });
                 }
             }
             catch (Exception ex)
@@ -96,7 +96,7 @@ namespace App.Schedule.WebApi.Controllers
 
                 var isAny = _db.tblAdministrators.Any(d => d.Email.ToLower() == model.Email.ToLower());
                 if (isAny)
-                    return Ok(new { status = false, data = "", message = "Please try another email id." });
+                    return Ok(new { status = false, data = "", message = "please try another email id." });
 
                 var admin = new tblAdministrator()
                 {
@@ -116,9 +116,9 @@ namespace App.Schedule.WebApi.Controllers
 
                 if (response > 0)
                 {
-                    return Ok(new { status = true, data = admin, message = "Transaction successed." });
+                    return Ok(new { status = true, data = admin, message = "success" });
                 }
-                return Ok(new { status = false, data = "", message = "Transaction failed." });
+                return Ok(new { status = false, data = "", message = "failed" });
             }
             catch (Exception ex)
             {
@@ -132,7 +132,7 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "", message = "Please provide a valid id." });
+                    return Ok(new { status = false, data = "", message = "please provide a valid id." });
                 else
                 {
                     var admin = _db.tblAdministrators.Find(id);
@@ -150,18 +150,18 @@ namespace App.Schedule.WebApi.Controllers
                             _db.Entry(admin).State = EntityState.Modified;
                             var response = _db.SaveChanges();
                             if (response > 0)
-                                return Ok(new { status = true, data = admin, message = "Transaction successed." });
+                                return Ok(new { status = true, data = admin, message = "success" });
                             else
-                                return Ok(new { status = false, data = "", message = "Transaction failed." });
+                                return Ok(new { status = false, data = "", message = "failed" });
                         }
                         else
                         {
-                            return Ok(new { status = false, data = "", message = "Please provide a valid administrator id." });
+                            return Ok(new { status = false, data = "", message = "please provide a valid administrator id." });
                         }
                     }
                     else
                     {
-                        return Ok(new { status = false, data = "", message = "Not a valid data to update. Please provide a valid id." });
+                        return Ok(new { status = false, data = "", message = "not a valid data to update. Please provide a valid id." });
                     }
                 }
             }
@@ -171,28 +171,35 @@ namespace App.Schedule.WebApi.Controllers
             }
         }
 
-        public IHttpActionResult Delete(long? id, bool status)
+        public IHttpActionResult Delete(long? id, bool status, DeleteType type)
         {
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "Please provide a valid admin id." });
+                    return Ok(new { status = false, data = "", message = "please provide a valid admin id." });
                 else
                 {
                     var admin = _db.tblAdministrators.Find(id);
                     if (admin != null)
                     {
                         admin.IsActive = status;
-                        _db.Entry(admin).State = EntityState.Modified;
+                        if (type == DeleteType.DeleteRecord)
+                        {
+                            _db.Entry(admin).State = EntityState.Deleted;
+                        }
+                        else
+                        {
+                            _db.Entry(admin).State = EntityState.Modified;
+                        }
                         var response = _db.SaveChanges();
                         if (response > 0)
-                            return Ok(new { status = true, data = admin, message = "Transaction successed." });
+                            return Ok(new { status = true, data = admin, message = "success" });
                         else
-                            return Ok(new { status = false, data = "", message = "Transaction failed." });
+                            return Ok(new { status = false, data = "", message = "failed" });
                     }
                     else
                     {
-                        return Ok(new { status = false, data = "", message = "Not a valid data to update. Please provide a valid id." });
+                        return Ok(new { status = false, data = "", message = "not a valid data to update. Please provide a valid id." });
                     }
                 }
             }
@@ -232,12 +239,12 @@ namespace App.Schedule.WebApi.Controllers
                 if (response > 0)
                 {
                     status = true;
-                    message = "Transaction successed.";
+                    message = "success";
                     data = admin;
                 }
                 else
                 {
-                    message = "Transaction failed.";
+                    message = "failed";
                 }
             }
             catch (Exception ex)
@@ -270,21 +277,21 @@ namespace App.Schedule.WebApi.Controllers
                         if (response > 0)
                         {
                             status = true;
-                            message = "Transaction successed.";
+                            message = "success";
                         }
                         else
                         {
-                            message = "Transaction failed.";
+                            message = "failed";
                         }
                     }
                     else
                     {
-                        message = "Please enter a valid email id.";
+                        message = "please enter a valid email id.";
                     }
                 }
                 else
                 {
-                    message = "It is not a valid Admin information.";
+                    message = "it is not a valid admin information.";
                 }
             }
             catch (Exception ex)
