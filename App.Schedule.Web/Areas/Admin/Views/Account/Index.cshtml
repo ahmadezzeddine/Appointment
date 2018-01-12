@@ -5,141 +5,156 @@
     ViewBag.Title = "Account Profile";
     Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
 }
-<ul class="nav nav-tabs">
-    <li class="active"><a href="@Url.Action("index", "account", new { area = "admin" })">Account Profile</a></li>
-    <li><a href="@Url.Action("administrator", "account", new { area = "admin" })">Administrator</a></li>
-    <li><a href="@Url.Action("membership", "account", new { area = "admin" })">Membership</a></li>
-    <li><a href="@Url.Action("billing", "account", new { area = "admin" })">Billing</a></li>
-</ul>
-<div class="tab-content" style="padding:0px 10px;">
-    <div class="tab-pane active">
-        <div class="col-lg-12 margin10">
-            <div class="row">
-                @{
-                    if (Model != null)
-                    {
-                        if (!Model.Status)
-                        {
-                            <div class="alert alert-danger" role="alert">
-                                <strong id="err_head">Info: </strong>
-                                <span id="err_title">@Model.Message</span>
-                            </div>
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Account Setup</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/SubViews/_Error.cshtml", Model)
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="@Url.Action("index", "account", new { area = "admin" })">Account Profile</a></li>
+            <li><a href="@Url.Action("administrator", "account", new { area = "admin" })">Administrator</a></li>
+            <li><a href="@Url.Action("membership", "account", new { area = "admin" })">Membership</a></li>
+            <li><a href="@Url.Action("billing", "account", new { area = "admin" })">Billing</a></li>
+        </ul>
+        <div class="tab-content" style="padding:0px 10px;">
+            <div class="tab-pane active">
+                <div class="col-lg-12 margin10">
+                    <div class="row">
+                        @{
+                            if (Model != null)
+                            {
+                                if (!Model.Status)
+                                {
+                                    <div class="alert alert-danger" role="alert">
+                                        <strong id="err_head">Info: </strong>
+                                        <span id="err_title">@Model.Message</span>
+                                    </div>
+                                }
+                                if (Model.Data != null)
+                                {
+                                    <table class="table table-striped">
+                                        <tr>
+                                            <td class="text-right">Category</td>
+                                            <td>
+                                                @if (Model.Data != null && Model.Data.tblBusinessCategory != null)
+                                                {
+                                                    <text>@Model.Data.tblBusinessCategory.Name</text>
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-4 col-md-4 col-sm-4  text-right">Business Name</td>
+                                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                                <b>
+                                                    @Model.Data.Name
+                                                </b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-4 col-md-4 col-sm-4  text-right">Short Name</td>
+                                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                                @Model.Data.ShortName
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">Phone No.</td>
+                                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                                @Model.Data.PhoneNumbers
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">Fax No.</td>
+                                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                                @Model.Data.FaxNumbers
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">Email Id</td>
+                                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                                @Model.Data.Email
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">Website</td>
+                                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                                @Model.Data.Website
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">Address 1</td>
+                                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                                @Model.Data.Add1
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">Address 2</td>
+                                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                                @Model.Data.Add2
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">City</td>
+                                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                                @Model.Data.City
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">State</td>
+                                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                                @Model.Data.State
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">Zipcode</td>
+                                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                                @Model.Data.Zip
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">Country</td>
+                                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                                @Model.Data.CountryId
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">Timezone</td>
+                                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                                @if (Model.Data.tblTimezone != null)
+                                                {
+                                                    <text>@Model.Data.tblTimezone.Title</text>
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-4 col-md-4 col-sm-4 text-right">Is International</td>
+                                            <td class="col-lg-8 col-md-8 col-sm-8">
+                                                @{
+                                                    var isInternational = Model.Data.IsInternational ? "Yes" : "No";
+                                                }
+                                                @isInternational
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right"></td>
+                                            <td>
+                                                <a href="@Url.Action("index","profile",new { area="admin"})" class="btn btn-default">Edit</a>
+                                                <a href="@Url.Action("index","accountsetup",new { area="admin"})" class="btn btn-default">Back</a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                                        }
+                                                    }
                         }
-                        if (Model.Data != null)
-                        {
-                            <table class="table table-striped">
-                                <tr>
-                                    <td class="text-right">Category</td>
-                                    <td>
-                                        @if (Model.Data != null && Model.Data.tblBusinessCategory != null)
-                                        {
-                                        <text>@Model.Data.tblBusinessCategory.Name</text>
-                                        }
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-4 col-md-4 col-sm-4  text-right">Business Name</td>
-                                    <td class="col-lg-8 col-md-8 col-sm-8">
-                                        <b>
-                                            @Model.Data.Name
-                                        </b>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-4 col-md-4 col-sm-4  text-right">Short Name</td>
-                                    <td class="col-lg-8 col-md-8 col-sm-8">
-                                        @Model.Data.ShortName
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Phone No.</td>
-                                    <td class="col-lg-8 col-md-8 col-sm-8">
-                                        @Model.Data.PhoneNumbers
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Fax No.</td>
-                                    <td class="col-lg-8 col-md-8 col-sm-8">
-                                        @Model.Data.FaxNumbers
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Email Id</td>
-                                    <td class="col-lg-8 col-md-8 col-sm-8">
-                                        @Model.Data.Email
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Website</td>
-                                    <td class="col-lg-8 col-md-8 col-sm-8">
-                                        @Model.Data.Website
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Address 1</td>
-                                    <td class="col-lg-8 col-md-8 col-sm-8">
-                                        @Model.Data.Add1
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Address 2</td>
-                                    <td class="col-lg-8 col-md-8 col-sm-8">
-                                        @Model.Data.Add2
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">City</td>
-                                    <td class="col-lg-8 col-md-8 col-sm-8">
-                                        @Model.Data.City
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">State</td>
-                                    <td class="col-lg-8 col-md-8 col-sm-8">
-                                        @Model.Data.State
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Zipcode</td>
-                                    <td class="col-lg-8 col-md-8 col-sm-8">
-                                        @Model.Data.Zip
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Country</td>
-                                    <td class="col-lg-8 col-md-8 col-sm-8">
-                                        @Model.Data.CountryId
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Timezone</td>
-                                    <td class="col-lg-8 col-md-8 col-sm-8">
-                                        @if (Model.Data.tblTimezone != null)
-                                        {
-                                        <text>@Model.Data.tblTimezone.Title</text>
-                                        }
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-4 col-md-4 col-sm-4 text-right">Is International</td>
-                                    <td class="col-lg-8 col-md-8 col-sm-8">
-                                        @{
-                                            var isInternational = Model.Data.IsInternational ? "Yes" : "No";
-                                        }
-                                        @isInternational
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-right"></td>
-                                    <td>
-                                        <a href="@Url.Action("index","profile",new { area="admin"})"  class="btn btn-default">Edit</a>
-                                        <a href="@Url.Action("index","accountsetup",new { area="admin"})" class="btn btn-default">Back</a>
-                                    </td>
-                                </tr>
-                            </table>
-                        }
-                    }
-                }
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -199,7 +199,7 @@ namespace App.Schedule.Web.Admin.Controllers
             var result = new ResponseViewModel<string>();
             try
             {
-                if (!string.IsNullOrEmpty(model.Data.Email))
+                if (model.Data!=null)
                 {
                     var response = await this.AdminService.Delete(model.Data.Id);
                     if (response.Status)
@@ -216,7 +216,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 else
                 {
                     result.Status = false;
-                    result.Message = "Please provide a valid email id.";
+                    result.Message = "Not a valid data.";
                 }
             }
             catch

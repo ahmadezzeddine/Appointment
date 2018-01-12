@@ -23,10 +23,6 @@ namespace App.Schedule.Web
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Content/bootstrap.css",
-                "~/Content/no-border.css",
-                      "~/Content/site.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/fullcalendar/jquery").Include(
                    "~/Scripts/moment.js",
@@ -34,6 +30,17 @@ namespace App.Schedule.Web
 
             bundles.Add(new StyleBundle("~/bundles/fullcalendar/css").Include(
                 "~/Content/fullcalendar.css"));
+
+            //Metis Menu
+            bundles.Add(new ScriptBundle("~/bundles/metismenu").Include(
+                      "~/Scripts/metisMenu.js",
+                      "~/Scripts/vendor/js/sb-admin-2.js"));
+
+            bundles.Add(new StyleBundle("~/Content/css").Include(
+                      "~/Content/bootstrap.css",
+                      "~/Scripts/vendor/css/sb-admin-2.css",
+                      "~/Content/vendor/font-awesome.css",
+                      "~/Content/site.css"));
 
         }
     }

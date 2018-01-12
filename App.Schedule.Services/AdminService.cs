@@ -167,7 +167,7 @@ namespace App.Schedule.Services
             var returnResponse = new ResponseViewModel<string>();
             try
             {
-                Password = HttpContext.Current.Server.UrlEncode(Password);
+                //Password = HttpContext.Current.Server.UrlEncode(Password);
                 var model = "username=admin" + Email + "&password=" + Password + "&grant_type=password";
                 var content = new StringContent(model, Encoding.UTF8, "text/plain");
                 var url = String.Format(AppointmentService.GET_ADMIN_TOKEN);

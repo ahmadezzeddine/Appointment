@@ -280,6 +280,7 @@
     <Content Include="Views\SubViews\_ScriptError.cshtml" />
     <Content Include="Views\Membership\Deactive.cshtml" />
     <Content Include="Views\BusinessCategory\Delete.cshtml" />
+    <Content Include="Views\BusinessCategory\SubDelete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

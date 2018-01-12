@@ -1,84 +1,28 @@
 ﻿body {
-    background-color: #FCF7F8;
-}
-/*padding */
-.padd60 {
-    padding-top: 60px;
-}
-.pad10 {
-    padding-top: 10px;
+    background: #F4F4F4;
 }
 
-.pad20 {
-    padding-top: 20px;
-}
-/*end padding*/
-/*margin*/
-.margin10 {
-    margin-top: 10px;
-}
-.margin20 {
-    margin-top: 20px;
-}
-/*end margin*/
-.bga-fullscreen {
-    height: calc(100vh - 52px);
-}
-.navbar {
-    margin-bottom: 0px;
-    border-radius: 0;
-}
-.navbar-toggle .icon-bar {
-    display: block;
-    width: 22px;
-    height: 2px;
-    border-radius: 1px;
-    background-color:black;
+.well {
+    height: 250px;
 }
 
-.nav .dropdown > a:hover,
-.nav .dropdown > a:focus {
-    background-color: black;
-    border-color: transparent;
-} 
-.white-text {
-    color: #FFFFFF;
+.text-overflow {
+    overflow: hidden;
+    line-height: 25px;
 }
-.white-grey-text {
-    color: #105e46;
+
+.navbar-brand-title {
+    float: left;
+    height: 50px;
+    font-size: 18px;
+    line-height: 20px;
+    padding: 15px 0;
 }
-.navbar-default {
-    background: #FFFFFF;
+
+.pagination {
+    margin: 0px;
 }
-.bga-transparent {
-    background-color: transparent;
-}
-.bga-primary {
-    background-color: #008975;
-}
-.bga-secondary {
-    background-color: #00AA8D;
-}
-.bga-primary-text {
-    background-color: #CDE3EB;
-}
-.bga-secondary-text {
-    background-color: #E3EFF3;
-}
-.bg-green-ap {
-    background-color: #57C78B;
-}
-/*scrollbar*/
-body::-webkit-scrollbar {
-    width: 0.5em;
-}
-body::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-}
-body::-webkit-scrollbar-thumb {
-    background-color: darkgrey;
-    outline: 1px solid slategrey;
-}
+
 .absolute-center {
     margin: auto;
     position: absolute;
@@ -87,55 +31,112 @@ body::-webkit-scrollbar-thumb {
     bottom: 0;
     right: 0;
 }
-/*end scrollbar*/
-/*center login*/
-.absolute-center.is-center {
+
+.absolute-center.is-login-box {
     width: 50%;
+    height: 250px;
     min-width: 300px;
     max-width: 400px;
-    padding: 10px;
-    color: #FFFFFF;
-    background-color: rgba(0, 82, 79, 0.5);
+    padding: 20px;
+    background-color: #D3D4D8;
 }
-.absolute-center.is-login-check {
-    height: 250px;
-}
-.absolute-center.is-login {
-    height: 320px;
-}
-.absolute-center.is-forgot {
-    height: 240px;
-}
-.logo-container {
+
+    .absolute-center.is-login {
+        width: 50%;
+        height: 320px;
+        min-width: 300px;
+        max-width: 400px;
+        padding: 10px;
+        background-color: #D3D4D8;
+        color: #4D606E;
+    }
+
+    .absolute-center.is-forgot {
+        width: 50%;
+        height: 240px;
+        min-width: 300px;
+        max-width: 400px;
+        padding: 10px;
+        background-color: #D3D4D8;
+        color: #4D606E;
+    }
+
+    .absolute-center.is-register {
+        width: 50%;
+        height: 430px;
+        min-width: 300px;
+        max-width: 400px;
+        padding: 10px;
+        background-color: #D3D4D8;
+        color: #4D606E;
+    }
+
+#logo-container {
     padding: 20px;
     text-align: center;
     font-size: 2em;
 }
-.is-center a {
-    color: white;
-}
-.is-center a:hover,
-a:active {
-    color: #d1d1d1;
-    text-decoration: none;
-}
-.absolute-center .bga-footer {
+
+.footer-bottom {
     position: absolute;
-    bottom: -30px;
-    text-align: center;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    z-index: -1;
 }
-/*end center login*/
-.link-text a {
-    color: #FFFFFF;
+
+    .footer-bottom > div {
+        text-align: center;
+    }
+
+.btn-dark {
+    background-color: #4D606E;
+    color: #fff;
 }
-.link-text a:active,
-hover {
-    color: #FFFFFF;
+
+    .btn-dark:hover {
+        background-color: #627a8c;
+        color: #D3D4D8;
+    }
+
+.bg-dark {
+    background-color: #D3D4D8;
+    color: #D3D4D8;
 }
-.border-left {
-    border-left: 1px solid #D7D7D7;
+
+.bg-bluegray {
+    background-color: #78909c;
+    color: #000;
 }
-.middle-layout {
-    background-color: #ffffff;
-    border: 1px solid #f5f5f5;
+
+.bg-gray {
+    background-color: #9e9e9e;
+    color: #000;
+}
+
+.bg-default {
+    background-color: #d1d1d1;
+    color: #000;
+}
+
+    .bg-default:hover {
+        background-color: #e1e1e1;
+    }
+
+.bg-border-dark {
+    border-bottom: 1px solid #4D606E !important;
+}
+
+.bg-box {
+    padding: 10px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.pnl-head {
+    background-color: #384650;
+    color: #ffffff;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    font-size: 1.5em;
 }

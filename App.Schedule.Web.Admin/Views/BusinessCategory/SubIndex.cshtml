@@ -23,7 +23,7 @@
                 <i class="fa fa-bars fa-fw"></i> Category List
                 <div class="pull-right">
                     <div class="btn-group">
-                        <a onclick="@("window.location.href='" + @Url.Action("Create") + "'");" class="btn btn-info btn-xs">
+                        <a onclick="@("window.location.href='" + @Url.Action("SubCreate", new { id = ViewBag.ParentId}) + "'");" class="btn btn-info btn-xs">
                             <span class="glyphicon glyphicon-plus"></span> Add New
                         </a>
                     </div>
@@ -39,7 +39,7 @@
                     <div class="form-group input-group input-group-sm">
                         <input type="text" class="form-control" id="searchKeyword" value="@ViewBag.search" placeholder="Search here" />
                         <div class="input-group-btn">
-                            <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index")?search=' + $('#searchKeyword').val()">
+                            <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("SubIndex")?search=' + $('#searchKeyword').val()">
                                 <i class="glyphicon glyphicon-search"></i>
                                 Search
                             </button>
@@ -84,7 +84,7 @@
                                                 <img id="categoryImage" class="img-circle" src="~/Content/Images/NoImageThumb.gif" width="25" height="25" />
                                             }
                                         </td>
-                                        <td class="row-bg" onclick="@("window.location.href='" + @Url.Action("SubIndex", "BusinessCategory", new { id = item.Id }) + "'");">
+                                        <td class="row-bg">
                                             @Html.DisplayFor(modelItem => item.Name)
                                         </td>
                                         <td>
@@ -97,13 +97,13 @@
                                             @Html.DisplayFor(modelItem => item.IsActive)
                                         </td>
                                         <td class="text-right">
-                                            <a title="Update" onclick="@("window.location.href='" + @Url.Action("Edit", new { Id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                            <a title="Update" onclick="@("window.location.href='" + @Url.Action("SubEdit", new { Id = item.Id }) + "'");" class="btn btn-default btn-xs">
                                                 <span class="fa fa-pencil"></span>
                                             </a>
-                                            <a title="Change Status" onclick="@("window.location.href='" + @Url.Action("Deactive",new { Id = item.Id }) + "'");" class="btn btn-xs btn-default">
+                                            <a title="Change Status" onclick="@("window.location.href='" + @Url.Action("SubDeactive",new { Id = item.Id }) + "'");" class="btn btn-xs btn-default">
                                                 <span class="fa fa-minus-square"></span>
                                             </a>
-                                            <a title="Delete" onclick="@("window.location.href='" + @Url.Action("Delete",new { Id = item.Id }) + "'");" class="btn btn-xs btn-default">
+                                            <a title="Delete" onclick="@("window.location.href='" + @Url.Action("SubDelete",new { Id = item.Id }) + "'");" class="btn btn-xs btn-default">
                                                 <span class="fa fa-trash"></span>
                                             </a>
                                         </td>

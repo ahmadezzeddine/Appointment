@@ -78,7 +78,7 @@ namespace App.Schedule.Services
             {
                 var jsonContent = JsonConvert.SerializeObject(model);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var url = String.Format(AppointmentService.PUT_BUSINESSCATEGORY, model.Id);
+                var url = String.Format(AppointmentService.PUT_BUSINESSCATEGORY_BYID, model.Id);
                 var response = await this.appointmentService.httpClient.PutAsync(url, content);
                 returnResponse = await base.GetHttpResponse<BusinessCategoryViewModel>(response);
             }

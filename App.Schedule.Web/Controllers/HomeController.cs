@@ -40,9 +40,7 @@ namespace App.Schedule.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> Register()
         {
-            var result = new ServiceDataViewModel<RegisterViewModel>();
-            result.HasError = false;
-            result.HasMore = false;
+            var result = new ResponseViewModel<RegisterViewModel>();
             try
             {
                 var Countries = await this.GetCountries();
@@ -95,8 +93,8 @@ namespace App.Schedule.Web.Controllers
             }
             catch(Exception ex)
             {
-                result.HasError = true;
-                result.Error = ex.Message.ToString();
+                result.Status = true;
+                result.Message = ex.Message.ToString();
                 return View(result);
             }
         }

@@ -56,6 +56,12 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -188,7 +194,12 @@
     <Content Include="Content\Images\loading2.gif" />
     <Content Include="Content\Images\logo.png" />
     <Content Include="Content\Images\NoImageThumb.gif" />
+    <Content Include="Content\metisMenu.css" />
+    <Content Include="Content\metisMenu.min.css" />
     <Content Include="Content\no-border.css" />
+    <Content Include="Content\PagedList.css" />
+    <Content Include="Content\vendor\font-awesome.css" />
+    <Content Include="Content\vendor\font-awesome.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -237,6 +248,7 @@
     <Content Include="Areas\Admin\Views\ServiceLocation\Add.cshtml" />
     <Content Include="Areas\Admin\Views\ServiceLocation\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\ServiceLocation\Delete.cshtml" />
+    <Content Include="Content\vendor\font-awesome.css.map" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -343,6 +355,8 @@
     <Content Include="Scripts\locale\vi.js" />
     <Content Include="Scripts\locale\zh-cn.js" />
     <Content Include="Scripts\locale\zh-tw.js" />
+    <Content Include="Scripts\metisMenu.js" />
+    <Content Include="Scripts\metisMenu.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
@@ -351,6 +365,10 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\site.js" />
+    <Content Include="Scripts\vendor\css\sb-admin-2.css" />
+    <Content Include="Scripts\vendor\css\sb-admin-2.min.css" />
+    <Content Include="Scripts\vendor\js\sb-admin-2.js" />
+    <Content Include="Scripts\vendor\js\sb-admin-2.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -369,11 +387,13 @@
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
     <Content Include="Views\Shared\_AfterLoginMaster.cshtml" />
+    <Content Include="Scripts\metisMenu.js.map" />
+    <Content Include="Views\SubViews\_Error.cshtml" />
+    <Content Include="Views\SubViews\_ScriptError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Areas\Admin\Views\ProfileBase\" />
     <Folder Include="Areas\Admin\Views\ServiceLocationBase\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Customer\Models\" />
@@ -381,7 +401,6 @@
     <Folder Include="Areas\Employee\Models\" />
     <Folder Include="Areas\Employee\Views\Shared\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\HomeBase\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

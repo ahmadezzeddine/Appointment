@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Owin;
 using Microsoft.Owin;
-using Owin;
 
 [assembly: OwinStartup(typeof(App.Schedule.WebApi.Startup))]
-
 namespace App.Schedule.WebApi
 {
     public partial class Startup

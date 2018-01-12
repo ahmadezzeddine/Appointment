@@ -54,6 +54,7 @@ namespace App.Schedule.Services
         public const string GET_BUSINESSCATEGORIES = "api/businesscategory";
         public const string POST_BUSINESSCATEGORY = "api/businesscategory";
         public const string GET_BUSINESSCATEGORY_BYID = "api/businesscategory?id={0}";
+        public const string PUT_BUSINESSCATEGORY_BYID = "api/businesscategory?id={0}";
         public const string PUT_BUSINESSCATEGORY = "api/businesscategory?id={0}&status={1}&type={2}";
         public const string DELETE_BUSINESSCATEGORY = "api/businesscategory?id={0}&status={1}&type={2}";
 
