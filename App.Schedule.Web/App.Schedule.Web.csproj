@@ -390,6 +390,7 @@
     <Content Include="Scripts\metisMenu.js.map" />
     <Content Include="Views\SubViews\_Error.cshtml" />
     <Content Include="Views\SubViews\_ScriptError.cshtml" />
+    <Content Include="Views\SubViews\_ErrorView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

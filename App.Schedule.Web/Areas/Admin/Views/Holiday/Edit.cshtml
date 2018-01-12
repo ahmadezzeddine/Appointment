@@ -2,83 +2,64 @@
 @model ResponseViewModel<BusinessHolidayViewModel>
 
 @{
-    ViewBag.Title = "Update Business Holiday";
+    ViewBag.Title = "Business Holiday";
     Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
 }
 
-<ul class="nav nav-tabs">
-    <li class="active"><a href="@Url.Action("index", "holiday", new { area = "admin" })">Business Holiday Setup</a></li>
-</ul>
-<div class="tab-content" style="padding:0px 10px;">
-    <div class="tab-pane active">
-        <div class="col-lg-12 margin10">
-            <div class="row">
-                @{
-                    if (Model != null)
-                    {
-                        if (!Model.Status)
-                        {
-                            <div class="alert alert-danger" role="alert">
-                                <strong id="err_head">Info: </strong>
-                                <span id="err_title">@Model.Message</span>
-                            </div>
-                        }
-                        if (Model.Data != null)
-                        {
-                            using (Ajax.BeginForm("edit", "holiday", new AjaxOptions { }))
-                            {
-                                @Html.AntiForgeryToken()
-                                @Html.HiddenFor(d => d.Data.Id)
-                                @Html.HiddenFor(d => d.Data.ServiceLocationId)
-                                <table class="table table-striped">
-                                    <tr>
-                                        <td class="text-right">Date</td>
-                                        <td>
-                                            <div class="col-lg-6">@Model.Data.OnDate.ToString("MM/dd/yyyy")</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-right">Change Date</td>
-                                        <td>
-                                            <div class="col-lg-6">@Html.EditorFor(d => d.Data.OnDate, new { htmlAttributes = new { @class = "form-control", @placeholder = "MM/DD/YYYY", @value = "", @type = "date" } })</div>
-                                        </td>
-                                    </tr>
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Update Holiday</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/SubViews/_ErrorView.cshtml", Model)
+    </div>
+</div>
 
-                                    <tr>
-                                        <td class="text-right">
-                                            Type
-                                        </td>
-                                        <td>
-                                            <div class="col-lg-6">
-                                                @Html.DropDownListFor(d => d.Data.Type, new SelectList(ViewBag.HolidayType, "Value", "Text"), new { @class = "form-control" })
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-right"></td>
-                                        <td>
-                                            <div class="col-lg-12">
-                                                <button onclick="onSubmit(this,'@Url.Action("index", "holiday", new { area = "admin" })')" class="btn btn-success">Edit</button>
-                                                <a href="@Url.Action("index", "holiday", new { area = "admin" })" class="btn btn-default" style="margin-left:10px;">Back</a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            }
-                        }
-                        else
-                        {
-                            <text>Please check record.</text>
-                            <a href="@Url.Action("index", "accountsetup", new { area = "admin" })" class="btn btn-default col-lg-4" style="margin-left:10px;">Account Setup</a>
-                        }
-                    }
-                    else
+<div class="row">
+    <div class="col-lg-12">
+        @using (Ajax.BeginForm("edit", "holiday", new AjaxOptions { }))
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <b>Holiday Information</b>
+                </div>
+                <div class="panel-body">
+                    @if (Model == null & Model.Data == null)
                     {
-                        <text>Please check record.</text>
-                        <a href="@Url.Action("index", "accountsetup", new { area = "admin" })" class="btn btn-default col-lg-4" style="margin-left:10px;">Account Setup</a>
+                        <text>Please try again later.</text>
+                        return;
                     }
-                }
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(d => d.Data.Id)
+                    @Html.HiddenFor(d => d.Data.ServiceLocationId)
+                    <div class="form-group col-lg-6">
+                        <label>Old Date</label>
+                        <div class="form-control">
+                            @Model.Data.OnDate.ToString("MM/dd/yyyy")
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label>Update Date</label>
+                        @Html.EditorFor(d => d.Data.OnDate, new { htmlAttributes = new { @class = "form-control", @placeholder = "MM/DD/YYYY", @value = "", @type = "date" } })
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label>Type</label>
+                        @Html.DropDownListFor(d => d.Data.Type, new SelectList(ViewBag.HolidayType, "Value", "Text"), new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="col-lg-12">
+                                <input id="btnUpdate" class="btn btn-info btn-sm " type="button" value="Update" onclick="onSubmit(this,'@Url.Action("index", "holiday", new { area = "admin" })');" />
+                                <input type="button" class="btn btn-default btn-sm" value="Back" onclick="@("window.location.href='" + @Url.Action("Index", "holiday", new { area = "admin" }) + "'");" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        }
     </div>
 </div>

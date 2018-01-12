@@ -9,8 +9,6 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 {
     public class HourController : HourBaseController
     {
-
-        // GET: Admin/Hour
         [HttpGet]
         public async Task<ActionResult> Index()
         {
@@ -87,6 +85,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
 
+        [NonAction]
         private bool CheckSplitDate(BusinessHourViewModel model)
         {
             if (model.IsHoliday)
@@ -120,6 +119,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             return true;
         }
 
+        [NonAction]
         public Dictionary<int, string> GetHoursOfDay()
         {
             var now = DateTime.Now;
