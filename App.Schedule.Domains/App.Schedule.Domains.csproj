@@ -74,6 +74,7 @@
     <Compile Include="tblCountry.cs" />
     <Compile Include="tblDocumentCategory.cs" />
     <Compile Include="tblMembership.cs" />
+    <Compile Include="tblSchedule.cs" />
     <Compile Include="tblServiceLocation.cs" />
     <Compile Include="tblTimezone.cs" />
     <Compile Include="ViewModel\AppointmentViewModel.cs" />

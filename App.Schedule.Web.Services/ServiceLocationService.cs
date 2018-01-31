@@ -140,7 +140,7 @@ namespace App.Schedule.Web.Services
             {
                 var jsonContent = JsonConvert.SerializeObject(model);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var url = String.Format(AppointmentUserService.POST_SERVICELOCATION);
+                var url = String.Format(AppointmentUserService.PUT_SERVICELOCATION,model.Id);
                 var response = await this.appointmentUserService.httpClient.PutAsync(url, content);
                 returnResponse = await base.GetHttpResponse<ServiceLocationViewModel>(response);
             }

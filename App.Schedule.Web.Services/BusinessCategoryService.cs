@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Services

@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Text;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using App.Schedule.Domains.ViewModel;
-using System.Text;
 
 namespace App.Schedule.Web.Services
 {

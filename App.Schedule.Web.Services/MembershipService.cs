@@ -1,9 +1,7 @@
-﻿using App.Schedule.Domains.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Services
 {

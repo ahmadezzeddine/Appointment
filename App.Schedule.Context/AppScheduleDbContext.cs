@@ -30,6 +30,7 @@ namespace App.Schedule.Context
         public virtual DbSet<tblCountry> tblCountries { get; set; }
         public virtual DbSet<tblDocumentCategory> tblDocumentCategories { get; set; }
         public virtual DbSet<tblMembership> tblMemberships { get; set; }
+        public virtual DbSet<tblSchedule> tblSchedules { get; set; }
         public virtual DbSet<tblServiceLocation> tblServiceLocations { get; set; }
         public virtual DbSet<tblTimezone> tblTimezones { get; set; }
 
@@ -170,6 +171,11 @@ namespace App.Schedule.Context
                 .HasMany(e => e.tblBusinesses)
                 .WithOptional(e => e.tblMembership)
                 .HasForeignKey(e => e.MembershipId);
+
+            modelBuilder.Entity<tblSchedule>()
+                .HasMany(e => e.tblAppointments)
+                .WithOptional(e => e.tblSchedule)
+                .HasForeignKey(e => e.ScheduleId);
 
             modelBuilder.Entity<tblServiceLocation>()
                 .HasMany(e => e.tblAppointments)
