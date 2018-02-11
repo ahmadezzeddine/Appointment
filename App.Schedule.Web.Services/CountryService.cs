@@ -32,32 +32,32 @@ namespace App.Schedule.Web.Services
 
         public Task<ResponseViewModel<CountryViewModel>> Find(Predicate<CountryViewModel> pridict)
         {
-            return Task.FromResult(new ResponseViewModel<CountryViewModel>());
+            return null;
         }
 
         public Task<ResponseViewModel<CountryViewModel>> Get(long? id)
         {
-            return Task.FromResult(new ResponseViewModel<CountryViewModel>());
+            return null;
         }
         
         public Task<ResponseViewModel<CountryViewModel>> Add(CountryViewModel model)
         {
-            return Task.FromResult(new ResponseViewModel<CountryViewModel>());
+            return null;
         }
 
         public Task<ResponseViewModel<CountryViewModel>> Deactive(long? id, bool status)
         {
-            return Task.FromResult(new ResponseViewModel<CountryViewModel>());
+            return null;
         }
 
         public Task<ResponseViewModel<CountryViewModel>> Delete(long? id)
         {
-            return Task.FromResult(new ResponseViewModel<CountryViewModel>());
+            return null;
         }
         
         public Task<ResponseViewModel<CountryViewModel>> Update(CountryViewModel model)
         {
-            return Task.FromResult(new ResponseViewModel<CountryViewModel>());
+            return null;
         }
     }
 }

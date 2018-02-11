@@ -470,9 +470,13 @@ namespace App.Schedule.Domains.ViewModel
         public string Code { get; set; }
 
         [Column(TypeName = "date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime ValidFrom { get; set; }
 
         [Column(TypeName = "date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime ValidTo { get; set; }
 
         public bool IsActive { get; set; }
@@ -491,6 +495,22 @@ namespace App.Schedule.Domains.ViewModel
         //public virtual ICollection<tblBusinessOfferServiceLocation> tblBusinessOfferServiceLocations { get; set; }
     }
 
+
+    /// <summary>
+    /// Class is used to hold business offer locations information.
+    /// </summary>
+    public class BusinessOfferServiceLocationViewModel
+    {
+        public long Id { get; set; }
+
+        public long? BusinessOfferId { get; set; }
+
+        public long? ServiceLocationId { get; set; }
+
+        public virtual BusinessOfferViewModel BusinessOfferViewModel { get; set; }
+
+        public virtual ServiceLocationViewModel ServiceLocationViewModel { get; set; }
+    }
     /// <summary>
     /// Class is used to hold business service information
     /// </summary>

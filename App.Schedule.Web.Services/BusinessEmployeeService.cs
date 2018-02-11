@@ -105,6 +105,24 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
+        public async Task<ResponseViewModel<List<BusinessEmployeeViewModel>>> Gets(long? ServiceLocationId)
+        {
+            var returnResponse = new ResponseViewModel<List<BusinessEmployeeViewModel>>();
+            try
+            {
+                var url = String.Format(AppointmentUserService.GET_EMPLOYEESBYSERVICELOCATIONID, ServiceLocationId);
+                var response = await this.appointmentUserService.httpClient.GetAsync(url);
+                returnResponse = await base.GetHttpResponse<List<BusinessEmployeeViewModel>>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
         public Task<ResponseViewModel<List<BusinessEmployeeViewModel>>> Gets()
         {
             throw new NotImplementedException();

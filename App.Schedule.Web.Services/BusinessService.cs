@@ -45,7 +45,7 @@ namespace App.Schedule.Web.Services
 
         public Task<ResponseViewModel<List<RegisterViewModel>>> Gets()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public async Task<ResponseViewModel<RegisterViewModel>> Add(RegisterViewModel model)
@@ -70,17 +70,17 @@ namespace App.Schedule.Web.Services
         
         public Task<ResponseViewModel<RegisterViewModel>> Deactive(long? id, bool status)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public Task<ResponseViewModel<RegisterViewModel>> Delete(long? id)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public Task<ResponseViewModel<RegisterViewModel>> Find(Predicate<RegisterViewModel> pridict)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public async Task<ResponseViewModel<RegisterViewModel>> Update(RegisterViewModel model)

@@ -59,40 +59,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 return View(Response);
             }
         }
-
-        [HttpGet]
-        public async Task<ActionResult> Hour(long? id)
-        {
-            if (!id.HasValue)
-                return RedirectToAction("index", "servicelocation", new { area = "admin" });
-
-            ViewBag.Id = id.Value;
-            var result = await this.BusinessHourService.Gets(id.Value, TableType.ServiceLocationId);
-            if (result != null && result.Status)
-                return View(result);
-            else
-            {
-                var response = this.ResponseHelper.GetResponse<List<BusinessHourViewModel>>();
-                return View(Response);
-            }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> Holiday(long? id)
-        {
-            if (!id.HasValue)
-                return RedirectToAction("index", "servicelocation", new { area = "admin" });
-            ViewBag.Id = id.Value;
-            var result = await this.BusinessHolidayService.Gets(id.Value, TableType.ServiceLocationId);
-            if (result != null && result.Status)
-                return View(result);
-            else
-            {
-                var response = this.ResponseHelper.GetResponse<List<BusinessHolidayViewModel>>();
-                return View(Response);
-            }
-        }
-
+        
         [HttpGet]
         public async Task<ActionResult> Add(long? id)
         {
@@ -150,8 +117,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             }
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
-
-
+        
         [HttpGet]
         public async Task<ActionResult> Edit(long? id)
         {
@@ -260,7 +226,38 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> Hour(long? id)
+        {
+            if (!id.HasValue)
+                return RedirectToAction("index", "servicelocation", new { area = "admin" });
 
+            ViewBag.Id = id.Value;
+            var result = await this.BusinessHourService.Gets(id.Value, TableType.ServiceLocationId);
+            if (result != null && result.Status)
+                return View(result);
+            else
+            {
+                var response = this.ResponseHelper.GetResponse<List<BusinessHourViewModel>>();
+                return View(Response);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Holiday(long? id)
+        {
+            if (!id.HasValue)
+                return RedirectToAction("index", "servicelocation", new { area = "admin" });
+            ViewBag.Id = id.Value;
+            var result = await this.BusinessHolidayService.Gets(id.Value, TableType.ServiceLocationId);
+            if (result != null && result.Status)
+                return View(result);
+            else
+            {
+                var response = this.ResponseHelper.GetResponse<List<BusinessHolidayViewModel>>();
+                return View(Response);
+            }
+        }
 
         /// <summary>
         /// To get the list of countries in the database using web api call.

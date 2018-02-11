@@ -140,3 +140,12 @@
     margin-bottom: 10px;
     font-size: 1.5em;
 }
+
+.textarea-des {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    height: 100px;
+    min-height: 100px;
+    max-height: 100px;
+}

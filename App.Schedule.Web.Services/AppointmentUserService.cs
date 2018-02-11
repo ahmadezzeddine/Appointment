@@ -11,8 +11,8 @@ namespace App.Schedule.Web.Services
     public class AppointmentUserService
     {
         public HttpClient httpClient;
-        private const string baseUrl = "http://appointment.why-fi.com";
-        //public static string baseUrl = "http://localhost/appointmentapi/";
+        //private const string baseUrl = "http://appointment.why-fi.com";
+        public static string baseUrl = "http://localhost/appointmentapi/";
         //public static string baseUrl = "http://localhost:57433/";
 
         //Admin Identity Token API
@@ -69,6 +69,26 @@ namespace App.Schedule.Web.Services
         public const string POST_SERVICELOCATION = "api/servicelocation";
         public const string PUT_SERVICELOCATION = "api/servicelocation?id={0}";
 
+        //Business Offer
+        public const string GET_BUSINESSOFFER = "api/businessoffer";
+        public const string GET_BUSINESSOFFERBYID = "api/businessoffer?id={0}";
+        public const string GETS_BUSINESSOFFERBYIDANDTYPE = "api/businessoffer?id={0}&type={1}";
+        public const string POST_BUSINESSOFFER = "api/businessoffer";
+        public const string PUT_BUSINESSOFFERBYID = "api/businessoffer?id={0}";
+        public const string DELETE_BUSINESSOFFERBYID = "api/businessoffer?id={0}";
+        public const string DEACTIVE_BUSINESSOFFERBYIDANDSTATUS = "api/businessoffer?id={0}&status={1}";
+
+        //Business Offer Location
+        public const string GET_BUSINESSOFFERSERVICELOCATION = "api/businessofferlocation";
+        public const string GET_BUSINESSOFFERSERVICELOCATIONBYID = "api/businessofferlocation?id={0}";
+        public const string GETS_BUSINESSOFFERSERVICELOCATION = "api/businessofferlocation?id={0}&type={1}";
+        public const string POST_BUSINESSOFFERSERVICELOCATION = "api/businessofferlocation";
+        public const string PUT_BUSINESSOFFERSERVICELOCATION = "api/businessofferlocation?id={0}";
+        public const string DELETE_BUSINESSOFFERSERVICELOCATION = "api/businessofferlocation?id={0}";
+        public const string DEACTIVE_BUSINESSOFFERSERVICELOCATION = "api/businessofferlocation?id={0}&status={1}";
+
+        //Business Employee
+        public const string GET_EMPLOYEESBYSERVICELOCATIONID = "api/businessemployee?locationid={0}";
 
 
         public AppointmentUserService()

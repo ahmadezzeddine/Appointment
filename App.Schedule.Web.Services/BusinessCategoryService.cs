@@ -33,32 +33,32 @@ namespace App.Schedule.Web.Services
 
         public Task<ResponseViewModel<BusinessCategoryViewModel>> Find(Predicate<BusinessCategoryViewModel> pridict)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public Task<ResponseViewModel<BusinessCategoryViewModel>> Get(long? id)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public Task<ResponseViewModel<BusinessCategoryViewModel>> Add(BusinessCategoryViewModel model)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public Task<ResponseViewModel<BusinessCategoryViewModel>> Deactive(long? id, bool status)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public Task<ResponseViewModel<BusinessCategoryViewModel>> Delete(long? id)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public Task<ResponseViewModel<BusinessCategoryViewModel>> Update(BusinessCategoryViewModel model)
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 }

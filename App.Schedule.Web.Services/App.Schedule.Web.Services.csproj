@@ -49,6 +49,8 @@
     <Compile Include="BusinessEmployeeService.cs" />
     <Compile Include="BusinessHolidayService.cs" />
     <Compile Include="BusinessHourService.cs" />
+    <Compile Include="BusinessOfferService.cs" />
+    <Compile Include="BusinessOfferServiceLocationService.cs" />
     <Compile Include="BusinessService.cs" />
     <Compile Include="CountryService.cs" />
     <Compile Include="IAppointmentUserService.cs" />

@@ -243,6 +243,7 @@
     <Compile Include="Controllers\BusinessHolidayController.cs" />
     <Compile Include="Controllers\BusinessHourController.cs" />
     <Compile Include="Controllers\BusinessOfferController.cs" />
+    <Compile Include="Controllers\BusinessOfferLocationController.cs" />
     <Compile Include="Controllers\BusinessServiceController.cs" />
     <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\DocumentCategoryController.cs" />

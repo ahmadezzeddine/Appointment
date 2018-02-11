@@ -36,7 +36,6 @@ namespace App.Schedule.Web.Services
                 returnResponse.Message = "Reason: " + ex.Message.ToString();
                 returnResponse.Status = false;
             }
-
             return returnResponse;
         }
 

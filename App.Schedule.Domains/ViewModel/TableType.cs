@@ -4,6 +4,7 @@
     {
         None = 0,
         BusinessId = 1,
-        ServiceLocationId = 2
+        ServiceLocationId = 2,
+        EmployeeId = 3
     }
 }
