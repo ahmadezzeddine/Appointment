@@ -5,6 +5,7 @@ using System.Web.Http;
 using System.Data.Entity;
 using App.Schedule.Domains;
 using App.Schedule.Context;
+using System.Collections.Generic;
 using App.Schedule.Domains.Helpers;
 using App.Schedule.Domains.ViewModel;
 
@@ -20,12 +21,49 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // GET: api/businessemployee
-        public IHttpActionResult Get()
+        public IHttpActionResult Get(long? id, TableType type)
         {
             try
             {
-                var model = _db.tblBusinessEmployees.ToList();
-                return Ok(new { status = true, data = model, message ="success" });
+                if (!id.HasValue)
+                    return Ok(new { status = false, data = "", message = "Please provide valid ID." });
+
+                if (type == TableType.BusinessId)
+                {
+                    var locations = _db.tblServiceLocations.Where(d => d.BusinessId == id.Value).ToList();
+                    var model = new List<BusinessEmployeeViewModel>();
+                    foreach (var location in locations)
+                    {
+                        var employees = _db.tblBusinessEmployees.Where(d => d.ServiceLocationId == location.Id).Select(s => new BusinessEmployeeViewModel
+                        {
+                            Created = s.Created,
+                            Email = s.Email,
+                            FirstName = s.FirstName,
+                            Id = s.Id,
+                            IsAdmin = s.IsAdmin,
+                            IsActive = s.IsActive,
+                            LastName = s.LastName,
+                            Password = s.Password,
+                            PhoneNumber = s.PhoneNumber,
+                            ServiceLocationId = s.ServiceLocationId,
+                            STD = s.STD,
+                            ServiceLocation = new ServiceLocationViewModel() { Name = location.Name, Description = location.Description }
+                        }).ToList();
+                        if (employees.Count > 0)
+                        {
+                            foreach (var employ in employees)
+                            {
+                                model.Add(employ);
+                            }
+                        }
+                    }
+                    return Ok(new { status = true, data = model, message = "success" });
+                }
+                else
+                {
+                    var serviceModel = _db.tblBusinessEmployees.Where(d => d.ServiceLocationId == id.Value).ToList();
+                    return Ok(new { status = true, data = serviceModel, message = "success" });
+                }
             }
             catch (Exception ex)
             {
@@ -97,29 +135,37 @@ namespace App.Schedule.WebApi.Controllers
             {
                 if (model != null)
                 {
-                    var businessEmployee = new tblBusinessEmployee()
+                    var check = _db.tblBusinessEmployees.Any(d => d.Email.ToLower() == model.Email.ToLower() && model.ServiceLocationId == model.ServiceLocationId);
+                    if (!check)
                     {
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        Password = Security.Encrypt(model.Password, true),
-                        Email = model.Email,
-                        STD = model.STD,
-                        PhoneNumber = model.PhoneNumber,
-                        ServiceLocationId = model.ServiceLocationId,
-                        IsAdmin = model.IsAdmin,
-                        Created = DateTime.Now.ToUniversalTime(),
-                        IsActive = model.IsActive
-                    };
-                    _db.tblBusinessEmployees.Add(businessEmployee);
-                    var response = _db.SaveChanges();
-                    if (response > 0)
-                        return Ok(new { status = true, data = businessEmployee });
+                        var businessEmployee = new tblBusinessEmployee()
+                        {
+                            FirstName = model.FirstName,
+                            LastName = model.LastName,
+                            Password = Security.Encrypt(model.Password, true),
+                            Email = model.Email,
+                            STD = model.STD,
+                            PhoneNumber = model.PhoneNumber,
+                            ServiceLocationId = model.ServiceLocationId,
+                            IsAdmin = model.IsAdmin,
+                            Created = DateTime.Now.ToUniversalTime(),
+                            IsActive = model.IsActive
+                        };
+                        _db.tblBusinessEmployees.Add(businessEmployee);
+                        var response = _db.SaveChanges();
+                        if (response > 0)
+                            return Ok(new { status = true, data = businessEmployee, message = "success" });
+                        else
+                            return Ok(new { status = false, data = "", message = "There was a problem." });
+                    }
                     else
-                        return Ok(new { status = false, data = "There was a problem." });
+                    {
+                        return Ok(new { status = false, data = "", message = "Email id has already been taken, please try another email id with same service location." });
+                    }
                 }
                 else
                 {
-                    return Ok(new { status = false, data = "Model is not valid." });
+                    return Ok(new { status = false, data = "", message = "Model is not valid." });
                 }
             }
             catch (Exception ex)
@@ -134,7 +180,7 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "", message= "Please provide a valid id." });
+                    return Ok(new { status = false, data = "", message = "Please provide a valid id." });
                 else
                 {
                     var businessEmployee = _db.tblBusinessEmployees.Find(id);
@@ -152,13 +198,13 @@ namespace App.Schedule.WebApi.Controllers
                             _db.Entry(businessEmployee).State = EntityState.Modified;
                             var response = _db.SaveChanges();
                             if (response > 0)
-                                return Ok(new { status = true, data = businessEmployee, message = "success"});
+                                return Ok(new { status = true, data = businessEmployee, message = "success" });
                             else
                                 return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
                         }
                         else
                         {
-                            return Ok(new { status = false, data ="", message = "Please provide a valid login id to update." });
+                            return Ok(new { status = false, data = "", message = "Please provide a valid id to update." });
                         }
                     }
                     else
@@ -179,7 +225,39 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "Please provide a valid ID." });
+                    return Ok(new { status = false, data = "", message = "Please provide a valid ID." });
+                else
+                {
+                    var businessEmployee = _db.tblBusinessEmployees.Find(id);
+                    if (businessEmployee != null)
+                    {
+                        _db.Entry(businessEmployee).State = EntityState.Deleted;
+                        var response = _db.SaveChanges();
+                        if (response > 0)
+                            return Ok(new { status = true, data = businessEmployee, message = "success" });
+                        else
+                            return Ok(new { status = false, data = "", message = "There was a problem to delete the data." });
+                    }
+                    else
+                    {
+                        return Ok(new { status = false, data = "", message = "Not a valid data to update. Please provide a valid id." });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, data = "", message = ex.Message.ToString() });
+            }
+        }
+
+        // DELETE: api/businessemployee/5
+        [HttpDelete]
+        public IHttpActionResult Deactive(int? id, bool? status)
+        {
+            try
+            {
+                if (!id.HasValue && status.HasValue)
+                    return Ok(new { status = false, data = "", message = "Please provide a valid ID and status." });
                 else
                 {
                     var businessEmployee = _db.tblBusinessEmployees.Find(id);
@@ -189,13 +267,13 @@ namespace App.Schedule.WebApi.Controllers
                         _db.Entry(businessEmployee).State = EntityState.Modified;
                         var response = _db.SaveChanges();
                         if (response > 0)
-                            return Ok(new { status = true, data = businessEmployee });
+                            return Ok(new { status = true, data = businessEmployee, message = "success" });
                         else
-                            return Ok(new { status = false, data = "There was a problem to update the data." });
+                            return Ok(new { status = false, data = "", message = "There was a problem to deactive the data." });
                     }
                     else
                     {
-                        return Ok(new { status = false, data = "Not a valid data to update. Please provide a valid id." });
+                        return Ok(new { status = false, data = "", message = "Not a valid data to update. Please provide a valid id." });
                     }
                 }
             }
@@ -204,6 +282,7 @@ namespace App.Schedule.WebApi.Controllers
                 return Ok(new { status = false, data = "", message = ex.Message.ToString() });
             }
         }
+
 
         [NonAction]
         public bool UpdateEmployee(BusinessEmployeeViewModel model, out string message)

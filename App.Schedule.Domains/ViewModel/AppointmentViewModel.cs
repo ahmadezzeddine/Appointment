@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -315,6 +316,8 @@ namespace App.Schedule.Domains.ViewModel
         public bool IsAdmin { get; set; }
 
         public long? ServiceLocationId { get; set; }
+
+        public ServiceLocationViewModel ServiceLocation { get; set; }
 
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<tblAppointmentFeedback> tblAppointmentFeedbacks { get; set; }

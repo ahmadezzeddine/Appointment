@@ -88,8 +88,12 @@ namespace App.Schedule.Web.Services
         public const string DEACTIVE_BUSINESSOFFERSERVICELOCATION = "api/businessofferlocation?id={0}&status={1}";
 
         //Business Employee
-        public const string GET_EMPLOYEESBYSERVICELOCATIONID = "api/businessemployee?locationid={0}";
-
+        public const string GET_EMPLOYEESBYBUSINESSID = "api/businessemployee?id={0}";
+        public const string GET_EMPLOYEESBYBUSINESSIDANDTYPE = "api/businessemployee?id={0}&type={1}";
+        public const string POST_EMPLOYEES = "api/businessemployee";
+        public const string PUT_EMPLOYEES = "api/businessemployee?id={0}";
+        public const string DELETE_EMPLOYEES = "api/businessemployee?id={0}";
+        public const string DEACTIVE_EMPLOYEES = "api/businessemployee?id={0}&status={1}";
 
         public AppointmentUserService()
         {

@@ -261,6 +261,10 @@
     <Content Include="Areas\Admin\Views\BusinessOffer\AddLocation.cshtml" />
     <Content Include="Areas\Admin\Views\BusinessOffer\DeleteLocation.cshtml" />
     <Content Include="Areas\Admin\Views\Employee\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Employee\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\Employee\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Employee\Deactive.cshtml" />
+    <Content Include="Areas\Admin\Views\Employee\Delete.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -406,7 +410,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Admin\Views\EmployeeBase\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Customer\Models\" />
     <Folder Include="Areas\Customer\Views\Shared\" />

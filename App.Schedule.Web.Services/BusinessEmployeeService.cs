@@ -105,14 +105,17 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
-        public async Task<ResponseViewModel<List<BusinessEmployeeViewModel>>> Gets(long? ServiceLocationId)
+        public async Task<ResponseViewModel<List<BusinessEmployeeViewModel>>> Gets(long? id, TableType type)
         {
             var returnResponse = new ResponseViewModel<List<BusinessEmployeeViewModel>>();
             try
             {
-                var url = String.Format(AppointmentUserService.GET_EMPLOYEESBYSERVICELOCATIONID, ServiceLocationId);
+                var url = String.Format(AppointmentUserService.GET_EMPLOYEESBYBUSINESSIDANDTYPE, id, (int) type);
                 var response = await this.appointmentUserService.httpClient.GetAsync(url);
-                returnResponse = await base.GetHttpResponse<List<BusinessEmployeeViewModel>>(response);
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    returnResponse = await base.GetHttpResponse<List<BusinessEmployeeViewModel>>(response);
+                }
             }
             catch (Exception ex)
             {
@@ -133,9 +136,24 @@ namespace App.Schedule.Web.Services
             throw new NotImplementedException();
         }
 
-        public Task<ResponseViewModel<BusinessEmployeeViewModel>> Add(BusinessEmployeeViewModel model)
+        public async Task<ResponseViewModel<BusinessEmployeeViewModel>> Add(BusinessEmployeeViewModel model)
         {
-            throw new NotImplementedException();
+            var returnResponse = new ResponseViewModel<BusinessEmployeeViewModel>();
+            try
+            {
+                var jsonContent = JsonConvert.SerializeObject(model);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var url = String.Format(AppointmentUserService.POST_EMPLOYEES);
+                var response = await this.appointmentUserService.httpClient.PostAsync(url, content);
+                returnResponse = await base.GetHttpResponse<BusinessEmployeeViewModel>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
         }
 
         public async Task<ResponseViewModel<BusinessEmployeeViewModel>> Update(BusinessEmployeeViewModel model)
@@ -158,14 +176,40 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
-        public Task<ResponseViewModel<BusinessEmployeeViewModel>> Delete(long? id)
+        public async Task<ResponseViewModel<BusinessEmployeeViewModel>> Delete(long? id)
         {
-            throw new NotImplementedException();
+            var returnResponse = new ResponseViewModel<BusinessEmployeeViewModel>();
+            try
+            {
+                var url = String.Format(AppointmentUserService.DELETE_EMPLOYEES, id);
+                var response = await this.appointmentUserService.httpClient.DeleteAsync(url);
+                returnResponse = await base.GetHttpResponse<BusinessEmployeeViewModel>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
         }
 
-        public Task<ResponseViewModel<BusinessEmployeeViewModel>> Deactive(long? id, bool status)
+        public async Task<ResponseViewModel<BusinessEmployeeViewModel>> Deactive(long? id, bool status)
         {
-            throw new NotImplementedException();
+            var returnResponse = new ResponseViewModel<BusinessEmployeeViewModel>();
+            try
+            {
+                var url = String.Format(AppointmentUserService.DEACTIVE_EMPLOYEES, id, status);
+                var response = await this.appointmentUserService.httpClient.DeleteAsync(url);
+                returnResponse = await base.GetHttpResponse<BusinessEmployeeViewModel>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
         }
     }
 }
