@@ -585,18 +585,26 @@ namespace App.Schedule.Domains.ViewModel
         [StringLength(10)]
         public string Zip { get; set; }
 
-        [Required]
-        [StringLength(250)]
+        [Required(ErrorMessage = "Please enter your password")]
+        [MinLength(8, ErrorMessage = "Password must be greater than 8 character")]
+        [MaxLength(50, ErrorMessage = "Password must be less than 50 character")]
         public string Password { get; set; }
+
+        [Compare("Password", ErrorMessage = "Please cheque your confirm password")]
+        public string ConfirmPassword { get; set; }
+
+        [MinLength(8, ErrorMessage = "Password must be greater than 8 character")]
+        [MaxLength(50, ErrorMessage = "Password must be less than 50 character")]
+        public string OldPassword { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime Created { get; set; }
 
         public bool IsActive { get; set; }
 
-        public int? TimezoneId { get; set; }
-
         public long? ServiceLocationId { get; set; }
+
+        public dynamic ServiceLocation { get; set; }
 
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<tblAppointment> tblAppointments { get; set; }
@@ -831,6 +839,23 @@ namespace App.Schedule.Domains.ViewModel
         //public virtual tblAppointment tblAppointment { get; set; }
 
         //public virtual tblDocumentCategory tblDocumentCategory { get; set; }
+    }
+
+    public class UserViewModel
+    {
+        public AdministratorViewModel SiteAdmin { get; set; }
+        public RegisterViewModel BusinessAdmin { get; set; }
+        public BusinessEmployeeViewModel BusinessEmployee { get; set; }
+        public BusinessCustomerViewMdoel BusinessCustomer { get; set; }
+        public UserType UserType { get; set; }
+    }
+
+    public enum UserType
+    {
+        SiteAdmin = 0,
+        BusinessAdmin = 1,
+        BusinessEmployee = 2,
+        BusinessCustomer = 3
     }
 
     //All Enum Types fro Appointment Scheduler

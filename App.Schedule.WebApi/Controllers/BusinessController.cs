@@ -199,21 +199,21 @@ namespace App.Schedule.WebApi.Controllers
 
         [NonAction]
         [AllowAnonymous]
-        public RegisterViewModel Register(RegisterViewModel model, out bool status, out string message)
+        public ResponseViewModel<RegisterViewModel> Register(RegisterViewModel model)
         {
-            var data = new RegisterViewModel();
+            var data = new ResponseViewModel<RegisterViewModel>();
 
             var hasName = _db.tblBusinesses.Any(d => d.Name.ToLower() == model.Business.Name.ToLower());
             var hasEmail = _db.tblBusinessEmployees.Any(d => d.Email.ToLower() == model.Business.Email.ToLower());
             if (hasName)
             {
-                status = false;
-                message = "This business name has been taken. Please try another name.";
+                data.Status = false;
+                data.Message = "This business name has been taken. Please try another name.";
             }
             else if (hasEmail)
             {
-                status = false;
-                message = "This business email has been taken. Please try another email id.";
+                data.Status = false;
+                data.Message = "This business email has been taken. Please try another email id.";
             }
             else
             {
@@ -349,15 +349,18 @@ namespace App.Schedule.WebApi.Controllers
 
                         if (responseBusiness > 0 && responseServiceLocation > 0 && responseBusinessEmployee > 0 && responseBusinessHour > 0)
                         {
-                            status = true;
-                            message = "Transaction successed.";
-                            data.Business = businessViewModel;
-                            data.Employee = businessEmployeeViewModel;
+                            data.Status = true;
+                            data.Message = "Transaction successed.";
+                            data.Data = new RegisterViewModel();
+                            data.Data.Business = new BusinessViewModel();
+                            data.Data.Employee = new BusinessEmployeeViewModel();
+                            data.Data.Business = businessViewModel;
+                            data.Data.Employee = businessEmployeeViewModel;
                             dbTran.Commit();
                         }
                         else
                         {
-                            status = false;
+                            data.Status = false;
                             var reason = "";
                             if (responseBusiness <= 0)
                                 reason += "Business setup issue. ";
@@ -368,18 +371,18 @@ namespace App.Schedule.WebApi.Controllers
                             if (responseBusinessHour <= 0)
                                 reason += " Business hour issue.";
 
-                            message = "Registration failed. reason: " + reason;
-                            data.Business = new BusinessViewModel();
-                            data.Employee = new BusinessEmployeeViewModel();
+                            data.Message = "Registration failed. reason: " + reason;
+                            data.Data.Business = new BusinessViewModel();
+                            data.Data.Employee = new BusinessEmployeeViewModel();
                             dbTran.Rollback();
                         }
                     }
                     catch (Exception ex)
                     {
-                        status = false;
-                        message = "Registration failed. ex: " + ex.Message.ToString();
-                        data.Business = new BusinessViewModel();
-                        data.Employee = new BusinessEmployeeViewModel();
+                        data.Status = false;
+                        data.Message = "Registration failed. ex: " + ex.Message.ToString();
+                        data.Data.Business = new BusinessViewModel();
+                        data.Data.Employee = new BusinessEmployeeViewModel();
                         dbTran.Rollback();
                     }
                 }

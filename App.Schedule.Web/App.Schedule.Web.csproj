@@ -159,6 +159,8 @@
     <Compile Include="Areas\Admin\Controllers\BusinessAdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\BusinessOfferBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\BusinessOfferController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CustomerBaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CustomerController.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Admin\Controllers\EmployeeBaseController.cs" />
@@ -168,7 +170,7 @@
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\HourBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\HourController.cs" />
-    <Compile Include="Areas\Admin\Controllers\LoginBaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\HomeBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\MembershipBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\MembershipController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProfileController.cs" />
@@ -265,6 +267,11 @@
     <Content Include="Areas\Admin\Views\Employee\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Employee\Deactive.cshtml" />
     <Content Include="Areas\Admin\Views\Employee\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Customer\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Customer\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\Customer\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Customer\Deactive.cshtml" />
+    <Content Include="Areas\Admin\Views\Customer\Delete.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -410,6 +417,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Admin\Views\CustomerBase\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Customer\Models\" />
     <Folder Include="Areas\Customer\Views\Shared\" />

@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="AppointmentUserService.cs" />
     <Compile Include="BusinessCategoryService.cs" />
+    <Compile Include="BusinessCustomerService.cs" />
     <Compile Include="BusinessEmployeeService.cs" />
     <Compile Include="BusinessHolidayService.cs" />
     <Compile Include="BusinessHourService.cs" />

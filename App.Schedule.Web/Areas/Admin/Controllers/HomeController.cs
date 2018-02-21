@@ -5,7 +5,7 @@ using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
-    public class HomeController : LoginBaseController
+    public class HomeController : HomeBaseController
     {
         [HttpGet]
         public ActionResult Login()
@@ -37,8 +37,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                         if (response.Status)
                         {
                             var tokenResponse = await BusinessEmployeeService.VerifyAndGetAdminAccessToken(model.Data.Email, model.Data.Password);
-                            result.Status = result.Status;
-                            result.Message = result.Message;
+                            result.Status = tokenResponse.Status;
+                            result.Message = tokenResponse.Message;
                             if (tokenResponse.Status)
                             {
                                 if (string.IsNullOrEmpty(tokenResponse.Data))

@@ -57,11 +57,19 @@ namespace App.Schedule.Services
             var returnResponse = new ResponseViewModel<AdministratorViewModel>();
             try
             {
-                var jsonContent = JsonConvert.SerializeObject(model);
+                var registerModel = new UserViewModel()
+                {
+                    UserType = UserType.SiteAdmin,
+                    SiteAdmin = model
+                };
+                var jsonContent = JsonConvert.SerializeObject(registerModel);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
                 var url = String.Format(AppointmentService.POST_API_ACCOUNT_REGISTER);
                 var response = await this.appointmentService.httpClient.PostAsync(url, content);
-                returnResponse = await base.GetHttpResponse<AdministratorViewModel>(response);
+                var result = await base.GetHttpResponse<UserViewModel>(response);
+                returnResponse.Status = result.Status;
+                returnResponse.Message = result.Message;
+                returnResponse.Data = result.Data.SiteAdmin;
             }
             catch (Exception ex)
             {
@@ -78,11 +86,19 @@ namespace App.Schedule.Services
             try
             {
                 //model.Password = HttpContext.Current.Server.UrlEncode(model.Password);
-                var jsonContent = JsonConvert.SerializeObject(model);
+                var registerModel = new UserViewModel()
+                {
+                    UserType = UserType.SiteAdmin,
+                    SiteAdmin = model
+                };
+                var jsonContent = JsonConvert.SerializeObject(registerModel);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
                 var url = String.Format(AppointmentService.PUT_API_ACCOUNT_REGISTER);
                 var response = await this.appointmentService.httpClient.PostAsync(url, content);
-                returnResponse = await base.GetHttpResponse<AdministratorViewModel>(response);
+                var result = await base.GetHttpResponse<UserViewModel>(response);
+                returnResponse.Status = result.Status;
+                returnResponse.Message = result.Message;
+                returnResponse.Data = result.Data.SiteAdmin;
             }
             catch (Exception ex)
             {
@@ -168,7 +184,7 @@ namespace App.Schedule.Services
             try
             {
                 //Password = HttpContext.Current.Server.UrlEncode(Password);
-                var model = "username=admin" + Email + "&password=" + Password + "&grant_type=password";
+                var model = "username=" + Email + "&password=" + Password + "&grant_type=password";
                 var content = new StringContent(model, Encoding.UTF8, "text/plain");
                 var url = String.Format(AppointmentService.GET_ADMIN_TOKEN);
                 var response = await this.appointmentService.httpClient.PostAsync(url, content);

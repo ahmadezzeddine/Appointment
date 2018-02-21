@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Web;
-using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
-using App.Schedule.Domains;
+using App.Schedule.Context;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.Owin.Security;
@@ -28,8 +27,11 @@ namespace App.Schedule.WebApi.Controllers
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
 
+        private readonly AppScheduleDbContext _dbAppointment;
+
         public AccountController()
         {
+            _dbAppointment = new AppScheduleDbContext();
         }
 
         public AccountController(ApplicationUserManager userManager,
@@ -475,168 +477,371 @@ namespace App.Schedule.WebApi.Controllers
         // POST api/Account/Register
         [AllowAnonymous]
         [Route("Register")]
-        public async Task<IHttpActionResult> Register(AdministratorViewModel model)
+        [HttpPost]
+        public async Task<IHttpActionResult> Register(UserViewModel model)
         {
-            var result = new ResponseViewModel<tblAdministrator>();
+            //var result = new ResponseViewModel<tblAdministrator>();
 
-            if (!ModelState.IsValid)
+            if (model == null)
+                return Ok(new { status = false, data = "", message = "Invalid data model." });
+
+            if (model.UserType == UserType.SiteAdmin)
             {
-                var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
-                result.Status = false;
-                result.Message = errMessage;
-                result.Data = null;
-                return Ok(result);
-            }
-            else
-            {
-                var message = "";
-                var data = new tblAdministrator();
+                var admin = model.SiteAdmin;
                 var adminController = new AdministratorController();
-                var createStatus = adminController.RegisterAdmin(model, out data, out message);
-                model.Email = "admin" + model.Email;
-                if (createStatus)
+                using (var appointmetntDb = _dbAppointment.Database.BeginTransaction())
                 {
-                    var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
-                    var password = HttpContext.Current.Server.UrlDecode(model.Password);
-                    var response = await UserManager.CreateAsync(user, password);
-                    if (response.Succeeded)
+                    try
                     {
-                        result.Status = createStatus;
-                        result.Message = "Saved data successfully.";
-                        result.Data = data;
-                        return Ok(result);
+                        var registerViewModel = adminController.RegisterAdmin(admin);
+                        if (registerViewModel.Status)
+                        {
+                            var user = new ApplicationUser() { UserName = admin.Email, Email = admin.Email };
+                            var password = HttpContext.Current.Server.UrlDecode(admin.Password);
+                            var response = await UserManager.CreateAsync(user, password);
+                            if (response.Succeeded)
+                            {
+                                appointmetntDb.Commit();
+                                return Ok(new { status = true, data = registerViewModel, message = "Registeration successfully." });
+                            }
+                            else
+                            {
+                                appointmetntDb.Rollback();
+                                return Ok(new { status = false, data = registerViewModel, message = "Registeration failed. ex:" + response.Errors });
+                            }
+                        }
+                        else
+                        {
+                            appointmetntDb.Rollback();
+                            return Ok(new { status = false , data = "", message = registerViewModel.Message});
+                        }
                     }
-                    else
+                    catch
                     {
-                        result.Status = false;
-                        result.Message = string.Join(", ", response.Errors);
-                        result.Data = null;
-                        return Ok(result);
+                        appointmetntDb.Rollback();
+                        var user = UserManager.FindByEmail(model.SiteAdmin.Email);
+                        if (user != null)
+                        {
+                            UserManager.Delete(user);
+                        }
+                        return Ok(new { status = false, data = "", message = "There was a problem to register account, Please try again later." });
                     }
                 }
-                else
-                {
-                    result.Status = false;
-                    result.Message = message;
-                    result.Data = null;
-                    return Ok(result);
-                }
             }
-        }
-
-
-        // POST api/Account/UpdateAdmin
-        [Route("UpdateAdmin")]
-        public async Task<IHttpActionResult> UpdateAdmin(AdministratorViewModel model)
-        {
-            var result = new ResponseViewModel<AdministratorViewModel>();
-            if (!ModelState.IsValid)
+            else if (model.UserType == UserType.BusinessAdmin)
             {
-                var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
-                result.Status = false;
-                result.Message = errMessage;
-            }
-            var user = await UserManager.FindByEmailAsync(model.Email);
-            var response = await UserManager.ChangePasswordAsync(user.Id, model.OldPassword, model.Password);
-            if (response.Succeeded)
-            {
-                string message = "";
-                var adminController = new AdministratorController();
-                var updateStatus = adminController.UpdateAdmin(model, out message);
-                    result.Status = updateStatus;
-                    result.Message = message;
-                if (!updateStatus)
-                {
-                    var rollbackResponse = await UserManager.ChangePasswordAsync(user.Id, model.Password, model.OldPassword);
-                }
-            }
-            else
-            {
-                result.Status = false;
-                result.Message = string.Join(", ", response.Errors).ToLower();
-                if (result.Message.Contains("incorrect password"))
-                    result.Message = "Please check your old password.";
-            }
-            return Ok(result);
-        }
-
-
-        // POST api/Account/Register
-        [AllowAnonymous]
-        [Route("RegisterBusinessEmployee")]
-        public async Task<IHttpActionResult> RegisterBusinessEmployee(RegisterViewModel model)
-        {
-            var result = new ResponseViewModel<RegisterViewModel>();
-
-            if (!ModelState.IsValid)
-            {
-                var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
-                result.Status = false;
-                result.Message = errMessage;
-                result.Data = null;
-                return Ok(result);
-            }
-            else
-            {
-                var message = string.Empty;
-                var status = false;
+                var businessAdmin = model.BusinessAdmin;
                 var businessController = new BusinessController();
-                var business = businessController.Register(model, out status, out message);
-                model.Employee.Email = "emp" + model.Employee.Email;
-                if (status)
+                using (var appointmetntDb = _dbAppointment.Database.BeginTransaction())
                 {
-                    var user = new ApplicationUser() { UserName = model.Employee.Email, Email = model.Employee.Email };
-                    
-                    var response = await UserManager.CreateAsync(user, model.Employee.Password);
-                    if (response.Succeeded)
+                    try
                     {
-                        result.Status = status;
-                        result.Message = "User has registered successfully.";
-                        result.Data = business;
-                        return Ok(result);
+                        var registerViewModel = businessController.Register(businessAdmin);
+                        if (registerViewModel.Status)
+                        {
+                            var user = new ApplicationUser() { UserName = businessAdmin.Employee.Email, Email = businessAdmin.Employee.Email };
+                            var password = HttpContext.Current.Server.UrlDecode(businessAdmin.Employee.Password);
+                            var response = await UserManager.CreateAsync(user, password);
+                            if (response.Succeeded)
+                            {
+                                appointmetntDb.Commit();
+                                return Ok(new { status = true, data = registerViewModel, message = "Registeration successfully." });
+                            }
+                            else
+                            {
+                                appointmetntDb.Rollback();
+                                return Ok(new { status = false, data = registerViewModel, message = "Registeration failed. ex:" + response.Errors });
+                            }
+                        }
+                        else
+                        {
+                            appointmetntDb.Rollback();
+                            return Ok(new { status = false, data = registerViewModel, message = "There was problem. Please try again later." });
+                        }
                     }
-                    else
+                    catch
                     {
-                        result.Status = false;
-                        result.Message = string.Join(", ", response.Errors);
-                        result.Data = null;
-                        return Ok(result);
+                        appointmetntDb.Rollback();
+                        var user = UserManager.FindByEmail(businessAdmin.Employee.Email);
+                        if (user != null)
+                        {
+                            UserManager.Delete(user);
+                        }
+                        return Ok(new { status = false, data = "", message = "There was a problem to register account, Please try again later." });
                     }
-                }
-                else
-                {
-                    result.Status = false;
-                    result.Message = message;
-                    result.Data = null;
-                    return Ok(result);
                 }
             }
+            else if (model.UserType == UserType.BusinessEmployee)
+            {
+                var businessEmployee = model.BusinessEmployee;
+                var businessEmployeeController = new BusinessEmployeeController();
+                using (var appointmetntDb = _dbAppointment.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var registerViewModel = businessEmployeeController.Register(businessEmployee);
+                        if (registerViewModel.Status)
+                        {
+                            var user = new ApplicationUser() { UserName = businessEmployee.Email, Email = businessEmployee.Email };
+                            var password = HttpContext.Current.Server.UrlDecode(businessEmployee.Password);
+                            var response = await UserManager.CreateAsync(user, password);
+                            if (response.Succeeded)
+                            {
+                                appointmetntDb.Commit();
+                                return Ok(new { status = true, data = registerViewModel.Data, message = "Registeration successfully." });
+                            }
+                            else
+                            {
+                                appointmetntDb.Rollback();
+                                return Ok(new { status = false, data = registerViewModel.Data, message = "Registeration failed. ex:" + response.Errors });
+                            }
+                        }
+                        else
+                        {
+                            appointmetntDb.Rollback();
+                            return Ok(new { status = false, data = "", message = "There was problem. Please try again later." });
+                        }
+                    }
+                    catch
+                    {
+                        appointmetntDb.Rollback();
+                        var user = UserManager.FindByEmail(businessEmployee.Email);
+                        if (user != null)
+                        {
+                            UserManager.Delete(user);
+                        }
+                        return Ok(new { status = false, data = "", message = "There was a problem to register account, Please try again later." });
+                    }
+                }
+            }
+            else if (model.UserType == UserType.BusinessCustomer)
+            {
+                var businessCustomer = model.BusinessCustomer;
+                var businessCustomerController = new BusinessCustomerController();
+                using (var appointmetntDb = _dbAppointment.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var registerViewModel = businessCustomerController.Register(businessCustomer);
+                        if (registerViewModel.Status)
+                        {
+                            var user = new ApplicationUser() { UserName = businessCustomer.Email, Email = businessCustomer.Email };
+                            var password = HttpContext.Current.Server.UrlDecode(businessCustomer.Password);
+                            var response = await UserManager.CreateAsync(user, password);
+                            if (response.Succeeded)
+                            {
+                                appointmetntDb.Commit();
+                                return Ok(new { status = true, data = registerViewModel.Data, message = "Registeration successfully." });
+                            }
+                            else
+                            {
+                                appointmetntDb.Rollback();
+                                return Ok(new { status = false, data = registerViewModel.Data, message = "Registeration failed. ex:" + response.Errors });
+                            }
+                        }
+                        else
+                        {
+                            appointmetntDb.Rollback();
+                            return Ok(new { status = false, data = "", message = "There was problem. Please try again later." });
+                        }
+                    }
+                    catch
+                    {
+                        appointmetntDb.Rollback();
+                        var user = UserManager.FindByEmail(businessCustomer.Email);
+                        if (user != null)
+                        {
+                            UserManager.Delete(user);
+                        }
+                        return Ok(new { status = false, data = "", message = "There was a problem to register account, Please try again later." });
+                    }
+                }
+            }
+            else
+            {
+                return Ok(new { status = false, data = "", message = "Invalid user." });
+            }
         }
+
 
         // PUT api/Account/UpdateAdmin
-        [Route("UpdateBusinessEmployee")]
-        public async Task<IHttpActionResult> UpdateBusinessEmployee(BusinessEmployeeViewModel model)
+        [AllowAnonymous]
+        [Route("UpdateUser")]
+        [HttpPut]
+        public async Task<IHttpActionResult> UpdateUser(UserViewModel model)
         {
-            var result = new ResponseViewModel<BusinessEmployeeViewModel>();
-            if (!ModelState.IsValid)
+            if (model == null)
+                return Ok(new { status = false, data = "", message = "Invalid data model." });
+
+            if (model.UserType == UserType.SiteAdmin)
             {
-                var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
-                result.Status = false;
-                result.Message = errMessage;
+                var admin = model.SiteAdmin;
+                var adminController = new AdministratorController();
+                using (var appointmetntDb = _dbAppointment.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var updateAdmin = adminController.UpdateAdmin(admin);
+                        if (updateAdmin.Status)
+                        {
+                            var user = await UserManager.FindByEmailAsync(admin.Email);
+                            var response = await UserManager.ChangePasswordAsync(user.Id, admin.OldPassword, admin.Password);
+                            if (response.Succeeded)
+                            {
+                                appointmetntDb.Commit();
+                                return Ok(new { status = true, data = updateAdmin.Data, message = "update successfully." });
+                            }
+                            else
+                            {
+                                appointmetntDb.Rollback();
+                                return Ok(new { status = false, data = updateAdmin.Data, message = "update failed. ex:" + response.Errors });
+                            }
+                        }
+                        else
+                        {
+                            appointmetntDb.Rollback();
+                            return Ok(new { status = false, data = updateAdmin.Data, message = "There was problem. Please try again later." });
+                        }
+                    }
+                    catch
+                    {
+                        appointmetntDb.Rollback();
+                        return Ok(new { status = false, data = "", message = "There was a problem Please try again later." });
+                    }
+                }
             }
-            var message = string.Empty;
-            var adminController = new BusinessEmployeeController();
-            var updateStatus = adminController.UpdateEmployee(model, out message);
-            result.Status = updateStatus;
-            result.Message = message;
-            result.Data = model;
-            if (updateStatus)
+            else if (model.UserType == UserType.BusinessAdmin || model.UserType == UserType.BusinessEmployee)
             {
-                var email = string.Concat("emp", model.Email);
-                var user = await UserManager.FindByEmailAsync(email);
-                var rollbackResponse =await UserManager.ChangePasswordAsync(user.Id, model.OldPassword, model.Password);
+                var employe = model.BusinessEmployee;
+                var businessEmployeeController = new BusinessEmployeeController();
+                using (var appointmetntDb = _dbAppointment.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var updateAdmin = businessEmployeeController.UpdateEmployee(employe);
+                        if (updateAdmin.Status)
+                        {
+                            var user = await UserManager.FindByEmailAsync(employe.Email);
+                            var response = await UserManager.ChangePasswordAsync(user.Id, employe.OldPassword, employe.Password);
+                            if (response.Succeeded)
+                            {
+                                appointmetntDb.Commit();
+                                return Ok(new { status = true, data = updateAdmin.Data, message = "changed successfully." });
+                            }
+                            else
+                            {
+                                appointmetntDb.Rollback();
+                                return Ok(new { status = false, data = updateAdmin.Data, message = "change failed. ex:" + response.Errors });
+                            }
+                        }
+                        else
+                        {
+                            appointmetntDb.Rollback();
+                            return Ok(new { status = false, data = updateAdmin.Data, message = "There was problem. Please try again later." });
+                        }
+                    }
+                    catch
+                    {
+                        appointmetntDb.Rollback();
+                        return Ok(new { status = false, data = "", message = "There was a problem Please try again later." });
+                    }
+                }
             }
-            return Ok(result);
+            else if (model.UserType == UserType.BusinessCustomer)
+            {
+                return Ok(new { status = false, data = "", message = "Invalid user." });
+            }
+            else
+            {
+                return Ok(new { status = false, data = "", message = "Invalid user." });
+            }
+        }
+
+        // PUT api/Account/DeleteUser
+        [AllowAnonymous]
+        [Route("DeleteUser")]
+        [HttpPost]
+        public async Task<IHttpActionResult> DeleteUser(UserViewModel model)
+        {
+            if (model == null)
+                return Ok(new { status = false, data = "", message = "Invalid data model." });
+
+            if (model.UserType == UserType.BusinessEmployee)
+            {
+                var employe = model.BusinessEmployee;
+                var businessEmployeeController = new BusinessEmployeeController();
+                using (var appointmetntDb = _dbAppointment.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var deleteEmploye = businessEmployeeController.DeleteEmployee(employe.Id);
+                        if (deleteEmploye.Status)
+                        {
+                            var user = await UserManager.FindByEmailAsync(deleteEmploye.Data.Email);
+                            var response = await UserManager.DeleteAsync(user);
+                            if (response.Succeeded)
+                            {
+                                return Ok(new { status = true, data = deleteEmploye.Data, message = "deleted successfully." });
+                            }
+                            else
+                            {
+                                appointmetntDb.Rollback();
+                                return Ok(new { status = false, data = deleteEmploye.Data, message = "deletion failed. ex:" + response.Errors });
+                            }
+                        }
+                        else
+                        {
+                            appointmetntDb.Rollback();
+                            return Ok(new { status = false, data = "", message = "There was problem. Please try again later." });
+                        }
+                    }
+                    catch
+                    {
+                        appointmetntDb.Rollback();
+                        return Ok(new { status = false, data = "", message = "There was a problem Please try again later." });
+                    }
+                }
+            }
+            else if (model.UserType == UserType.BusinessCustomer)
+            {
+                var customer = model.BusinessCustomer;
+                var businessCustomerController = new BusinessCustomerController();
+                using (var appointmetntDb = _dbAppointment.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var deleteCustomer = businessCustomerController.DeleteCustomer(customer.Id);
+                        if (deleteCustomer.Status)
+                        {
+                            var user = await UserManager.FindByEmailAsync(deleteCustomer.Data.Email);
+                            var response = await UserManager.DeleteAsync(user);
+                            if (response.Succeeded)
+                            {
+                                return Ok(new { status = true, data = deleteCustomer.Data, message = "deleted successfully." });
+                            }
+                            else
+                            {
+                                appointmetntDb.Rollback();
+                                return Ok(new { status = false, data = deleteCustomer.Data, message = "deletion failed. ex:" + response.Errors });
+                            }
+                        }
+                        else
+                        {
+                            appointmetntDb.Rollback();
+                            return Ok(new { status = false, data = "", message = "There was problem. Please try again later." });
+                        }
+                    }
+                    catch
+                    {
+                        appointmetntDb.Rollback();
+                        return Ok(new { status = false, data = "", message = "There was a problem Please try again later." });
+                    }
+                }
+            }
+            else
+            {
+                return Ok(new { status = false, data = "", message = "Invalid user." });
+            }
         }
     }
 }

@@ -2,26 +2,25 @@
 using PagedList;
 using System.Linq;
 using System.Web.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using App.Schedule.Domains.ViewModel;
-using App.Schedule.Domains.Helpers;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
-    public class EmployeeController : EmployeeBaseController
+    public class CustomerController : CustomerBaseController
     {
         [HttpGet]
         public async Task<ActionResult> Index(int? page, string search)
         {
-            var model = this.ResponseHelper.GetResponse<IPagedList<BusinessEmployeeViewModel>>();
+            var model = this.ResponseHelper.GetResponse<IPagedList<BusinessCustomerViewMdoel>>();
             var pageNumber = page ?? 1;
             ViewBag.search = search;
 
             ViewBag.BusinessId = RegisterViewModel.Business.Id;
             ViewBag.ServiceLocationId = RegisterViewModel.Employee.ServiceLocationId;
 
-            var result = await BusinessEmployeeService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
+            var result = await BusinessCustomerService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
             if (result.Status)
             {
                 var data = result.Data;
@@ -29,7 +28,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 model.Message = result.Message;
                 if (search == null)
                 {
-                    model.Data = data.ToPagedList<BusinessEmployeeViewModel>(pageNumber, 5);
+                    model.Data = data.ToPagedList<BusinessCustomerViewMdoel>(pageNumber, 5);
                 }
                 else
                 {
@@ -47,8 +46,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<ActionResult> Add()
         {
-            var response = this.ResponseHelper.GetResponse<BusinessEmployeeViewModel>();
-            response.Data = new BusinessEmployeeViewModel();
+            var response = this.ResponseHelper.GetResponse<BusinessCustomerViewMdoel>();
+            response.Data = new BusinessCustomerViewMdoel();
             response.Data.ServiceLocationId = RegisterViewModel.Employee.ServiceLocationId;
             response.Status = true;
 
@@ -64,9 +63,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Add([Bind(Include = "Data")]ResponseViewModel<BusinessEmployeeViewModel> model)
+        public async Task<ActionResult> Add([Bind(Include = "Data")]ResponseViewModel<BusinessCustomerViewMdoel> model)
         {
-            var result = new ResponseViewModel<BusinessEmployeeViewModel>();
+            var result = new ResponseViewModel<BusinessCustomerViewMdoel>();
 
             if (!ModelState.IsValid)
             {
@@ -76,7 +75,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             }
             else
             {
-                var response = await this.BusinessEmployeeService.Add(model.Data);
+                var response = await this.BusinessCustomerService.Add(model.Data);
                 if (response == null)
                 {
                     result.Status = false;
@@ -96,15 +95,14 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         {
             if (id.HasValue && locationid.HasValue)
             {
-                ViewBag.EmployeeId = id.Value;
+                ViewBag.CustomerId = id.Value;
 
-                var response = await this.BusinessEmployeeService.Get(id.Value);
+                var response = await this.BusinessCustomerService.Get(id.Value);
 
                 if (response != null)
                 {
                     if (response.Status)
                     {
-                       // response.Data.ConfirmPassword = response.Data.Password = response.Data.OldPassword = Security.Decrypt(response.Data.Password, true);
                         var ServiceLocations = await this.GetServiceLocations();
                         ViewBag.ServiceLocationId = ServiceLocations.Select(s => new SelectListItem()
                         {
@@ -124,11 +122,10 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Data")]ResponseViewModel<BusinessEmployeeViewModel> model)
+        public async Task<ActionResult> Edit([Bind(Include = "Data")]ResponseViewModel<BusinessCustomerViewMdoel> model)
         {
-            var result = new ResponseViewModel<BusinessEmployeeViewModel>();
-
-            var response = await this.BusinessEmployeeService.Update(model.Data);
+            var result = new ResponseViewModel<BusinessCustomerViewMdoel>();
+            var response = await this.BusinessCustomerService.Update(model.Data);
             if (response == null)
             {
                 result.Status = false;
@@ -142,13 +139,12 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
 
-
         [HttpGet]
         public async Task<ActionResult> Deactive(long? id)
         {
             if (id.HasValue)
             {
-                var response = await this.BusinessEmployeeService.Get(id.Value);
+                var response = await this.BusinessCustomerService.Get(id.Value);
 
                 if (response != null)
                 {
@@ -165,10 +161,10 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Deactive([Bind(Include = "Data")]ResponseViewModel<BusinessEmployeeViewModel> model)
+        public async Task<ActionResult> Deactive([Bind(Include = "Data")]ResponseViewModel<BusinessCustomerViewMdoel> model)
         {
-            var result = new ResponseViewModel<BusinessEmployeeViewModel>();
-            var response = await this.BusinessEmployeeService.Deactive(model.Data.Id, model.Data.IsActive);
+            var result = new ResponseViewModel<BusinessCustomerViewMdoel>();
+            var response = await this.BusinessCustomerService.Deactive(model.Data.Id, model.Data.IsActive);
             if (response == null)
             {
                 result.Status = false;
@@ -187,7 +183,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         {
             if (id.HasValue)
             {
-                var response = await this.BusinessEmployeeService.Get(id.Value);
+                var response = await this.BusinessCustomerService.Get(id.Value);
 
                 if (response != null)
                 {
@@ -204,10 +200,10 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete([Bind(Include = "Data")]ResponseViewModel<BusinessEmployeeViewModel> model)
+        public async Task<ActionResult> Delete([Bind(Include = "Data")]ResponseViewModel<BusinessCustomerViewMdoel> model)
         {
-            var result = new ResponseViewModel<BusinessEmployeeViewModel>();
-            var response = await this.BusinessEmployeeService.DeleteEmployee(model.Data);
+            var result = new ResponseViewModel<BusinessCustomerViewMdoel>();
+            var response = await this.BusinessCustomerService.Delete(model.Data.Id);
             if (response == null)
             {
                 result.Status = false;
@@ -220,6 +216,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             }
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
+
 
         [NonAction]
         private async Task<List<ServiceLocationViewModel>> GetServiceLocations()
@@ -234,6 +231,5 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 return new List<ServiceLocationViewModel>();
             }
         }
-
     }
 }

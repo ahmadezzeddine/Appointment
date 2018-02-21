@@ -60,8 +60,6 @@ namespace App.Schedule.Domains
 
         public bool IsActive { get; set; }
 
-        public int? TimezoneId { get; set; }
-
         public long? ServiceLocationId { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

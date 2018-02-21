@@ -190,11 +190,9 @@ namespace App.Schedule.WebApi.Controllers
                         {
                             businessEmployee.FirstName = model.FirstName;
                             businessEmployee.LastName = model.LastName;
-                            businessEmployee.Password = Security.Encrypt(model.Password, true);
                             businessEmployee.STD = model.STD;
                             businessEmployee.PhoneNumber = model.PhoneNumber;
                             businessEmployee.ServiceLocationId = model.ServiceLocationId;
-
                             _db.Entry(businessEmployee).State = EntityState.Modified;
                             var response = _db.SaveChanges();
                             if (response > 0)
@@ -220,7 +218,7 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // DELETE: api/businessemployee/5
-        public IHttpActionResult Delete(int? id)
+        public IHttpActionResult Delete(long? id)
         {
             try
             {
@@ -252,7 +250,7 @@ namespace App.Schedule.WebApi.Controllers
 
         // DELETE: api/businessemployee/5
         [HttpDelete]
-        public IHttpActionResult Deactive(int? id, bool? status)
+        public IHttpActionResult Deactive(long? id, bool? status)
         {
             try
             {
@@ -283,11 +281,87 @@ namespace App.Schedule.WebApi.Controllers
             }
         }
 
+        [NonAction]
+        [AllowAnonymous]
+        public ResponseViewModel<BusinessEmployeeViewModel> Register(BusinessEmployeeViewModel model)
+        {
+            var data = new ResponseViewModel<BusinessEmployeeViewModel>();
+            var hasEmail = _db.tblBusinessEmployees.Any(d => d.Email.ToLower() == model.Email.ToLower() && d.ServiceLocationId == model.ServiceLocationId);
+            if (hasEmail)
+            {
+                data.Status = false;
+                data.Message = "This business email has been taken. Please try another email id.";
+            }
+            else
+            {
+                var businessEmployee = new tblBusinessEmployee()
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Password = Security.Encrypt(model.Password, true),
+                    Email = model.Email,
+                    STD = model.STD,
+                    PhoneNumber = model.PhoneNumber,
+                    ServiceLocationId = model.ServiceLocationId,
+                    IsAdmin = model.IsAdmin,
+                    Created = DateTime.Now.ToUniversalTime(),
+                    IsActive = model.IsActive
+                };
+                _db.tblBusinessEmployees.Add(businessEmployee);
+                var response = _db.SaveChanges();
+                data.Message = response > 0 ? "success" : "failed";
+                data.Status = response > 0 ? true : false;
+                data.Data = model;
+            }
+            return data;
+        }
 
         [NonAction]
-        public bool UpdateEmployee(BusinessEmployeeViewModel model, out string message)
+        public ResponseViewModel<AdministratorViewModel> UpdateAdmin(AdministratorViewModel model)
         {
-            var status = false;
+            var data = new ResponseViewModel<AdministratorViewModel>();
+            try
+            {
+                var admin = _db.tblAdministrators.Find(model.Id);
+                if (admin != null)
+                {
+                    if (admin.Email.ToLower() == model.Email.ToLower())
+                    {
+                        admin.FirstName = model.FirstName;
+                        admin.LastName = model.LastName;
+                        admin.Password = Security.Encrypt(model.Password, true);
+                        admin.IsAdmin = model.IsAdmin;
+                        admin.IsActive = model.IsActive;
+                        admin.ContactNumber = model.ContactNumber;
+
+                        _db.Entry(admin).State = EntityState.Modified;
+                        var response = _db.SaveChanges();
+                        data.Status = response > 0 ? true : false;
+                        data.Message = response > 0 ? "success" : "failed";
+                        data.Data = model;
+                    }
+                    else
+                    {
+                        data.Message = "please enter a valid email id.";
+                    }
+                }
+                else
+                {
+                    data.Message = "it is not a valid admin information.";
+                }
+            }
+            catch (Exception ex)
+            {
+                data.Message = "ex: " + ex.Message.ToString();
+            }
+            return data;
+        }
+
+
+        [NonAction]
+        public ResponseViewModel<BusinessEmployeeViewModel> UpdateEmployee(BusinessEmployeeViewModel model)
+        {
+            var data = new ResponseViewModel<BusinessEmployeeViewModel>();
             try
             {
                 var businessEmployee = _db.tblBusinessEmployees.Find(model.Id);
@@ -298,45 +372,65 @@ namespace App.Schedule.WebApi.Controllers
                     {
                         if (businessEmployee.Email.ToLower() == model.Email.ToLower())
                         {
-                            businessEmployee.FirstName = model.FirstName;
-                            businessEmployee.LastName = model.LastName;
                             businessEmployee.Password = Security.Encrypt(model.Password, true);
-                            businessEmployee.STD = model.STD;
-                            businessEmployee.PhoneNumber = model.PhoneNumber;
-                            businessEmployee.ServiceLocationId = model.ServiceLocationId;
-
                             _db.Entry(businessEmployee).State = EntityState.Modified;
                             var response = _db.SaveChanges();
-                            if (response > 0)
-                            {
-                                status = true;
-                                message = "Transaction successed.";
-                            }
-                            else
-                            {
-                                message = "Transaction failed.";
-                            }
+                            data.Message = response > 0 ? "success" : "failed";
+                            data.Status = response > 0 ? true : false;
                         }
                         else
                         {
-                            message = "Please enter a valid email id.";
+                            data.Message = "Please enter a valid email id.";
                         }
                     }
                     else
                     {
-                        message = "Please enter your valid old password.";
+                        data.Message = "Please enter your valid old password.";
                     }
                 }
                 else
                 {
-                    message = "It is not a valid Admin information.";
+                    data.Message = "It is not a valid information.";
                 }
             }
             catch (Exception ex)
             {
-                message = "ex: " + ex.Message.ToString();
+                data.Message = "ex: " + ex.Message.ToString();
             }
-            return status;
+            return data;
+        }
+
+        [NonAction]
+        public ResponseViewModel<BusinessEmployeeViewModel> DeleteEmployee(long? id)
+        {
+            var data = new ResponseViewModel<BusinessEmployeeViewModel>()
+            {
+                Status = false
+            };
+            try
+            {
+                if (id.HasValue)
+                {
+                    var businessEmployee = _db.tblBusinessEmployees.Find(id);
+                    if (businessEmployee != null)
+                    {
+                        _db.Entry(businessEmployee).State = EntityState.Deleted;
+                        var response = _db.SaveChanges();
+                        data.Data = new BusinessEmployeeViewModel() { Email = businessEmployee.Email, Id = businessEmployee.Id };
+                        data.Message = response > 0 ? "success" : "failed";
+                        data.Status = response > 0 ? true : false;
+                    }
+                    else
+                    {
+                        data.Message = "Not a valid data to delete. Please provide a valid id.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                data.Message = ex.Message.ToString();
+            }
+            return data;
         }
     }
 }

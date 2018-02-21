@@ -211,53 +211,51 @@ namespace App.Schedule.WebApi.Controllers
 
         [NonAction]
         [AllowAnonymous]
-        public bool RegisterAdmin(AdministratorViewModel model, out tblAdministrator data, out string message)
+        public ResponseViewModel<AdministratorViewModel> RegisterAdmin(AdministratorViewModel model)
         {
-            var status = false;
-            data = null;
+            var data = new ResponseViewModel<AdministratorViewModel>();
             try
             {
                 var isAny = _db.tblAdministrators.Any(d => d.Email.ToLower() == model.Email.ToLower());
                 if (isAny)
-                    message = "This email id has been taken. Please try another email id.";
-
-                var admin = new tblAdministrator()
                 {
-                    Email = model.Email,
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    Password = Security.Encrypt(model.Password, true),
-                    IsAdmin = model.IsAdmin,
-                    IsActive = model.IsActive,
-                    ContactNumber = model.ContactNumber,
-                    Created = DateTime.Now.ToUniversalTime(),
-                    AdministratorId = model.AdministratorId,
-                };
-
-                _db.tblAdministrators.Add(admin);
-                var response = _db.SaveChanges();
-                if (response > 0)
-                {
-                    status = true;
-                    message = "success";
-                    data = admin;
+                    data.Message = "This email id has already been registered. Try another email id.";
+                    data.Status = false;
                 }
                 else
                 {
-                    message = "failed";
+                    var admin = new tblAdministrator()
+                    {
+                        Email = model.Email,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        Password = Security.Encrypt(model.Password, true),
+                        IsAdmin = model.IsAdmin,
+                        IsActive = model.IsActive,
+                        ContactNumber = model.ContactNumber,
+                        Created = DateTime.Now.ToUniversalTime(),
+                        AdministratorId = model.AdministratorId,
+                    };
+
+                    _db.tblAdministrators.Add(admin);
+                    var response = _db.SaveChanges();
+
+                    data.Status = response > 0 ? true : false;
+                    data.Message = response > 0 ? "success" : "failed";
                 }
             }
             catch (Exception ex)
             {
-                message = "ex: " + ex.Message.ToString();
+                data.Message = "ex: " + ex.Message.ToString();
+                data.Status = false;
             }
-            return status;
+            return data;
         }
 
         [NonAction]
-        public bool UpdateAdmin(AdministratorViewModel model, out string message)
+        public ResponseViewModel<AdministratorViewModel> UpdateAdmin(AdministratorViewModel model)
         {
-            var status = false;
+            var data = new ResponseViewModel<AdministratorViewModel>();
             try
             {
                 var admin = _db.tblAdministrators.Find(model.Id);
@@ -274,31 +272,24 @@ namespace App.Schedule.WebApi.Controllers
 
                         _db.Entry(admin).State = EntityState.Modified;
                         var response = _db.SaveChanges();
-                        if (response > 0)
-                        {
-                            status = true;
-                            message = "success";
-                        }
-                        else
-                        {
-                            message = "failed";
-                        }
+                        data.Status = response > 0 ? true : false;
+                        data.Message = response > 0 ? "success" : "failed";
                     }
                     else
                     {
-                        message = "please enter a valid email id.";
+                        data.Message = "please enter a valid email id.";
                     }
                 }
                 else
                 {
-                    message = "it is not a valid admin information.";
+                    data.Message = "it is not a valid admin information.";
                 }
             }
             catch (Exception ex)
             {
-                message = "ex: " + ex.Message.ToString();
+                data.Message = "ex: " + ex.Message.ToString();
             }
-            return status;
+            return data;
         }
 
         [NonAction]
@@ -339,6 +330,5 @@ namespace App.Schedule.WebApi.Controllers
             }
             return result;
         }
-
     }
 }

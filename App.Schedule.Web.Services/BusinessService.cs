@@ -53,7 +53,12 @@ namespace App.Schedule.Web.Services
             var returnResponse = new ResponseViewModel<RegisterViewModel>();
             try
             {
-                var jsonContent = JsonConvert.SerializeObject(model);
+                var registerModel = new UserViewModel()
+                {
+                    UserType = UserType.BusinessAdmin,
+                    BusinessAdmin = model
+                };
+                var jsonContent = JsonConvert.SerializeObject(registerModel);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
                 var url = String.Format(AppointmentUserService.POST_API_ACCOUNT_REGISTER);
                 var response = await this.appointmentUserService.httpClient.PostAsync(url, content);

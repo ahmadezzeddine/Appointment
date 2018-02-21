@@ -17,7 +17,7 @@ namespace App.Schedule.Services
 
         //Admin Identity Token API
         public const string POST_API_ACCOUNT_REGISTER = "api/account/register";
-        public const string PUT_API_ACCOUNT_REGISTER = "api/account/updateadmin";
+        public const string PUT_API_ACCOUNT_REGISTER = "api/account/updateuser";
         public const string GET_ADMIN_TOKEN = "token";
 
         //Administrator API

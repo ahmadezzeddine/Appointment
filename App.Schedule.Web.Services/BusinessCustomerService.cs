@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Text;
 using System.Web;
+using System.Text;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
@@ -9,22 +9,22 @@ using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Services
 {
-    public class BusinessEmployeeService : AppointmentUserBaseService, IAppointmentUserService<BusinessEmployeeViewModel>
+    public class BusinessCustomerService : AppointmentUserBaseService, IAppointmentUserService<BusinessCustomerViewMdoel>
     {
-        public BusinessEmployeeService(string token)
+        public BusinessCustomerService(string token)
         {
             base.SetUpAppointmentService(token);
         }
 
-        public async Task<ResponseViewModel<RegisterViewModel>> VerifyLoginCredential(string Email, string Password)
+        public async Task<ResponseViewModel<BusinessCustomerViewMdoel>> VerifyLoginCredential(string Email, string Password)
         {
-            var returnResponse = new ResponseViewModel<RegisterViewModel>();
+            var returnResponse = new ResponseViewModel<BusinessCustomerViewMdoel>();
             try
             {
                 Password = HttpContext.Current.Server.UrlEncode(Password);
-                var url = String.Format(AppointmentUserService.GET_BUSINESS_EMP_BYLOGINID, Email, Password);
+                var url = String.Format(AppointmentUserService.GET_BUSINESS_CUSTOMER_BYLOGINID, Email, Password);
                 var response = await this.appointmentUserService.httpClient.GetAsync(url);
-                returnResponse = await base.GetHttpResponse<RegisterViewModel>(response);
+                returnResponse = await base.GetHttpResponse<BusinessCustomerViewMdoel>(response);
             }
             catch (Exception ex)
             {
@@ -35,7 +35,7 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
-        public async Task<ResponseViewModel<string>> VerifyAndGetAdminAccessToken(string Email, string Password)
+        public async Task<ResponseViewModel<string>> VerifyAngGetAccessToken(string Email, string Password)
         {
             var returnResponse = new ResponseViewModel<string>();
             try
@@ -78,19 +78,24 @@ namespace App.Schedule.Web.Services
             }
         }
 
-        public async Task<ResponseViewModel<BusinessEmployeeViewModel>> Get(long? id)
+        public Task<ResponseViewModel<BusinessCustomerViewMdoel>> Find(Predicate<BusinessCustomerViewMdoel> pridict)
         {
-            var returnResponse = new ResponseViewModel<BusinessEmployeeViewModel>()
+            throw new NotImplementedException();
+        }
+
+        public async Task<ResponseViewModel<BusinessCustomerViewMdoel>> Get(long? id)
+        {
+            var returnResponse = new ResponseViewModel<BusinessCustomerViewMdoel>()
             {
                 Status = false,
                 Message = "",
-                Data = new BusinessEmployeeViewModel()
+                Data = new BusinessCustomerViewMdoel()
             };
             try
             {
-                var url = String.Format(AppointmentUserService.GET_EMPLOYEESBYID, id);
+                var url = String.Format(AppointmentUserService.GET_BUSINESS_CUSTOMERBYID, id);
                 var response = await this.appointmentUserService.httpClient.GetAsync(url);
-                var result = await base.GetHttpResponse<BusinessEmployeeViewModel>(response);
+                var result = await base.GetHttpResponse<BusinessCustomerViewMdoel>(response);
 
                 returnResponse.Status = result.Status;
                 returnResponse.Message = result.Message;
@@ -106,16 +111,21 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
-        public async Task<ResponseViewModel<List<BusinessEmployeeViewModel>>> Gets(long? id, TableType type)
+        public Task<ResponseViewModel<List<BusinessCustomerViewMdoel>>> Gets()
         {
-            var returnResponse = new ResponseViewModel<List<BusinessEmployeeViewModel>>();
+            throw new NotImplementedException();
+        }
+
+        public async Task<ResponseViewModel<List<BusinessCustomerViewMdoel>>> Gets(long? id, TableType type)
+        {
+            var returnResponse = new ResponseViewModel<List<BusinessCustomerViewMdoel>>();
             try
             {
-                var url = String.Format(AppointmentUserService.GET_EMPLOYEESBYIDANDTYPE, id, (int) type);
+                var url = String.Format(AppointmentUserService.GET_BUSINESS_CUSTOMERBYIDANDTYPE, id, (int)type);
                 var response = await this.appointmentUserService.httpClient.GetAsync(url);
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    returnResponse = await base.GetHttpResponse<List<BusinessEmployeeViewModel>>(response);
+                    returnResponse = await base.GetHttpResponse<List<BusinessCustomerViewMdoel>>(response);
                 }
             }
             catch (Exception ex)
@@ -127,31 +137,21 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
-        public Task<ResponseViewModel<List<BusinessEmployeeViewModel>>> Gets()
+        public async Task<ResponseViewModel<BusinessCustomerViewMdoel>> Add(BusinessCustomerViewMdoel model)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<ResponseViewModel<BusinessEmployeeViewModel>> Find(Predicate<BusinessEmployeeViewModel> pridict)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<ResponseViewModel<BusinessEmployeeViewModel>> Add(BusinessEmployeeViewModel model)
-        {
-            var returnResponse = new ResponseViewModel<BusinessEmployeeViewModel>();
+            var returnResponse = new ResponseViewModel<BusinessCustomerViewMdoel>();
             try
             {
                 var registerModel = new UserViewModel()
                 {
-                    UserType = UserType.BusinessEmployee,
-                    BusinessEmployee = model
+                    UserType = UserType.BusinessCustomer,
+                    BusinessCustomer = model
                 };
                 var jsonContent = JsonConvert.SerializeObject(registerModel);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
                 var url = String.Format(AppointmentUserService.POST_API_ACCOUNT_REGISTER);
                 var response = await this.appointmentUserService.httpClient.PostAsync(url, content);
-                returnResponse = await base.GetHttpResponse<BusinessEmployeeViewModel>(response);
+                returnResponse = await base.GetHttpResponse<BusinessCustomerViewMdoel>(response);
             }
             catch (Exception ex)
             {
@@ -162,16 +162,14 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
-        public async Task<ResponseViewModel<BusinessEmployeeViewModel>> Update(BusinessEmployeeViewModel model)
+        public async Task<ResponseViewModel<BusinessCustomerViewMdoel>> Deactive(long? id, bool status)
         {
-            var returnResponse = new ResponseViewModel<BusinessEmployeeViewModel>();
+            var returnResponse = new ResponseViewModel<BusinessCustomerViewMdoel>();
             try
             {
-                var jsonContent = JsonConvert.SerializeObject(model);
-                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var url = String.Format(AppointmentUserService.PUT_EMPLOYEES, model.Id);
-                var response = await this.appointmentUserService.httpClient.PutAsync(url, content);
-                returnResponse = await base.GetHttpResponse<BusinessEmployeeViewModel>(response);
+                var url = String.Format(AppointmentUserService.DEACTIVE_BUSINESS_CUSTOMER, id, status);
+                var response = await this.appointmentUserService.httpClient.DeleteAsync(url);
+                returnResponse = await base.GetHttpResponse<BusinessCustomerViewMdoel>(response);
             }
             catch (Exception ex)
             {
@@ -182,21 +180,22 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
-        public async Task<ResponseViewModel<BusinessEmployeeViewModel>> DeleteEmployee(BusinessEmployeeViewModel model)
+        //Don't forgot to remove token
+        public async Task<ResponseViewModel<BusinessCustomerViewMdoel>> Delete(long? id)
         {
-            var returnResponse = new ResponseViewModel<BusinessEmployeeViewModel>();
+            var returnResponse = new ResponseViewModel<BusinessCustomerViewMdoel>();
             try
             {
                 var registerModel = new UserViewModel()
                 {
-                    UserType = UserType.BusinessEmployee,
-                    BusinessEmployee = model
+                    UserType = UserType.BusinessCustomer,
+                    BusinessCustomer = new BusinessCustomerViewMdoel() { Id = id.Value }
                 };
                 var jsonContent = JsonConvert.SerializeObject(registerModel);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
                 var url = String.Format(AppointmentUserService.DELETE_API_ACCOUNT);
                 var response = await this.appointmentUserService.httpClient.PostAsync(url, content);
-                returnResponse = await base.GetHttpResponse<BusinessEmployeeViewModel>(response);
+                returnResponse = await base.GetHttpResponse<BusinessCustomerViewMdoel>(response);
             }
             catch (Exception ex)
             {
@@ -206,15 +205,17 @@ namespace App.Schedule.Web.Services
             }
             return returnResponse;
         }
-
-        public async Task<ResponseViewModel<BusinessEmployeeViewModel>> Deactive(long? id, bool status)
+        
+        public async Task<ResponseViewModel<BusinessCustomerViewMdoel>> Update(BusinessCustomerViewMdoel model)
         {
-            var returnResponse = new ResponseViewModel<BusinessEmployeeViewModel>();
+            var returnResponse = new ResponseViewModel<BusinessCustomerViewMdoel>();
             try
             {
-                var url = String.Format(AppointmentUserService.DEACTIVE_EMPLOYEES, id, status);
-                var response = await this.appointmentUserService.httpClient.DeleteAsync(url);
-                returnResponse = await base.GetHttpResponse<BusinessEmployeeViewModel>(response);
+                var jsonContent = JsonConvert.SerializeObject(model);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var url = String.Format(AppointmentUserService.PUT_BUSINESS_CUSTOMER, model.Id);
+                var response = await this.appointmentUserService.httpClient.PutAsync(url, content);
+                returnResponse = await base.GetHttpResponse<BusinessCustomerViewMdoel>(response);
             }
             catch (Exception ex)
             {
@@ -223,11 +224,6 @@ namespace App.Schedule.Web.Services
                 returnResponse.Status = false;
             }
             return returnResponse;
-        }
-
-        public Task<ResponseViewModel<BusinessEmployeeViewModel>> Delete(long? id)
-        {
-            throw new NotImplementedException();
         }
     }
 }
