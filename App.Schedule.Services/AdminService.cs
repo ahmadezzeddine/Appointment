@@ -94,11 +94,11 @@ namespace App.Schedule.Services
                 var jsonContent = JsonConvert.SerializeObject(registerModel);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
                 var url = String.Format(AppointmentService.PUT_API_ACCOUNT_REGISTER);
-                var response = await this.appointmentService.httpClient.PostAsync(url, content);
+                var response = await this.appointmentService.httpClient.PutAsync(url, content);
                 var result = await base.GetHttpResponse<UserViewModel>(response);
                 returnResponse.Status = result.Status;
                 returnResponse.Message = result.Message;
-                returnResponse.Data = result.Data.SiteAdmin;
+                returnResponse.Data = null;
             }
             catch (Exception ex)
             {

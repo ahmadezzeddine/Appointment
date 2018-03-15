@@ -16,7 +16,7 @@
 </div>
 <div class="row">
     <div class="col-lg-12">
-        @using (Ajax.BeginForm("Delete", new AjaxOptions { }))
+        @using (Ajax.BeginForm("Deactive", new AjaxOptions { }))
         {
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -27,7 +27,7 @@
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(model => model.Data.Id)
                     @Html.HiddenFor(model => model.Data.AdministratorId)
-                    @Html.HiddenFor(mode => Model.Data.IsActive)
+                    @Html.HiddenFor(mode => Model.Data.IsAdmin)
                     <div class="form-group col-lg-6">
                         <label>FirstName</label>
                         @Html.EditorFor(model => model.Data.FirstName, new { htmlAttributes = new { @class = "form-control", @readonly = true, placeholder = "First Name" } })
@@ -46,8 +46,8 @@
                     </div>
                     <div class="form-group col-lg-12">
                         <label>
-                            @Html.CheckBoxFor(model => model.Data.IsAdmin, new { htmlAttributes = new { @class = "form-control" } })
-                            is Admin? <span class="text-danger small"> Note: By disable status of admin will not allow to login.</span>
+                            @Html.CheckBoxFor(model => model.Data.IsActive, new { htmlAttributes = new { @class = "form-control" } })
+                            is Active? <span class="text-danger small"> Note: By disable status of admin will not allow to login.</span>
                         </label>
                     </div>
                 </div>

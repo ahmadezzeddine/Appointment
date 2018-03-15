@@ -173,10 +173,18 @@ namespace App.Schedule.Web.Admin.Controllers
                     var res = await this.AdminService.Get(id.Value);
                     if (res.Status)
                     {
-                        model.HasError = false;
-                        model.Data = res.Data;
-                        model.Data.Password = "";
-                        model.Data.ConfirmPassword = "";
+                        if (res.Data.Email.ToLower() != this.admin.Email.ToLower())
+                        {
+                            model.HasError = false;
+                            model.Data = res.Data;
+                            model.Data.Password = "";
+                            model.Data.ConfirmPassword = "";
+                        }
+                        else
+                        {
+                            model.Error = "Sorry, You cann't remove yourself.";
+                            return RedirectToAction("index");
+                        }
                     }
                     else
                     {
@@ -201,16 +209,24 @@ namespace App.Schedule.Web.Admin.Controllers
             {
                 if (model.Data!=null)
                 {
-                    var response = await this.AdminService.Delete(model.Data.Id);
-                    if (response.Status)
+                    if (model.Data.Email.ToLower() != this.admin.Email.ToLower())
                     {
-                        result.Status = true;
-                        result.Message = response.Message;
+                        var response = await this.AdminService.Delete(model.Data.Id);
+                        if (response.Status)
+                        {
+                            result.Status = true;
+                            result.Message = response.Message;
+                        }
+                        else
+                        {
+                            result.Status = false;
+                            result.Message = response.Message;
+                        }
                     }
                     else
                     {
                         result.Status = false;
-                        result.Message = response.Message;
+                        result.Message = "Sorry, You cann't remove yourself";
                     }
                 }
                 else
