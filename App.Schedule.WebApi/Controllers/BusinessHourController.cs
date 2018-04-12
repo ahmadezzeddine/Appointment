@@ -9,6 +9,7 @@ using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.WebApi.Controllers
 {
+    [Authorize]
     public class BusinessHourController : ApiController
     {
         private readonly AppScheduleDbContext _db;

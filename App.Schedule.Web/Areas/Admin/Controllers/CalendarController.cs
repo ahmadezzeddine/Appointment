@@ -1,26 +1,32 @@
-﻿using System;
-using System.Linq;
-using System.Web.Mvc;
+﻿using App.Schedule.Domains.ViewModel;
+using System;
 using System.Collections.Generic;
-using App.Schedule.Domains.ViewModel;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
-    public class DashboardController : DashboardBaseController
+    public class CalendarController : CalendarBaseController
     {
-        [HttpGet]
         public ActionResult Index()
         {
             return View();
         }
 
-        [HttpGet]
-        public ActionResult Logout()
+        public ActionResult Week()
         {
-            if (this.LogoutStatus())
-                return RedirectToAction("Login", "Home", new { area = "Admin" });
-            else
-                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+            return View();
+        }
+
+        public ActionResult Timeline()
+        {
+            return View();
+        }
+
+        public ActionResult Reports()
+        {
+            return View();
         }
 
         [NonAction]

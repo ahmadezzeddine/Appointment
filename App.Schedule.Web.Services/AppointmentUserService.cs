@@ -96,6 +96,15 @@ namespace App.Schedule.Web.Services
         public const string DELETE_BUSINESS_CUSTOMER= "api/businesscustomer?id={0}";
         public const string DEACTIVE_BUSINESS_CUSTOMER = "api/businesscustomer?id={0}&status={1}";
 
+        //Appointment
+        //Business Customer
+        public const string GET_APPOINTMENT_BYBUSINESSIDANDTYPE = "api/appointment?businessid={0}&type={1}";
+        public const string GET_APPOINTMENT_BYID = "api/appointment?id={0}";
+        //public const string GET_BUSINESS_CUSTOMERBYIDANDTYPE = "api/businesscustomer?id={0}&type={1}";
+        //public const string PUT_BUSINESS_CUSTOMER = "api/businesscustomer?id={0}";
+        //public const string DELETE_BUSINESS_CUSTOMER = "api/businesscustomer?id={0}";
+        //public const string DEACTIVE_BUSINESS_CUSTOMER = "api/businesscustomer?id={0}&status={1}";
+
         public AppointmentUserService()
         {
             this.httpClient = new HttpClient() { BaseAddress = new Uri(baseUrl) };

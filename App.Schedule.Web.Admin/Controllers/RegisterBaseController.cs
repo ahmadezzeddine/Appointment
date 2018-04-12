@@ -1,5 +1,5 @@
 ﻿using System.Web.Mvc;
-using App.Schedule.Services;
+using App.Schedule.Web.Admin.Services;
 
 namespace App.Schedule.Web.Admin.Controllers
 {

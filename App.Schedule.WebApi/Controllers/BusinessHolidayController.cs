@@ -9,6 +9,7 @@ using System.Web.Http;
 
 namespace App.Schedule.WebApi.Controllers
 {
+    [Authorize]
     public class BusinessHolidayController : ApiController
     {
         private readonly AppScheduleDbContext _db;

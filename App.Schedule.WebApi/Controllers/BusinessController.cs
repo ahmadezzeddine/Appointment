@@ -13,6 +13,7 @@ namespace App.Schedule.WebApi.Controllers
     /// crud API for business.
     /// You can call "api/business" for GET,POST,PUT and DELETE.
     /// </summary>
+    [Authorize]
     public class BusinessController : ApiController
     {
         private readonly AppScheduleDbContext _db;

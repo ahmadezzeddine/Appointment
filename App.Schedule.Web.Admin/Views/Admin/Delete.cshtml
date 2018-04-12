@@ -24,6 +24,7 @@
                 </div>
                 <div class="panel-body">
                     @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.Data.Email)
                     @Html.HiddenFor(model => model.Data.Id)
                     @Html.HiddenFor(model => model.Data.AdministratorId)
                     @Html.HiddenFor(mode => Model.Data.IsActive)

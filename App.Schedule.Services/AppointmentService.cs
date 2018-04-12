@@ -6,7 +6,7 @@ using System.Net.Http.Headers;
 using System.Collections.Generic;
 using App.Schedule.Domains.ViewModel;
 
-namespace App.Schedule.Services
+namespace App.Schedule.Web.Admin.Services
 {
     public class AppointmentService
     {

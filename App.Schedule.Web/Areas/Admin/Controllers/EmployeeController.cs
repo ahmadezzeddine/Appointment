@@ -5,7 +5,6 @@ using System.Web.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using App.Schedule.Domains.ViewModel;
-using App.Schedule.Domains.Helpers;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {

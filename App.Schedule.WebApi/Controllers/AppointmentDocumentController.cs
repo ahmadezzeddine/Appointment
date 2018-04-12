@@ -8,6 +8,7 @@ using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.WebApi.Controllers
 {
+    [Authorize]
     public class AppointmentDocumentController : ApiController
     {
         private readonly AppScheduleDbContext _db;

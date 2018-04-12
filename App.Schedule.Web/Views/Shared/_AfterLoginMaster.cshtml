@@ -17,7 +17,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="@Url.Action("Index","Dashboard")" style="margin-top:-5px;"><img alt="Brand" src="~/Content/Images/logo.png" width="30"></a> <span class="navbar-brand-title">Appointment</span>
+                <a class="navbar-brand" href="@Url.Action("index","dashboard")" style="margin-top:-5px;"><img alt="Brand" src="~/Content/Images/logo.png" width="30"></a> <span class="navbar-brand-title">Appointment</span>
             </div>
             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
@@ -37,15 +37,15 @@
                     }
                     else
                     {
-                        Response.Redirect("~/Admin/Home/Login");
+                        Response.Redirect("~/admin/home/login");
                     }
                     <ul class="dropdown-menu dropdown-user">
                         <li>
-                            <a href="@Url.Action("Index","Account", new { area = "Admin" })"><i class="fa fa-user fa-fw"></i> Profile</a>
+                            <a href="@Url.Action("index","account", new { area = "admin" })"><i class="fa fa-user fa-fw"></i> Profile</a>
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="@Url.Action("Logout","Dashboard", new { area = "Admin"})"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                            <a href="@Url.Action("logout","dashboard", new { area = "admin"})"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                 </li>
@@ -54,36 +54,36 @@
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                         <li>
-                            <a href="@Url.Action("Index","Dashboard", new { area="Admin" })"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                            <a href="@Url.Action("index","dashboard", new { area="admin" })"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         <li>
                             <a> <i class="fa fa-bars fa-fw"></i> Profile Setup <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                                <li><a href="@Url.Action("Index","AccountSetup", new { area="Admin" })">Account</a></li>
-                                <li><a href="@Url.Action("Index","account", new { area="Admin" })">Profile</a></li>
-                                <li><a href="@Url.Action("Index","membership", new { area="Admin" })">Membership</a></li>
-                                <li><a href="@Url.Action("Index","businessadmin", new { area="Admin" })">Administrator</a></li>
-                                <li><a href="@Url.Action("Index","hour", new { area="Admin" })">Business Hour</a></li>
-                                <li><a href="@Url.Action("Index","holiday", new { area="Admin" })">Business Holiday</a></li>
-                                <li><a href="@Url.Action("Index","servicelocation", new { area="Admin" })">Service Location</a></li>
-                                <li><a href="@Url.Action("Index","BusinessOffer", new { area="Admin" })">Custom Offer</a></li>
-                                <li><a href="@Url.Action("Index","Employee", new { area="Admin" })">Employee</a></li>
-                                <li><a href="@Url.Action("Index","Customer", new { area="Admin" })">Customer</a></li>
+                                <li><a href="@Url.Action("index","accountsetup", new { area="admin" })">Account</a></li>
+                                <li><a href="@Url.Action("index","account", new { area="admin" })">Profile</a></li>
+                                <li><a href="@Url.Action("index","membership", new { area="admin" })">Membership</a></li>
+                                <li><a href="@Url.Action("index","businessadmin", new { area="admin" })">Administrator</a></li>
+                                <li><a href="@Url.Action("index","hour", new { area="admin" })">Business Hour</a></li>
+                                <li><a href="@Url.Action("index","holiday", new { area="admin" })">Business Holiday</a></li>
+                                <li><a href="@Url.Action("index","servicelocation", new { area="admin" })">Service Location</a></li>
+                                <li><a href="@Url.Action("index","businessoffer", new { area="admin" })">Custom Offer</a></li>
+                                <li><a href="@Url.Action("index","employee", new { area="admin" })">Employee</a></li>
+                                <li><a href="@Url.Action("index","customer", new { area="admin" })">Customer</a></li>
                             </ul>
                         </li>
                         <li>
                             <a><i class="fa fa-calendar fa-fw"></i> Calendar <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                                <li class="disabled"><a href="@Url.Action("Index","Calendar", new { area="Admin" })">View</a></li>
-                                <li class="disabled"><a href="#">Month</a></li>
-                                <li class="disabled"><a href="#">Timeline</a></li>
-                                <li class="disabled"><a href="#">Reports</a></li>
+                                <li><a href="@Url.Action("index","calendar", new { area="admin" })">View</a></li>
+                                <li><a href="@Url.Action("week","calendar", new { area="admin" })">Week</a></li>
+                                <li><a  href="@Url.Action("timeline","calendar", new { area="admin" })">Timeline</a></li>
+                                <li class="disabled"><a  href="@Url.Action("index","calendar", new { area="admin" })">Reports</a></li>
                             </ul>
                         </li>
                         <li>
                             <a><i class="fa fa-book fa-fw"></i> Appointments <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                                <li class="disabled"><a href="@Url.Action("Index","Appointment",new { area="Admin" })">View</a></li>
+                                <li><a href="@Url.Action("index","appointment",new { area="admin" })">View</a></li>
                                 <li class="disabled"><a href="#">Search</a></li>
                                 <li class="disabled"><a href="#">New</a></li>
                                 <li class="disabled"><a href="#">Block</a></li>

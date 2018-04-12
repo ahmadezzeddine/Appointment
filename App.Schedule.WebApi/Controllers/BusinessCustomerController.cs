@@ -10,6 +10,7 @@ using App.Schedule.Domains.Helpers;
 
 namespace App.Schedule.WebApi.Controllers
 {
+    [Authorize]
     public class BusinessCustomerController : ApiController
     {
         private readonly AppScheduleDbContext _db;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using App.Schedule.Domains.ViewModel;
 using System.Collections.Generic;
 
-namespace App.Schedule.Services
+namespace App.Schedule.Web.Admin.Services
 {
     public class AdminService : AppointmentBaseService, IAppointmentService<AdministratorViewModel>
     {

@@ -8,6 +8,7 @@ using System.Web.Http;
 
 namespace App.Schedule.WebApi.Controllers
 {
+    [Authorize]
     public class MembershipController : ApiController
     {
         private readonly AppScheduleDbContext _db;

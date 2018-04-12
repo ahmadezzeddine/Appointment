@@ -5,9 +5,11 @@ using System.Data.Entity;
 using App.Schedule.Domains;
 using App.Schedule.Context;
 using App.Schedule.Domains.ViewModel;
+using System.Collections.Generic;
 
 namespace App.Schedule.WebApi.Controllers
 {
+    [Authorize]
     public class AppointmentController : ApiController
     {
         private readonly AppScheduleDbContext _db;
@@ -23,11 +25,45 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 var model = _db.tblAppointments.ToList();
-                return Ok(new { status = true, data = model });
+                return Ok(new { status = true, data = model, message = "success"});
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = false, data = "", message = "ex: "+ex.Message.ToString() });
+            }
+        }
+
+        // GET: api/Appointment
+        public IHttpActionResult Get(long? id, TableType type)
+        {
+            try
+            {
+                var model = new List<tblAppointment>();
+                if (id.HasValue && type == TableType.BusinessId)
+                {
+                    var locations = _db.tblServiceLocations.Where(d => d.BusinessId == id).ToList();
+                    locations.ForEach((location) => {
+                        var data = _db.tblAppointments.Where(d => d.ServiceLocationId == location.Id).ToList();
+                        model.AddRange(data);
+                    });
+                }
+                else if (id.HasValue && type == TableType.EmployeeId)
+                {
+                    model = _db.tblAppointments.Where(d => d.BusinessEmployeeId == id.Value).ToList();
+                }
+                else if (id.HasValue && type == TableType.ServiceLocationId)
+                {
+                    model = _db.tblAppointments.Where(d => d.ServiceLocationId == id.Value).ToList();
+                }
+                else
+                {
+                    model = _db.tblAppointments.ToList();
+                }
+                return Ok(new { status = true, data = model, message = "success" });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 
@@ -37,19 +73,19 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "Please provide valid ID." });
+                    return Ok(new { status = false, data ="", message = "Please provide valid ID." });
                 else
                 {
                     var model = _db.tblAppointments.Find(id);
                     if (model != null)
-                        return Ok(new { status = true, data = model });
+                        return Ok(new { status = true, data = model, message = "success" });
                     else
-                        return Ok(new { status = false, data = "Not found." });
+                        return Ok(new { status = false, data = "", message = "No records found." });
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 
@@ -60,45 +96,46 @@ namespace App.Schedule.WebApi.Controllers
             {
                 if (model != null)
                 {
+                    var randomId = new Random().Next(1000000, 99999999);
                     var appointment = new tblAppointment()
                     {
-                     GlobalAppointmentId = model.GlobalAppointmentId,
-                     BusinessServiceId = model.BusinessServiceId,
-                     Title = model.Title,
-                     PatternType = model.PatternType,
-                     StartTime = model.StartTime,
-                     EndTime = model.EndTime,
-                     IsRecuring = model.IsRecuring,
-                     IsAllDayEvent = model.IsAllDayEvent,
-                     TextColor = model.TextColor,
-                     BackColor = model.BackColor,
-                     RecureEvery = model.RecureEvery,
-                     EndAfter = model.EndAfter,
-                     EndAfterDate = model.EndAfterDate,
-                     StatusType = model.StatusType,
-                     CancelReason = model.CancelReason,
-                     IsActive = model.IsActive,
-                     Created = model.Created,
-                     BusinessCustomerId = model.BusinessCustomerId,
-                     BusinessEmployeeId = model.BusinessEmployeeId,
-                     BusinessOfferId = model.BusinessOfferId,
-                     ServiceLocationId = model.ServiceLocationId
+                        GlobalAppointmentId = randomId,
+                        BusinessServiceId = model.BusinessServiceId,
+                        Title = model.Title,
+                        PatternType = model.PatternType,
+                        StartTime = model.StartTime,
+                        EndTime = model.EndTime,
+                        IsRecuring = model.IsRecuring,
+                        IsAllDayEvent = model.IsAllDayEvent,
+                        TextColor = model.TextColor,
+                        BackColor = model.BackColor,
+                        RecureEvery = model.RecureEvery,
+                        EndAfter = model.EndAfter,
+                        EndAfterDate = model.EndAfterDate,
+                        StatusType = model.StatusType,
+                        CancelReason = model.CancelReason,
+                        IsActive = model.IsActive,
+                        Created = model.Created,
+                        BusinessCustomerId = model.BusinessCustomerId,
+                        BusinessEmployeeId = model.BusinessEmployeeId,
+                        BusinessOfferId = model.BusinessOfferId,
+                        ServiceLocationId = model.ServiceLocationId
                     };
                     _db.tblAppointments.Add(appointment);
                     var response = _db.SaveChanges();
                     if (response > 0)
-                        return Ok(new { status = true, data = appointment });
+                        return Ok(new { status = true, data = appointment, message = "" });
                     else
-                        return Ok(new { status = false, data = "There was a problem." });
+                        return Ok(new { status = false, data = "", message = "There was a problem." });
                 }
                 else
                 {
-                    return Ok(new { status = false, data = "There was a problem." });
+                    return Ok(new { status = false, data = "", message = "There was a problem." });
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 
@@ -108,7 +145,7 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "Please provide a valid ID." });
+                    return Ok(new { status = false, data = "", message = "Please provide a valid ID." });
                 else
                 {
                     if (model != null)
@@ -141,17 +178,17 @@ namespace App.Schedule.WebApi.Controllers
                             _db.Entry(appointment).State = EntityState.Modified;
                             var response = _db.SaveChanges();
                             if (response > 0)
-                                return Ok(new { status = true, data = appointment });
+                                return Ok(new { status = true, data = appointment, message = "success" });
                             else
-                                return Ok(new { status = false, data = "There was a problem to update the data." });
+                                return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
                         }
                     }
-                    return Ok(new { status = false, data = "Not a valid data to update. Please provide a valid id." });
+                    return Ok(new { status = false, data ="", message = "Not a valid data to update. Please provide a valid id." });
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 
@@ -161,7 +198,7 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "Please provide a valid ID." });
+                    return Ok(new { status = false, data ="", message = "Please provide a valid ID." });
                 else
                 {
                     var appointment = _db.tblAppointments.Find(id);
@@ -171,19 +208,19 @@ namespace App.Schedule.WebApi.Controllers
                         _db.Entry(appointment).State = EntityState.Modified;
                         var response = _db.SaveChanges();
                         if (response > 0)
-                            return Ok(new { status = true, data = appointment });
+                            return Ok(new { status = true, data = appointment, message = "success" });
                         else
-                            return Ok(new { status = false, data = "There was a problem to update the data." });
+                            return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
                     }
                     else
                     {
-                        return Ok(new { status = false, data = "Not a valid data to update. Please provide a valid id." });
+                        return Ok(new { status = false, data = "", message = "Not a valid data to update. Please provide a valid id." });
                     }
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
     }

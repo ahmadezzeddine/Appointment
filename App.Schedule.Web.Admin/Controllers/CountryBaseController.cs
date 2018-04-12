@@ -1,4 +1,4 @@
-﻿using App.Schedule.Services;
+﻿using App.Schedule.Web.Admin.Services;
 using System.Web.Mvc;
 
 namespace App.Schedule.Web.Admin.Controllers

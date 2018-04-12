@@ -1,0 +1,49 @@
+﻿@using App.Schedule.Domains.ViewModel;
+@using FullCalendar
+@{
+    ViewBag.Title = "Business Calendar";
+    Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Business Calendar</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        @*@Html.Partial("~/Views/SubViews/_ErrorView.cshtml", Model)*@
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <b>Calendar View</b>
+            </div>
+            <div class="panel-body">
+                @Html.FullCalendar(settings =>
+                         {
+                             settings.Name = "ApCalendar";
+                             settings.CssClass = "css-test";
+                             settings.Header = new Header
+                             {
+                                 Left = new ControlsBuilder().AddButton(HeaderButton.Prev).AddSeparator(HeaderSeparator.Adjacent)
+                                             .AddButton(HeaderButton.Next).AddSeparator(HeaderSeparator.Gap).AddButton(HeaderButton.Today),
+                                 Right = new ControlsBuilder().AddTitle(),
+                             };
+                             settings.DefaultView = Enum.GetName(typeof(AvailableView), AvailableView.Month);
+                             settings.Editable = true;
+                             settings.AllDaySlot = false;
+                             settings.Selectable = true;
+                             settings.SlotDuration = TimeSpan.FromMinutes(15);
+                             settings.Events = new EventCollection(Url.Action("GetDiaryEvents","Calendar", new { start = DateTime.Now, end = DateTime.Now.AddDays(2), area = "Admin" }), EventCollectionType.JsonFeed);
+                         })
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Styles.Render("~/bundles/fullcalendar/css")
+    @Scripts.Render("~/bundles/fullcalendar/jquery")
+}
