@@ -624,16 +624,24 @@ namespace App.Schedule.Domains.ViewModel
     {
         public long Id { get; set; }
 
-        public long GlobalAppointmentId { get; set; }
+        public string GlobalAppointmentId { get; set; }
 
         public long? BusinessServiceId { get; set; }
 
+        [Required(ErrorMessage = "Please enter Title")]
         public string Title { get; set; }
 
         public int PatternType { get; set; }
 
+        [DataType(DataType.Date)]
+        public DateTime? StartDate { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime? EndDate { get; set; }
+
+        [DataType(DataType.Time)]
         public DateTime? StartTime { get; set; }
 
+        [DataType(DataType.Time)]
         public DateTime? EndTime { get; set; }
 
         public bool IsRecuring { get; set; }
@@ -669,22 +677,27 @@ namespace App.Schedule.Domains.ViewModel
 
         public long? BusinessCustomerId { get; set; }
 
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public string BusinessServiceName { get; set; }
+
+        public string ServiceLocationName { get; set; }
+
+        public string BusinessCustomerName { get; set; }
+
+        public string BusinessOfferName { get; set; }
+
         //public virtual ICollection<tblAppointmentDocument> tblAppointmentDocuments { get; set; }
 
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<tblAppointmentPayment> tblAppointmentPayments { get; set; }
+
+        //public virtual ICollection<tblAppointmentInvitee> tblAppointmentInvitees { get; set; }
+
+        //public virtual tblServiceLocation tblServiceLocation { get; set; }
 
         //public virtual tblBusinessCustomer tblBusinessCustomer { get; set; }
 
         //public virtual tblBusinessOffer tblBusinessOffer { get; set; }
 
         //public virtual tblBusinessService tblBusinessService { get; set; }
-
-        //public virtual tblServiceLocation tblServiceLocation { get; set; }
-
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        //public virtual ICollection<tblAppointmentInvitee> tblAppointmentInvitees { get; set; }
     }
 
     /// <summary>
@@ -967,20 +980,30 @@ namespace App.Schedule.Domains.ViewModel
         Daily = 1,
         Weekly = 2,
         Monthly = 3,
-        Yearly = 4,
-        Custom = 5
+        Yearly = 4
     }
 
     /// <summary>
     /// Enum is used to set holiday type.
     /// </summary>
-    public enum HolidayType
+    public enum RecureType
     {
         Specified = 0,
         RpeatEveryWeek = 1,
         RepeatEveryMonth = 2,
         RepeatEveryYear = 4,
     }
+
+    /// <summary>
+    /// Enum is used to set holiday type.
+    /// </summary>
+    //public enum HolidayType
+    //{
+    //    Specified = 0,
+    //    RpeatEveryWeek = 1,
+    //    RepeatEveryMonth = 2,
+    //    RepeatEveryYear = 4,
+    //}
 
     /// <summary>
     /// Enum is used to set file type.

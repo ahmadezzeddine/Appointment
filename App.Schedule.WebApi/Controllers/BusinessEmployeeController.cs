@@ -95,6 +95,7 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // GET: api/businessemployee/?emailid=value&password=value
+        [AllowAnonymous]
         public IHttpActionResult Get(string email, string password)
         {
             try
@@ -357,7 +358,6 @@ namespace App.Schedule.WebApi.Controllers
             }
             return data;
         }
-
 
         [NonAction]
         public ResponseViewModel<BusinessEmployeeViewModel> UpdateEmployee(BusinessEmployeeViewModel model)

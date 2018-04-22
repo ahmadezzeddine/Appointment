@@ -33,11 +33,6 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
-        public Task<ResponseViewModel<BusinessHourViewModel>> Find(Predicate<BusinessHourViewModel> pridict)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<ResponseViewModel<BusinessHourViewModel>> Get(long? id)
         {
             var returnResponse = new ResponseViewModel<BusinessHourViewModel>();

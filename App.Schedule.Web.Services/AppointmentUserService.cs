@@ -79,6 +79,15 @@ namespace App.Schedule.Web.Services
         public const string DELETE_BUSINESSOFFERSERVICELOCATION = "api/businessofferlocation?id={0}";
         public const string DEACTIVE_BUSINESSOFFERSERVICELOCATION = "api/businessofferlocation?id={0}&status={1}";
 
+        //Business Service
+        public const string GET_BUSINESSSERVICE = "api/businessservice";
+        public const string GET_BUSINESSSERVICEBYID = "api/businessservice?id={0}";
+        public const string GETS_BUSINESSSERVICEBYTYPEID = "api/businessservice?id={0}&type={1}";
+        public const string POST_BUSINESSSERVICE = "api/businessservice";
+        public const string PUT_BUSINESSSERVICEBYID = "api/businessservice?id={0}";
+        public const string DELETE_BUSINESSSERVICEBYID = "api/businessservice?id={0}";
+        public const string DEACTIVE_BUSINESSSERVICEBYIDANDSTATUS = "api/businessservice?id={0}&status={1}";
+
         //Business Employee
         public const string GET_BUSINESS_EMP_BYLOGINID = "api/businessemployee?email={0}&password={1}";
         public const string GET_EMPLOYEESBYID = "api/businessemployee?id={0}";
@@ -98,9 +107,13 @@ namespace App.Schedule.Web.Services
 
         //Appointment
         //Business Customer
-        public const string GET_APPOINTMENT_BYBUSINESSIDANDTYPE = "api/appointment?businessid={0}&type={1}";
+        public const string GET_APPOINTMENT  = "api/appointment";
         public const string GET_APPOINTMENT_BYID = "api/appointment?id={0}";
-        //public const string GET_BUSINESS_CUSTOMERBYIDANDTYPE = "api/businesscustomer?id={0}&type={1}";
+        public const string GET_APPOINTMENT_BYBUSINESSIDANDTYPE = "api/appointment?id={0}&type={1}";
+        public const string POST_APPOINTMENT = "api/appointment";
+        public const string PUT_APPOINTMENT = "api/appointment?id={0}";
+        public const string DEACTIVE_APPOINTMENT = "api/appointment";
+        public const string DELETE_APPOINTMENT = "api/appointment?id={0}";
         //public const string PUT_BUSINESS_CUSTOMER = "api/businesscustomer?id={0}";
         //public const string DELETE_BUSINESS_CUSTOMER = "api/businesscustomer?id={0}";
         //public const string DEACTIVE_BUSINESS_CUSTOMER = "api/businesscustomer?id={0}&status={1}";

@@ -26,7 +26,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         public ActionResult Add()
         {
             var model = new ResponseViewModel<BusinessHolidayViewModel>();
-            var holidayTypes = from HolidayType e in Enum.GetValues(typeof(HolidayType))
+            var holidayTypes = from RecureType e in Enum.GetValues(typeof(RecureType))
                                select new
                                {
                                    ID = (int)e,
@@ -91,7 +91,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 return RedirectToAction("index", "holiday", new { area = "admin" });
 
             var model = await this.BusinessHolidayService.Get(id);
-            var holidayTypes = from HolidayType e in Enum.GetValues(typeof(HolidayType))
+            var holidayTypes = from RecureType e in Enum.GetValues(typeof(RecureType))
                                select new
                                {
                                    ID = (int)e,
@@ -154,7 +154,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 return RedirectToAction("index", "holiday", new { area = "admin" });
 
             var model = await this.BusinessHolidayService.Get(id);
-            var holidayTypes = from HolidayType e in Enum.GetValues(typeof(HolidayType))
+            var holidayTypes = from RecureType e in Enum.GetValues(typeof(RecureType))
                                select new
                                {
                                    ID = (int)e,

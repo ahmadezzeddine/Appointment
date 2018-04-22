@@ -6,7 +6,7 @@ namespace App.Schedule.Web.Controllers
 {
     public class HomeBaseController : BaseController
     {
-        protected BusinessService BusinessService;
+        protected RegisterService BusinessService;
         protected MembershipService MembershipService;
         protected BusinessCategoryService BusinessCategoryService;
         protected BusinessEmployeeService BusinessEmployeeService;
@@ -22,7 +22,7 @@ namespace App.Schedule.Web.Controllers
             }
             else
             {
-                this.BusinessService = new BusinessService(this.Token);
+                this.BusinessService = new RegisterService(this.Token);
                 this.MembershipService = new MembershipService(this.Token);
                 this.CountryService = new CountryService(this.Token);
                 this.TimezoneService = new TimezoneService(this.Token);

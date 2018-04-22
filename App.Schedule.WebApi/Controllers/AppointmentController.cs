@@ -24,12 +24,16 @@ namespace App.Schedule.WebApi.Controllers
         {
             try
             {
-                var model = _db.tblAppointments.ToList();
-                return Ok(new { status = true, data = model, message = "success"});
+                var model = _db.tblAppointments
+                                    .Include(i => i.tblServiceLocation)
+                                    .Include(i => i.tblBusinessService)
+                                    .Include(i => i.tblBusinessOffer)
+                                    .Include(i => i.tblBusinessCustomer).ToList();
+                return Ok(new { status = true, data = model, message = "success" });
             }
             catch (Exception ex)
             {
-                return Ok(new { status = false, data = "", message = "ex: "+ex.Message.ToString() });
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 
@@ -38,26 +42,30 @@ namespace App.Schedule.WebApi.Controllers
         {
             try
             {
-                var model = new List<tblAppointment>();
+                var model = new List<AppointmentViewModel>();
                 if (id.HasValue && type == TableType.BusinessId)
                 {
                     var locations = _db.tblServiceLocations.Where(d => d.BusinessId == id).ToList();
-                    locations.ForEach((location) => {
-                        var data = _db.tblAppointments.Where(d => d.ServiceLocationId == location.Id).ToList();
-                        model.AddRange(data);
-                    });
+                    if (locations.Count > 0)
+                    {
+                        locations.ForEach((location) =>
+                        {
+                            var data = this.GetApppointments().Where(d => d.ServiceLocationId == location.Id).ToList();
+                            model.AddRange(data);
+                        });
+                    }
                 }
                 else if (id.HasValue && type == TableType.EmployeeId)
                 {
-                    model = _db.tblAppointments.Where(d => d.BusinessEmployeeId == id.Value).ToList();
+                    model = this.GetApppointments().Where(d => d.BusinessEmployeeId == id.Value).ToList();
                 }
                 else if (id.HasValue && type == TableType.ServiceLocationId)
                 {
-                    model = _db.tblAppointments.Where(d => d.ServiceLocationId == id.Value).ToList();
+                    model = this.GetApppointments().Where(d => d.ServiceLocationId == id.Value).ToList();
                 }
                 else
                 {
-                    model = _db.tblAppointments.ToList();
+                    model = this.GetApppointments().ToList();
                 }
                 return Ok(new { status = true, data = model, message = "success" });
             }
@@ -73,10 +81,10 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data ="", message = "Please provide valid ID." });
+                    return Ok(new { status = false, data = "", message = "Please provide valid ID." });
                 else
                 {
-                    var model = _db.tblAppointments.Find(id);
+                    var model = this.GetApppointments().Find(d => d.Id == id.Value);
                     if (model != null)
                         return Ok(new { status = true, data = model, message = "success" });
                     else
@@ -96,15 +104,12 @@ namespace App.Schedule.WebApi.Controllers
             {
                 if (model != null)
                 {
-                    var randomId = new Random().Next(1000000, 99999999);
                     var appointment = new tblAppointment()
                     {
-                        GlobalAppointmentId = randomId,
+                        GlobalAppointmentId = model.GlobalAppointmentId,
                         BusinessServiceId = model.BusinessServiceId,
                         Title = model.Title,
                         PatternType = model.PatternType,
-                        StartTime = model.StartTime,
-                        EndTime = model.EndTime,
                         IsRecuring = model.IsRecuring,
                         IsAllDayEvent = model.IsAllDayEvent,
                         TextColor = model.TextColor,
@@ -115,7 +120,9 @@ namespace App.Schedule.WebApi.Controllers
                         StatusType = model.StatusType,
                         CancelReason = model.CancelReason,
                         IsActive = model.IsActive,
-                        Created = model.Created,
+                        StartTime = model.StartTime.Value.ToUniversalTime(),
+                        EndTime = model.EndTime.Value.ToUniversalTime(),
+                        Created = model.Created.ToUniversalTime(),
                         BusinessCustomerId = model.BusinessCustomerId,
                         BusinessEmployeeId = model.BusinessEmployeeId,
                         BusinessOfferId = model.BusinessOfferId,
@@ -153,12 +160,11 @@ namespace App.Schedule.WebApi.Controllers
                         var appointment = _db.tblAppointments.Find(id);
                         if (appointment != null)
                         {
-                            appointment.GlobalAppointmentId = model.GlobalAppointmentId;
                             appointment.BusinessServiceId = model.BusinessServiceId;
                             appointment.Title = model.Title;
                             appointment.PatternType = model.PatternType;
-                            appointment.StartTime = model.StartTime;
-                            appointment.EndTime = model.EndTime;
+                            appointment.StartTime = model.StartTime.Value.ToUniversalTime();
+                            appointment.EndTime = model.EndTime.Value.ToUniversalTime();
                             appointment.IsRecuring = model.IsRecuring;
                             appointment.IsAllDayEvent = model.IsAllDayEvent;
                             appointment.TextColor = model.TextColor;
@@ -169,7 +175,7 @@ namespace App.Schedule.WebApi.Controllers
                             appointment.StatusType = model.StatusType;
                             appointment.CancelReason = model.CancelReason;
                             appointment.IsActive = model.IsActive;
-                            appointment.Created = model.Created;
+                            appointment.Created = model.Created.ToUniversalTime();
                             appointment.BusinessCustomerId = model.BusinessCustomerId;
                             appointment.BusinessEmployeeId = model.BusinessEmployeeId;
                             appointment.BusinessOfferId = model.BusinessOfferId;
@@ -183,7 +189,7 @@ namespace App.Schedule.WebApi.Controllers
                                 return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
                         }
                     }
-                    return Ok(new { status = false, data ="", message = "Not a valid data to update. Please provide a valid id." });
+                    return Ok(new { status = false, data = "", message = "Not a valid data to update. Please provide a valid id." });
                 }
             }
             catch (Exception ex)
@@ -198,7 +204,7 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data ="", message = "Please provide a valid ID." });
+                    return Ok(new { status = false, data = "", message = "Please provide a valid ID." });
                 else
                 {
                     var appointment = _db.tblAppointments.Find(id);
@@ -222,6 +228,46 @@ namespace App.Schedule.WebApi.Controllers
             {
                 return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
+        }
+
+        [NonAction]
+        public List<AppointmentViewModel> GetApppointments()
+        {
+            return _db.tblAppointments
+                                    .Include(i => i.tblServiceLocation)
+                                    .Include(i => i.tblBusinessService)
+                                    .Include(i => i.tblBusinessOffer)
+                                    .Include(i => i.tblBusinessCustomer).Select(s => new AppointmentViewModel
+                                    {
+                                        BackColor = s.BackColor,
+                                        BusinessCustomerId = s.BusinessCustomerId,
+                                        BusinessEmployeeId = s.BusinessEmployeeId,
+                                        BusinessOfferId = s.BusinessOfferId,
+                                        BusinessServiceId = s.BusinessServiceId,
+                                        CancelReason = s.CancelReason,
+                                        Created = s.Created,
+                                        EndAfter = s.EndAfter,
+                                        EndAfterDate = s.EndAfterDate,
+                                        EndTime = s.EndTime,
+                                        GlobalAppointmentId = s.GlobalAppointmentId,
+                                        Id = s.Id,
+                                        IsActive = s.IsActive,
+                                        IsAllDayEvent = s.IsAllDayEvent,
+                                        IsRecuring = s.IsRecuring,
+                                        PatternType = s.PatternType,
+                                        RecureEvery = s.RecureEvery,
+                                        ServiceLocationId = s.ServiceLocationId,
+                                        StartTime = s.StartTime,
+                                        StatusType = s.StatusType,
+                                        TextColor = s.TextColor,
+                                        Title = s.Title,
+                                        EndDate = s.EndTime.Value,
+                                        StartDate = s.StartTime.Value,
+                                        BusinessCustomerName = s.tblBusinessCustomer.FirstName +" "+s.tblBusinessCustomer.LastName,
+                                        BusinessOfferName = s.tblBusinessOffer.Name,
+                                        BusinessServiceName = s.tblBusinessService.Name,
+                                        ServiceLocationName = s.tblServiceLocation.Name
+                                    }).ToList();
         }
     }
 }

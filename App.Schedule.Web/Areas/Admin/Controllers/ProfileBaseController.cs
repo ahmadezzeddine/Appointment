@@ -5,7 +5,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 {
     public class ProfileBaseController : BaseController
     {
-        protected BusinessService BusinessService;
+        protected RegisterService BusinessService;
         protected TimezoneService TimezoneService;
         protected BusinessCategoryService BusinessCategoryService;
         protected CountryService CountryService;
@@ -19,7 +19,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             }
             else
             {
-                this.BusinessService = new BusinessService(this.Token);
+                this.BusinessService = new RegisterService(this.Token);
                 this.TimezoneService = new TimezoneService(this.Token);
                 this.BusinessCategoryService = new BusinessCategoryService(this.Token);
                 this.CountryService = new CountryService(this.Token);

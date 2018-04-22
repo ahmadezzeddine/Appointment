@@ -15,11 +15,6 @@ namespace App.Schedule.Web.Services
             this.SetUpAppointmentService(token);
         }
 
-        public Task<ResponseViewModel<ServiceLocationViewModel>> Find(Predicate<ServiceLocationViewModel> pridict)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<ResponseViewModel<ServiceLocationViewModel>> Get(long? id)
         {
             var returnResponse = new ResponseViewModel<ServiceLocationViewModel>();

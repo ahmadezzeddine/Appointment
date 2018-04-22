@@ -1,7 +1,9 @@
 ﻿using App.Schedule.Domains.ViewModel;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,19 +16,40 @@ namespace App.Schedule.Web.Services
             this.SetUpAppointmentService(token);
         }
 
-        public Task<ResponseViewModel<AppointmentViewModel>> Find(Predicate<AppointmentViewModel> pridict)
+        public async Task<ResponseViewModel<AppointmentViewModel>> Get(long? id)
         {
-            throw new NotImplementedException();
+            var returnResponse = new ResponseViewModel<AppointmentViewModel>();
+            try
+            {
+                var url = String.Format(AppointmentUserService.GET_APPOINTMENT_BYID, id);
+                var response = this.appointmentUserService.httpClient.GetAsync(url);
+                returnResponse = await base.GetHttpResponse<AppointmentViewModel>(response.Result);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
         }
 
-        public Task<ResponseViewModel<AppointmentViewModel>> Get(long? id)
+        public async Task<ResponseViewModel<List<AppointmentViewModel>>> Gets()
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<ResponseViewModel<List<AppointmentViewModel>>> Gets()
-        {
-            throw new NotImplementedException();
+            var returnResponse = new ResponseViewModel<List<AppointmentViewModel>>();
+            try
+            {
+                var url = String.Format(AppointmentUserService.GET_APPOINTMENT);
+                var response = await this.appointmentUserService.httpClient.GetAsync(url);
+                returnResponse = await base.GetHttpResponse<List<AppointmentViewModel>>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
         }
 
         public async Task<ResponseViewModel<List<AppointmentViewModel>>> Gets(long? id, TableType type)
@@ -50,9 +73,24 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
-        public Task<ResponseViewModel<AppointmentViewModel>> Add(AppointmentViewModel model)
+        public async Task<ResponseViewModel<AppointmentViewModel>> Add(AppointmentViewModel model)
         {
-            throw new NotImplementedException();
+            var returnResponse = new ResponseViewModel<AppointmentViewModel>();
+            try
+            {
+                var jsonContent = JsonConvert.SerializeObject(model);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var url = String.Format(AppointmentUserService.POST_APPOINTMENT);
+                var response = await this.appointmentUserService.httpClient.PostAsync(url, content);
+                returnResponse = await base.GetHttpResponse<AppointmentViewModel>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
         }
 
         public Task<ResponseViewModel<AppointmentViewModel>> Deactive(long? id, bool status)
@@ -65,9 +103,24 @@ namespace App.Schedule.Web.Services
             throw new NotImplementedException();
         }
 
-        public Task<ResponseViewModel<AppointmentViewModel>> Update(AppointmentViewModel model)
+        public async Task<ResponseViewModel<AppointmentViewModel>> Update(AppointmentViewModel model)
         {
-            throw new NotImplementedException();
+            var returnResponse = new ResponseViewModel<AppointmentViewModel>();
+            try
+            {
+                var jsonContent = JsonConvert.SerializeObject(model);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var url = String.Format(AppointmentUserService.PUT_APPOINTMENT, model.Id);
+                var response = await this.appointmentUserService.httpClient.PutAsync(url, content);
+                returnResponse = await base.GetHttpResponse<AppointmentViewModel>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
         }
     }
 }

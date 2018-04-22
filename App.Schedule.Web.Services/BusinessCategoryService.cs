@@ -31,11 +31,6 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
-        public Task<ResponseViewModel<BusinessCategoryViewModel>> Find(Predicate<BusinessCategoryViewModel> pridict)
-        {
-            return null;
-        }
-
         public Task<ResponseViewModel<BusinessCategoryViewModel>> Get(long? id)
         {
             return null;

@@ -8,61 +8,30 @@ using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Services
 {
-    public class BusinessService : AppointmentUserBaseService, IAppointmentUserService<RegisterViewModel>
+    public class BusinessService : AppointmentUserBaseService, IAppointmentUserService<BusinessServiceViewModel>
     {
         public BusinessService(string token)
         {
-            base.SetUpAppointmentService(token);
+            this.SetUpAppointmentService(token);
         }
 
-        public async Task<ResponseViewModel<RegisterViewModel>> Get(long? id)
+        public async Task<ResponseViewModel<BusinessServiceViewModel>> Get(long? id)
         {
-            var returnResponse = new ResponseViewModel<RegisterViewModel>()
+            var returnResponse = new ResponseViewModel<BusinessServiceViewModel>()
             {
                 Status = false,
                 Message = "",
-                Data = new RegisterViewModel()
+                Data = new BusinessServiceViewModel()
             };
             try
             {
-                var url = String.Format(AppointmentUserService.GET_BUSINESS_BYID, id);
+                var url = String.Format(AppointmentUserService.GET_BUSINESSSERVICEBYID, id);
                 var response = await this.appointmentUserService.httpClient.GetAsync(url);
-                var result = await base.GetHttpResponse<BusinessViewModel>(response);
+                var result = await base.GetHttpResponse<BusinessServiceViewModel>(response);
 
                 returnResponse.Status = result.Status;
                 returnResponse.Message = result.Message;
-                returnResponse.Data.Business = result.Data;
-            }
-            catch (Exception ex)
-            {
-                returnResponse.Data = null;
-                returnResponse.Message = "Reason: " + ex.Message.ToString();
-                returnResponse.Status = false;
-            }
-
-            return returnResponse;
-        }
-
-        public Task<ResponseViewModel<List<RegisterViewModel>>> Gets()
-        {
-            return null;
-        }
-
-        public async Task<ResponseViewModel<RegisterViewModel>> Add(RegisterViewModel model)
-        {
-            var returnResponse = new ResponseViewModel<RegisterViewModel>();
-            try
-            {
-                var registerModel = new UserViewModel()
-                {
-                    UserType = UserType.BusinessAdmin,
-                    BusinessAdmin = model
-                };
-                var jsonContent = JsonConvert.SerializeObject(registerModel);
-                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var url = String.Format(AppointmentUserService.POST_API_ACCOUNT_REGISTER);
-                var response = await this.appointmentUserService.httpClient.PostAsync(url, content);
-                returnResponse = await base.GetHttpResponse<RegisterViewModel>(response);
+                returnResponse.Data = result.Data;
             }
             catch (Exception ex)
             {
@@ -72,45 +41,35 @@ namespace App.Schedule.Web.Services
             }
             return returnResponse;
         }
-        
-        public Task<ResponseViewModel<RegisterViewModel>> Deactive(long? id, bool status)
-        {
-            return null;
-        }
 
-        public Task<ResponseViewModel<RegisterViewModel>> Delete(long? id)
+        public async Task<ResponseViewModel<List<BusinessServiceViewModel>>> Gets()
         {
-            return null;
-        }
-
-        public Task<ResponseViewModel<RegisterViewModel>> Find(Predicate<RegisterViewModel> pridict)
-        {
-            return null;
-        }
-
-        public async Task<ResponseViewModel<RegisterViewModel>> Update(RegisterViewModel model)
-        {
-            var returnResponse = new ResponseViewModel<RegisterViewModel>()
-            {
-                Data = new RegisterViewModel()
-            };
+            var returnResponse = new ResponseViewModel<List<BusinessServiceViewModel>>();
             try
             {
-                var jsonContent = JsonConvert.SerializeObject(model.Business);
-                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var url = String.Format(AppointmentUserService.PUT_BUSINESS_BYTPE, model.Business.Id, FieldType.All);
-                var response = await this.appointmentUserService.httpClient.PutAsync(url, content);
-                var business = await base.GetHttpResponse<BusinessViewModel>(response);
-                if(business != null && business.Status)
+                var url = String.Format(AppointmentUserService.GET_BUSINESSOFFER);
+                var response = await this.appointmentUserService.httpClient.GetAsync(url);
+                returnResponse = await base.GetHttpResponse<List<BusinessServiceViewModel>>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
+        public async Task<ResponseViewModel<List<BusinessServiceViewModel>>> Gets(long? empId)
+        {
+            var returnResponse = new ResponseViewModel<List<BusinessServiceViewModel>>();
+            try
+            {
+                if (empId.HasValue)
                 {
-                    returnResponse.Status = business.Status;
-                    returnResponse.Message = business.Message;
-                    returnResponse.Data.Business = business.Data;
-                }
-                else
-                {
-                    returnResponse.Status = false;
-                    returnResponse.Message = "Please try again later.";
+                    var url = String.Format(AppointmentUserService.GETS_BUSINESSSERVICEBYTYPEID,empId.Value, TableType.EmployeeId);
+                    var response = await this.appointmentUserService.httpClient.GetAsync(url);
+                    returnResponse = await base.GetHttpResponse<List<BusinessServiceViewModel>>(response);
                 }
             }
             catch (Exception ex)
@@ -122,27 +81,86 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
-        public async Task<ResponseViewModel<BusinessViewModel>> Update(FieldType type, BusinessViewModel model)
+        public async Task<ResponseViewModel<BusinessServiceViewModel>> Add(BusinessServiceViewModel model)
         {
-            var returnResponse = new ResponseViewModel<BusinessViewModel>();
+            var returnResponse = new ResponseViewModel<BusinessServiceViewModel>();
             try
             {
                 var jsonContent = JsonConvert.SerializeObject(model);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var url = String.Format(AppointmentUserService.PUT_BUSINESS_BYTPE, model.Id, type);
-                var response = await this.appointmentUserService.httpClient.PutAsync(url, content);
-                var business = await base.GetHttpResponse<BusinessViewModel>(response);
-                if (business != null && business.Status)
+                var url = String.Format(AppointmentUserService.POST_BUSINESSSERVICE);
+                var response = await this.appointmentUserService.httpClient.PostAsync(url, content);
+                returnResponse = await base.GetHttpResponse<BusinessServiceViewModel>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
+        public async Task<ResponseViewModel<BusinessServiceViewModel>> Deactive(long? id, bool status)
+        {
+            var returnResponse = new ResponseViewModel<BusinessServiceViewModel>();
+            try
+            {
+                if (!id.HasValue)
                 {
-                    returnResponse.Status = business.Status;
-                    returnResponse.Message = business.Message;
-                    returnResponse.Data = business.Data;
+                    returnResponse.Status = false;
+                    returnResponse.Message = "Please enter a valid offer id.";
                 }
                 else
                 {
-                    returnResponse.Status = false;
-                    returnResponse.Message = "Please try again later.";
+                    var url = String.Format(AppointmentUserService.DEACTIVE_BUSINESSSERVICEBYIDANDSTATUS, id.Value, status);
+                    var response = await this.appointmentUserService.httpClient.DeleteAsync(url);
+                    returnResponse = await base.GetHttpResponse<BusinessServiceViewModel>(response);
                 }
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
+        public async Task<ResponseViewModel<BusinessServiceViewModel>> Delete(long? id)
+        {
+            var returnResponse = new ResponseViewModel<BusinessServiceViewModel>();
+            try
+            {
+                if (!id.HasValue)
+                {
+                    returnResponse.Status = false;
+                    returnResponse.Message = "Please enter a valid offer id.";
+                }
+                else
+                {
+                    var url = String.Format(AppointmentUserService.DELETE_BUSINESSSERVICEBYID, id.Value);
+                    var response = await this.appointmentUserService.httpClient.DeleteAsync(url);
+                    returnResponse = await base.GetHttpResponse<BusinessServiceViewModel>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
+        public async Task<ResponseViewModel<BusinessServiceViewModel>> Update(BusinessServiceViewModel model)
+        {
+            var returnResponse = new ResponseViewModel<BusinessServiceViewModel>();
+            try
+            {
+                var jsonContent = JsonConvert.SerializeObject(model);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var url = String.Format(AppointmentUserService.PUT_BUSINESSSERVICEBYID, model.Id);
+                var response = await this.appointmentUserService.httpClient.PutAsync(url, content);
+                returnResponse = await base.GetHttpResponse<BusinessServiceViewModel>(response);
             }
             catch (Exception ex)
             {

@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using App.Schedule.Domains.ViewModel;
+using App.Schedule.Domains.Helpers;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
@@ -26,7 +27,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 return RedirectToAction("index", "hour", new { area = "admin" });
 
             var model = await this.BusinessHourService.Get(id);
-            var fromHours = this.GetHoursOfDay();
+            var fromHours = Hour.GetHoursOfDay();
             model.Status = true;
             ViewBag.FromHours = fromHours.Select(s => new SelectListItem()
             {
@@ -119,18 +120,6 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             return true;
         }
 
-        [NonAction]
-        public Dictionary<int, string> GetHoursOfDay()
-        {
-            var now = DateTime.Now;
-            var date = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
-            var hours = new Dictionary<int, string>();
-            for (var i = 1; i <= 48; i++)
-            {
-                hours.Add(i, date.ToString("hh:mm tt"));
-                date = date.AddMinutes(30);
-            }
-            return hours;
-        }
+      
     }
 }

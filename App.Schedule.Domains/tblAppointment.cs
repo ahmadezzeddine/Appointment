@@ -20,7 +20,7 @@ namespace App.Schedule.Domains
 
         public long Id { get; set; }
 
-        public long GlobalAppointmentId { get; set; }
+        public string GlobalAppointmentId { get; set; }
 
         public long? BusinessServiceId { get; set; }
 
@@ -64,8 +64,6 @@ namespace App.Schedule.Domains
 
         public long? BusinessCustomerId { get; set; }
 
-        public long? ScheduleId { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblAppointmentDocument> tblAppointmentDocuments { get; set; }
 
@@ -85,7 +83,5 @@ namespace App.Schedule.Domains
         public virtual tblBusinessService tblBusinessService { get; set; }
 
         public virtual tblServiceLocation tblServiceLocation { get; set; }
-
-        public virtual tblSchedule tblSchedule { get; set; }
     }
 }

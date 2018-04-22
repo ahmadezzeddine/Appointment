@@ -55,6 +55,7 @@
     <Compile Include="BusinessOfferService.cs" />
     <Compile Include="BusinessOfferServiceLocationService.cs" />
     <Compile Include="BusinessService.cs" />
+    <Compile Include="RegisterService.cs" />
     <Compile Include="CalendarService.cs" />
     <Compile Include="CountryService.cs" />
     <Compile Include="IAppointmentUserService.cs" />

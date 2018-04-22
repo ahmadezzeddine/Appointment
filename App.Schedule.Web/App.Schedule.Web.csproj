@@ -162,6 +162,8 @@
     <Compile Include="Areas\Admin\Controllers\BusinessAdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\BusinessOfferBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\BusinessOfferController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BusinessServiceBaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BusinessServiceController.cs" />
     <Compile Include="Areas\Admin\Controllers\CalendarBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\CalendarController.cs" />
     <Compile Include="Areas\Admin\Controllers\CustomerBaseController.cs" />
@@ -284,6 +286,12 @@
     <Content Include="Areas\Admin\Views\Calendar\Timeline.cshtml" />
     <Content Include="Areas\Admin\Views\Calendar\Reports.cshtml" />
     <Content Include="Areas\Admin\Views\Appointment\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Appointment\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\BusinessService\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\BusinessService\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\BusinessService\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\BusinessService\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Appointment\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />

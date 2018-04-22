@@ -54,7 +54,9 @@
     <Compile Include="AspRole\AspNetUser.cs" />
     <Compile Include="AspRole\AspNetUserClaim.cs" />
     <Compile Include="AspRole\AspNetUserLogin.cs" />
+    <Compile Include="Helpers\Hour.cs" />
     <Compile Include="Helpers\Security.cs" />
+    <Compile Include="Helpers\Unique.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="tblAdministrator.cs" />
     <Compile Include="tblAppointment.cs" />
@@ -74,7 +76,6 @@
     <Compile Include="tblCountry.cs" />
     <Compile Include="tblDocumentCategory.cs" />
     <Compile Include="tblMembership.cs" />
-    <Compile Include="tblSchedule.cs" />
     <Compile Include="tblServiceLocation.cs" />
     <Compile Include="tblTimezone.cs" />
     <Compile Include="ViewModel\AppointmentViewModel.cs" />

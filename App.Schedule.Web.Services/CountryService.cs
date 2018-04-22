@@ -30,11 +30,6 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
-        public Task<ResponseViewModel<CountryViewModel>> Find(Predicate<CountryViewModel> pridict)
-        {
-            return null;
-        }
-
         public Task<ResponseViewModel<CountryViewModel>> Get(long? id)
         {
             return null;

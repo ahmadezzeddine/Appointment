@@ -5,7 +5,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 {
     public class AccountBaseController : BaseController
     {
-        protected BusinessService BusinessService;
+        protected RegisterService BusinessService;
         protected MembershipService MembershipService;
         protected BusinessEmployeeService BusinessEmployeeService;
 
@@ -18,7 +18,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             }
             else
             {
-                this.BusinessService = new BusinessService(this.Token);
+                this.BusinessService = new RegisterService(this.Token);
                 this.MembershipService = new MembershipService(this.Token);
                 this.BusinessEmployeeService = new BusinessEmployeeService(this.Token);
             }

@@ -13,7 +13,7 @@ namespace App.Schedule.Web.Services
         //Gets Objects
         Task<ResponseViewModel<List<T>>> Gets();
 
-        Task<ResponseViewModel<T>> Find(Predicate<T> pridict);
+        //Task<ResponseViewModel<T>> Find(Func<T, bool> pridict);
 
         //Add Object
         Task<ResponseViewModel<T>> Add(T model);

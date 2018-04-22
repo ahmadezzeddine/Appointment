@@ -217,7 +217,6 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
 
-
         [NonAction]
         private async Task<List<ServiceLocationViewModel>> GetServiceLocations()
         {

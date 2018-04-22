@@ -7,9 +7,9 @@ namespace App.Schedule.Web.Services
 {
     public class TimezoneService : AppointmentUserBaseService, IAppointmentUserService<TimezoneViewModel>
     {
-        public Task<ResponseViewModel<TimezoneViewModel>> Find(Predicate<TimezoneViewModel> pridict)
+        public TimezoneService(string token)
         {
-            throw new NotImplementedException();
+            base.SetUpAppointmentService(token);
         }
 
         public Task<ResponseViewModel<TimezoneViewModel>> Get(long? id)
@@ -38,11 +38,6 @@ namespace App.Schedule.Web.Services
         public Task<ResponseViewModel<TimezoneViewModel>> Update(TimezoneViewModel model)
         {
             throw new NotImplementedException();
-        }
-
-        public TimezoneService(string token)
-        {
-            base.SetUpAppointmentService(token);
         }
 
         public Task<ResponseViewModel<TimezoneViewModel>> Add(TimezoneViewModel model)

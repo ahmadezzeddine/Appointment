@@ -78,11 +78,6 @@ namespace App.Schedule.Web.Services
             }
         }
 
-        public Task<ResponseViewModel<BusinessCustomerViewMdoel>> Find(Predicate<BusinessCustomerViewMdoel> pridict)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<ResponseViewModel<BusinessCustomerViewMdoel>> Get(long? id)
         {
             var returnResponse = new ResponseViewModel<BusinessCustomerViewMdoel>()

@@ -132,11 +132,6 @@ namespace App.Schedule.Web.Services
             throw new NotImplementedException();
         }
 
-        public Task<ResponseViewModel<BusinessEmployeeViewModel>> Find(Predicate<BusinessEmployeeViewModel> pridict)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<ResponseViewModel<BusinessEmployeeViewModel>> Add(BusinessEmployeeViewModel model)
         {
             var returnResponse = new ResponseViewModel<BusinessEmployeeViewModel>();

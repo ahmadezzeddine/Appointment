@@ -56,20 +56,20 @@
                                             <tr>
                                                 <td class="text-left">
                                                     @{
-                                                        if (item.Type == (int)HolidayType.Specified)
+                                                        if (item.Type == (int)RecureType.Specified)
                                                         {
                                                             <text>On </text> @item.OnDate.ToString("MMMM dd, yyyy (dddd)");
                                                         }
-                                                        else if (item.Type == (int)HolidayType.RpeatEveryWeek)
+                                                        else if (item.Type == (int)RecureType.RpeatEveryWeek)
                                                         {
                                                             <text>Every </text> @item.OnDate.ToString("dd"); <text> day of the month since </text>  @item.OnDate.ToString("MMMM yyyy");
                                                         }
-                                                        else if (item.Type == (int)HolidayType.RepeatEveryMonth)
+                                                        else if (item.Type == (int)RecureType.RepeatEveryMonth)
                                                         {
                                                             <text>Every </text> @item.OnDate.ToString("dddd"); <text> since </text>  @item.OnDate.ToString("MMMM dd, yyyy");
 
                                                         }
-                                                        else if (item.Type == (int)HolidayType.RepeatEveryYear)
+                                                        else if (item.Type == (int)RecureType.RepeatEveryYear)
                                                         {
                                                             <text>On </text> @item.OnDate.ToString("MMMM dd"); <text> every year since </text>  @item.OnDate.ToString("yyyy");
                                                         }

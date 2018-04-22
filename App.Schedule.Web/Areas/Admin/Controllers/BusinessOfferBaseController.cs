@@ -6,9 +6,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
     public class BusinessOfferBaseController : BaseController
     {
         protected BusinessOfferService BusinessOfferService;
-        protected ServiceLocationService ServiceLocationService;
         protected BusinessOfferServiceLocationService BusinessOfferServiceLocationService;
-
+        protected ServiceLocationService ServiceLocationService;
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -20,8 +19,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             else
             {
                 this.BusinessOfferService = new BusinessOfferService(this.Token);
-                this.ServiceLocationService = new ServiceLocationService(this.Token);
                 this.BusinessOfferServiceLocationService = new BusinessOfferServiceLocationService(this.Token);
+                this.ServiceLocationService = new ServiceLocationService(this.Token);
             }
         }
     }

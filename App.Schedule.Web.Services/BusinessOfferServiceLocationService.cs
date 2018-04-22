@@ -15,11 +15,6 @@ namespace App.Schedule.Web.Services
             this.SetUpAppointmentService(token);
         }
 
-        public Task<ResponseViewModel<BusinessOfferServiceLocationViewModel>> Find(Predicate<BusinessOfferServiceLocationViewModel> pridict)
-        {
-            return null;
-        }
-
         public async Task<ResponseViewModel<BusinessOfferServiceLocationViewModel>> Get(long? id)
         {
             var returnResponse = new ResponseViewModel<BusinessOfferServiceLocationViewModel>()

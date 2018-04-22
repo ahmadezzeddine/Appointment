@@ -1,4 +1,5 @@
 ﻿using App.Schedule.Domains.ViewModel;
+using System.Collections.Generic;
 
 namespace App.Schedule.Web.Helpers
 {

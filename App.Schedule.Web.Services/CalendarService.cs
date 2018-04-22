@@ -29,11 +29,6 @@ namespace App.Schedule.Web.Services
             throw new NotImplementedException();
         }
 
-        public Task<ResponseViewModel<AppointmentViewModel>> Find(Predicate<AppointmentViewModel> pridict)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<ResponseViewModel<AppointmentViewModel>> Get(long? id)
         {
             throw new NotImplementedException();
