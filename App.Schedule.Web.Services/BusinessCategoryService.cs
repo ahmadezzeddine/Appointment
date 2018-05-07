@@ -7,7 +7,6 @@ namespace App.Schedule.Web.Services
 {
     public class BusinessCategoryService : AppointmentUserBaseService, IAppointmentUserService<BusinessCategoryViewModel>
     {
-
         public BusinessCategoryService(string token)
         {
             base.SetUpAppointmentService(token);

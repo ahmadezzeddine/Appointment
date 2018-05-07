@@ -604,7 +604,7 @@ namespace App.Schedule.Domains.ViewModel
 
         public long? ServiceLocationId { get; set; }
 
-        public dynamic ServiceLocation { get; set; }
+        public virtual ServiceLocationViewModel ServiceLocation { get; set; }
 
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<tblAppointment> tblAppointments { get; set; }
@@ -685,6 +685,8 @@ namespace App.Schedule.Domains.ViewModel
 
         public string BusinessOfferName { get; set; }
 
+        public List<long> SelectedEmployeeIds { get; set; }
+
         //public virtual ICollection<tblAppointmentDocument> tblAppointmentDocuments { get; set; }
 
         //public virtual ICollection<tblAppointmentPayment> tblAppointmentPayments { get; set; }
@@ -698,6 +700,11 @@ namespace App.Schedule.Domains.ViewModel
         //public virtual tblBusinessOffer tblBusinessOffer { get; set; }
 
         //public virtual tblBusinessService tblBusinessService { get; set; }
+    }
+
+    public class AppointmentPayViewModel : AppointmentViewModel
+    {
+        public AppointmentPaymentViewModel Payment { get; set; }
     }
 
     /// <summary>
@@ -889,8 +896,7 @@ namespace App.Schedule.Domains.ViewModel
     {
         Cash = 1,
         Cheque = 2,
-        CreditCard = 3,
-        Account = 4
+        CreditCard = 3
     }
 
     /// <summary>

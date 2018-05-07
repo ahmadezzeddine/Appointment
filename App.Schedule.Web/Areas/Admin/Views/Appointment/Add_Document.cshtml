@@ -1,0 +1,154 @@
+﻿@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<AppointmentDocumentViewModel>
+
+@{
+    ViewBag.Title = "New Document";
+    Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Appointment</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/SubViews/_ErrorView.cshtml", Model)
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <b>Add Document</b>
+            </div>
+            @using (Ajax.BeginForm("add_document", "appointment", new AjaxOptions { }))
+            {
+                <div class="panel-body">
+                    @if (Model == null & Model.Data == null)
+                    {
+                        <text>Please try again later.</text>
+                        return;
+                    }
+                    <div class="tab-content" style="padding:0px 10px;">
+                        <div class="row">
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(d => d.Data.AppointmentId)
+                            @Html.HiddenFor(d => d.Data.DocumentLink)
+                            <div id="progress-wrp" style="display:none;">
+                                <div class="progress-bar"></div>
+                                <div class="status">0%</div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Title</label>
+                                @Html.EditorFor(d => d.Data.Title, new { htmlAttributes = new { @class = "form-control", @placeholder = "Title" } })
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Type</label>
+                                @Html.DropDownListFor(d => d.Data.DocumentType, new SelectList(ViewBag.DocumentType, "Value", "Text"), "--Select Document Type --", new { @class = "form-control" })
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>File</label>
+                                <input id="documentUpload" type="file" class="form-control" />
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Document Category</label>
+                                @Html.DropDownListFor(d => d.Data.DocumentCategoryId, new SelectList(ViewBag.DocumentCategoryId, "Value", "Text", "Group.Name", -1), "--Select Document --", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <input id="btnSave" class="btn btn-info btn-sm " type="button" value="Save" onclick="onSubmit(this,'@Url.Action("attachments", "appointment", new { area = "admin", id = Model.Data.AppointmentId })')" />
+                            <input type="button" class="btn btn-default btn-sm" value="Back" onclick="@("window.location.href='" + @Url.Action("attachments", "appointment", new { area = "admin", id = Model.Data.AppointmentId }) + "'");" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        var Upload = function (file) {
+            this.file = file;
+        };
+
+        Upload.prototype.getType = function () {
+            return this.file.type;
+        };
+        Upload.prototype.getSize = function () {
+            return this.file.size;
+        };
+        Upload.prototype.getName = function () {
+            return this.file.name;
+        };
+        Upload.prototype.doUpload = function () {
+            var that = this;
+            var formData = new FormData();
+
+            // add assoc key values, this will be posts values
+            formData.append("file", this.file, this.getName());
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("documentupload", "appointment")",
+                xhr: function () {
+                    var myXhr = $.ajaxSettings.xhr();
+                    if (myXhr.upload) {
+                        myXhr.upload.addEventListener('progress', that.progressHandling, false);
+                    }
+                    return myXhr;
+                },
+                success: function (res) {
+                    console.log('data: ' + res.data);
+                    $('#Data_DocumentLink').val(res.data);
+                },
+                error: function (error) {
+                    console.log('data: '+error);
+                },
+                async: true,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                timeout: 60000
+            });
+        };
+
+        Upload.prototype.progressHandling = function (event) {
+            var percent = 0;
+            var position = event.loaded || event.position;
+            var total = event.total;
+            var progress_bar_id = "#progress-wrp";
+            if (event.lengthComputable) {
+                percent = Math.ceil(position / total * 100);
+            }
+            // update progressbars classes so it fits your code
+            $(progress_bar_id + " .progress-bar").css("width", +percent + "%");
+            $(progress_bar_id + " .status").text(percent + "%");
+            if (percent > 0) {
+                $('#progress-wrp').attr('style', 'display: block;');
+            }
+            if (percent >= 100) {
+                $('#progress-wrp').attr('style', 'display: none;');
+            }
+        };
+
+        $(document).ready(function () {
+            //Change id to your id
+            $("#documentUpload").on("change", function (e) {
+                var file = $(this)[0].files[0];
+                var upload = new Upload(file);
+
+                // maby check size or type here with upload.getSize() and upload.getType()
+
+                // execute upload
+                upload.doUpload();
+            });
+        });
+    </script>
+}

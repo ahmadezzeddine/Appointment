@@ -93,3 +93,21 @@ function onUpdate(btnSubmit, Id, url, refreshCallback) {
         }
     });
 }
+
+function onGetData(id, url) {
+    console.log('id: ' + id + ' url: ' + url);
+    return new Promise((resolve, reject) => {
+        console.log('id: ' + id + ' url: ' + url);
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: { Id: id },
+            success: function (data) {
+                resolve(data);
+            },
+            error: function (response) {
+                reject(response);
+            }
+        });
+    });
+}

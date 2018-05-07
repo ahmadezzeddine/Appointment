@@ -6,6 +6,9 @@
         BusinessId = 1,
         ServiceLocationId = 2,
         EmployeeId = 3,
-        All = 4
+        All = 4,
+        Payment = 5,
+        AppointmentDocument = 6,
+        AppointmentFeedback = 7
     }
 }

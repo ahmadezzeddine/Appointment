@@ -25,8 +25,8 @@
             @using (Ajax.BeginForm("delete", "employee", new AjaxOptions { }))
             {
                 @Html.AntiForgeryToken()
-                @Html.HiddenFor(d => d.Data.ServiceLocationId)
                 @Html.HiddenFor(d => d.Data.Id)
+                @Html.HiddenFor(d => d.Data.ServiceLocationId)
                 @Html.HiddenFor(d => d.Data.Email)
                 <div class="panel-body">
                     <div class="tab-content" style="padding:0px 10px;">

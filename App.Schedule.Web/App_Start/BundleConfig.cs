@@ -37,9 +37,9 @@ namespace App.Schedule.Web
                       "~/Scripts/vendor/js/sb-admin-2.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
+                      "~/Content/bootstrap.min.css",
                       "~/Scripts/vendor/css/sb-admin-2.css",
-                      "~/Content/vendor/font-awesome.css",
+                      "~/Content/vendor/font-awesome.min.css",
                       "~/Content/site.css"));
 
         }

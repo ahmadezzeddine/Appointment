@@ -70,6 +70,7 @@
                                 <li><a href="@Url.Action("index","businessservice", new { area="admin" })">Business Service</a></li>
                                 <li><a href="@Url.Action("index","employee", new { area="admin" })">Employee</a></li>
                                 <li><a href="@Url.Action("index","customer", new { area="admin" })">Customer</a></li>
+                                <li><a href="@Url.Action("index","documentcategory", new { area="admin" })">Document Category</a></li>
                             </ul>
                         </li>
                         <li>
@@ -84,11 +85,10 @@
                         <li>
                             <a><i class="fa fa-book fa-fw"></i> Appointments <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                                <li><a href="@Url.Action("index","appointment",new { area="admin" })">View</a></li>
-                                <li class="disabled"><a href="#">Search</a></li>
-                                <li class="disabled"><a href="#">New</a></li>
-                                <li class="disabled"><a href="#">Block</a></li>
-                                <li class="disabled"><a href="#">Close</a></li>
+                                <li><a href="@Url.Action("index","appointment",new { area="admin" })">List All</a></li>
+                                <li><a href="@Url.Action("search","appointment",new { area="admin" })">Search</a></li>
+                                <li><a href="@Url.Action("add","appointment",new { area="admin" })">Add New</a></li>
+                                <li><a href="@Url.Action("payments","appointment",new { area="admin" })">Payments</a></li>
                             </ul>
                         </li>
                     </ul>

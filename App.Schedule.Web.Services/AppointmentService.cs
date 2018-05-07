@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace App.Schedule.Web.Services
 {
@@ -24,6 +26,42 @@ namespace App.Schedule.Web.Services
                 var url = String.Format(AppointmentUserService.GET_APPOINTMENT_BYID, id);
                 var response = this.appointmentUserService.httpClient.GetAsync(url);
                 returnResponse = await base.GetHttpResponse<AppointmentViewModel>(response.Result);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
+        public async Task<ResponseViewModel<AppointmentPayViewModel>> GetPayment(long? id)
+        {
+            var returnResponse = new ResponseViewModel<AppointmentPayViewModel>();
+            try
+            {
+                var url = String.Format(AppointmentUserService.GET_APPOINTMENT_BYBUSINESSIDANDTYPE, id, TableType.Payment);
+                var response = this.appointmentUserService.httpClient.GetAsync(url);
+                returnResponse = await base.GetHttpResponse<AppointmentPayViewModel>(response.Result);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
+        public async Task<ResponseViewModel<AppointmentDocumentViewModel>> GetAttachments(long? id)
+        {
+            var returnResponse = new ResponseViewModel<AppointmentDocumentViewModel>();
+            try
+            {
+                var url = String.Format(AppointmentUserService.GET_APPOINTMENT_BYBUSINESSIDANDTYPE, id, TableType.AppointmentDocument);
+                var response = this.appointmentUserService.httpClient.GetAsync(url);
+                returnResponse = await base.GetHttpResponse<AppointmentDocumentViewModel>(response.Result);
             }
             catch (Exception ex)
             {
@@ -93,14 +131,54 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
-        public Task<ResponseViewModel<AppointmentViewModel>> Deactive(long? id, bool status)
+        public async Task<ResponseViewModel<AppointmentViewModel>> Deactive(long? id, bool status)
         {
-            throw new NotImplementedException();
+            var returnResponse = new ResponseViewModel<AppointmentViewModel>();
+            try
+            {
+                if (!id.HasValue)
+                {
+                    returnResponse.Status = false;
+                    returnResponse.Message = "Please enter a valid offer id.";
+                }
+                else
+                {
+                    var url = String.Format(AppointmentUserService.DEACTIVE_APPOINTMENT, id.Value, status);
+                    var response = await this.appointmentUserService.httpClient.DeleteAsync(url);
+                    returnResponse = await base.GetHttpResponse<AppointmentViewModel>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
         }
 
-        public Task<ResponseViewModel<AppointmentViewModel>> Delete(long? id)
+        public async Task<ResponseViewModel<AppointmentViewModel>> Delete(long? id)
         {
-            throw new NotImplementedException();
+            var returnResponse = new ResponseViewModel<AppointmentViewModel>();
+            try
+            {
+                if (!id.HasValue)
+                {
+                    returnResponse.Status = false;
+                    returnResponse.Message = "Please enter a valid offer id.";
+                }
+                else
+                {
+                    var url = String.Format(AppointmentUserService.DELETE_APPOINTMENT, id.Value);
+                    var response = await this.appointmentUserService.httpClient.DeleteAsync(url);
+                    returnResponse = await base.GetHttpResponse<AppointmentViewModel>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
         }
 
         public async Task<ResponseViewModel<AppointmentViewModel>> Update(AppointmentViewModel model)
@@ -117,6 +195,54 @@ namespace App.Schedule.Web.Services
             catch (Exception ex)
             {
                 returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+        public async Task<ResponseViewModel<AppointmentViewModel>> Resheduled(AppointmentViewModel model, string reason)
+        {
+            var returnResponse = new ResponseViewModel<AppointmentViewModel>();
+            try
+            {
+                var jsonContent = JsonConvert.SerializeObject(model);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var url = String.Format(AppointmentUserService.CLOSE_APPOINTMENT, model.StatusType,null);
+                var response = await this.appointmentUserService.httpClient.PutAsync(url, content);
+                returnResponse = await base.GetHttpResponse<AppointmentViewModel>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
+        public async Task<ResponseViewModel<string>> FileUpload(HttpRequestBase httpRequestBase)
+        {
+            var returnResponse = new ResponseViewModel<string>();
+            try
+            {
+                var form = new MultipartFormDataContent();
+                var file = httpRequestBase.Files[0];
+                var stream = file.InputStream;
+                var content = new StreamContent(stream);
+                content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                {
+                    Name = "file",
+                    FileName = file.FileName
+                };
+                form.Add(content);
+
+                var url = String.Format(AppointmentUserService.POST_UPLOAD_DOCUMENT);
+                var response = await this.appointmentUserService.httpClient.PostAsync(url,form);
+                returnResponse = await base.GetHttpResponse<string>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = "";
                 returnResponse.Message = "Reason: " + ex.Message.ToString();
                 returnResponse.Status = false;
             }

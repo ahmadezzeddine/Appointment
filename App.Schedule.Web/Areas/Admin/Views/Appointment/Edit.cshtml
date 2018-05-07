@@ -4,10 +4,11 @@
 @{
     ViewBag.Title = "Update Appointment";
     Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
+    var customerWebGrid = new WebGrid(ViewBag.BusinessEmployeeId);
 }
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Update new appointment</h1>
+        <h1 class="page-header">Update appointment</h1>
     </div>
 </div>
 <div class="row">
@@ -17,90 +18,220 @@
 </div>
 <div class="row">
     <div class="col-lg-12">
-
+        @if (Model == null & Model.Data == null)
+        {
+            <text>Please try again later.</text>
+            return;
+        }
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>Appointment Info</b>
+                <ul class="nav nav-tabs">
+                    <li class="active disabled"><a href="#homeTab">Information</a></li>
+                    <li><a href="#customerTab">Customer</a></li>
+                    <li><a href="#inviteeTab">Invitees</a></li>
+                    <li><a href="#scheduleTab">Schedule</a></li>
+                    <li><a href="#confirmTab">Confirm</a></li>
+                </ul>
             </div>
             @using (Ajax.BeginForm("update", "appointment", new AjaxOptions { }))
             {
-                <div class="panel-body">
-                    @if (Model == null & Model.Data == null)
-                    {
-                        <text>Please try again later.</text>
-                        return;
-                    }
-                    <div class="tab-content" style="padding:0px 10px;">
-                        <div class="row">
-                            @Html.AntiForgeryToken()
-                            @Html.HiddenFor(d => d.Data.Id)
-                            <div class="form-group col-lg-6">
-                                <label>Title</label>
-                                @Html.EditorFor(d => d.Data.Title, new { htmlAttributes = new { @class = "form-control", @placeholder = "Title" } })
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label>Global Id</label>
-                                @Html.EditorFor(d => d.Data.GlobalAppointmentId, new { htmlAttributes = new { @class = "form-control", @placeholder = "Global Id" } })
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label>Customer</label>
-                                @Html.DropDownListFor(d => d.Data.BusinessCustomerId, new SelectList(ViewBag.BusinessCustomerId ?? null, "Value", "Text"), "-- Select Customer --", new { @class = "form-control" })
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label>Service Name</label>
-                                @Html.DropDownListFor(d => d.Data.BusinessServiceId, new SelectList(ViewBag.BusinessServiceId ?? null, "Value", "Text"), "-- Select Business Service --", new { @class = "form-control" })
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label>Service Location</label>
-                                @Html.DropDownListFor(d => d.Data.ServiceLocationId, new SelectList(ViewBag.ServiceLocationId ?? null, "Value", "Text"), "-- Select Location --", new { @class = "form-control" })
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label>Offer</label>
-                                @Html.DropDownListFor(d => d.Data.BusinessOfferId, new SelectList(ViewBag.BusinessOfferId ?? null, "Value", "Text"), "-- Select Offer --", new { @class = "form-control" })
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label>Recurrence</label>
-                                @Html.DropDownListFor(d => d.Data.PatternType, new SelectList(ViewBag.PatternType, "Value", "Text"), new { @class = "form-control" })
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label>Is All Day</label>
-                                <div class="form-control">
-                                    @Html.CheckBoxFor(d => d.Data.IsAllDayEvent, new { onclick = "isAllDay()" })
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(d => d.Data.Id)
+                @Html.HiddenFor(d => d.Data.IsActive)
+                @Html.HiddenFor(d => d.Data.GlobalAppointmentId)
+                @Html.HiddenFor(d => d.Data.BusinessEmployeeId)
+                @Html.HiddenFor(d => d.Data.BusinessCustomerName)
+                @Html.HiddenFor(d => d.Data.BusinessOfferName)
+                @Html.HiddenFor(d => d.Data.BusinessServiceName)
+                @Html.HiddenFor(d => d.Data.CancelReason)
+                @Html.HiddenFor(d => d.Data.ServiceLocationName)
+                <div class="tab-content">
+                    <div id="homeTab" class="tab-pane fade in active">
+                        <div class="panel-body">
+                            <div class="tab-content">
+                                <div class="row">
+                                    <div class="col-lg-12 text-right">
+                                        #@Model.Data.GlobalAppointmentId
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label>Title</label>
+                                        @Html.EditorFor(d => d.Data.Title, new { htmlAttributes = new { @class = "form-control", @placeholder = "Title" } })
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label>Service Type</label>
+                                        @Html.DropDownListFor(d => d.Data.BusinessServiceId, new SelectList(ViewBag.BusinessServiceId ?? null, "Value", "Text"), "-- Select Service Type --", new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label>Location</label>
+                                        @Html.DropDownListFor(d => d.Data.ServiceLocationId, new SelectList(ViewBag.ServiceLocationId ?? null, "Value", "Text"), "-- Select Location --", new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label>Offer</label>
+                                        @Html.DropDownListFor(d => d.Data.BusinessOfferId, new SelectList(ViewBag.BusinessOfferId ?? null, "Value", "Text"), "-- Select Offer --", new { @class = "form-control" })
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group col-lg-6">
-                                <label>Start Date</label>
-                                @Html.EditorFor(m => m.Data.StartDate, new { htmlAttributes = new { @class = "form-control datepicker", @type = "date", @placeholder = "Start Date" } })
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label>End Date</label>
-                                @Html.EditorFor(m => m.Data.EndDate, new { htmlAttributes = new { @class = "form-control datepicker", @type = "date", @placeholder = "End Date" } })
-                            </div>
-                            <div id="timeView">
-                                <div class="form-group col-lg-6">
-                                    <label>Start</label>
-                                    @Html.DropDownListFor(d => d.Data.StartTime, new SelectList(ViewBag.FromHours, "Value", "Text"), new { @class = "form-control" })
-                                </div>
-                                <div class="form-group col-lg-6">
-                                    <label>End</label>
-                                    @Html.DropDownListFor(d => d.Data.EndTime, new SelectList(ViewBag.ToHours, "Value", "Text", "Selected"), new { @class = "form-control" })
-                                </div>
-                            </div>
-
-                            <div class="form-group col-lg-6">
-                                <label>Is Active</label>
-                                <div class="form-control">
-                                    @Html.CheckBoxFor(d => d.Data.IsActive)
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-lg-12 text-right">
+                                    <input type="button" class="btn btn-default btn-sm" value="Back" onclick="@("window.location.href='" + @Url.Action("index", "appointment", new { area = "admin" }) + "'");" />
+                                    <input type="button" class="btn btn-info btn-sm" value="Next" onclick="activeTab('customerTab')" />
+                                    @*<input id="btnSave" class="btn btn-info btn-sm" type="button" value="Next" onclick="onSubmit(this,'@Url.Action("index", "appointment", new { area = "admin" })')" />*@
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <input id="btnSave" class="btn btn-info btn-sm " type="button" value="Update" onclick="onSubmit(this,'@Url.Action("index", "appointment", new { area = "admin" })')" />
-                            <input type="button" class="btn btn-default btn-sm" value="Back" onclick="@("window.location.href='" + @Url.Action("index", "appointment", new { area = "admin" }) + "'");" />
+                    <div id="customerTab" class="tab-pane fade">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <label>Customer</label>
+                                    @Html.DropDownListFor(d => d.Data.BusinessCustomerId, new SelectList(ViewBag.BusinessCustomerId ?? null, "Value", "Text"), "-- Select Customer --", new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div id="customerInformation" style="display:none;">
+                                <div class="row">
+                                    <div class="form-group col-lg-6">
+                                        <label>First Name</label>
+                                        <div class="form-control" id="customer_firstName"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label>Last Name</label>
+                                        <div class="form-control" id="customer_lastName"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label>Email</label>
+                                        <div class="form-control" id="customer_email"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label>Phone Number</label>
+                                        <div class="form-control" id="customer_phoneNumber"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label>Address</label>
+                                        <div class="form-control" id="customer_add1"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label>Location</label>
+                                        <div class="form-control" id="customer_serviceName"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-lg-12 text-right">
+                                    <input type="button" class="btn btn-default btn-sm" value="Back" onclick="activeTab('homeTab')" />
+                                    <input type="button" class="btn btn-info btn-sm" value="Next" onclick="activeTab('inviteeTab')" />
+                                    @*<input id="btnSave" class="btn btn-info btn-sm" type="button" value="Next" onclick="onSubmit(this,'@Url.Action("index", "appointment", new { area = "admin" })')" />*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="inviteeTab" class="tab-pane fade">
+                        <div class="panel-body">
+                            <div class="tab-content" style="padding:0px 10px;">
+                                <div class="row">
+                                    <div class="form-group col-lg-12">
+                                        @customerWebGrid.GetHtml(htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
+                                              tableStyle: "table table-striped",
+                                              headerStyle: "active",
+                                              footerStyle: "webgrid-footer",
+                                              columns: customerWebGrid.Columns(
+                                              customerWebGrid.Column(format: @<text><input name="Data.SelectedEmployeeIds" checked="@Model?.Data?.SelectedEmployeeIds?.Contains(item.Id)"  value="@item.Id" type="checkbox" /></text>, header: "Select"),
+                                              customerWebGrid.Column("FirstName", "First Name"),
+                                              customerWebGrid.Column("LastName", "Last Name"),
+                                              customerWebGrid.Column("Email", "Email")))
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-lg-12 text-right">
+                                    <input type="button" class="btn btn-default btn-sm" value="Back" onclick="activeTab('customerTab')" />
+                                    <input type="button" class="btn btn-info btn-sm" value="Next" onclick="activeTab('scheduleTab')" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="scheduleTab" class="tab-pane fade">
+                        <div class="panel-body">
+                            <div class="tab-content" style="padding:0px 10px;">
+                                <div class="row">
+                                    <div class="form-group col-lg-6">
+                                        <label>Recurrence</label>
+                                        @Html.DropDownListFor(d => d.Data.PatternType, new SelectList(ViewBag.PatternType, "Value", "Text"), new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label>Is All Day</label>
+                                        <div class="form-control">
+                                            @Html.CheckBoxFor(d => d.Data.IsAllDayEvent, new { onclick = "isAllDay()" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label>Start Date</label>
+                                        @Html.EditorFor(m => m.Data.StartDate, new { htmlAttributes = new { @class = "form-control", @type = "text", data_format = "dd/MM/yyyy", @placeholder = "Start Date" } })
+                                        <small>dd/mm/yyyy</small>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label>End Date</label>
+                                        @Html.EditorFor(m => m.Data.EndDate, new { htmlAttributes = new { @class = "form-control datepicker", @type = "text", @placeholder = "End Date" } })
+                                        <small>dd/mm/yyyy</small>
+                                    </div>
+                                    <div id="timeView">
+                                        <div class="form-group col-lg-6">
+                                            <label>Start</label>
+                                            @Html.DropDownListFor(d => d.Data.StartTime, new SelectList(ViewBag.FromHours, "Value", "Text"), new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label>End</label>
+                                            @Html.DropDownListFor(d => d.Data.EndTime, new SelectList(ViewBag.ToHours, "Value", "Text"), new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label>Is Active</label>
+                                        <div class="form-control">
+                                            @Html.CheckBoxFor(d => d.Data.IsActive)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-lg-12 text-right">
+                                    <input type="button" class="btn btn-default btn-sm" value="Back" onclick="activeTab('inviteeTab')" />
+                                    <input type="button" class="btn btn-info btn-sm" value="Next" onclick="activeTab('confirmTab')" />
+                                    @*<input id="btnSave" class="btn btn-info btn-sm" type="button" value="Next" onclick="onSubmit(this,'@Url.Action("index", "appointment", new { area = "admin" })')" />*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="confirmTab" class="tab-pane fade">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="ap-card">
+                                    <div class="card-body">
+                                        <h5 class="ap-title" id="ap_title">Appointment Title</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted" id="ap_serviceType">Service Type</h6>
+                                        <div class="ap-other" id="ap_customer">Customer Name</div>
+                                        <div class="ap-other" id="ap_location">Location</div>
+                                        <div class="ap-other" id="ap_time">Time</div>
+                                        <div class="ap-other" id="ap_date">Date</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-lg-12 text-right">
+                                    <input type="button" class="btn btn-default btn-sm" value="Back" onclick="activeTab('scheduleTab')" />
+                                    <input id="btnSave" class="btn btn-info btn-sm " type="button" value="Submit" onclick="onSubmit(this,'@Url.Action("index", "appointment", new { area = "admin" })')" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -108,7 +239,6 @@
         </div>
     </div>
 </div>
-
 @section scripts{
     <script>
         function isAllDay() {
@@ -121,5 +251,61 @@
                 $("#timeView").attr('style', 'display: block;');
             }
         }
+
+        $(document).ready(function () {
+            activeTab('homeTab');
+              $("#Data_BusinessCustomerId").change(function () {
+                  var id = $('option:selected', $(this)).val();
+                  if (id) {
+                      onGetData(id, '@Url.Action("GetCustomerById", "appointment", new { area = "admin" })').then((res) => {
+                          if (res && res.status) {
+                              console.log(res);
+                              setCustomer(res.data);
+                          }
+                      }).catch((error) => {
+                          console.error(error);
+                          $('#customerInformation').attr('style', 'none');
+                          setCustomer(null);
+                      });
+                  }
+                  else {
+                      setCustomer(null);
+                  }
+            });
+        });
+
+        function setCustomer(data) {
+            if (data) {
+                var address = data.Add1 + ',' + data.Add2 + ',' + data.City + ', ' + data.State + ', ' + data.Country + ', ' + data.Zip;
+                $('#customerInformation').attr('style', 'display: block;');
+                $('#customer_firstName').text(data.FirstName);
+                $('#customer_lastName').text(data.LastName);
+                $('#customer_email').text(data.Email);
+                $('#customer_phoneNumber').text(data.PhoneNumber);
+                $('#customer_add1').text(address);
+                $('#customer_serviceName').text(data.ServiceLocation.Name);
+            }
+            else {
+                $('#customerInformation').attr('style', 'display: none;');
+                $('#customer_firstName').text('');
+                $('#customer_lastName').text('');
+                $('#customer_email').text('');
+                $('#customer_phoneNumber').text('');
+                $('#customer_add1').text('');
+                $('#customer_serviceName').text('');
+            }
+        }
+
+        function activeTab(tab) {
+            $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+            $('#ap_title').text($('#Data_Title').val());
+            $('#ap_serviceType').text($('#Data_BusinessServiceId option:selected').text());
+            $('#ap_location').text($('#Data_ServiceLocationId option:selected').text());
+            $('#ap_customer').text($('#Data_BusinessCustomerId option:selected').text());
+            var time = 'Start: ' + $('#Data_StartTime option:selected').text() + ' To: ' + $('#Data_EndTime option:selected').text();
+            $('#ap_time').text(time);
+            var date = 'From: ' + $('#Data_StartDate').val() + ' To: ' + $('#Data_EndDate').val();
+            $('#ap_date').text(date);
+        };
     </script>
 }

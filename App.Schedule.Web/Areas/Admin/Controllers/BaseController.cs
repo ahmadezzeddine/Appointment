@@ -28,9 +28,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 var businessEmployee = new HttpCookie("aadminappointment");
 
                 if (isKeepLoggedIn)
-                    businessEmployee.Expires = DateTime.Now.AddDays(1);
-                else
                     businessEmployee.Expires = DateTime.Now.AddDays(365);
+                else
+                    businessEmployee.Expires = DateTime.Now.AddDays(1);
 
                 businessEmployee.Values["aFirstName"] = model.Employee.FirstName;
                 businessEmployee.Values["aLastName"] = model.Employee.LastName;

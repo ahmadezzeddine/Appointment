@@ -133,23 +133,24 @@
                     <div class="panel-heading"><b>Appointment Calendar</b></div>
                     <div class="panel-body">
                         @Html.FullCalendar(settings =>
+                   {
+                       settings.Name = "ApCalendar";
+                       settings.CssClass = "css-test";
+                       settings.Header = new Header
                        {
-                           settings.Name = "ApCalendar";
-                           settings.CssClass = "css-test";
-                           settings.Header = new Header
-                           {
-                               Left = new ControlsBuilder().AddButton(HeaderButton.Prev).AddSeparator(HeaderSeparator.Adjacent)
-                                           .AddButton(HeaderButton.Next).AddSeparator(HeaderSeparator.Gap).AddButton(HeaderButton.Today),
-                               Center = new ControlsBuilder().AddTitle(),
-                               Right = new ControlsBuilder("month,agendaWeek,agendaDay ")
-                           };
-                           settings.DefaultView = Enum.GetName(typeof(AvailableView), AvailableView.Month);
-                           settings.Editable = true;
-                           settings.AllDaySlot = false;
-                           settings.Selectable = true;
-                           settings.SlotDuration = TimeSpan.FromMinutes(15);
-                           settings.Events = new EventCollection(Url.Action("GetDiaryEvents", "Dashboard", new { start = DateTime.Now, end = DateTime.Now.AddDays(2), area = "Admin" }), EventCollectionType.JsonFeed);
-                       })
+                           Left = new ControlsBuilder().AddButton(HeaderButton.Prev).AddSeparator(HeaderSeparator.Adjacent)
+                                       .AddButton(HeaderButton.Next).AddSeparator(HeaderSeparator.Gap).AddButton(HeaderButton.Today),
+                           Center = new ControlsBuilder().AddTitle(),
+                           Right = new ControlsBuilder("month,agendaWeek,agendaDay ")
+                       };
+                       settings.DefaultView = Enum.GetName(typeof(AvailableView), AvailableView.Month);
+                       settings.Editable = true;
+                       settings.AllDaySlot = false;
+                       settings.Selectable = true;
+                       settings.SlotDuration = TimeSpan.FromMinutes(15);
+                       settings.DragScroll = true;
+                       settings.Events = new EventCollection(Url.Action("GetDiaryEvents", "Dashboard", new { start = DateTime.Now, end = DateTime.Now.AddDays(2), area = "Admin" }), EventCollectionType.JsonFeed);
+                   })
                     </div>
                 </div>
             </div>

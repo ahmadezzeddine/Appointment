@@ -106,17 +106,46 @@ namespace App.Schedule.Web.Services
         public const string DEACTIVE_BUSINESS_CUSTOMER = "api/businesscustomer?id={0}&status={1}";
 
         //Appointment
-        //Business Customer
         public const string GET_APPOINTMENT  = "api/appointment";
         public const string GET_APPOINTMENT_BYID = "api/appointment?id={0}";
         public const string GET_APPOINTMENT_BYBUSINESSIDANDTYPE = "api/appointment?id={0}&type={1}";
         public const string POST_APPOINTMENT = "api/appointment";
         public const string PUT_APPOINTMENT = "api/appointment?id={0}";
-        public const string DEACTIVE_APPOINTMENT = "api/appointment";
         public const string DELETE_APPOINTMENT = "api/appointment?id={0}";
-        //public const string PUT_BUSINESS_CUSTOMER = "api/businesscustomer?id={0}";
-        //public const string DELETE_BUSINESS_CUSTOMER = "api/businesscustomer?id={0}";
-        //public const string DEACTIVE_BUSINESS_CUSTOMER = "api/businesscustomer?id={0}&status={1}";
+        public const string DEACTIVE_APPOINTMENT = "api/appointment?id={0}&status={1}";
+        public const string CLOSE_APPOINTMENT = "api/appointment?type={0}&reason={1}";
+
+        //Document Category
+        public const string GET_DOCUMENTCATEGORIES = "api/documentcategory";
+        public const string POST_DOCUMENTCATEGORY = "api/documentcategory";
+        public const string GET_DOCUMENTCATEGORY_BYID = "api/documentcategory?id={0}";
+        public const string PUT_DOCUMENTCATEGORY_BYID = "api/documentcategory?id={0}";
+        public const string PUT_DOCUMENTCATEGORY = "api/documentcategory?id={0}&status={1}&type={2}";
+        public const string DELETE_DOCUMENTCATEGORY = "api/documentcategory?id={0}&status={1}&type={2}";
+
+        //Appointment Document
+        public const string GET_APPOINTMENT_DOCUMENT = "api/appointmentdocument";
+        public const string GET_APPOINTMENT_DOCUMENT_BYID = "api/appointmentdocument?id={0}";
+        public const string GET_APPOINTMENT_DOCUMENT_BYBUSINESSIDANDTYPE = "api/appointmentdocument?id={0}&type={1}";
+        public const string POST_APPOINTMENT_DOCUMENT = "api/appointmentdocument";
+        public const string PUT_APPOINTMENT_DOCUMENT = "api/appointmentdocument?id={0}";
+        public const string DELETE_APPOINTMENT_DOCUMENT = "api/appointmentdocument?id={0}";
+        public const string DEACTIVE_APPOINTMENT_DOCUMENT = "api/appointmentdocument?id={0}&status={1}";
+        public const string CLOSE_APPOINTMENT_DOCUMENT = "api/appointmentdocument?type={0}&reason={1}";
+
+        //Appointment Feedback
+        public const string GET_APPOINTMENT_FEEDBACK = "api/appointmentfeedback";
+        public const string GET_APPOINTMENT_FEEDBACK_BYID = "api/appointmentfeedback?id={0}";
+        public const string GET_APPOINTMENT_FEEDBACK_BYBUSINESSIDANDTYPE = "api/appointmentfeedback?id={0}&type={1}";
+        public const string POST_APPOINTMENT_FEEDBACK = "api/appointmentfeedback";
+        public const string PUT_APPOINTMENT_FEEDBACK = "api/appointmentfeedback?id={0}";
+        public const string DELETE_APPOINTMENT_FEEDBACK = "api/appointmentfeedback?id={0}";
+        public const string DEACTIVE_APPOINTMENT_FEEDBACK = "api/appointmentfeedback?id={0}&status={1}";
+        public const string CLOSE_APPOINTMENT_FEEDBACK = "api/appointmentfeedback?type={0}&reason={1}";
+
+        //Upload
+        public const string POST_UPLOAD_DOCUMENT = "api/upload";
+
 
         public AppointmentUserService()
         {

@@ -3,8 +3,8 @@ using PagedList;
 using System.Linq;
 using System.Web.Mvc;
 using System.Threading.Tasks;
-using App.Schedule.Domains.ViewModel;
 using System.Collections.Generic;
+using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {

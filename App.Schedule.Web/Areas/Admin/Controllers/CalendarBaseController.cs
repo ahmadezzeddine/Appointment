@@ -6,6 +6,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
     public class CalendarBaseController : BaseController
     {
         protected ServiceLocationService ServiceLocationService;
+        protected AppointmentService AppointmentService;
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -17,6 +18,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             else
             {
                 this.ServiceLocationService = new ServiceLocationService(this.Token);
+                this.AppointmentService = new AppointmentService(this.Token);
             }
         }
     }

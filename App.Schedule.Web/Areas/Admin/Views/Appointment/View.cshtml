@@ -1,0 +1,238 @@
+﻿@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<AppointmentViewModel>
+
+@{
+    ViewBag.Title = "Appointment View";
+    Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
+    var customerWebGrid = new WebGrid(ViewBag.BusinessEmployeeId);
+}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Appointment View</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/SubViews/_ErrorView.cshtml", Model)
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <b>Appointment View</b>
+            </div>
+            <div class="panel-body">
+                @if (Model == null & Model.Data == null)
+    {
+            <text>Please try again later.</text>
+return;
+}
+                @using (Ajax.BeginForm("update", "appointment", new AjaxOptions { }))
+    {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(d => d.Data.Id)
+            @Html.HiddenFor(d => d.Data.BusinessCustomerId)
+            <div class="row">
+                <div class="col-lg-12 text-right">
+                    #@Model.Data.GlobalAppointmentId
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Title</label>
+                    <div class="form-control">
+                        @Model.Data.Title
+                    </div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Service Type</label>
+                    <div class="form-control">
+                        @Model.Data.BusinessServiceName
+                    </div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Location</label>
+                    <div class="form-control">
+                        @Model.Data.ServiceLocationName
+                    </div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Offer</label>
+                    <div class="form-control">
+                        @Model.Data.BusinessOfferName
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="alert alert-success">
+                        Customer Information
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <label>First Name</label>
+                    <div class="form-control" id="customer_firstName"></div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Last Name</label>
+                    <div class="form-control" id="customer_lastName"></div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Email</label>
+                    <div class="form-control" id="customer_email"></div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Phone Number</label>
+                    <div class="form-control" id="customer_phoneNumber"></div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Address</label>
+                    <div class="form-control" id="customer_add1"></div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Location</label>
+                    <div class="form-control" id="customer_serviceName"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="alert alert-success">
+                        Employee Information
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-lg-12">
+                    @customerWebGrid.GetHtml(htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
+       tableStyle: "table table-striped",
+       headerStyle: "active",
+       footerStyle: "webgrid-footer",
+       columns: customerWebGrid.Columns(
+customerWebGrid.Column("FirstName", "First Name"),
+customerWebGrid.Column("LastName", "Last Name"),
+customerWebGrid.Column("Email", "Email")))
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="alert alert-success">
+                        Schedule Information
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <label>Recurrence</label>
+                    <div class="form-control">
+                        @Enum.GetName(typeof(PatternType), (int)Model.Data.PatternType)
+                    </div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Is All Day</label>
+                    <div class="form-control">
+                        @Model.Data.IsAllDayEvent
+                    </div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Start Date</label>
+                    <div class="form-control">
+                        @string.Format("{0:MM/dd/yyyy}", Model.Data.StartDate.Value)
+                    </div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>End Date</label>
+                    <div class="form-control">
+                        @string.Format("{0:MM/dd/yyyy}", Model.Data.EndDate.Value)
+                    </div>
+                </div>
+                <div id="timeView">
+                    <div class="form-group col-lg-6">
+                        <label>Start</label>
+                        <div class="form-control">
+                            @string.Format("{0:hh:mm tt}", Model.Data.StartTime.Value)
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label>End</label>
+                        <div class="form-control">
+                            @string.Format("{0:hh:mm tt}", Model.Data.EndTime.Value)
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Is Active</label>
+                    <div class="form-control">
+                        @Model.Data.IsActive
+                    </div>
+                </div>
+            </div>
+}
+                <hr />
+                <div>
+                    <span class="text-left">
+                        <a href="@Url.Action("index", "appointment", new { area = "admin" })" class="btn btn-default btn-sm">
+                            Back
+                        </a>
+                    </span>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+@section scripts{
+<script>
+            function isAllDay() {
+                var isChecked = $('#Data_IsAllDayEvent').prop('checked');
+                console.log('print:: ', isChecked);
+                if (isChecked) {
+                    $("#timeView").attr('style', 'display: none;');
+                }
+                else {
+                    $("#timeView").attr('style', 'display: block;');
+                }
+            }
+
+            $(document).ready(function () {
+                      var id = $('#Data_BusinessCustomerId').val();
+                      if (id) {
+                          onGetData(id, '@Url.Action("GetCustomerById", "appointment", new { area = "admin" })').then((res) => {
+                              if (res && res.status) {
+                                  console.log(res);
+                                  setCustomer(res.data);
+                              }
+                          }).catch((error) => {
+                              console.error(error);
+                              $('#customerInformation').attr('style', 'none');
+                              setCustomer(null);
+                          });
+                      }
+                      else {
+                          setCustomer(null);
+                      }
+            });
+
+            function setCustomer(data) {
+                if (data) {
+                    var address = data.Add1 + ',' + data.Add2 + ',' + data.City + ', ' + data.State + ', ' + data.Country + ', ' + data.Zip;
+                    $('#customerInformation').attr('style', 'display: block;');
+                    $('#customer_firstName').text(data.FirstName);
+                    $('#customer_lastName').text(data.LastName);
+                    $('#customer_email').text(data.Email);
+                    $('#customer_phoneNumber').text(data.PhoneNumber);
+                    $('#customer_add1').text(address);
+                    $('#customer_serviceName').text(data.ServiceLocation.Name);
+                }
+                else {
+                    $('#customerInformation').attr('style', 'display: none;');
+                    $('#customer_firstName').text('');
+                    $('#customer_lastName').text('');
+                    $('#customer_email').text('');
+                    $('#customer_phoneNumber').text('');
+                    $('#customer_add1').text('');
+                    $('#customer_serviceName').text('');
+                }
+            }
+</script>
+}

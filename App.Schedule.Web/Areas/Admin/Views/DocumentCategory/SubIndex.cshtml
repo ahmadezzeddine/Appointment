@@ -1,0 +1,143 @@
+﻿
+@using PagedList;
+@using PagedList.Mvc;
+@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<IPagedList<DocumentCategoryViewModel>>
+
+@{
+    ViewBag.Title = "Document Sub Categories";
+    Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Document Sub Categories</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/SubViews/_ErrorView.cshtml", Model)
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <b>Document Sub Category List</b>
+                <a href="@Url.Action("subcreate", "documentcategory", new { area = "admin", id = ViewBag.ParentId })" class="btn btn-info btn-xs pull-right">
+                    <span class="fa fa-plus"></span> Add
+                </a>
+            </div>
+            <div class="panel-body">
+                @if (Model == null & Model.Data == null)
+                {
+                    <text>Please try again later.</text>
+                }
+                <div class="tab-content">
+                    <div class="tab-pane active">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="form-group input-group input-group-sm">
+                                    <input type="text" class="form-control" id="searchKeyword" value="@ViewBag.search" placeholder="Search here" />
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index")?search=' + $('#searchKeyword').val()">
+                                            <i class="fa fa-search"></i>
+                                            Search
+                                        </button>
+                                    </div>
+                                </div>
+                                <table class="table table-condensed table-striped table-hover sortable" cellspacing="0" cellpadding="0">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Image
+                                            </th>
+                                            <th>
+                                                Name
+                                            </th>
+                                            <th>
+                                                Order No.
+                                            </th>
+                                            <th>
+                                                Type
+                                            </th>
+                                            <th>
+                                                IsActive
+                                            </th>
+                                            <th class="text-right">
+                                                Action
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.Data.Count <= 0)
+                                        {
+                                            <tr>
+                                                <td colspan="7">
+                                                    No document sub category has been created yet.
+                                                </td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            foreach (var item in Model.Data)
+                                            {
+                                                <tr>
+                                                    @Html.HiddenFor(modelItem => item.Id)
+                                                    <td>
+                                                        @if (!string.IsNullOrEmpty(item.PictureLink))
+                                                        {
+                                                            <img id="categoryImage" class="img-circle" src="@item.PictureLink" width="25" height="25" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <img id="categoryImage" class="img-circle" src="~/Content/Images/NoImageThumb.gif" width="25" height="25" />
+                                                        }
+                                                    </td>
+                                                    <td class="row-bg" onclick="@("window.location.href='" + @Url.Action("subindex", "documentcategory", new { id = item.Id }) + "'");">
+                                                        @Html.DisplayFor(modelItem => item.Name)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.OrderNo)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Type)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.IsActive)
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <a title="Update" onclick="@("window.location.href='" + @Url.Action("SubEdit", new { Id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                            <span class="fa fa-pencil"></span>
+                                                        </a>
+                                                        <a title="Change Status" onclick="@("window.location.href='" + @Url.Action("SubDeactive", new { Id = item.Id }) + "'");" class="btn btn-xs btn-default">
+                                                            <span class="fa fa-minus-square"></span>
+                                                        </a>
+                                                        <a title="Delete" onclick="@("window.location.href='" + @Url.Action("SubDelete", new { Id = item.Id }) + "'");" class="btn btn-xs btn-default">
+                                                            <span class="fa fa-trash"></span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div>
+                    <span class="text-left">
+                        <a href="@Url.Action("index", "documentcategory", new { area = "admin" })" class="btn btn-default btn-sm">
+                            Back
+                        </a>
+                    </span>
+                    <span class="pull-right">
+                        @Html.PagedListPager(Model.Data, page => Url.Action("Index", new { page }))
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

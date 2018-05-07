@@ -355,11 +355,6 @@ namespace App.Schedule.Web.Admin.Controllers
 
             var model = new ServiceDataViewModel<BusinessCategoryViewModel>();
             var businessCategories = await this.DashboardService.GetBusinessCategories();
-            ViewBag.ParentId = businessCategories.Where(d => d.ParentId == null && d.Id == id.Value).Select(d => new SelectListItem()
-            {
-                Value = Convert.ToString(d.Id),
-                Text = d.Name
-            });
             model.Data = new BusinessCategoryViewModel()
             {
                 ParentId = id.Value

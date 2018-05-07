@@ -1,0 +1,58 @@
+﻿@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<AppointmentFeedbackViewModel>
+
+@{
+    ViewBag.Title = "Delete Feedback";
+    Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Appointment</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/SubViews/_ErrorView.cshtml", Model)
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <b>Delete Feedback</b>
+            </div>
+            @using (Ajax.BeginForm("delete_feedback", "appointment", new AjaxOptions { }))
+            {
+                <div class="panel-body">
+                    @if (Model == null & Model.Data == null)
+                    {
+                        <text>Please try again later.</text>
+                        return;
+                    }
+                    <div class="tab-content" style="padding:0px 10px;">
+                        <div class="row">
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(d => d.Data.Id)
+                            @Html.HiddenFor(d => d.Data.AppointmentId)
+                            <div class="form-group col-lg-12">
+                                <label>Message</label>
+                                <div class="form-control">
+                                    @Model.Data.Feedback
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <input id="btnDelete" class="btn btn-danger btn-sm " type="button" value="Delete" onclick="onSubmit(this,'@Url.Action("feedbacks", "appointment", new { area = "admin", id = Model.Data.AppointmentId })')" />
+                            <input type="button" class="btn btn-default btn-sm" value="Back" onclick="@("window.location.href='" + @Url.Action("feedbacks", "appointment", new { area = "admin", id = Model.Data.AppointmentId }) + "'");" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
