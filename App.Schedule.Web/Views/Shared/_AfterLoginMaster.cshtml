@@ -17,7 +17,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="@Url.Action("index","dashboard")" style="margin-top:-5px;"><img alt="Brand" src="~/Content/Images/logo.png" width="30"></a> <span class="navbar-brand-title">Appointment</span>
+                <a class="navbar-brand" href="@Url.Action("index","dashboard")" style="margin-top:-5px;"><img alt="Brand" src="~/Content/Images/logo.png" width="30"></a> <span class="navbar-brand-title">Appointment <sub><small> admin</small></sub></span>
             </div>
             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
@@ -86,8 +86,8 @@
                             <a><i class="fa fa-book fa-fw"></i> Appointments <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li><a href="@Url.Action("index","appointment",new { area="admin" })">List All</a></li>
-                                <li><a href="@Url.Action("search","appointment",new { area="admin" })">Search</a></li>
                                 <li><a href="@Url.Action("add","appointment",new { area="admin" })">Add New</a></li>
+                                <li><a href="@Url.Action("search","appointment",new { area="admin" })">Search</a></li>
                                 <li><a href="@Url.Action("payments","appointment",new { area="admin" })">Payments</a></li>
                             </ul>
                         </li>

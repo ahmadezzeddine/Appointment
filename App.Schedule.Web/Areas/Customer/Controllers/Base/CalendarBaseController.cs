@@ -1,14 +1,14 @@
 ﻿using System.Web.Mvc;
 using App.Schedule.Web.Services;
 
-namespace App.Schedule.Web.Areas.Admin.Controllers
+namespace App.Schedule.Web.Areas.Customer.Controllers.Base
 {
-    public class AppointmentBaseController : BaseController
+    public class CalendarBaseController : BaseController
     {
         protected AppointmentService AppointmentService;
         protected AppointmentDocumentService AppointmentDocumentService;
-        protected AppointmentInviteeService AppointmentInviteeService;
         protected AppointmentFeedbackService AppointmentFeedbackService;
+        protected AppointmentInviteeService AppointmentInviteeService;
         protected DocumentCategoryService DocumentCategoryService;
         protected ServiceLocationService ServiceLocationService;
         protected BusinessCustomerService BusinessCustomerService;

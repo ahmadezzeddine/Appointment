@@ -1,0 +1,87 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<IPagedList<AppointmentDocumentViewModel>>
+@{
+    ViewBag.Title = "Appointments Documents";
+    Layout = "~/Views/Shared/_AfterLoginCustomerMaster.cshtml";
+}
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/SubViews/_ErrorView.cshtml", Model)
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <b>Document List</b>
+            </div>
+            <div class="panel-body">
+                @if (Model == null || Model.Data == null)
+                {
+                    <text>Please try again later.</text>
+                    return;
+                }
+                <div class="tab-content">
+                    <div class="tab-pane active">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <table class="table table-condensed sortable" cellspacing="0" cellpadding="0">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Title
+                                            </th>
+                                            <th class="col-lg-2 text-right">
+                                                Action
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.Data.Count <= 0)
+                                        {
+                                            <tr>
+                                                <td colspan="7">
+                                                    No appointments document has been created yet.
+                                                </td>
+                                            </tr>
+                                            return;
+                                        }
+                                        @foreach (var item in Model.Data)
+                                        {
+                                            if (item != null)
+                                            {
+                                                var style = item.IsEmployeeUpload ? "class = bg-info" : "class = bg-success";
+                                                <tr @style>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                @item.Title
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <a title="Attachment" target="_blank" href="@item.DocumentLink" class="btn btn-default btn-xs">
+                                                            <span class="fa fa-file"></span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div>
+                    <span class="pull-right">
+                        @Html.PagedListPager(Model.Data, page => Url.Action("Index", new { page }))
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

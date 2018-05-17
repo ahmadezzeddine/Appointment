@@ -23,22 +23,22 @@
             </div>
             <div class="panel-body">
                 @Html.FullCalendar(settings =>
-                              {
-                                  settings.Name = "ApCalendar";
-                                  settings.CssClass = "css-test";
-                                  settings.Header = new Header
-                                  {
-                                      Left = new ControlsBuilder().AddButton(HeaderButton.Prev).AddSeparator(HeaderSeparator.Adjacent)
-                                                  .AddButton(HeaderButton.Next).AddSeparator(HeaderSeparator.Gap).AddButton(HeaderButton.Today),
-                                      Right = new ControlsBuilder().AddTitle()
-                                  };
-                                  settings.DefaultView = Enum.GetName(typeof(AvailableView), AvailableView.AgendaWeek);
-                                  settings.Editable = true;
-                                  settings.AllDaySlot = false;
-                                  settings.Selectable = true;
-                                  settings.SlotDuration = TimeSpan.FromMinutes(15);
-                                  settings.Events = new EventCollection(Url.Action("GetDiaryEvents", "Calendar", new { start = DateTime.Now, end = DateTime.Now.AddDays(2), area = "Admin" }), EventCollectionType.JsonFeed);
-                              })
+           {
+               settings.Name = "ApCalendar";
+               settings.CssClass = "css-test";
+               settings.Header = new Header
+               {
+                   Left = new ControlsBuilder().AddButton(HeaderButton.Prev).AddSeparator(HeaderSeparator.Adjacent)
+                               .AddButton(HeaderButton.Next).AddSeparator(HeaderSeparator.Gap).AddButton(HeaderButton.Today),
+                   Right = new ControlsBuilder().AddTitle()
+               };
+               settings.DefaultView = Enum.GetName(typeof(AvailableView), AvailableView.AgendaWeek);
+               settings.Editable = false;
+               settings.AllDaySlot = false;
+               settings.Selectable = false;
+               settings.SlotDuration = TimeSpan.FromMinutes(15);
+               settings.Events = new EventCollection(Url.Action("GetDiaryEvents", "Dashboard", new { area = "Admin" }), EventCollectionType.JsonFeed);
+           })
             </div>
         </div>
     </div>

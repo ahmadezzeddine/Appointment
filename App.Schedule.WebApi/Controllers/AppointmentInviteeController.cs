@@ -24,11 +24,36 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 var model = _db.tblAppointmentInvitees.ToList();
-                return Ok(new { status = true, data = model });
+                return Ok(new { status = true, data = model, message = "success" });
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = true, data = "", message = "ex: " + ex.Message.ToString() });
+            }
+        }
+
+        // GET: api/AppointmentDocument
+        public IHttpActionResult Get(long? id, TableType type)
+        {
+            try
+            {
+                if (!id.HasValue)
+                    return Ok(new { status = false, data = "", message = "Please provide a valid id." });
+
+                if (type == TableType.AppointmentInvitee)
+                {
+                    var model = _db.tblAppointmentInvitees.Where(d => d.AppointmentId == id.Value).ToList();
+                    return Ok(new { status = true, data = model, message = "success" });
+                }
+                else
+                {
+                    var model = _db.tblAppointmentInvitees.Find(id.Value);
+                    return Ok(new { status = true, data = model, message = "success" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 
@@ -50,7 +75,7 @@ namespace App.Schedule.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = true, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 
@@ -83,7 +108,7 @@ namespace App.Schedule.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = true, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 
@@ -117,7 +142,7 @@ namespace App.Schedule.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = true, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 
@@ -148,7 +173,7 @@ namespace App.Schedule.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = true, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
     }

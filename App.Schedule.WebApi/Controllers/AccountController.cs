@@ -749,7 +749,40 @@ namespace App.Schedule.WebApi.Controllers
             }
             else if (model.UserType == UserType.BusinessCustomer)
             {
-                return Ok(new { status = false, data = "", message = "Invalid user." });
+                var customer = model.BusinessCustomer;
+                var businessCustomerController = new BusinessCustomerController();
+                using (var appointmetntDb = _dbAppointment.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var updateCustomer = businessCustomerController.UpdateCustomer(customer);
+                        if (updateCustomer.Status)
+                        {
+                            var user = await UserManager.FindByEmailAsync(customer.Email);
+                            var response = await UserManager.ChangePasswordAsync(user.Id, customer.OldPassword, customer.Password);
+                            if (response.Succeeded)
+                            {
+                                appointmetntDb.Commit();
+                                return Ok(new { status = true, data = updateCustomer.Data, message = "changed successfully." });
+                            }
+                            else
+                            {
+                                appointmetntDb.Rollback();
+                                return Ok(new { status = false, data = updateCustomer.Data, message = "change failed. ex:" + response.Errors });
+                            }
+                        }
+                        else
+                        {
+                            appointmetntDb.Rollback();
+                            return Ok(new { status = false, data = updateCustomer.Data, message = "There was problem. Please try again later." });
+                        }
+                    }
+                    catch
+                    {
+                        appointmetntDb.Rollback();
+                        return Ok(new { status = false, data = "", message = "There was a problem Please try again later." });
+                    }
+                }
             }
             else
             {

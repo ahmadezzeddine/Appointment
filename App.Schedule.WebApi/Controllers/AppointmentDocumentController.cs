@@ -34,7 +34,7 @@ namespace App.Schedule.WebApi.Controllers
                 else
                 {
                     var model = _db.tblAppointmentDocuments.ToList();
-                    return Ok(new { status = false, data = "", message = "failed" });
+                    return Ok(new { status = true, data = model, message = "success" });
                 }
             }
             catch (Exception ex)

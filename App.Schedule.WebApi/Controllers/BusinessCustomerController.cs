@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Web;
 using System.Linq;
 using System.Web.Http;
 using System.Data.Entity;
 using App.Schedule.Context;
 using App.Schedule.Domains;
-using App.Schedule.Domains.ViewModel;
 using System.Collections.Generic;
 using App.Schedule.Domains.Helpers;
+using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.WebApi.Controllers
 {
@@ -33,6 +34,41 @@ namespace App.Schedule.WebApi.Controllers
                 return Ok(new { status = false, data = "", message = ex.Message.ToString() });
             }
         }
+
+        [AllowAnonymous]
+        public IHttpActionResult Get(string email, string password)
+        {
+            try
+            {
+                var tblBusinessCustomer = new tblBusinessCustomer();
+                password = HttpContext.Current.Server.UrlDecode(password);
+                password = Security.Encrypt(password, true);
+                tblBusinessCustomer = _db.tblBusinessCustomers.Where(d => d.Email.ToLower() == email.ToLower() && d.Password == password && d.IsActive == true).FirstOrDefault();
+                if (tblBusinessCustomer != null)
+                {
+                    tblBusinessCustomer.Password = "";
+                    var tblServiceLocations = _db.tblServiceLocations.Find(tblBusinessCustomer.ServiceLocationId);
+                    if (tblServiceLocations != null)
+                    {
+                        var tblBusinesses = _db.tblBusinesses.Find(tblServiceLocations.BusinessId);
+                        if (tblBusinesses != null)
+                        {
+                            return Ok(new { status = true, data = new { Customer = tblBusinessCustomer, ServiceLocation = tblServiceLocations, Business = tblBusinesses }, message = "Valid credential" });
+                        }
+                    }
+                    else
+                    {
+                        return Ok(new { status = false, data = "", message = "Not a valid credential" });
+                    }
+                }
+                return Ok(new { status = false, data = "", message = "Not a valid credential" });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, data = "", message = ex.Message.ToString() });
+            }
+        }
+
 
 
         // GET: api/businessemployee
@@ -134,7 +170,7 @@ namespace App.Schedule.WebApi.Controllers
                         City = model.City,
                         State = model.State,
                         Zip = model.Zip,
-                        Password = model.Password,
+                        Password = Security.Encrypt(model.Password, true),
                         IsActive = model.IsActive,
                         Created = model.Created,
                         ServiceLocationId = model.ServiceLocationId
@@ -330,6 +366,48 @@ namespace App.Schedule.WebApi.Controllers
             catch (Exception ex)
             {
                 data.Message = ex.Message.ToString();
+            }
+            return data;
+        }
+
+        [NonAction]
+        public ResponseViewModel<BusinessCustomerViewMdoel> UpdateCustomer(BusinessCustomerViewMdoel model)
+        {
+            var data = new ResponseViewModel<BusinessCustomerViewMdoel>();
+            try
+            {
+                var businessCustomer= _db.tblBusinessCustomers.Find(model.Id);
+                if (businessCustomer != null)
+                {
+                    var password = Security.Decrypt(businessCustomer.Password, true);
+                    if (password == model.OldPassword)
+                    {
+                        if (businessCustomer.Email.ToLower() == model.Email.ToLower())
+                        {
+                            businessCustomer.Password = Security.Encrypt(model.Password, true);
+                            _db.Entry(businessCustomer).State = EntityState.Modified;
+                            var response = _db.SaveChanges();
+                            data.Message = response > 0 ? "success" : "failed";
+                            data.Status = response > 0 ? true : false;
+                        }
+                        else
+                        {
+                            data.Message = "Please enter a valid email id.";
+                        }
+                    }
+                    else
+                    {
+                        data.Message = "Please enter your valid old password.";
+                    }
+                }
+                else
+                {
+                    data.Message = "It is not a valid information.";
+                }
+            }
+            catch (Exception ex)
+            {
+                data.Message = "ex: " + ex.Message.ToString();
             }
             return data;
         }

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using System.Collections.Generic;
-using App.Schedule.Domains.ViewModel;
 using System.Threading.Tasks;
 using App.Schedule.Web.Models;
+using System.Collections.Generic;
+using App.Schedule.Domains.ViewModel;
+using App.Schedule.Web.Areas.Customer.Controllers.Base;
 
-namespace App.Schedule.Web.Areas.Admin.Controllers
+namespace App.Schedule.Web.Areas.Customer.Controllers
 {
     public class DashboardController : DashboardBaseController
     {
@@ -25,16 +26,16 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         public ActionResult Logout()
         {
             if (this.LogoutStatus())
-                return RedirectToAction("Login", "Home", new { area = "Admin" });
+                return RedirectToAction("Login", "Home", new { area = "Customer" });
             else
-                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                return RedirectToAction("Index", "Dashboard", new { area = "Customer" });
         }
 
         [NonAction]
         private async Task<List<AppointmentViewModel>> GetAppointments()
         {
             var data = new List<AppointmentViewModel>();
-            var response = await this.AppointmentService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
+            var response = await this.AppointmentService.Gets(RegisterCustomerViewModel.Customer.Id, TableType.CustomerId);
             if (response.Status)
             {
                 data = response.Data;
@@ -43,7 +44,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetDiaryEvents(DateTime start, DateTime end)
+        public async Task<JsonResult> GetDiaryEvents()
         {
             var appointments = await GetAppointments();
             var recurredAppointments = this.RecurreAppointments(appointments).ToArray();
@@ -56,7 +57,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var appoint = new SchedulerModel
             {
                 id = x.Id,
-                title = x.Title + " (" + x.BusinessCustomerName.ToUpper()+")",
+                title = x.Title + " (" + x.BusinessCustomerName.ToUpper() + ")",
                 start = x.StartTime,
                 end = x.EndTime,
                 color = x.BackColor,

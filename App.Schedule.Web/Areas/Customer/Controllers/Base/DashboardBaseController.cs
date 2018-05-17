@@ -3,22 +3,24 @@ using System.Web;
 using System.Web.Mvc;
 using App.Schedule.Web.Services;
 
-namespace App.Schedule.Web.Areas.Admin.Controllers
+namespace App.Schedule.Web.Areas.Customer.Controllers.Base
 {
     public class DashboardBaseController : BaseController
     {
         protected AppointmentService AppointmentService;
+        protected BusinessService BusinessService;
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var status = LoginStatus();
             if (!status)
             {
-                filterContext.Result = RedirectToAction("Login", "Home", new { area = "Admin" });
+                filterContext.Result = RedirectToAction("Index", "Dashboard", new { area = "Customer" });
             }
             else
             {
                 this.AppointmentService = new AppointmentService(this.Token);
+                this.BusinessService = new BusinessService(this.Token);
             }
         }
 
@@ -27,9 +29,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         {
             try
             {
-                if (Request.Cookies["aadminappointment"] != null)
+                if (Request.Cookies[httpCookieKey] != null)
                 {
-                    var admin = new HttpCookie("aadminappointment");
+                    var admin = new HttpCookie(httpCookieKey);
                     if (Session.Keys.Count > 0) { Session["aEmail"] = ""; }
                     admin.Expires = DateTime.Now.AddDays(-1d);
                     Response.Cookies.Add(admin);

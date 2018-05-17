@@ -1,5 +1,5 @@
-﻿using App.Schedule.Web.Services;
-using System;
+﻿using System;
+using App.Schedule.Web.Services;
 using System.Web.Mvc;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers

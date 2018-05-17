@@ -1,0 +1,110 @@
+﻿@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<BusinessCustomerViewMdoel>
+
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_AfterLoginCustomerMaster.cshtml";
+}
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/SubViews/_ErrorView.cshtml", Model)
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <b>Profile Information</b>
+            </div>
+            @using (Ajax.BeginForm("index", "account", new AjaxOptions { }))
+            {
+                <div class="panel-body">
+                    @if (Model == null & Model.Data == null)
+                    {
+                        <text>Please try again later.</text>
+                        return;
+                    }
+                    <div class="tab-pane">
+                        <div class="row">
+                            <div class="col-lg-12 text-center" style="padding:20px 0;">
+                                @if (Model.Data.ProfilePicture != null && Model.Data.ProfilePicture.Length > 0)
+                                {
+                                    <img id="userProfilePic" class="img-rounded" src="@Model.Data.Picture" width="100" height="100" />
+                                }
+                                else
+                                {
+                                    <img id="userProfilePic" class="img-rounded" src="~/Content/Images/NoImageThumb.gif" width="100" height="100" />
+                                }
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="form-group col-lg-6">
+                                <label>Name</label>
+                                <div class="form-control">
+                                    @Model.Data.FirstName @Model.Data.LastName
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Location</label>
+                                <div class="form-control">
+                                    @Model.Data.ServiceLocation.Name
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Email</label>
+                                <div class="form-control">
+                                    @Model.Data.Email
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Phone</label>
+                                <div class="form-control">
+                                    @Model.Data.StdCode @Model.Data.PhoneNumber
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Address Line 1</label>
+                                <div class="form-control">
+                                    @Model.Data.Add1
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Address Line2</label>
+                                <div class="form-control">
+                                    @Model.Data.Add2
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>City</label>
+                                <div class="form-control">
+                                    @Model.Data.City
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>State</label>
+                                <div class="form-control">
+                                    @Model.Data.State
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Zipcode</label>
+                                <div class="form-control">
+                                    @Model.Data.Zip
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <input id="btnUpdate" class="btn btn-info btn-sm " type="button" value="Update" onclick="@("window.location.href='" + @Url.Action("update","account",new { id = Model.Data.Id, area = "customer"})+"'");" />
+                            <input type="button" class="btn btn-default btn-sm" value="Back" onclick="@("window.location.href='" + @Url.Action("index","dashboard",new { area="customer"}) + "'");" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

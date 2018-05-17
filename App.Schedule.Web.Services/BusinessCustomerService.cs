@@ -16,15 +16,15 @@ namespace App.Schedule.Web.Services
             base.SetUpAppointmentService(token);
         }
 
-        public async Task<ResponseViewModel<BusinessCustomerViewMdoel>> VerifyLoginCredential(string Email, string Password)
+        public async Task<ResponseViewModel<RegisterCustomerViewModel>> VerifyLoginCredential(string Email, string Password)
         {
-            var returnResponse = new ResponseViewModel<BusinessCustomerViewMdoel>();
+            var returnResponse = new ResponseViewModel<RegisterCustomerViewModel>();
             try
             {
                 Password = HttpContext.Current.Server.UrlEncode(Password);
                 var url = String.Format(AppointmentUserService.GET_BUSINESS_CUSTOMER_BYLOGINID, Email, Password);
                 var response = await this.appointmentUserService.httpClient.GetAsync(url);
-                returnResponse = await base.GetHttpResponse<BusinessCustomerViewMdoel>(response);
+                returnResponse = await base.GetHttpResponse<RegisterCustomerViewModel>(response);
             }
             catch (Exception ex)
             {
@@ -200,15 +200,45 @@ namespace App.Schedule.Web.Services
             }
             return returnResponse;
         }
-        
+
         public async Task<ResponseViewModel<BusinessCustomerViewMdoel>> Update(BusinessCustomerViewMdoel model)
         {
             var returnResponse = new ResponseViewModel<BusinessCustomerViewMdoel>();
             try
             {
+                var url = String.Format(AppointmentUserService.PUT_BUSINESS_CUSTOMER, model.Id);
                 var jsonContent = JsonConvert.SerializeObject(model);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var url = String.Format(AppointmentUserService.PUT_BUSINESS_CUSTOMER, model.Id);
+                var response = await this.appointmentUserService.httpClient.PutAsync(url, content);
+                returnResponse = await base.GetHttpResponse<BusinessCustomerViewMdoel>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
+        public async Task<ResponseViewModel<BusinessCustomerViewMdoel>> Update(BusinessCustomerViewMdoel model, bool hasPassword)
+        {
+            var returnResponse = new ResponseViewModel<BusinessCustomerViewMdoel>();
+            try
+            {
+                var updateUser = new UserViewModel()
+                {
+                    UserType = UserType.BusinessCustomer,
+                    BusinessCustomer = model
+                };
+                var url = String.Format(AppointmentUserService.PUT_API_ACCOUNT);
+                var jsonContent = "";
+                if (hasPassword)
+                    jsonContent = JsonConvert.SerializeObject(updateUser);
+                else
+                    jsonContent = JsonConvert.SerializeObject(model);
+
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
                 var response = await this.appointmentUserService.httpClient.PutAsync(url, content);
                 returnResponse = await base.GetHttpResponse<BusinessCustomerViewMdoel>(response);
             }

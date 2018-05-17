@@ -15,7 +15,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Login(ServiceDataViewModel<LoginViewModel> model)
+        public async Task<ActionResult> Login(ResponseViewModel<LoginViewModel> model)
         {
             var result = new ResponseViewModel<RegisterViewModel>();
             try
@@ -69,8 +69,5 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         {
             return View();
         }
-
-      
-
     }
 }

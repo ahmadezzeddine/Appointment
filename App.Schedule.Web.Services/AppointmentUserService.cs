@@ -143,6 +143,14 @@ namespace App.Schedule.Web.Services
         public const string DEACTIVE_APPOINTMENT_FEEDBACK = "api/appointmentfeedback?id={0}&status={1}";
         public const string CLOSE_APPOINTMENT_FEEDBACK = "api/appointmentfeedback?type={0}&reason={1}";
 
+        //Appointment Invitee
+        public const string GET_APPOINTMENT_INVITEE = "api/appointmentinvitee";
+        public const string GET_APPOINTMENT_INVITEE_BYID = "api/appointmentinvitee?id={0}";
+        public const string GET_APPOINTMENT_INVITEE_BYID_TYPE = "api/appointmentinvitee?id={0}&type={1}";
+        public const string POST_APPOINTMENT_INVITEE = "api/appointmentinvitee";
+        public const string PUT_APPOINTMENT_INVITEE = "api/appointmentinvitee?id={0}";
+        public const string DELETE_APPOINTMENT_INVITEE = "api/appointmentinvitee?id={0}";
+
         //Upload
         public const string POST_UPLOAD_DOCUMENT = "api/upload";
 

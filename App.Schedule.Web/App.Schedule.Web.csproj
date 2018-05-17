@@ -186,6 +186,16 @@
     <Compile Include="Areas\Admin\Controllers\ProfileBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\ServiceLocationBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\ServiceLocationController.cs" />
+    <Compile Include="Areas\Customer\Controllers\AccountController.cs" />
+    <Compile Include="Areas\Customer\Controllers\AppointmentController.cs" />
+    <Compile Include="Areas\Customer\Controllers\Base\AccountBaseController.cs" />
+    <Compile Include="Areas\Customer\Controllers\Base\AppointmentBaseController.cs" />
+    <Compile Include="Areas\Customer\Controllers\Base\BaseController.cs" />
+    <Compile Include="Areas\Customer\Controllers\Base\CalendarBaseController.cs" />
+    <Compile Include="Areas\Customer\Controllers\Base\DashboardBaseController.cs" />
+    <Compile Include="Areas\Customer\Controllers\Base\HomeBaseController.cs" />
+    <Compile Include="Areas\Customer\Controllers\CalendarController.cs" />
+    <Compile Include="Areas\Customer\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Customer\Controllers\HomeController.cs" />
     <Compile Include="Areas\Customer\CustomerAreaRegistration.cs" />
     <Compile Include="Areas\Employee\Controllers\HomeController.cs" />
@@ -196,6 +206,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ResponseHelper.cs" />
+    <Compile Include="Models\AppointmentViewStatus.cs" />
+    <Compile Include="Models\SchedulerModel.cs" />
+    <Compile Include="Models\UIViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -316,6 +329,18 @@
     <Content Include="Areas\Admin\Views\Appointment\Feedbacks.cshtml" />
     <Content Include="Areas\Admin\Views\Appointment\Add_Feedback.cshtml" />
     <Content Include="Areas\Admin\Views\Appointment\Delete_Feedback.cshtml" />
+    <Content Include="Areas\Customer\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\Customer\Views\Appointment\Index.cshtml" />
+    <Content Include="Areas\Customer\Views\Appointment\View.cshtml" />
+    <Content Include="Areas\Customer\Views\Calendar\Index.cshtml" />
+    <Content Include="Areas\Customer\Views\Calendar\Week.cshtml" />
+    <Content Include="Areas\Customer\Views\Calendar\Timeline.cshtml" />
+    <Content Include="Areas\Customer\Views\Appointment\Attachments.cshtml" />
+    <Content Include="Areas\Customer\Views\Appointment\Feedbacks.cshtml" />
+    <Content Include="Areas\Customer\Views\Appointment\Add_Feedback.cshtml" />
+    <Content Include="Areas\Customer\Views\Account\Index.cshtml" />
+    <Content Include="Areas\Customer\Views\Account\Update.cshtml" />
+    <Content Include="Areas\Customer\Views\Account\Password.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -458,6 +483,7 @@
     <Content Include="Views\SubViews\_Error.cshtml" />
     <Content Include="Views\SubViews\_ScriptError.cshtml" />
     <Content Include="Views\SubViews\_ErrorView.cshtml" />
+    <Content Include="Views\Shared\_AfterLoginCustomerMaster.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -465,7 +491,6 @@
     <Folder Include="Areas\Customer\Views\Shared\" />
     <Folder Include="Areas\Employee\Models\" />
     <Folder Include="Areas\Employee\Views\Shared\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

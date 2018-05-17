@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
 
 namespace App.Schedule.Domains.ViewModel
 {
@@ -546,8 +547,14 @@ namespace App.Schedule.Domains.ViewModel
     /// <summary>
     /// Class is used to hold business customer information.
     /// </summary>
+    /// 
     public class BusinessCustomerViewMdoel
     {
+        public BusinessCustomerViewMdoel()
+        {
+            this.ProfilePicture = new List<byte>().ToArray();
+        }
+
         public long Id { get; set; }
 
         [Required]
@@ -605,6 +612,17 @@ namespace App.Schedule.Domains.ViewModel
         public long? ServiceLocationId { get; set; }
 
         public virtual ServiceLocationViewModel ServiceLocation { get; set; }
+
+        public string Picture
+        {
+            get
+            {
+                if (this.ProfilePicture != null)
+                    return String.Format("data:image/png;base64,{0}", Convert.ToBase64String(this.ProfilePicture));
+                else
+                    return "";
+            }
+        }
 
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<tblAppointment> tblAppointments { get; set; }

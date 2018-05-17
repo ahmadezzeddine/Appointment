@@ -9,6 +9,9 @@
         All = 4,
         Payment = 5,
         AppointmentDocument = 6,
-        AppointmentFeedback = 7
+        AppointmentFeedback = 7,
+        CustomerId = 8,
+        AppointmentInvitee = 9,
+
     }
 }

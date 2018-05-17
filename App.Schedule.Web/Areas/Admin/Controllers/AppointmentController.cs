@@ -1,11 +1,12 @@
-﻿using App.Schedule.Domains.ViewModel;
+﻿using System;
 using PagedList;
-using System;
 using System.Linq;
 using System.Web.Mvc;
 using System.Threading.Tasks;
+using App.Schedule.Web.Models;
 using System.Collections.Generic;
 using App.Schedule.Domains.Helpers;
+using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
@@ -14,11 +15,12 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         AppointmentViewModel appointmentViewModel;
 
         [HttpGet]
-        public async Task<ActionResult> Index(int? page, string search)
+        public async Task<ActionResult> Index(int? page, string search, AppointmentViewStatus? type)
         {
             var model = this.ResponseHelper.GetResponse<IPagedList<AppointmentViewModel>>();
             var pageNumber = page ?? 1;
             ViewBag.search = search;
+            
 
             ViewBag.BusinessId = RegisterViewModel.Business.Id;
             ViewBag.ServiceLocationId = RegisterViewModel.Employee.ServiceLocationId;
@@ -26,7 +28,26 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var result = await AppointmentService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
             if (result.Status)
             {
-                var data = result.Data.Where(d => d.StatusType != (int)StatusType.Completed).OrderByDescending(d => d.Id).ToList();
+                if (type.HasValue)
+                {
+                    if (type.Value == AppointmentViewStatus.Canceled)
+                    {
+                        result.Data = result.Data.Where(d => d.StatusType == (int)StatusType.Canceled).ToList();
+                    }
+                    else if (type.Value == AppointmentViewStatus.Completed)
+                    {
+                        result.Data = result.Data.Where(d => d.StatusType == (int)StatusType.Completed).ToList();
+                    }
+                    else if (type.Value == AppointmentViewStatus.Pending)
+                    {
+                        result.Data = result.Data.Where(d => d.StatusType != (int)StatusType.Canceled && d.StatusType != (int)StatusType.Completed).ToList();
+                    }
+                    else if (type.Value == AppointmentViewStatus.Deactivate)
+                    {
+                        result.Data = result.Data.Where(d => d.IsActive == false).ToList();
+                    }
+                }
+                var data = result.Data.OrderByDescending(d => d.Id).ToList();
                 model.Status = result.Status;
                 model.Message = result.Message;
                 if (search == null)
@@ -110,7 +131,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var currentEmployee = employees.Find(d => d.Id == RegisterViewModel.Employee.Id);
             employees.Remove(currentEmployee);
             ViewBag.BusinessEmployeeId = employees;
-
+            response.Data.BusinessEmployeeId = RegisterViewModel.Employee.Id;
+            response.Data.IsActive = true;
             return View(response);
         }
 
@@ -602,10 +624,25 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             response.Data.StartDate = response.Data.StartDate.Value;
             response.Data.EndDate = response.Data.StartDate.Value;
 
-            var employees = await this.GetBusinessEmployee();
-            var currentEmployee = employees.Find(d => d.Id == RegisterViewModel.Employee.Id);
-            employees.Remove(currentEmployee);
-            ViewBag.BusinessEmployeeId = employees;
+            var invitees = await this.AppointmentInviteeService.Gets(response.Data.Id, TableType.AppointmentInvitee);
+
+            if (invitees.Status)
+            {
+                var employees = await this.GetBusinessEmployee();
+                var appointmentInvitees = new List<BusinessEmployeeViewModel>();
+                var employee = employees.Find(d => d.Id == response.Data.BusinessEmployeeId);
+                if (employee != null)
+                    appointmentInvitees.Add(employee);
+
+                foreach (var invitee in invitees.Data)
+                {
+                    employee = employees.Find(d => d.Id == invitee.BusinessEmployeeId);
+                    if (employee != null)
+                        appointmentInvitees.Add(employee);
+                }
+                ViewBag.BusinessEmployeeId = appointmentInvitees;
+            }
+
 
             return View(response);
         }

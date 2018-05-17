@@ -59,6 +59,10 @@ namespace App.Schedule.WebApi.Controllers
                 {
                     model = this.GetApppointments().Where(d => d.BusinessEmployeeId == id.Value).ToList();
                 }
+                else if (id.HasValue && type == TableType.CustomerId)
+                {
+                    model = this.GetApppointments().Where(d => d.BusinessCustomerId == id.Value).ToList();
+                }
                 else if (id.HasValue && type == TableType.ServiceLocationId)
                 {
                     model = this.GetApppointments().Where(d => d.ServiceLocationId == id.Value).ToList();
@@ -224,7 +228,9 @@ namespace App.Schedule.WebApi.Controllers
                                 var payment = new tblAppointmentPayment()
                                 {
                                     AppointmentId = appointment.Id,
-                                    Amount = serviceCost
+                                    Amount = serviceCost,
+                                    Created = DateTime.UtcNow,
+                                    PaidDate = DateTime.UtcNow
                                 };
                                 _db.tblAppointmentPayments.Add(payment);
                                 _db.SaveChanges();
