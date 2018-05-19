@@ -4,11 +4,11 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Threading.Tasks;
 using App.Schedule.Web.Models;
-using App.Schedule.Domains.ViewModel;
 using System.Collections.Generic;
-using App.Schedule.Web.Areas.Customer.Controllers.Base;
+using App.Schedule.Domains.ViewModel;
+using App.Schedule.Web.Areas.Employee.Controllers.Base;
 
-namespace App.Schedule.Web.Areas.Customer.Controllers
+namespace App.Schedule.Web.Areas.Employee.Controllers
 {
     public class AppointmentController : AppointmentBaseController
     {
@@ -19,11 +19,11 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
             var pageNumber = page ?? 1;
             ViewBag.search = search;
 
-            ViewBag.CustomerId = RegisterCustomerViewModel.Customer.Id;
-            ViewBag.BusinessId = RegisterCustomerViewModel.Business.Id;
-            ViewBag.ServiceLocationId = RegisterCustomerViewModel.Customer.ServiceLocationId;
+            ViewBag.EmployeeId = RegisterViewModel.Employee.Id;
+            ViewBag.BusinessId = RegisterViewModel.Business.Id;
+            ViewBag.ServiceLocationId = RegisterViewModel.ServiceLocation.Id;
 
-            var result = await AppointmentService.Gets(RegisterCustomerViewModel.Customer.Id, TableType.CustomerId);
+            var result = await AppointmentService.Gets(RegisterViewModel.Employee.Id, TableType.EmployeeId);
             if (result.Status)
             {
                 if (type.HasValue)
@@ -69,13 +69,13 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
         public async Task<ActionResult> View(long? id)
         {
             if (!id.HasValue)
-                return RedirectToAction("index", "appointment", new { area = "customer" });
+                return RedirectToAction("index", "appointment", new { area = "employee" });
 
             var response = await this.AppointmentService.Get(id.Value);
             if (response.Status == false)
-                return RedirectToAction("index", "appointment", new { area = "customer" });
+                return RedirectToAction("index", "appointment", new { area = "employee" });
 
-            response.Data.ServiceLocationName = RegisterCustomerViewModel.ServiceLocation.Name;
+            response.Data.ServiceLocationName = RegisterViewModel.ServiceLocation.Name;
 
             var BusinessOffers = await this.GetOffers();
             response.Data.BusinessOfferName = BusinessOffers.Find(d => d.Id == response.Data.BusinessOfferId).Name;
@@ -109,10 +109,11 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
             return View(response);
         }
 
+
         [NonAction]
         private async Task<List<ServiceLocationViewModel>> GetServiceLocations()
         {
-            var response = await this.ServiceLocationService.Gets(RegisterCustomerViewModel.Business.Id, TableType.BusinessId);
+            var response = await this.ServiceLocationService.Gets(RegisterViewModel.Employee.Id, TableType.EmployeeId);
             if (response != null)
             {
                 return response.Data;
@@ -126,7 +127,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
         [NonAction]
         private async Task<List<BusinessCustomerViewModel>> GetCustomers()
         {
-            var response = await this.BusinessCustomerService.Gets(RegisterCustomerViewModel.Business.Id, TableType.BusinessId);
+            var response = await this.BusinessCustomerService.Gets(RegisterViewModel.Employee.Id, TableType.EmployeeId);
             if (response != null)
             {
                 return response.Data;
@@ -140,7 +141,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
         [NonAction]
         private async Task<List<BusinessOfferViewModel>> GetOffers()
         {
-            var response = await this.BusinessOfferService.Gets(RegisterCustomerViewModel.Business.Id, TableType.BusinessId);
+            var response = await this.BusinessOfferService.Gets(-1, TableType.All);
             if (response != null)
             {
                 return response.Data;
@@ -168,7 +169,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
         [NonAction]
         private async Task<List<BusinessEmployeeViewModel>> GetBusinessEmployee()
         {
-            var response = await this.BusinessEmployeeService.Gets(RegisterCustomerViewModel.Business.Id, TableType.BusinessId);
+            var response = await this.BusinessEmployeeService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
             if (response != null)
             {
                 return response.Data;
@@ -226,7 +227,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
         public async Task<ActionResult> Attachments(long? id, int? page)
         {
             if (!id.HasValue)
-                return RedirectToAction("index", "appointment", new { area = "customer" });
+                return RedirectToAction("index", "appointment", new { area = "employee" });
 
             var pageNumber = page ?? 1;
             var model = this.ResponseHelper.GetResponse<IPagedList<AppointmentDocumentViewModel>>();
@@ -251,7 +252,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
         public async Task<ActionResult> Feedbacks(long? id, int? page)
         {
             if (!id.HasValue)
-                return RedirectToAction("index", "appointment", new { area = "customer" });
+                return RedirectToAction("index", "appointment", new { area = "employee" });
 
             var pageNumber = page ?? 1;
             var model = this.ResponseHelper.GetResponse<IPagedList<AppointmentFeedbackViewModel>>();
@@ -281,14 +282,6 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
             var response = this.ResponseHelper.GetResponse<AppointmentFeedbackViewModel>();
             response.Data = new AppointmentFeedbackViewModel();
             response.Status = true;
-            var ratingValue = new List<object>();
-            ratingValue.Add(new { Value = 1, Text = "1 Star" });
-            ratingValue.Add(new { Value = 2, Text = "2 Star" });
-            ratingValue.Add(new { Value = 3, Text = "3 Star" });
-            ratingValue.Add(new { Value = 4, Text = "4 Star" });
-            ratingValue.Add(new { Value = 5, Text = "5 Star" });
-            ViewBag.Rating = new SelectList(ratingValue, "Value", "Text");
-
             response.Data.AppointmentId = id.Value;
             return View(response);
         }
@@ -306,8 +299,8 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
             }
             else
             {
-                model.Data.IsEmployee = false;
-                model.Data.BusinessCustomerId = RegisterCustomerViewModel.Customer.Id;
+                model.Data.IsEmployee = true;
+                model.Data.BusinessEmployeeId = RegisterViewModel.Employee.Id;
                 model.Data.Rating = 0;
                 var response = await this.AppointmentFeedbackService.Add(model.Data);
                 if (response == null)

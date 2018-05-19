@@ -1,0 +1,65 @@
+﻿@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<BusinessEmployeeViewModel>
+
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_AfterLoginEmployeeMaster.cshtml";
+}
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/SubViews/_ErrorView.cshtml", Model)
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <b>Profile Information</b>
+            </div>
+            <div class="panel-body">
+                @if (Model == null & Model.Data == null)
+                {
+                    <text>Please try again later.</text>
+                    return;
+                }
+                <div class="tab-pane">
+                    <div class="row">
+
+                        <div class="form-group col-lg-6">
+                            <label>Name</label>
+                            <div class="form-control">
+                                @Model.Data.FirstName @Model.Data.LastName
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label>Location</label>
+                            <div class="form-control">
+                                @Model.Data.ServiceLocation.Name
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label>Email</label>
+                            <div class="form-control">
+                                @Model.Data.Email
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label>Phone</label>
+                            <div class="form-control">
+                                @Model.Data.STD @Model.Data.PhoneNumber
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <input id="btnUpdate" class="btn btn-info btn-sm " type="button" value="Update" onclick="@("window.location.href='" + @Url.Action("update","account",new { id = Model.Data.Id, area = "employee"})+"'");" />
+                        <input type="button" class="btn btn-default btn-sm" value="Back" onclick="@("window.location.href='" + @Url.Action("index","dashboard",new { area="employee"}) + "'");" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

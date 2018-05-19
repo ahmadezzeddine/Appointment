@@ -1,20 +1,24 @@
-﻿using System.Linq;
-using System.Web.Mvc;
+﻿using App.Schedule.Domains.ViewModel;
+using App.Schedule.Web.Areas.Employee.Controllers.Base;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using App.Schedule.Domains.ViewModel;
-using App.Schedule.Web.Areas.Customer.Controllers.Base;
+using System.Web;
+using System.Web.Mvc;
 
-namespace App.Schedule.Web.Areas.Customer.Controllers
+namespace App.Schedule.Web.Areas.Employee.Controllers
 {
     public class AccountController : AccountBaseController
     {
+        [HttpGet]
         public async Task<ActionResult> Index()
         {
-            var model = await this.BusinessCustomerService.Get(RegisterCustomerViewModel.Customer.Id);
-            if(model.Data!=null && model.Data.ServiceLocation == null)
+            var model = await this.BusinessEmployeeService.Get(RegisterViewModel.Employee.Id);
+            if (model.Data != null && model.Data.ServiceLocation == null)
             {
                 var serviceLocation = await this.ServiceLocationService.Get(model.Data.ServiceLocationId);
-                if (serviceLocation != null && serviceLocation.Data !=null)
+                if (serviceLocation != null && serviceLocation.Data != null)
                 {
                     model.Data.ServiceLocation = serviceLocation.Data;
                 }
@@ -25,7 +29,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
         [HttpGet]
         public async Task<ActionResult> Update()
         {
-            var model = await this.BusinessCustomerService.Get(RegisterCustomerViewModel.Customer.Id);
+            var model = await this.BusinessEmployeeService.Get(RegisterViewModel.Employee.Id);
             if (model.Data != null && model.Data.ServiceLocation == null)
             {
                 model.Data.Password = "";
@@ -40,9 +44,9 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Update([Bind(Include = "Data")] ResponseViewModel<BusinessCustomerViewModel> model)
+        public async Task<ActionResult> Update([Bind(Include = "Data")] ResponseViewModel<BusinessEmployeeViewModel> model)
         {
-            var result = new ResponseViewModel<BusinessCustomerViewModel>();
+            var result = new ResponseViewModel<BusinessEmployeeViewModel>();
             try
             {
                 if (!ModelState.IsValid)
@@ -53,7 +57,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
                 }
                 else
                 {
-                    var response = await this.BusinessCustomerService.Update(model.Data);
+                    var response = await this.BusinessEmployeeService.Update(model.Data);
                     if (response.Status)
                     {
                         result.Status = true;
@@ -77,7 +81,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
         [HttpGet]
         public async Task<ActionResult> Password()
         {
-            var model = await this.BusinessCustomerService.Get(RegisterCustomerViewModel.Customer.Id);
+            var model = await this.BusinessEmployeeService.Get(RegisterViewModel.Employee.Id);
             if (model.Data != null && model.Data.ServiceLocation == null)
             {
                 model.Data.Password = "";
@@ -92,9 +96,9 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Password([Bind(Include = "Data")] ResponseViewModel<BusinessCustomerViewModel> model)
+        public async Task<ActionResult> Password([Bind(Include = "Data")] ResponseViewModel<BusinessEmployeeViewModel> model)
         {
-            var result = new ResponseViewModel<BusinessCustomerViewModel>();
+            var result = new ResponseViewModel<BusinessEmployeeViewModel>();
             try
             {
                 if (!ModelState.IsValid)
@@ -105,13 +109,13 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
                 }
                 else
                 {
-                    var response = await this.BusinessCustomerService.Get(RegisterCustomerViewModel.Customer.Id);
+                    var response = await this.BusinessEmployeeService.Get(RegisterViewModel.Employee.Id);
                     if (response.Status)
                     {
                         response.Data.Password = model.Data.Password;
                         response.Data.OldPassword = model.Data.OldPassword;
                         response.Data.ConfirmPassword = model.Data.ConfirmPassword;
-                        var getUserResponse = await this.BusinessCustomerService.Update(response.Data,true);
+                        var getUserResponse = await this.BusinessEmployeeService.Update(response.Data, true);
                         if (getUserResponse.Status)
                         {
                             result.Status = true;

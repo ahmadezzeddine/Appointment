@@ -177,6 +177,37 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
+        public async Task<ResponseViewModel<BusinessEmployeeViewModel>> Update(BusinessEmployeeViewModel model, bool hasPassword)
+        {
+            var returnResponse = new ResponseViewModel<BusinessEmployeeViewModel>();
+            try
+            {
+                var updateUser = new UserViewModel()
+                {
+                    UserType = UserType.BusinessEmployee,
+                    BusinessEmployee = model
+                };
+                var url = String.Format(AppointmentUserService.PUT_API_ACCOUNT);
+                var jsonContent = "";
+                if (hasPassword)
+                    jsonContent = JsonConvert.SerializeObject(updateUser);
+                else
+                    jsonContent = JsonConvert.SerializeObject(model);
+
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var response = await this.appointmentUserService.httpClient.PutAsync(url, content);
+                returnResponse = await base.GetHttpResponse<BusinessEmployeeViewModel>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
+
         public async Task<ResponseViewModel<BusinessEmployeeViewModel>> DeleteEmployee(BusinessEmployeeViewModel model)
         {
             var returnResponse = new ResponseViewModel<BusinessEmployeeViewModel>();

@@ -28,7 +28,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 }
                 else
                 {
-                    if (BusinessCategoryService != null)
+                    if (BusinessEmployeeService != null)
                     {
                         var response = await BusinessEmployeeService.VerifyLoginCredential(model.Data.Email, model.Data.Password);
                         result.Status = response.Status;

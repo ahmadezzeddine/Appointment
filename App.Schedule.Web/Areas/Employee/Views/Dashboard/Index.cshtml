@@ -1,0 +1,180 @@
+﻿@using FullCalendar
+@using App.Schedule.Web.Models;
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_AfterLoginEmployeeMaster.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/SubViews/_Error.cshtml", null)
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-lg-3 col-md-6" title="Appointments">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-book fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">
+                                    @{var totalAppointmentCount = (ViewBag.totalAppointmentCount != null) ? ViewBag.totalAppointmentCount : 0;}
+                                    @totalAppointmentCount
+                                </div>
+                                <div>Appointments</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("index","appointment",new { area="employee", type = (int)AppointmentViewStatus.All })">
+                        <div class="panel-footer">
+                            <span class="pull-left">View Details</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6" title="Pending Appointment">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-book fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">
+                                    @{var totalAppointmentPendingCount = (ViewBag.totalAppointmentPendingCount != null) ? ViewBag.totalAppointmentPendingCount : 0;}
+                                    @totalAppointmentPendingCount
+                                </div>
+                                <div>Pending</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("index","appointment",new { area="employee", type = (int)AppointmentViewStatus.Pending })">
+                        <div class="panel-footer">
+                            <span class="pull-left">View Details</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6" title="Completed Appointments">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-book fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">
+                                    @{var totalAppointmentCompletedCount = (ViewBag.totalAppointmentCompletedCount != null) ? ViewBag.totalAppointmentCompletedCount : 0;}
+                                    @totalAppointmentCompletedCount
+                                </div>
+                                <div>Completed</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("index","appointment",new { area="employee" , type = (int)AppointmentViewStatus.Completed })">
+                        <div class="panel-footer">
+                            <span class="pull-left">View Details</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6" title="Canceled Appointments">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-book fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">
+                                    @{var totalAppointmentCanceledCount = (ViewBag.totalAppointmentCanceledCount != null) ? ViewBag.totalAppointmentCanceledCount : 0;}
+                                    @totalAppointmentCanceledCount
+                                </div>
+                                <div>Canceled</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("index","appointment",new { area="employee", type = (int)AppointmentViewStatus.Canceled  })">
+                        <div class="panel-footer">
+                            <span class="pull-left">View Details</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="panel panel-success">
+                    <div class="panel-heading"><b>Appointment Calendar</b></div>
+                    <div class="panel-body">
+                        @Html.FullCalendar(settings =>
+                        {
+                            settings.Name = "ApCalendar";
+                            settings.CssClass = "css-test";
+                            settings.Header = new Header
+                            {
+                                Left = new ControlsBuilder().AddButton(HeaderButton.Prev).AddSeparator(HeaderSeparator.Adjacent)
+                                            .AddButton(HeaderButton.Next).AddSeparator(HeaderSeparator.Gap).AddButton(HeaderButton.Today),
+                                Center = new ControlsBuilder().AddTitle(),
+                            };
+                            settings.DefaultView = Enum.GetName(typeof(AvailableView), AvailableView.Month);
+                            settings.Editable = false;
+                            settings.AllDaySlot = false;
+                            settings.Selectable = false;
+                            settings.SlotDuration = TimeSpan.FromMinutes(30);
+                            settings.DragScroll = true;
+                            settings.Events = new EventCollection(Url.Action("getdiaryevents", "dashboard", new { area = "employee" }), EventCollectionType.JsonFeed);
+                        })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <b>Upcomming Appoitnments</b>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            @Html.FullCalendar(settings =>
+                            {
+                                settings.Name = "ApCalendarList";
+                                settings.CssClass = "css-test";
+                                settings.Header = new Header
+                                {
+                                    Left = new ControlsBuilder().AddButton(HeaderButton.Prev).AddSeparator(HeaderSeparator.Adjacent)
+                                                .AddButton(HeaderButton.Next).AddSeparator(HeaderSeparator.Gap).AddButton(HeaderButton.Today),
+                                    Center = new ControlsBuilder().AddTitle(),
+                                    Right = new ControlsBuilder().AddView(AvailableView.ListMonth)
+                                };
+                                settings.DefaultView = Enum.GetName(typeof(AvailableView), AvailableView.ListMonth);
+                                settings.Editable = true;
+                                settings.AllDaySlot = false;
+                                settings.Selectable = true;
+                                settings.SlotDuration = TimeSpan.FromMinutes(15);
+                                settings.Events = new EventCollection(Url.Action("getdiaryevents", "dashboard", new { area = "admin" }), EventCollectionType.JsonFeed);
+                            })
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Styles.Render("~/bundles/fullcalendar/css")
+    @Scripts.Render("~/bundles/fullcalendar/jquery")
+}

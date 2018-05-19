@@ -1,10 +1,10 @@
 ﻿@using PagedList;
 @using PagedList.Mvc;
 @using App.Schedule.Domains.ViewModel;
-@model ResponseViewModel<IPagedList<AppointmentDocumentViewModel>>
+@model ResponseViewModel<IPagedList<AppointmentFeedbackViewModel>>
 @{
-    ViewBag.Title = "Appointments Documents";
-    Layout = "~/Views/Shared/_AfterLoginCustomerMaster.cshtml";
+    ViewBag.Title = "Appointment Feedback";
+    Layout = "~/Views/Shared/_AfterLoginEmployeeMaster.cshtml";
 }
 <div class="row">
     <div class="col-lg-12">
@@ -15,7 +15,10 @@
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>Document List</b>
+                <b>Feedback List</b>
+                <a href="@Url.Action("add_feedback", "appointment", new { area = "employee", id = ViewBag.AppointmentId })" class="btn btn-info btn-xs pull-right">
+                    <span class="glyphicon glyphicon-plus"></span> Add
+                </a>
             </div>
             <div class="panel-body">
                 @if (Model == null || Model.Data == null)
@@ -27,14 +30,23 @@
                     <div class="tab-pane active">
                         <div class="col-lg-12">
                             <div class="row">
+                                <div class="form-group input-group input-group-sm">
+                                    <input type="text" class="form-control" id="searchKeyword" value="@ViewBag.search" placeholder="Search here" />
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index")?search=' + $('#searchKeyword').val()">
+                                            <i class="glyphicon glyphicon-search"></i>
+                                            Search
+                                        </button>
+                                    </div>
+                                </div>
                                 <table class="table table-condensed sortable" cellspacing="0" cellpadding="0">
                                     <thead>
                                         <tr>
                                             <th>
-                                                Title
+                                                Text
                                             </th>
-                                            <th class="col-lg-2 text-right">
-                                                Action
+                                            <th>
+                                                DateTime
                                             </th>
                                         </tr>
                                     </thead>
@@ -43,7 +55,7 @@
                                         {
                                             <tr>
                                                 <td colspan="7">
-                                                    No appointments document has been created yet.
+                                                    No appointment feedbacks has been created yet.
                                                 </td>
                                             </tr>
                                             return;
@@ -52,19 +64,22 @@
                                         {
                                             if (item != null)
                                             {
-                                                var style = item.IsEmployeeUpload ? "class = bg-info" : "class = bg-success";
-                                                <tr @style>
+                                                <tr>
                                                     <td>
                                                         <div class="row">
                                                             <div class="col-lg-12">
-                                                                @item.Title
+                                                                @item.Feedback
                                                             </div>
+                                                            @if (!item.IsEmployee)
+                                                            {
+                                                                <div class="col-lg-12">
+                                                                    <span class="fa fa-star-o" data-="@item.Rating"></span>
+                                                                </div>
+                                                            }
                                                         </div>
                                                     </td>
-                                                    <td class="text-right">
-                                                        <a title="Attachment" target="_blank" href="@item.DocumentLink" class="btn btn-default btn-xs">
-                                                            <span class="fa fa-file"></span>
-                                                        </a>
+                                                    <td>
+                                                        @item.Created.ToLocalTime()
                                                     </td>
                                                 </tr>
                                             }
@@ -77,17 +92,16 @@
                 </div>
                 <hr />
                 <div>
-                    <div>
-                        <span class="text-left">
-                            <a href="@Url.Action("index", "appointment", new { area = "customer"  })" class="btn btn-default btn-sm">
-                                Back
-                            </a>
-                        </span>
-                        <span class="pull-right">
-                            @Html.PagedListPager(Model.Data, page => Url.Action("Index", new { page, id = ViewBag.AppointmentId }))
-                        </span>
-                    </div>
+                    <span class="text-left">
+                        <a href="@Url.Action("index", "appointment", new { area = "employee"  })" class="btn btn-default btn-sm">
+                            Back
+                        </a>
+                    </span>
+                    <span class="pull-right">
+                        @Html.PagedListPager(Model.Data, page => Url.Action("Index", new { page, id = ViewBag.AppointmentId }))
+                    </span>
                 </div>
             </div>
         </div>
     </div>
+</div>

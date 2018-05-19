@@ -8,11 +8,13 @@ namespace App.Schedule.Domains.ViewModel
     {
         public BusinessViewModel Business { get; set; }
         public BusinessEmployeeViewModel Employee { get; set; }
+        public ServiceLocationViewModel ServiceLocation { get; set; }
+
     }
 
     public class RegisterCustomerViewModel
     {
-        public BusinessCustomerViewMdoel Customer { get; set; }
+        public BusinessCustomerViewModel Customer { get; set; }
         public ServiceLocationViewModel ServiceLocation { get; set; }
         public BusinessViewModel Business { get; set; }
     }

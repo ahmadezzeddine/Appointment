@@ -548,9 +548,9 @@ namespace App.Schedule.Domains.ViewModel
     /// Class is used to hold business customer information.
     /// </summary>
     /// 
-    public class BusinessCustomerViewMdoel
+    public class BusinessCustomerViewModel
     {
-        public BusinessCustomerViewMdoel()
+        public BusinessCustomerViewModel()
         {
             this.ProfilePicture = new List<byte>().ToArray();
         }
@@ -884,7 +884,7 @@ namespace App.Schedule.Domains.ViewModel
         public AdministratorViewModel SiteAdmin { get; set; }
         public RegisterViewModel BusinessAdmin { get; set; }
         public BusinessEmployeeViewModel BusinessEmployee { get; set; }
-        public BusinessCustomerViewMdoel BusinessCustomer { get; set; }
+        public BusinessCustomerViewModel BusinessCustomer { get; set; }
         public UserType UserType { get; set; }
     }
 

@@ -7,5 +7,6 @@
     {
         public tblBusiness Business { get; set; }
         public tblBusinessEmployee Employee { get; set; }
+        public tblServiceLocation ServiceLocation { get; set; }
     }
 }

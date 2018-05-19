@@ -57,7 +57,13 @@ namespace App.Schedule.WebApi.Controllers
                 }
                 else if (id.HasValue && type == TableType.EmployeeId)
                 {
-                    model = this.GetApppointments().Where(d => d.BusinessEmployeeId == id.Value).ToList();
+                    var appointmentInvitees = _db.tblAppointmentInvitees.Where(d => d.BusinessEmployeeId == id.Value).ToList();
+                    var appointments = this.GetApppointments();
+                    appointmentInvitees.ForEach((apinvitee) =>
+                    {
+                        var appointment = appointments.Find(d => d.Id == apinvitee.AppointmentId);
+                        model.Add(appointment);
+                    });
                 }
                 else if (id.HasValue && type == TableType.CustomerId)
                 {

@@ -82,10 +82,10 @@ namespace App.Schedule.WebApi.Controllers
                 if (type == TableType.BusinessId)
                 {
                     var locations = _db.tblServiceLocations.Where(d => d.BusinessId == id.Value).ToList();
-                    var model = new List<BusinessCustomerViewMdoel>();
+                    var model = new List<BusinessCustomerViewModel>();
                     foreach (var location in locations)
                     {
-                        var customers = _db.tblBusinessCustomers.Where(d => d.ServiceLocationId == location.Id).Select(s => new BusinessCustomerViewMdoel
+                        var customers = _db.tblBusinessCustomers.Where(d => d.ServiceLocationId == location.Id).Select(s => new BusinessCustomerViewModel
                         {
                             Created = s.Created,
                             Email = s.Email,
@@ -151,7 +151,7 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // POST: api/BusinessCustomer
-        public IHttpActionResult Post([FromBody]BusinessCustomerViewMdoel model)
+        public IHttpActionResult Post([FromBody]BusinessCustomerViewModel model)
         {
             try
             {
@@ -194,7 +194,7 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // PUT: api/BusinessCustomer/5,
-        public IHttpActionResult Put(long? id, [FromBody]BusinessCustomerViewMdoel model)
+        public IHttpActionResult Put(long? id, [FromBody]BusinessCustomerViewModel model)
         {
             try
             {
@@ -207,24 +207,32 @@ namespace App.Schedule.WebApi.Controllers
                         var businessCustomer = _db.tblBusinessCustomers.Find(id);
                         if (businessCustomer != null)
                         {
-                            businessCustomer.FirstName = model.FirstName;
-                            businessCustomer.LastName = model.LastName;
-                            businessCustomer.ProfilePicture = model.ProfilePicture;
-                            businessCustomer.Email = model.Email;
-                            businessCustomer.StdCode = model.StdCode;
-                            businessCustomer.PhoneNumber = model.PhoneNumber;
-                            businessCustomer.Add1 = model.Add1;
-                            businessCustomer.Add2 = model.Add2;
-                            businessCustomer.City = model.City;
-                            businessCustomer.State = model.State;
-                            businessCustomer.Zip = model.Zip;
-                            businessCustomer.ServiceLocationId = model.ServiceLocationId;
-                            _db.Entry(businessCustomer).State = EntityState.Modified;
-                            var response = _db.SaveChanges();
-                            if (response > 0)
-                                return Ok(new { status = true, data = businessCustomer, message = "" });
+                            var verifyPass = Security.Encrypt(model.Password, true);
+                            if (businessCustomer.Email.ToLower() == model.Email.ToLower() && businessCustomer.Password == verifyPass)
+                            {
+                                businessCustomer.FirstName = model.FirstName;
+                                businessCustomer.LastName = model.LastName;
+                                businessCustomer.ProfilePicture = model.ProfilePicture;
+                                businessCustomer.Email = model.Email;
+                                businessCustomer.StdCode = model.StdCode;
+                                businessCustomer.PhoneNumber = model.PhoneNumber;
+                                businessCustomer.Add1 = model.Add1;
+                                businessCustomer.Add2 = model.Add2;
+                                businessCustomer.City = model.City;
+                                businessCustomer.State = model.State;
+                                businessCustomer.Zip = model.Zip;
+                                businessCustomer.ServiceLocationId = model.ServiceLocationId;
+                                _db.Entry(businessCustomer).State = EntityState.Modified;
+                                var response = _db.SaveChanges();
+                                if (response > 0)
+                                    return Ok(new { status = true, data = businessCustomer, message = "" });
+                                else
+                                    return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
+                            }
                             else
-                                return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
+                            {
+                                return Ok(new { status = false, data = "", message = "Please provide a valid email id and password to update." });
+                            }
                         }
                     }
                     return Ok(new { status = false, data = "Not a valid data to update. Please provide a valid id." });
@@ -302,9 +310,9 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         [NonAction]
-        public ResponseViewModel<BusinessCustomerViewMdoel> Register(BusinessCustomerViewMdoel model)
+        public ResponseViewModel<BusinessCustomerViewModel> Register(BusinessCustomerViewModel model)
         {
-            var data = new ResponseViewModel<BusinessCustomerViewMdoel>();
+            var data = new ResponseViewModel<BusinessCustomerViewModel>();
             var hasEmail = _db.tblBusinessCustomers.Any(d => d.Email.ToLower() == model.Email.ToLower() && d.ServiceLocationId == model.ServiceLocationId);
             if (hasEmail)
             {
@@ -341,9 +349,9 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         [NonAction]
-        public ResponseViewModel<BusinessCustomerViewMdoel> DeleteCustomer(long? id)
+        public ResponseViewModel<BusinessCustomerViewModel> DeleteCustomer(long? id)
         {
-            var data = new ResponseViewModel<BusinessCustomerViewMdoel>();
+            var data = new ResponseViewModel<BusinessCustomerViewModel>();
             try
             {
                 if (id.HasValue)
@@ -353,7 +361,7 @@ namespace App.Schedule.WebApi.Controllers
                     {
                         _db.Entry(businessCustomer).State = EntityState.Deleted;
                         var response = _db.SaveChanges();
-                        data.Data = new BusinessCustomerViewMdoel() { Email = businessCustomer.Email, Id = businessCustomer.Id };
+                        data.Data = new BusinessCustomerViewModel() { Email = businessCustomer.Email, Id = businessCustomer.Id };
                         data.Message = response > 0 ? "success" : "failed";
                         data.Status = response > 0 ? true : false;
                     }
@@ -371,9 +379,9 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         [NonAction]
-        public ResponseViewModel<BusinessCustomerViewMdoel> UpdateCustomer(BusinessCustomerViewMdoel model)
+        public ResponseViewModel<BusinessCustomerViewModel> UpdateCustomer(BusinessCustomerViewModel model)
         {
-            var data = new ResponseViewModel<BusinessCustomerViewMdoel>();
+            var data = new ResponseViewModel<BusinessCustomerViewModel>();
             try
             {
                 var businessCustomer= _db.tblBusinessCustomers.Find(model.Id);

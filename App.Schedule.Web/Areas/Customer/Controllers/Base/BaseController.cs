@@ -64,7 +64,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers.Base
                 {
                     RegisterCustomerViewModel.ServiceLocation = new ServiceLocationViewModel();
                     RegisterCustomerViewModel.Business = new BusinessViewModel();
-                    RegisterCustomerViewModel.Customer = new BusinessCustomerViewMdoel();
+                    RegisterCustomerViewModel.Customer = new BusinessCustomerViewModel();
                     CustomerCookie = HttpContext.Request.Cookies[httpCookieKey];
                     if (CustomerCookie != null)
                     {

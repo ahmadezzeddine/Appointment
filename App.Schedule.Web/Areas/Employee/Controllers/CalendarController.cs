@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
-using App.Schedule.Web.Areas.Customer.Controllers.Base;
+using App.Schedule.Web.Areas.Employee.Controllers.Base;
 
-namespace App.Schedule.Web.Areas.Customer.Controllers
+namespace App.Schedule.Web.Areas.Employee.Controllers
 {
     public class CalendarController : CalendarBaseController
     {

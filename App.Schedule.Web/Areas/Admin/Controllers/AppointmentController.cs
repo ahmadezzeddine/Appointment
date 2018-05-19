@@ -992,7 +992,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         }
 
         [NonAction]
-        private async Task<List<BusinessCustomerViewMdoel>> GetCustomers()
+        private async Task<List<BusinessCustomerViewModel>> GetCustomers()
         {
             var response = await this.BusinessCustomerService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
             if (response != null)
@@ -1001,7 +1001,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             }
             else
             {
-                return new List<BusinessCustomerViewMdoel>();
+                return new List<BusinessCustomerViewModel>();
             }
         }
 

@@ -13,7 +13,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(int? page, string search)
         {
-            var model = this.ResponseHelper.GetResponse<IPagedList<BusinessCustomerViewMdoel>>();
+            var model = this.ResponseHelper.GetResponse<IPagedList<BusinessCustomerViewModel>>();
             var pageNumber = page ?? 1;
             ViewBag.search = search;
 
@@ -28,7 +28,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 model.Message = result.Message;
                 if (search == null)
                 {
-                    model.Data = data.ToPagedList<BusinessCustomerViewMdoel>(pageNumber, 5);
+                    model.Data = data.ToPagedList<BusinessCustomerViewModel>(pageNumber, 5);
                 }
                 else
                 {
@@ -46,8 +46,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<ActionResult> Add()
         {
-            var response = this.ResponseHelper.GetResponse<BusinessCustomerViewMdoel>();
-            response.Data = new BusinessCustomerViewMdoel();
+            var response = this.ResponseHelper.GetResponse<BusinessCustomerViewModel>();
+            response.Data = new BusinessCustomerViewModel();
             response.Data.ServiceLocationId = RegisterViewModel.Employee.ServiceLocationId;
             response.Status = true;
 
@@ -63,9 +63,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Add([Bind(Include = "Data")]ResponseViewModel<BusinessCustomerViewMdoel> model)
+        public async Task<ActionResult> Add([Bind(Include = "Data")]ResponseViewModel<BusinessCustomerViewModel> model)
         {
-            var result = new ResponseViewModel<BusinessCustomerViewMdoel>();
+            var result = new ResponseViewModel<BusinessCustomerViewModel>();
 
             if (!ModelState.IsValid)
             {
@@ -122,9 +122,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Data")]ResponseViewModel<BusinessCustomerViewMdoel> model)
+        public async Task<ActionResult> Edit([Bind(Include = "Data")]ResponseViewModel<BusinessCustomerViewModel> model)
         {
-            var result = new ResponseViewModel<BusinessCustomerViewMdoel>();
+            var result = new ResponseViewModel<BusinessCustomerViewModel>();
             var response = await this.BusinessCustomerService.Update(model.Data);
             if (response == null)
             {
@@ -161,9 +161,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Deactive([Bind(Include = "Data")]ResponseViewModel<BusinessCustomerViewMdoel> model)
+        public async Task<ActionResult> Deactive([Bind(Include = "Data")]ResponseViewModel<BusinessCustomerViewModel> model)
         {
-            var result = new ResponseViewModel<BusinessCustomerViewMdoel>();
+            var result = new ResponseViewModel<BusinessCustomerViewModel>();
             var response = await this.BusinessCustomerService.Deactive(model.Data.Id, model.Data.IsActive);
             if (response == null)
             {
@@ -200,9 +200,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete([Bind(Include = "Data")]ResponseViewModel<BusinessCustomerViewMdoel> model)
+        public async Task<ActionResult> Delete([Bind(Include = "Data")]ResponseViewModel<BusinessCustomerViewModel> model)
         {
-            var result = new ResponseViewModel<BusinessCustomerViewMdoel>();
+            var result = new ResponseViewModel<BusinessCustomerViewModel>();
             var response = await this.BusinessCustomerService.Delete(model.Data.Id);
             if (response == null)
             {

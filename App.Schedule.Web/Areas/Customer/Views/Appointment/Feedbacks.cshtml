@@ -92,11 +92,17 @@
                 </div>
                 <hr />
                 <div>
-                    <span class="pull-right">
-                        @Html.PagedListPager(Model.Data, page => Url.Action("Index", new { page }))
-                    </span>
+                    <div>
+                        <span class="text-left">
+                            <a href="@Url.Action("index", "appointment", new { area = "customer"  })" class="btn btn-default btn-sm">
+                                Back
+                            </a>
+                        </span>
+                        <span class="pull-right">
+                            @Html.PagedListPager(Model.Data, page => Url.Action("Index", new { page, id = ViewBag.AppointmentId }))
+                        </span>
+                    </div>
                 </div>
-            </div>
         </div>
     </div>
 </div>

@@ -60,10 +60,15 @@ namespace App.Schedule.WebApi.Controllers
                     }
                     return Ok(new { status = true, data = model, message = "success" });
                 }
-                else
+                else if(type == TableType.ServiceLocationId)
                 {
                     var serviceModel = _db.tblBusinessEmployees.Where(d => d.ServiceLocationId == id.Value).ToList();
                     return Ok(new { status = true, data = serviceModel, message = "success" });
+                }
+                else
+                {
+                    var model = _db.tblBusinessEmployees.ToList();
+                    return Ok(new { status = true, data = model, message = "success" });
                 }
             }
             catch (Exception ex)
@@ -111,6 +116,7 @@ namespace App.Schedule.WebApi.Controllers
                     var serviceLocation = _db.tblServiceLocations.Find(loginSession.Employee.ServiceLocationId);
                     if (serviceLocation != null)
                     {
+                        loginSession.ServiceLocation = serviceLocation;
                         loginSession.Business = _db.tblBusinesses.Find(serviceLocation.BusinessId);
                         return Ok(new { status = true, data = loginSession, message = "Valid credential" });
                     }
@@ -188,7 +194,8 @@ namespace App.Schedule.WebApi.Controllers
                     var businessEmployee = _db.tblBusinessEmployees.Find(id);
                     if (businessEmployee != null)
                     {
-                        if (businessEmployee.Email.ToLower() == model.Email.ToLower())
+                        var verifyPass = Security.Encrypt(model.Password, true);
+                        if (businessEmployee.Email.ToLower() == model.Email.ToLower() && businessEmployee.Password == verifyPass)
                         {
                             businessEmployee.FirstName = model.FirstName;
                             businessEmployee.LastName = model.LastName;
@@ -204,7 +211,7 @@ namespace App.Schedule.WebApi.Controllers
                         }
                         else
                         {
-                            return Ok(new { status = false, data = "", message = "Please provide a valid id to update." });
+                            return Ok(new { status = false, data = "", message = "Please provide a valid email id and password to update." });
                         }
                     }
                     else
