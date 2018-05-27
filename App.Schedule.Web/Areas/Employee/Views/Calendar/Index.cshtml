@@ -17,22 +17,29 @@
             </div>
             <div class="panel-body">
                 @Html.FullCalendar(settings =>
-                     {
-                         settings.Name = "ApCalendar";
-                         settings.CssClass = "css-test";
-                         settings.Header = new Header
-                         {
-                             Left = new ControlsBuilder().AddButton(HeaderButton.Prev).AddSeparator(HeaderSeparator.Adjacent)
-                                         .AddButton(HeaderButton.Next).AddSeparator(HeaderSeparator.Gap).AddButton(HeaderButton.Today),
-                             Right = new ControlsBuilder().AddTitle(),
-                         };
-                         settings.DefaultView = Enum.GetName(typeof(AvailableView), AvailableView.Month);
-                         settings.Editable = false;
-                         settings.AllDaySlot = false;
-                         settings.Selectable = false;
-                         settings.SlotDuration = TimeSpan.FromMinutes(30);
-                         settings.Events = new EventCollection(Url.Action("getdiaryevents", "dashboard", new { area = "employee" }), EventCollectionType.JsonFeed);
-                     })
+           {
+               settings.Name = "ApCalendar";
+               settings.CssClass = "css-test";
+               settings.Header = new Header
+               {
+                   Left = new ControlsBuilder().AddButton(HeaderButton.Prev).AddSeparator(HeaderSeparator.Adjacent)
+                               .AddButton(HeaderButton.Next).AddSeparator(HeaderSeparator.Gap).AddButton(HeaderButton.Today),
+                   Right = new ControlsBuilder().AddTitle(),
+               };
+               settings.DefaultView = Enum.GetName(typeof(AvailableView), AvailableView.Month);
+               settings.Editable = false;
+               settings.AllDaySlot = false;
+               settings.Selectable = false;
+               settings.Droppable = false;
+               settings.DragScroll = false;
+               settings.Editable = false;
+               settings.NowIndicator = true;
+               settings.EventStartEditable = false;
+               settings.EventDurationEditable = false;
+               settings.SlotDuration = TimeSpan.FromMinutes(30);
+               settings.Events = new EventCollection(Url.Action("getdiaryevents", "dashboard", new { area = "employee" }), EventCollectionType.JsonFeed);
+               settings.BusinessHours = ViewBag.BusinessHours;
+           })
             </div>
         </div>
     </div>

@@ -22,13 +22,13 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                     Data = result.Data.Business
                 };
 
-                //get countries and set to dropdown list
-                var Countries = await this.GetCountries();
-                ViewBag.CountryId = Countries.Select(s => new SelectListItem()
-                {
-                    Value = Convert.ToString(s.Id),
-                    Text = s.Name
-                });
+                ////get countries and set to dropdown list
+                //var Countries = await this.GetCountries();
+                //ViewBag.CountryId = Countries.Select(s => new SelectListItem()
+                //{
+                //    Value = Convert.ToString(s.Id),
+                //    Text = s.Name
+                //});
 
                 //get timezones and set to dropdown list
                 var Timezones = await this.GetTimeZone();

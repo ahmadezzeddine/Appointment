@@ -97,17 +97,26 @@ namespace App.Schedule.Web.Admin.Controllers
                 }
                 else
                 {
-                    var res = await this.AdminService.Get(id.Value);
-                    if (res.Status)
+                    if (id.Value == admin.Id)
                     {
-                        model.HasError = false;
-                        model.Data = res.Data;
-                        model.Data.Password = "";
-                        model.Data.ConfirmPassword = "";
+                        var res = await this.AdminService.Get(id.Value);
+                        if (res.Status)
+                        {
+                            model.HasError = false;
+                            model.Data = res.Data;
+                            model.Data.Password = "";
+                            model.Data.ConfirmPassword = "";
+                        }
+                        else
+                        {
+                            model.Error = res.Message;
+                        }
                     }
                     else
                     {
-                        model.Error = res.Message;
+                        model.HasError = true;
+                        model.Error = "You can not update other user information.";
+                        model.ErrorDescription = "";
                     }
                 }
             }
@@ -134,18 +143,26 @@ namespace App.Schedule.Web.Admin.Controllers
                 }
                 else
                 {
-                    model.Data.Created = DateTime.Now.ToUniversalTime();
-                    model.Data.AdministratorId = admin.Id;
-                    var response = await this.AdminService.Update(model.Data);
-                    if (response.Status)
+                    if (model.Data.Id == admin.Id)
                     {
-                        result.Status = true;
-                        result.Message = response.Message;
+                        model.Data.Created = DateTime.Now.ToUniversalTime();
+                        model.Data.AdministratorId = admin.Id;
+                        var response = await this.AdminService.Update(model.Data);
+                        if (response.Status)
+                        {
+                            result.Status = true;
+                            result.Message = response.Message;
+                        }
+                        else
+                        {
+                            result.Status = false;
+                            result.Message = response.Message;
+                        }
                     }
                     else
                     {
                         result.Status = false;
-                        result.Message = response.Message;
+                        result.Message = "You cann't update other user information.";
                     }
                 }
             }
@@ -204,14 +221,14 @@ namespace App.Schedule.Web.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete([Bind(Include = "Data")] ServiceDataViewModel<AdministratorViewModel> model)
         {
-            var result = new ResponseViewModel<string>();
+            var result = new ResponseViewModel<AdministratorViewModel>();
             try
             {
                 if (model.Data!=null)
                 {
                     if (model.Data.Email.ToLower() != this.admin.Email.ToLower())
                     {
-                        var response = await this.AdminService.Delete(model.Data.Id);
+                        var response = await this.AdminService.DeleteEmployee(model.Data);
                         if (response.Status)
                         {
                             result.Status = true;

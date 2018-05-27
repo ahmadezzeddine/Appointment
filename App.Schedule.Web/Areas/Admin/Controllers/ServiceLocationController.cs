@@ -71,12 +71,12 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             response.Data = new ServiceLocationViewModel();
             response.Data.BusinessId = id.Value;
 
-            var Countries = await this.GetCountries();
-            ViewBag.CountryId = Countries.Select(s => new SelectListItem()
-            {
-                Value = Convert.ToString(s.Id),
-                Text = s.Name
-            });
+            //var Countries = await this.GetCountries();
+            //ViewBag.CountryId = Countries.Select(s => new SelectListItem()
+            //{
+            //    Value = Convert.ToString(s.Id),
+            //    Text = s.Name
+            //});
 
             var Timezones = await this.GetTimeZone();
             ViewBag.TimezoneId = Timezones.Select(s => new SelectListItem()
@@ -258,6 +258,70 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 return View(Response);
             }
         }
+
+        [HttpGet]
+        public async Task<ActionResult> Employees(long? id, int? page)
+        {
+            var model = this.ResponseHelper.GetResponse<IPagedList<BusinessEmployeeViewModel>>();
+            var pageNumber = page ?? 1;
+
+            if (!id.HasValue)
+                return RedirectToAction("index", "servicelocation", new { area = "admin" });
+
+            ViewBag.Id = id.Value;
+
+            var result = await this.BusinessEmployeeService.Gets(id.Value, TableType.ServiceLocationId);
+            if (result != null && result.Status)
+            {
+                model.Status = result.Status;
+                model.Message = result.Message;
+                model.Data = result.Data.ToPagedList<BusinessEmployeeViewModel>(pageNumber, 10);
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Customers(long? id, int? page)
+        {
+            var model = this.ResponseHelper.GetResponse<IPagedList<BusinessCustomerViewModel>>();
+            var pageNumber = page ?? 1;
+
+            if (!id.HasValue)
+                return RedirectToAction("index", "servicelocation", new { area = "admin" });
+
+            ViewBag.Id = id.Value;
+
+            var result = await this.BusinessCustomerService.Gets(id.Value, TableType.ServiceLocationId);
+            if (result != null && result.Status)
+            {
+                model.Status = result.Status;
+                model.Message = result.Message;
+                model.Data = result.Data.ToPagedList<BusinessCustomerViewModel>(pageNumber, 10);
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Offers(long? id, int? page)
+        {
+            var model = this.ResponseHelper.GetResponse<IPagedList<BusinessOfferViewModel>>();
+            var pageNumber = page ?? 1;
+
+            if (!id.HasValue)
+                return RedirectToAction("index", "servicelocation", new { area = "admin" });
+
+            ViewBag.Id = id.Value;
+
+            var result = await this.BusinessOfferServiceLocationService.Gets(id.Value, TableType.ServiceLocationId);
+            if (result != null && result.Status)
+            {
+                model.Status = result.Status;
+                model.Message = result.Message;
+                model.Data = result.Data.ToPagedList<BusinessOfferViewModel>(pageNumber, 10);
+            }
+            return View(model);
+        }
+
 
         /// <summary>
         /// To get the list of countries in the database using web api call.

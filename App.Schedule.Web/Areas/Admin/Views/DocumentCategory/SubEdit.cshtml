@@ -1,7 +1,7 @@
 ﻿@using App.Schedule.Domains.ViewModel;
 @model ResponseViewModel<DocumentCategoryViewModel>
 @{
-    ViewBag.Title = "Update Sub Category";
+    ViewBag.Title = "Sub Category";
     Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
 }
 <div class="row">
@@ -20,7 +20,7 @@
         {
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Update Sub Category
+                    Information
                 </div>
                 <div class="panel-body">
 
@@ -60,7 +60,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="col-lg-12">
-                                <input id="btnSave" class="btn btn-info btn-sm " type="button" value="Update" onclick="onSubmit(this,'@Url.Action("subindex", "documentcategory", new { area = "admin", id = Model.Data.ParentId })')" />
+                                <input id="btnSave" class="btn btn-info btn-sm " type="button" value="Submit" onclick="onSubmit(this,'@Url.Action("subindex", "documentcategory", new { area = "admin", id = Model.Data.ParentId })')" />
                                 <input type="button" class="btn btn-default btn-sm" value="Back" onclick="@("window.location.href='" + @Url.Action("subindex", "documentcategory", new { area = "admin", id = Model.Data.ParentId }) + "'");" />
                             </div>
                         </div>

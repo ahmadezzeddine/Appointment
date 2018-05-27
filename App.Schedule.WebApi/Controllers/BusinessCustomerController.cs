@@ -8,6 +8,9 @@ using App.Schedule.Domains;
 using System.Collections.Generic;
 using App.Schedule.Domains.Helpers;
 using App.Schedule.Domains.ViewModel;
+using System.Threading.Tasks;
+using App.Schedule.WebApi.Services;
+using System.Text;
 
 namespace App.Schedule.WebApi.Controllers
 {
@@ -68,9 +71,7 @@ namespace App.Schedule.WebApi.Controllers
                 return Ok(new { status = false, data = "", message = ex.Message.ToString() });
             }
         }
-
-
-
+        
         // GET: api/businessemployee
         public IHttpActionResult Get(long? id, TableType type)
         {
@@ -310,7 +311,7 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         [NonAction]
-        public ResponseViewModel<BusinessCustomerViewModel> Register(BusinessCustomerViewModel model)
+        public async Task<ResponseViewModel<BusinessCustomerViewModel>> Register(BusinessCustomerViewModel model)
         {
             var data = new ResponseViewModel<BusinessCustomerViewModel>();
             var hasEmail = _db.tblBusinessCustomers.Any(d => d.Email.ToLower() == model.Email.ToLower() && d.ServiceLocationId == model.ServiceLocationId);
@@ -344,6 +345,7 @@ namespace App.Schedule.WebApi.Controllers
                 data.Message = response > 0 ? "success" : "failed";
                 data.Status = response > 0 ? true : false;
                 data.Data = model;
+                await this.SendMail(model);
             }
             return data;
         }
@@ -418,6 +420,36 @@ namespace App.Schedule.WebApi.Controllers
                 data.Message = "ex: " + ex.Message.ToString();
             }
             return data;
+        }
+
+        [NonAction]
+        private async Task SendMail(BusinessCustomerViewModel model)
+        {
+            var mailService = new MailService();
+            var toMail = new List<string>();
+            if (String.IsNullOrEmpty(model.Email))
+            {
+                toMail.Add(model.Email);
+            }
+            var htmlMailBody = new StringBuilder();
+            htmlMailBody.Append("<div>");
+            htmlMailBody.Append("<div>Hi,</div><br /><br />");
+            htmlMailBody.Append("<div>Your Appointment Scheduler Login credential information:</div><br />");
+            htmlMailBody.Append(string.Format("<div>Login Id : {0}</div>", model.Email));
+            htmlMailBody.Append(string.Format("<div>Password : {0}</div>", model.Password));
+            htmlMailBody.Append("<br /><br />");
+            htmlMailBody.Append("<h4>Regard's</h4>");
+            htmlMailBody.Append("<h3>Appointment Scheduler</h3>");
+            htmlMailBody.Append("</div>");
+
+            var mailInfomration = new MailInformation()
+            {
+                To = toMail,
+                Subject = "Appointment Scheduler, Site admin login id and password",
+                HtmlText = htmlMailBody.ToString(),
+                PlainText = ""
+            };
+            var mailResponse = await mailService.SendMail(mailInfomration);
         }
     }
 }

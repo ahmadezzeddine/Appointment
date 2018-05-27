@@ -38,7 +38,6 @@
     min-width: 300px;
     max-width: 400px;
     padding: 20px;
-    background-color: #D3D4D8;
 }
 
     .absolute-center.is-login {
@@ -47,7 +46,6 @@
         min-width: 300px;
         max-width: 400px;
         padding: 10px;
-        background-color: #D3D4D8;
         color: #4D606E;
     }
 

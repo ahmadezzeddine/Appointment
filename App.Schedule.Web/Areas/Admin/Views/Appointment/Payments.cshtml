@@ -3,13 +3,13 @@
 @using App.Schedule.Domains.ViewModel;
 @model ResponseViewModel<IPagedList<AppointmentViewModel>>
 @{
-    ViewBag.Title = "Payments";
+    ViewBag.Title = "Appointment Payments";
     Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
 }
 
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Payment List</h1>
+        <h1 class="page-header">Appointment Payments</h1>
     </div>
 </div>
 <div class="row">
@@ -21,7 +21,7 @@
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>Appointment Payments</b>
+                <b>Information</b>
             </div>
             <div class="panel-body">
                 @if (Model == null || Model.Data == null)

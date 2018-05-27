@@ -20,8 +20,14 @@
             <li><a href="@Url.Action("location","servicelocation",new { area = "admin", id = ViewBag.Id})">Location</a></li>
             <li class="active"><a href="@Url.Action("hour","servicelocation",new { area = "admin", id = ViewBag.Id})">Business Hours</a></li>
             <li><a href="@Url.Action("holiday","servicelocation",new { area = "admin", id = ViewBag.Id})">Business Holiday</a></li>
+            <li><a href="@Url.Action("employees","servicelocation",new { area = "admin", id = ViewBag.Id})">Employe</a></li>
+            <li><a href="@Url.Action("customers","servicelocation",new { area = "admin", id = ViewBag.Id})">Customer</a></li>
+            <li><a href="@Url.Action("offers","servicelocation",new { area = "admin", id = ViewBag.Id})">Offer</a></li>
         </ul>
         <div class="panel panel-default" style="border-top:0;">
+            <div class="panel-heading">
+                <b>Information</b>
+            </div>
             <div class="panel-body">
                 @if (Model == null & Model.Data == null)
                 {

@@ -22,19 +22,23 @@
             <li><a href="@Url.Action("location","servicelocation",new { area = "admin", id = ViewBag.Id})">Location</a></li>
             <li><a href="@Url.Action("hour","servicelocation",new { area = "admin", id = ViewBag.Id})">Business Hours</a></li>
             <li class="active"><a href="@Url.Action("holiday","servicelocation",new { area = "admin", id = ViewBag.Id})">Business Holiday</a></li>
+            <li><a href="@Url.Action("employees","servicelocation",new { area = "admin", id = ViewBag.Id})">Employe</a></li>
+            <li><a href="@Url.Action("customers","servicelocation",new { area = "admin", id = ViewBag.Id})">Customer</a></li>
+            <li><a href="@Url.Action("offers","servicelocation",new { area = "admin", id = ViewBag.Id})">Offer</a></li>
         </ul>
         <div class="panel panel-default" style="border-top:0;">
-            <div style="padding:10px;">
+            <div class="panel-heading">
+                <b>Information</b>
                 <a href="@Url.Action("add", "holiday", new { area = "admin" })" class="btn btn-info btn-xs pull-right">
                     <span class="glyphicon glyphicon-plus"></span> Add
                 </a>
             </div>
             <div class="panel-body">
                 @if (Model == null & Model.Data == null)
-                {
-                    <text>Please try again later.</text>
-                    return;
-                }
+        {
+            <text>Please try again later.</text>
+    return;
+}
                 <div class="tab-content">
                     <div class="tab-pane active">
                         <div class="col-lg-12">
@@ -52,42 +56,42 @@
                                     </thead>
                                     <tbody>
                                         @foreach (var item in Model.Data)
+                                {
+                                    if (item == null)
+                                    {
+                                        return;
+                                    }
+                                    <tr>
+                                        <td class="text-left">
+                                            @{
+                                        if (item.Type == (int)HolidayType.Specified)
                                         {
-                                            if (item == null)
-                                            {
-                                                return;
+                                            <text>On </text> @item.OnDate.ToString("MMMM dd, yyyy (dddd)");
+                                }
+                                else if (item.Type == (int)HolidayType.RpeatEveryWeek)
+                                {
+                                    <text>Every </text> @item.OnDate.ToString("dd"); <text> day of the month since </text> @item.OnDate.ToString("MMMM yyyy");
+                        }
+                        else if (item.Type == (int)HolidayType.RepeatEveryMonth)
+                        {
+                            <text>Every </text> @item.OnDate.ToString("dddd"); <text> since </text> @item.OnDate.ToString("MMMM dd, yyyy");
+                }
+                else if (item.Type == (int)HolidayType.RepeatEveryYear)
+                {
+                    <text>On </text> @item.OnDate.ToString("MMMM dd"); <text> every year since </text> @item.OnDate.ToString("yyyy");
+        }
                                             }
-                                            <tr>
-                                                <td class="text-left">
-                                                    @{
-                                                        if (item.Type == (int)HolidayType.Specified)
-                                                        {
-                                                            <text>On </text> @item.OnDate.ToString("MMMM dd, yyyy (dddd)");
-                                                        }
-                                                        else if (item.Type == (int)HolidayType.RpeatEveryWeek)
-                                                        {
-                                                            <text>Every </text> @item.OnDate.ToString("dd"); <text> day of the month since </text>  @item.OnDate.ToString("MMMM yyyy");
-                                                        }
-                                                        else if (item.Type == (int)HolidayType.RepeatEveryMonth)
-                                                        {
-                                                            <text>Every </text> @item.OnDate.ToString("dddd"); <text> since </text>  @item.OnDate.ToString("MMMM dd, yyyy");
-                                                        }
-                                                        else if (item.Type == (int)HolidayType.RepeatEveryYear)
-                                                        {
-                                                            <text>On </text> @item.OnDate.ToString("MMMM dd"); <text> every year since </text>  @item.OnDate.ToString("yyyy");
-                                                        }
-                                                    }
-                                                </td>
-                                                <td class="text-right">
-                                                    <a title="Update" onclick="@("window.location.href='" + @Url.Action("edit", "holiday", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
-                                                        <span class="fa fa-pencil"></span>
-                                                    </a>
-                                                    <a title="Update" onclick="@("window.location.href='" + @Url.Action("delete", "holiday", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
-                                                        <span class="fa fa-trash"></span>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                                        }
+                                        </td>
+                                        <td class="text-right">
+                                            <a title="Update" onclick="@("window.location.href='" + @Url.Action("edit", "holiday", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                <span class="fa fa-pencil"></span>
+                                            </a>
+                                            <a title="Update" onclick="@("window.location.href='" + @Url.Action("delete", "holiday", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                <span class="fa fa-trash"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                        }
                                     </tbody>
                                 </table>
                             </div>

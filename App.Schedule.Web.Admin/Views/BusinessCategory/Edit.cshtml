@@ -6,7 +6,7 @@
 }
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Business Category</h1>
+        <h1 class="page-header">Update Business Category</h1>
     </div>
 </div>
 <div class="row">
@@ -22,10 +22,9 @@
             {
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <i class="fa fa-bars fa-fw"></i> Update Category
+                        <i class="fa fa-bars fa-fw"></i> Information
                     </div>
                     <div class="panel-body">
-
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(d => d.Data.Id)
                         @Html.HiddenFor(d => d.Data.IsActive)

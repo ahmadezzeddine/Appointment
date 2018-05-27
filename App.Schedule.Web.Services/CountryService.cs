@@ -30,9 +30,22 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
-        public Task<ResponseViewModel<CountryViewModel>> Get(long? id)
+        public async Task<ResponseViewModel<CountryViewModel>> Get(long? id)
         {
-            return null;
+            var returnResponse = new ResponseViewModel<CountryViewModel>();
+            try
+            {
+                var url = String.Format(AppointmentUserService.GET_COUNTRIE_BYID, id.Value);
+                var response = await this.appointmentUserService.httpClient.GetAsync(url);
+                returnResponse = await base.GetHttpResponse<CountryViewModel>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
         }
         
         public Task<ResponseViewModel<CountryViewModel>> Add(CountryViewModel model)

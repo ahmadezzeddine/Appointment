@@ -28,7 +28,7 @@ namespace App.Schedule.Web.Services
             catch (Exception ex)
             {
                 returnResponse.Data = null;
-                returnResponse.Message = "There was a problem. Please try again return. reason: " + ex.Message.ToString();
+                returnResponse.Message = "Please try again later. ex: " + ex.Message.ToString();
                 returnResponse.Status = false;
             }
             return returnResponse;
@@ -46,7 +46,7 @@ namespace App.Schedule.Web.Services
             catch (Exception ex)
             {
                 returnResponse.Data = null;
-                returnResponse.Message = "There was a problem. Please try again return. reason: " + ex.Message.ToString();
+                returnResponse.Message = "Please try again later. ex: " + ex.Message.ToString();
                 returnResponse.Status = false;
             }
             return returnResponse;
@@ -66,7 +66,7 @@ namespace App.Schedule.Web.Services
             catch (Exception ex)
             {
                 returnResponse.Data = null;
-                returnResponse.Message = "There was a problem. Please try again return. reason: " + ex.Message.ToString();
+                returnResponse.Message = "Please try again later. ex: " + ex.Message.ToString();
                 returnResponse.Status = false;
             }
             return returnResponse;
@@ -86,7 +86,7 @@ namespace App.Schedule.Web.Services
             catch (Exception ex)
             {
                 returnResponse.Data = null;
-                returnResponse.Message = "There was a problem. Please try again return. reason: " + ex.Message.ToString();
+                returnResponse.Message = "Please try again later. ex: " + ex.Message.ToString();
                 returnResponse.Status = false;
             }
             return returnResponse;
@@ -111,7 +111,7 @@ namespace App.Schedule.Web.Services
             }
             catch (Exception ex)
             {
-                returnResponse.Message = "There was a problem. Please try again return. reason: " + ex.Message.ToString();
+                returnResponse.Message = "Please try again later. ex: " + ex.Message.ToString();
                 returnResponse.Status = false;
             }
             return returnResponse;
@@ -136,7 +136,7 @@ namespace App.Schedule.Web.Services
             }
             catch (Exception ex)
             {
-                returnResponse.Message = "There was a problem. Please try again return. reason: " + ex.Message.ToString();
+                returnResponse.Message = "Please try again later. ex: " + ex.Message.ToString();
                 returnResponse.Status = false;
             }
             return returnResponse;

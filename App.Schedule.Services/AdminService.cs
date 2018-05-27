@@ -28,7 +28,7 @@ namespace App.Schedule.Web.Admin.Services
             catch (Exception ex)
             {
                 returnResponse.Data = null;
-                returnResponse.Message = "There was a problem. Please try again return. reason: " + ex.Message.ToString();
+                returnResponse.Message = "Please try again later. ex:  " + ex.Message.ToString();
                 returnResponse.Status = false;
             }
             return returnResponse;
@@ -46,7 +46,7 @@ namespace App.Schedule.Web.Admin.Services
             catch (Exception ex)
             {
                 returnResponse.Data = null;
-                returnResponse.Message = "There was a problem. Please try again return. reason: " + ex.Message.ToString();
+                returnResponse.Message = "Please try again later. ex:  " + ex.Message.ToString();
                 returnResponse.Status = false;
             }
             return returnResponse;
@@ -74,7 +74,7 @@ namespace App.Schedule.Web.Admin.Services
             catch (Exception ex)
             {
                 returnResponse.Data = null;
-                returnResponse.Message = "There was a problem. Please try again return. reason: " + ex.Message.ToString();
+                returnResponse.Message = "Please try again later. ex:  " + ex.Message.ToString();
                 returnResponse.Status = false;
             }
             return returnResponse;
@@ -103,7 +103,7 @@ namespace App.Schedule.Web.Admin.Services
             catch (Exception ex)
             {
                 returnResponse.Data = null;
-                returnResponse.Message = "There was a problem. Please try again return. reason: " + ex.Message.ToString();
+                returnResponse.Message = "Please try again later. ex:  " + ex.Message.ToString();
                 returnResponse.Status = false;
             }
             return returnResponse;
@@ -121,14 +121,14 @@ namespace App.Schedule.Web.Admin.Services
                 }
                 else
                 {
-                    var url = string.Format(AppointmentService.DELETE_ADMIN, id.Value, false, DeleteType.DeleteRecord);
+                    var url = string.Format(AppointmentService.DELETE_ADMIN, id.Value, false, (int)DeleteType.DeleteRecord);
                     var response = await this.appointmentService.httpClient.DeleteAsync(url);
                     returnResponse = await base.GetHttpResponse<AdministratorViewModel>(response);
                 }
             }
             catch (Exception ex)
             {
-                returnResponse.Message = "There was a problem. Please try again return. reason: " + ex.Message.ToString();
+                returnResponse.Message = "Please try again later. ex:  " + ex.Message.ToString();
                 returnResponse.Status = false;
             }
             return returnResponse;
@@ -153,32 +153,75 @@ namespace App.Schedule.Web.Admin.Services
             }
             catch (Exception ex)
             {
-                returnResponse.Message = "There was a problem. Please try again return. reason: " + ex.Message.ToString();
+                returnResponse.Message = "Please try again later. ex:  " + ex.Message.ToString();
                 returnResponse.Status = false;
             }
             return returnResponse;
         }
 
-        public async Task<ResponseViewModel<AdministratorViewModel>> VerifyLoginCredential(string Email, string Password)
+        public async Task<ResponseViewModel<AdministratorViewModel>> VerifyLoginCredential(string Email, string Password,bool hasForgot)
         {
             var returnResponse = new ResponseViewModel<AdministratorViewModel>();
             try
             {
                 Password = HttpContext.Current.Server.UrlEncode(Password);
-                var url = String.Format(AppointmentService.GET_ADMIN_BYEMAIL, Email, Password);
+                var url = String.Format(AppointmentService.GET_ADMIN_BYEMAIL, Email, Password,hasForgot);
                 var response = await this.appointmentService.httpClient.GetAsync(url);
                 returnResponse = await base.GetHttpResponse<AdministratorViewModel>(response);
             }
             catch (Exception ex)
             {
                 returnResponse.Data = null;
-                returnResponse.Message = "There was a problem. Please try again return. reason: " + ex.Message.ToString();
+                returnResponse.Message = "Please try again later. ex:  " + ex.Message.ToString();
                 returnResponse.Status = false;
             }
             return returnResponse;
         }
 
         public async Task<ResponseViewModel<string>> VerifyAndGetAdminAccessToken(string Email, string Password)
+        {
+            var returnResponse = new ResponseViewModel<string>();
+            try
+            {
+                var model = "username=" + Email + "&password=" + Password + "&grant_type=password";
+                var content = new StringContent(model, Encoding.UTF8, "text/plain");
+                var url = String.Format(AppointmentService.GET_ADMIN_TOKEN);
+                var response = await this.appointmentService.httpClient.PostAsync(url, content);
+                var result = await response.Content.ReadAsStringAsync();
+                dynamic res = JsonConvert.DeserializeObject(result);
+                if (res != null)
+                {
+                    var error = (string)res.error;
+                    if (res.error != null && error.Contains("invalid"))
+                    {
+                        returnResponse.Status = false;
+                        returnResponse.Data = null;
+                        returnResponse.Message = "Please check your id and password";
+                        return returnResponse;
+                    }
+                    returnResponse.Status = true;
+                    returnResponse.Data = res.access_token;
+                    returnResponse.Message = "Success";
+                    return returnResponse;
+                }
+                else
+                {
+                    returnResponse.Status = false;
+                    returnResponse.Data = null;
+                    returnResponse.Message = "There was a problem. Please try agian later.";
+                    return returnResponse;
+                }
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = ex.Message.ToString();
+                returnResponse.Status = false;
+                return returnResponse;
+            }
+        }
+
+        public async Task<ResponseViewModel<string>> VerifyAndGetAdminAccessToken11(string Email, string Password)
         {
             var returnResponse = new ResponseViewModel<string>();
             try
@@ -216,6 +259,31 @@ namespace App.Schedule.Web.Admin.Services
             {
                 returnResponse.Data = null;
                 returnResponse.Message = ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
+        public async Task<ResponseViewModel<AdministratorViewModel>> DeleteEmployee(AdministratorViewModel model)
+        {
+            var returnResponse = new ResponseViewModel<AdministratorViewModel>();
+            try
+            {
+                var registerModel = new UserViewModel()
+                {
+                    UserType = UserType.SiteAdmin,
+                    SiteAdmin = model
+                };
+                var jsonContent = JsonConvert.SerializeObject(registerModel);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var url = String.Format(AppointmentService.DELETE_API_ACCOUNT);
+                var response = await this.appointmentService.httpClient.PostAsync(url, content);
+                returnResponse = await base.GetHttpResponse<AdministratorViewModel>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
                 returnResponse.Status = false;
             }
             return returnResponse;

@@ -8,6 +8,9 @@ using App.Schedule.Context;
 using System.Collections.Generic;
 using App.Schedule.Domains.Helpers;
 using App.Schedule.Domains.ViewModel;
+using System.Threading.Tasks;
+using App.Schedule.WebApi.Services;
+using System.Text;
 
 namespace App.Schedule.WebApi.Controllers
 {
@@ -62,8 +65,8 @@ namespace App.Schedule.WebApi.Controllers
                 }
                 else if(type == TableType.ServiceLocationId)
                 {
-                    var serviceModel = _db.tblBusinessEmployees.Where(d => d.ServiceLocationId == id.Value).ToList();
-                    return Ok(new { status = true, data = serviceModel, message = "success" });
+                    var employees = _db.tblBusinessEmployees.Where(d => d.ServiceLocationId == id.Value).ToList();
+                    return Ok(new { status = true, data = employees, message = "success" });
                 }
                 else
                 {
@@ -194,7 +197,7 @@ namespace App.Schedule.WebApi.Controllers
                     var businessEmployee = _db.tblBusinessEmployees.Find(id);
                     if (businessEmployee != null)
                     {
-                        var verifyPass = Security.Encrypt(model.Password, true);
+                        var verifyPass = Security.Encrypt(model.OldPassword, true);
                         if (businessEmployee.Email.ToLower() == model.Email.ToLower() && businessEmployee.Password == verifyPass)
                         {
                             businessEmployee.FirstName = model.FirstName;
@@ -292,7 +295,7 @@ namespace App.Schedule.WebApi.Controllers
 
         [NonAction]
         [AllowAnonymous]
-        public ResponseViewModel<BusinessEmployeeViewModel> Register(BusinessEmployeeViewModel model)
+        public async Task<ResponseViewModel<BusinessEmployeeViewModel>> Register(BusinessEmployeeViewModel model)
         {
             var data = new ResponseViewModel<BusinessEmployeeViewModel>();
             var hasEmail = _db.tblBusinessEmployees.Any(d => d.Email.ToLower() == model.Email.ToLower() && d.ServiceLocationId == model.ServiceLocationId);
@@ -321,6 +324,7 @@ namespace App.Schedule.WebApi.Controllers
                 data.Message = response > 0 ? "success" : "failed";
                 data.Status = response > 0 ? true : false;
                 data.Data = model;
+                await this.SendMail(model);
             }
             return data;
         }
@@ -439,6 +443,36 @@ namespace App.Schedule.WebApi.Controllers
                 data.Message = ex.Message.ToString();
             }
             return data;
+        }
+
+        [NonAction]
+        private async Task<MailResponse> SendMail(BusinessEmployeeViewModel model)
+        {
+            var mailService = new MailService();
+            var toMail = new List<string>();
+            if (String.IsNullOrEmpty(model.Email))
+            {
+                toMail.Add(model.Email);
+            }
+            var htmlMailBody = new StringBuilder();
+            htmlMailBody.Append("<div>");
+            htmlMailBody.Append("<div>Hi,</div><br /><br />");
+            htmlMailBody.Append("<div>Your Appointment Scheduler Login credential information:</div><br />");
+            htmlMailBody.Append(string.Format("<div>Login Id : {0}</div>", model.Email));
+            htmlMailBody.Append(string.Format("<div>Password : {0}</div>", model.Password));
+            htmlMailBody.Append("<br /><br />");
+            htmlMailBody.Append("<h4>Regard's</h4>");
+            htmlMailBody.Append("<h3>Appointment Scheduler</h3>");
+            htmlMailBody.Append("</div>");
+
+            var mailInfomration = new MailInformation()
+            {
+                To = toMail,
+                Subject = "Appointment Scheduler, Site admin login id and password",
+                HtmlText = htmlMailBody.ToString(),
+                PlainText = ""
+            };
+            return await mailService.SendMail(mailInfomration);
         }
     }
 }

@@ -15,6 +15,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers.Base
         protected BusinessEmployeeService BusinessEmployeeService;
         protected BusinessOfferService BusinessOfferService;
         protected BusinessService BusinessService;
+        protected BusinessHourService BusinessHourService;
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -35,6 +36,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers.Base
                 this.BusinessEmployeeService = new BusinessEmployeeService(this.Token);
                 this.AppointmentDocumentService = new AppointmentDocumentService(this.Token);
                 this.AppointmentFeedbackService = new AppointmentFeedbackService(this.Token);
+                this.BusinessHourService = new BusinessHourService(this.Token);
             }
         }
     }

@@ -8,6 +8,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         protected ServiceLocationService ServiceLocationService;
         protected BusinessHourService BusinessHourService;
         protected BusinessHolidayService BusinessHolidayService;
+        protected BusinessEmployeeService BusinessEmployeeService;
+        protected BusinessCustomerService BusinessCustomerService;
+        protected BusinessOfferServiceLocationService BusinessOfferServiceLocationService;
         protected TimezoneService TimezoneService;
         protected CountryService CountryService;
 
@@ -25,6 +28,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 this.BusinessHolidayService = new BusinessHolidayService(this.Token);
                 this.TimezoneService = new TimezoneService(this.Token);
                 this.CountryService = new CountryService(this.Token);
+                this.BusinessEmployeeService = new BusinessEmployeeService(this.Token);
+                this.BusinessCustomerService = new BusinessCustomerService(this.Token);
+                this.BusinessOfferServiceLocationService = new BusinessOfferServiceLocationService(this.Token);
             }
         }
     }

@@ -17,6 +17,8 @@ using App.Schedule.Domains.ViewModel;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.AspNet.Identity.EntityFramework;
+using App.Schedule.WebApi.Services;
+using System.Text;
 
 namespace App.Schedule.WebApi.Controllers
 {
@@ -493,7 +495,14 @@ namespace App.Schedule.WebApi.Controllers
                 {
                     try
                     {
-                        var registerViewModel = adminController.RegisterAdmin(admin);
+                        var checkUser = await UserManager.FindByEmailAsync(admin.Email);
+                        if (checkUser != null)
+                        {
+                            appointmetntDb.Rollback();
+                            return Ok(new { status = false, data = model, message = "Email id has already been taken. Please try another email id." });
+                        }
+
+                        var registerViewModel = await adminController.RegisterAdmin(admin);
                         if (registerViewModel.Status)
                         {
                             var user = new ApplicationUser() { UserName = admin.Email, Email = admin.Email };
@@ -502,12 +511,12 @@ namespace App.Schedule.WebApi.Controllers
                             if (response.Succeeded)
                             {
                                 appointmetntDb.Commit();
-                                return Ok(new { status = true, data = registerViewModel, message = "Registeration successfully." });
+                                return Ok(new { status = true, data = registerViewModel, message = "Registration successfully." });
                             }
                             else
                             {
                                 appointmetntDb.Rollback();
-                                return Ok(new { status = false, data = registerViewModel, message = "Registeration failed. ex:" + response.Errors });
+                                return Ok(new { status = false, data = registerViewModel, message = "Registration failed. ex:" + response.Errors });
                             }
                         }
                         else
@@ -536,6 +545,13 @@ namespace App.Schedule.WebApi.Controllers
                 {
                     try
                     {
+                        var checkUser = await UserManager.FindByEmailAsync(businessAdmin.Employee.Email);
+                        if(checkUser != null)
+                        {
+                            appointmetntDb.Rollback();
+                            return Ok(new { status = false, data = model, message = "Email id has already been taken. Please try another email id." });
+                        }
+
                         var registerViewModel = businessController.Register(businessAdmin);
                         if (registerViewModel.Status)
                         {
@@ -545,21 +561,23 @@ namespace App.Schedule.WebApi.Controllers
                             if (response.Succeeded)
                             {
                                 appointmetntDb.Commit();
-                                return Ok(new { status = true, data = registerViewModel, message = "Registeration successfully." });
+                                //Send welcome mail
+                                var res =await this.SendBusinessWelcomeMail(model.BusinessAdmin.Business);
+                                return Ok(new { status = true, data = registerViewModel, message = "Registration successfully." });
                             }
                             else
                             {
                                 appointmetntDb.Rollback();
-                                return Ok(new { status = false, data = registerViewModel, message = "Registeration failed. ex:" + response.Errors });
+                                return Ok(new { status = false, data = registerViewModel, message = "Registration failed. ex:" + response.Errors });
                             }
                         }
                         else
                         {
                             appointmetntDb.Rollback();
-                            return Ok(new { status = false, data = registerViewModel, message = "There was problem. Please try again later." });
+                            return Ok(new { status = false, data = registerViewModel, message = registerViewModel.Message != null ? registerViewModel.Message : "Please try again later." });
                         }
                     }
-                    catch
+                    catch(Exception ex)
                     {
                         appointmetntDb.Rollback();
                         var user = UserManager.FindByEmail(businessAdmin.Employee.Email);
@@ -567,7 +585,7 @@ namespace App.Schedule.WebApi.Controllers
                         {
                             UserManager.Delete(user);
                         }
-                        return Ok(new { status = false, data = "", message = "There was a problem to register account, Please try again later." });
+                        return Ok(new { status = false, data = "", message = "Please try again later. ex:"+ex.Message.ToString() });
                     }
                 }
             }
@@ -579,7 +597,14 @@ namespace App.Schedule.WebApi.Controllers
                 {
                     try
                     {
-                        var registerViewModel = businessEmployeeController.Register(businessEmployee);
+                        var checkUser = await UserManager.FindByEmailAsync(businessEmployee.Email);
+                        if (checkUser != null)
+                        {
+                            appointmetntDb.Rollback();
+                            return Ok(new { status = false, data = model, message = "Email id has already been taken. Please try another email id." });
+                        }
+
+                        var registerViewModel =await businessEmployeeController.Register(businessEmployee);
                         if (registerViewModel.Status)
                         {
                             var user = new ApplicationUser() { UserName = businessEmployee.Email, Email = businessEmployee.Email };
@@ -588,21 +613,21 @@ namespace App.Schedule.WebApi.Controllers
                             if (response.Succeeded)
                             {
                                 appointmetntDb.Commit();
-                                return Ok(new { status = true, data = registerViewModel.Data, message = "Registeration successfully." });
+                                return Ok(new { status = true, data = registerViewModel.Data, message = "Registration successfully." });
                             }
                             else
                             {
                                 appointmetntDb.Rollback();
-                                return Ok(new { status = false, data = registerViewModel.Data, message = "Registeration failed. ex:" + response.Errors });
+                                return Ok(new { status = false, data = registerViewModel.Data, message = "Registration failed. ex:" + response.Errors });
                             }
                         }
                         else
                         {
                             appointmetntDb.Rollback();
-                            return Ok(new { status = false, data = "", message = "There was problem. Please try again later." });
+                            return Ok(new { status = false, data = registerViewModel, message = registerViewModel.Message != null ? registerViewModel.Message : "Please try again later." });
                         }
                     }
-                    catch
+                    catch(Exception ex)
                     {
                         appointmetntDb.Rollback();
                         var user = UserManager.FindByEmail(businessEmployee.Email);
@@ -610,7 +635,7 @@ namespace App.Schedule.WebApi.Controllers
                         {
                             UserManager.Delete(user);
                         }
-                        return Ok(new { status = false, data = "", message = "There was a problem to register account, Please try again later." });
+                        return Ok(new { status = false, data = "", message = "Please try again later. ex:"+ex.Message.ToString() });
                     }
                 }
             }
@@ -622,7 +647,14 @@ namespace App.Schedule.WebApi.Controllers
                 {
                     try
                     {
-                        var registerViewModel = businessCustomerController.Register(businessCustomer);
+                        var checkUser = await UserManager.FindByEmailAsync(businessCustomer.Email);
+                        if (checkUser != null)
+                        {
+                            appointmetntDb.Rollback();
+                            return Ok(new { status = false, data = model, message = "Email id has already been taken. Please try another email id." });
+                        }
+
+                        var registerViewModel = await businessCustomerController.Register(businessCustomer);
                         if (registerViewModel.Status)
                         {
                             var user = new ApplicationUser() { UserName = businessCustomer.Email, Email = businessCustomer.Email };
@@ -631,21 +663,21 @@ namespace App.Schedule.WebApi.Controllers
                             if (response.Succeeded)
                             {
                                 appointmetntDb.Commit();
-                                return Ok(new { status = true, data = registerViewModel.Data, message = "Registeration successfully." });
+                                return Ok(new { status = true, data = registerViewModel.Data, message = "Registration successfully." });
                             }
                             else
                             {
                                 appointmetntDb.Rollback();
-                                return Ok(new { status = false, data = registerViewModel.Data, message = "Registeration failed. ex:" + response.Errors });
+                                return Ok(new { status = false, data = registerViewModel.Data, message = "Registration failed. ex:" + response.Errors });
                             }
                         }
                         else
                         {
                             appointmetntDb.Rollback();
-                            return Ok(new { status = false, data = "", message = "There was problem. Please try again later." });
+                            return Ok(new { status = false, data = registerViewModel, message = registerViewModel.Message != null ? registerViewModel.Message : "Please try again later." });
                         }
                     }
-                    catch
+                    catch(Exception ex)
                     {
                         appointmetntDb.Rollback();
                         var user = UserManager.FindByEmail(businessCustomer.Email);
@@ -653,7 +685,7 @@ namespace App.Schedule.WebApi.Controllers
                         {
                             UserManager.Delete(user);
                         }
-                        return Ok(new { status = false, data = "", message = "There was a problem to register account, Please try again later." });
+                        return Ok(new { status = false, data = "", message = "Please try again later. ex:"+ ex.Message.ToString()});
                     }
                 }
             }
@@ -791,15 +823,58 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // PUT api/Account/DeleteUser
-        [AllowAnonymous]
-        [Route("DeleteUser")]
         [HttpPost]
+        [Route("DeleteUser")]
+        [AllowAnonymous]
         public async Task<IHttpActionResult> DeleteUser(UserViewModel model)
         {
             if (model == null)
                 return Ok(new { status = false, data = "", message = "Invalid data model." });
 
-            if (model.UserType == UserType.BusinessEmployee)
+            if(model.UserType == UserType.SiteAdmin)
+            {
+                var siteAdmin = model.SiteAdmin;
+                var administratorController = new AdministratorController();
+                using (var appointmetntDb = _dbAppointment.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var deleteEmploye = administratorController.DeleteSiteAdmin(siteAdmin.Id);
+                        if (deleteEmploye.Status)
+                        {
+                            var user = await UserManager.FindByEmailAsync(deleteEmploye.Data.Email);
+                            if (user != null)
+                            {
+                                var response = await UserManager.DeleteAsync(user);
+                                if (response.Succeeded)
+                                {
+                                    return Ok(new { status = true, data = deleteEmploye.Data, message = "deleted successfully." });
+                                }
+                                else
+                                {
+                                    appointmetntDb.Rollback();
+                                    return Ok(new { status = false, data = deleteEmploye.Data, message = "deletion failed. ex:" + response.Errors });
+                                }
+                            }
+                            else
+                            {
+                                return Ok(new { status = true, data = deleteEmploye.Data, message = "deleted successfully." });
+                            }
+                        }
+                        else
+                        {
+                            appointmetntDb.Rollback();
+                            return Ok(new { status = false, data = "", message = "There was problem. Please try again later." });
+                        }
+                    }
+                    catch
+                    {
+                        appointmetntDb.Rollback();
+                        return Ok(new { status = false, data = "", message = "There was a problem Please try again later." });
+                    }
+                }
+            }
+            else if (model.UserType == UserType.BusinessEmployee)
             {
                 var employe = model.BusinessEmployee;
                 var businessEmployeeController = new BusinessEmployeeController();
@@ -875,6 +950,35 @@ namespace App.Schedule.WebApi.Controllers
             {
                 return Ok(new { status = false, data = "", message = "Invalid user." });
             }
+        }
+
+        [NonAction]
+        private async Task<MailResponse> SendBusinessWelcomeMail(BusinessViewModel model)
+        {
+            var mailService = new MailService();
+            var toMail = new List<string>();
+            if (String.IsNullOrEmpty(model.Email))
+            {
+                toMail.Add(model.Email);
+            }
+            var htmlMailBody = new StringBuilder();
+            htmlMailBody.Append("<div>");
+            htmlMailBody.Append("<div>Hi, "+model.Name+"</div><br /><br />");
+            htmlMailBody.Append("<div><h3>Successfully created account.</h3></div><br />");
+            htmlMailBody.Append("<div><p>There are lots of things you can do with appointment scheduler. it will track your business day to day meeting. and so on.. <a href='#'>read more...</a></p></div><br />");
+            htmlMailBody.Append("<br /><br /><br />");
+            htmlMailBody.Append("<h4>Regard's</h4>");
+            htmlMailBody.Append("<h3>Appointment Scheduler</h3>");
+            htmlMailBody.Append("</div>");
+
+            var mailInfomration = new MailInformation()
+            {
+                To = toMail,
+                Subject = "Appointment Scheduler, Site admin login id and password",
+                HtmlText = htmlMailBody.ToString(),
+                PlainText = ""
+            };
+            return await mailService.SendMail(mailInfomration);
         }
     }
 }

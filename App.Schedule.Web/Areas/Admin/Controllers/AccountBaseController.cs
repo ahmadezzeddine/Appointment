@@ -8,6 +8,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         protected RegisterService BusinessService;
         protected MembershipService MembershipService;
         protected BusinessEmployeeService BusinessEmployeeService;
+        protected CountryService CountryService;
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -21,6 +22,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 this.BusinessService = new RegisterService(this.Token);
                 this.MembershipService = new MembershipService(this.Token);
                 this.BusinessEmployeeService = new BusinessEmployeeService(this.Token);
+                this.CountryService = new CountryService(this.Token);
             }
         }
     }

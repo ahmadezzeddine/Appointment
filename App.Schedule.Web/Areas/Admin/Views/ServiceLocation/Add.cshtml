@@ -7,7 +7,7 @@
 }
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Service Location Setup</h1>
+        <h1 class="page-header">New Location</h1>
     </div>
 </div>
 <div class="row">
@@ -20,7 +20,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>Add Service Location</b>
+                <b>Information</b>
             </div>
             @using (Ajax.BeginForm("add", "servicelocation", new AjaxOptions { }))
             {
@@ -34,6 +34,7 @@
                         <div class="row">
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(d => d.Data.BusinessId)
+                            @Html.HiddenFor(d => d.Data.CountryId)
                             <div class="form-group col-lg-6">
                                 <label>Business Name</label>
                                 @Html.EditorFor(d => d.Data.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Service Location Name" } })
@@ -41,50 +42,34 @@
                             <div class="form-group col-lg-6">
                                 <label>Description</label>
                                 @Html.EditorFor(d => d.Data.Description, new { htmlAttributes = new { @class = "form-control", @placeholder = "Location Description" } })
-
-
                             </div>
                             <div class="form-group col-lg-6">
                                 <label>Address 1</label>
                                 @Html.EditorFor(d => d.Data.Add1, new { htmlAttributes = new { @class = "form-control", @placeholder = "Address 1" } })
-
-
                             </div>
                             <div class="form-group col-lg-6">
                                 <label>Address 2</label>
                                 @Html.EditorFor(d => d.Data.Add2, new { htmlAttributes = new { @class = "form-control", @placeholder = "Address 2" } })
-
-
                             </div>
                             <div class="form-group col-lg-6">
                                 <label>City</label>
                                 @Html.EditorFor(d => d.Data.City, new { htmlAttributes = new { @class = "form-control", @placeholder = "City" } })
-
-
                             </div>
                             <div class="form-group col-lg-6">
                                 <label>State</label>
                                 @Html.EditorFor(d => d.Data.State, new { htmlAttributes = new { @class = "form-control", @placeholder = "State" } })
-
-
                             </div>
                             <div class="form-group col-lg-6">
                                 <label>Zip</label>
                                 @Html.EditorFor(d => d.Data.Zip, new { htmlAttributes = new { @class = "form-control", @placeholder = "Zip" } })
-
-
                             </div>
-                            <div class="form-group col-lg-6">
+                            @*<div class="form-group col-lg-6">
                                 <label>Country</label>
                                 @Html.DropDownListFor(d => d.Data.CountryId, new SelectList(ViewBag.CountryId ?? null, "Value", "Text"), "-- Select Country --", new { @class = "form-control" })
-
-
-                            </div>
+                            </div>*@
                             <div class="form-group col-lg-6">
                                 <label>Timezone</label>
                                 @Html.DropDownListFor(d => d.Data.TimezoneId, new SelectList(ViewBag.TimezoneId, "Value", "Text"), "-- Select Timezone --", new { @class = "form-control" })
-
-
                             </div>
                         </div>
                     </div>

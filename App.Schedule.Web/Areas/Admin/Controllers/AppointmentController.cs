@@ -117,7 +117,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 Text = s.Value
             });
 
-            var patternType = from PatternType e in Enum.GetValues(typeof(PatternType))
+            var patternType = from PatternTypeOnce e in Enum.GetValues(typeof(PatternTypeOnce))
                               select new
                               {
                                   ID = (int)e,
@@ -169,7 +169,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 model.Data.StatusType = (int)StatusType.Confirmed;
                 var startdate = model.Data.StartDate.HasValue ? model.Data.StartDate.Value : DateTime.Now;
                 var starttime = model.Data.StartTime.HasValue ? model.Data.StartTime.Value : DateTime.Now;
-                var enddate = model.Data.EndDate.HasValue ? model.Data.EndDate.Value : DateTime.Now;
+                //var enddate = model.Data.EndDate.HasValue ? model.Data.EndDate.Value : DateTime.Now;
+                var enddate = model.Data.StartDate.HasValue ? model.Data.StartDate.Value : DateTime.Now;
                 var endtime = model.Data.EndTime.HasValue ? model.Data.EndTime.Value : DateTime.Now;
                 model.Data.StartTime = new DateTime(startdate.Year, startdate.Month, startdate.Day, starttime.Hour, starttime.Minute, starttime.Second);
                 model.Data.EndTime = new DateTime(enddate.Year, enddate.Month, enddate.Day, endtime.Hour, endtime.Minute, endtime.Second);

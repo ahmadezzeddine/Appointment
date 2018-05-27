@@ -5,6 +5,7 @@ using System.Data.Entity;
 using App.Schedule.Context;
 using App.Schedule.Domains;
 using App.Schedule.Domains.ViewModel;
+using System.Collections.Generic;
 
 namespace App.Schedule.WebApi.Controllers
 {
@@ -69,6 +70,42 @@ namespace App.Schedule.WebApi.Controllers
                 return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
+
+        // GET: api/businessemployee
+        public IHttpActionResult Get(long? id, TableType tableType)
+        {
+            try
+            {
+                if (!id.HasValue)
+                    return Ok(new { status = false, data = "", message = "Please provide valid ID." });
+
+                if (tableType == TableType.ServiceLocationId)
+                {
+                    var offerLocations = _db.tblBusinessOfferServiceLocations.Where(d => d.ServiceLocationId == id.Value).ToList();
+                    var offers = new List<tblBusinessOffer>();
+                    foreach (var location in offerLocations)
+                    {
+                        var offer = _db.tblBusinessOffers.Find(location.BusinessOfferId);
+                        offers.Add(offer);
+                    }
+                    return Ok(new { status = true, data = offers, message = "success" });
+                }
+                else if(tableType == TableType.EmployeeId)
+                {
+                    var serviceModel = _db.tblBusinessOffers.Where(d => d.BusinessEmployeeId == id.Value).ToList();
+                    return Ok(new { status = true, data = serviceModel, message = "success" });
+                }
+                else
+                {
+                    return Ok(new { status = true, data = "", message = "success" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, data = "", message = ex.Message.ToString() });
+            }
+        }
+
 
         // GET: api/businessofferservicelocation/5
         public IHttpActionResult Get(long? id)

@@ -1,13 +1,13 @@
 ﻿@using App.Schedule.Domains.ViewModel;
-@model ResponseViewModel<BusinessCustomerViewMdoel>
+@model ResponseViewModel<BusinessCustomerViewModel>
 
 @{
-    ViewBag.Title = "New Business Customer";
+    ViewBag.Title = "Business Customer";
     Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
 }
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Business Customer Setup</h1>
+        <h1 class="page-header">New Business Customer Setup</h1>
     </div>
 </div>
 <div class="row">
@@ -20,7 +20,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>Add Customer</b>
+                <b>Information</b>
             </div>
             @using (Ajax.BeginForm("add", "customer", new AjaxOptions { }))
             {

@@ -1,10 +1,11 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using App.Schedule.Web.Admin.Models;
 
 namespace App.Schedule.Web.Admin.Controllers
 {
-    public class ForgotController : Controller
+    public class ForgotController : LoginBaseController
     {
         [HttpGet]
         public ActionResult Index()
@@ -13,7 +14,7 @@ namespace App.Schedule.Web.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(ForgotViewModel model)
+        public async Task<ActionResult> Index(ForgotViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -21,7 +22,14 @@ namespace App.Schedule.Web.Admin.Controllers
                 return Json(new { status = false, message = errMessage }, JsonRequestBehavior.AllowGet);
             }
             else
-                return Json(new { status = false, message = "There was a problem. Please try again later." }, JsonRequestBehavior.AllowGet);
+            {
+                var response = await this.AdminService.VerifyLoginCredential(model.Email,"", true);
+                if (response != null)
+                {
+                    return Json(new { status = response.Status, model = "", message = response.Message }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return Json(new { status = false, message = "There was a problem. Please try again later." }, JsonRequestBehavior.AllowGet);
         }
     }
 }

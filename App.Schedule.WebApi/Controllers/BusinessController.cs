@@ -122,6 +122,8 @@ namespace App.Schedule.WebApi.Controllers
                     var business = _db.tblBusinesses.Find(id);
                     if (business != null)
                     {
+                        var timeZone = _db.tblTimezones.Where(d => d.Id == model.TimezoneId).FirstOrDefault();
+                        var country = _db.tblCountries.Find(timeZone.CountryId);
                         if (type == FieldType.All)
                         {
                             business.Name = model.Name;
@@ -134,7 +136,7 @@ namespace App.Schedule.WebApi.Controllers
                             business.Add2 = model.Add2;
                             business.City = model.City;
                             business.State = model.State;
-                            business.CountryId = model.CountryId;
+                            business.CountryId = country.Id;
                             business.Email = model.Email;
                             business.Website = model.Website;
                             business.Zip = model.Zip;
@@ -218,178 +220,176 @@ namespace App.Schedule.WebApi.Controllers
             }
             else
             {
-                using (var dbTran = _db.Database.BeginTransaction())
+                try
                 {
-                    try
+                    var timeZone = _db.tblTimezones.Where(d => d.Id == model.Business.TimezoneId).FirstOrDefault();
+                    var country = _db.tblCountries.Find(timeZone.CountryId);
+                    var business = new tblBusiness()
                     {
-                        var business = new tblBusiness()
+                        Name = model.Business.Name,
+                        ShortName = model.Business.ShortName,
+                        IsInternational = model.Business.IsInternational,
+                        FaxNumbers = model.Business.FaxNumbers,
+                        PhoneNumbers = model.Business.PhoneNumbers,
+                        Logo = model.Business.Logo,
+                        Add1 = model.Business.Add1,
+                        Add2 = model.Business.Add2,
+                        City = model.Business.City,
+                        State = model.Business.State,
+                        CountryId = country.Id,
+                        Email = model.Business.Email,
+                        Website = model.Business.Website,
+                        Created = DateTime.Now.ToUniversalTime(),
+                        IsActive = model.Business.IsActive,
+                        Zip = model.Business.Zip,
+                        MembershipId = model.Business.MembershipId,
+                        BusinessCategoryId = model.Business.BusinessCategoryId,
+                        TimezoneId = model.Business.TimezoneId
+                    };
+
+                    _db.tblBusinesses.Add(business);
+                    var responseBusiness = _db.SaveChanges();
+
+                    var serviceLocation = new tblServiceLocation()
+                    {
+                        Name = "Main Address",
+                        Add1 = model.Business.Add1,
+                        Add2 = model.Business.Add2,
+                        City = model.Business.City,
+                        State = model.Business.State,
+                        CountryId = country.Id,
+                        Created = DateTime.Now.ToUniversalTime(),
+                        IsActive = model.Business.IsActive,
+                        Zip = model.Business.Zip,
+                        BusinessId = business.Id,
+                        TimezoneId = business.TimezoneId,
+                        Description = ""
+                    };
+
+                    _db.tblServiceLocations.Add(serviceLocation);
+                    var responseServiceLocation = _db.SaveChanges();
+
+                    //Setup default business hours
+                    //var businessHourController = new BusinessHourController();
+                    //var responseBusinessHour = businessHourController.SetupBusinessHours(serviceLocation.Id);
+                    var today = DateTime.Now;
+                    var date = new DateTime(today.Year, today.Month, today.Day, 8, 00, 00, DateTimeKind.Utc);
+                    for (int i = 0; i < 7; i++)
+                    {
+                        var businessHour = new tblBusinessHour()
                         {
-                            Name = model.Business.Name,
-                            ShortName = model.Business.ShortName,
-                            IsInternational = model.Business.IsInternational,
-                            FaxNumbers = model.Business.FaxNumbers,
-                            PhoneNumbers = model.Business.PhoneNumbers,
-                            Logo = model.Business.Logo,
-                            Add1 = model.Business.Add1,
-                            Add2 = model.Business.Add2,
-                            City = model.Business.City,
-                            State = model.Business.State,
-                            CountryId = model.Business.CountryId,
-                            Email = model.Business.Email,
-                            Website = model.Business.Website,
-                            Created = DateTime.Now.ToUniversalTime(),
-                            IsActive = model.Business.IsActive,
-                            Zip = model.Business.Zip,
-                            MembershipId = model.Business.MembershipId,
-                            BusinessCategoryId = model.Business.BusinessCategoryId,
-                            TimezoneId = model.Business.TimezoneId
+                            WeekDayId = i,
+                            IsStartDay = i == 0 ? true : false,
+                            IsHoliday = false,
+                            From = date,
+                            To = date.AddHours(10),
+                            IsSplit1 = false,
+                            FromSplit1 = null,
+                            ToSplit1 = null,
+                            IsSplit2 = false,
+                            FromSplit2 = null,
+                            ToSplit2 = null,
+                            ServiceLocationId = serviceLocation.Id
                         };
-
-                        _db.tblBusinesses.Add(business);
-                        var responseBusiness = _db.SaveChanges();
-
-                        var serviceLocation = new tblServiceLocation()
-                        {
-                            Name = "Main Address",
-                            Add1 = model.Business.Add1,
-                            Add2 = model.Business.Add2,
-                            City = model.Business.City,
-                            State = model.Business.State,
-                            CountryId = model.Business.CountryId.Value,
-                            Created = DateTime.Now.ToUniversalTime(),
-                            IsActive = model.Business.IsActive,
-                            Zip = model.Business.Zip,
-                            BusinessId = business.Id,
-                            TimezoneId = business.TimezoneId,
-                            Description = ""
-                        };
-
-                        _db.tblServiceLocations.Add(serviceLocation);
-                        var responseServiceLocation = _db.SaveChanges();
-
-                        //Setup default business hours
-                        //var businessHourController = new BusinessHourController();
-                        //var responseBusinessHour = businessHourController.SetupBusinessHours(serviceLocation.Id);
-                        var today = DateTime.Now;
-                        var date = new DateTime(today.Year, today.Month, today.Day, 8, 00, 00, DateTimeKind.Utc);
-                        for (int i = 0; i < 7; i++)
-                        {
-                            var businessHour = new tblBusinessHour()
-                            {
-                                WeekDayId = i,
-                                IsStartDay = i == 0 ? true : false,
-                                IsHoliday = false,
-                                From = date,
-                                To = date.AddHours(10),
-                                IsSplit1 = false,
-                                FromSplit1 = null,
-                                ToSplit1 = null,
-                                IsSplit2 = false,
-                                FromSplit2 = null,
-                                ToSplit2 = null,
-                                ServiceLocationId = serviceLocation.Id
-                            };
-                            _db.tblBusinessHours.Add(businessHour);
-                        }
-                        var responseBusinessHour = _db.SaveChanges();
-                        //End
-
-                        var businessEmployee = new tblBusinessEmployee()
-                        {
-                            FirstName = model.Employee.FirstName,
-                            LastName = model.Employee.LastName,
-                            Password = Security.Encrypt(model.Employee.Password, true),
-                            Email = model.Employee.Email,
-                            STD = model.Employee.STD,
-                            PhoneNumber = model.Employee.PhoneNumber,
-                            ServiceLocationId = serviceLocation.Id,
-                            IsAdmin = true,
-                            Created = DateTime.Now.ToUniversalTime(),
-                            IsActive = true
-                        };
-                        _db.tblBusinessEmployees.Add(businessEmployee);
-                        var responseBusinessEmployee = _db.SaveChanges();
-
-                        var businessViewModel = new BusinessViewModel()
-                        {
-                            Add1 = business.Add1,
-                            Add2 = business.Add2,
-                            BusinessCategoryId = business.BusinessCategoryId,
-                            City = business.City,
-                            CountryId = business.CountryId,
-                            Created = business.Created,
-                            Email = business.Email,
-                            FaxNumbers = business.FaxNumbers,
-                            Id = business.Id,
-                            IsActive = business.IsActive,
-                            IsInternational = business.IsInternational,
-                            Logo = business.Logo,
-                            MembershipId = business.MembershipId,
-                            Name = business.Name,
-                            PhoneNumbers = business.PhoneNumbers,
-                            ShortName = business.ShortName,
-                            State = business.State,
-                            TimezoneId = business.TimezoneId,
-                            Website = business.Website,
-                            Zip = business.Zip
-                        };
-
-                        var businessEmployeeViewModel = new BusinessEmployeeViewModel()
-                        {
-                            Created = businessEmployee.Created,
-                            Email = businessEmployee.Email,
-                            FirstName = businessEmployee.FirstName,
-                            Id = businessEmployee.Id,
-                            IsActive = businessEmployee.IsActive,
-                            IsAdmin = businessEmployee.IsAdmin,
-                            LastName = businessEmployee.LastName,
-                            PhoneNumber = businessEmployee.PhoneNumber,
-                            ServiceLocationId = businessEmployee.ServiceLocationId,
-                            STD = businessEmployee.STD
-                        };
-
-                        if (responseBusiness > 0 && responseServiceLocation > 0 && responseBusinessEmployee > 0 && responseBusinessHour > 0)
-                        {
-                            data.Status = true;
-                            data.Message = "Transaction successed.";
-                            data.Data = new RegisterViewModel();
-                            data.Data.Business = new BusinessViewModel();
-                            data.Data.Employee = new BusinessEmployeeViewModel();
-                            data.Data.Business = businessViewModel;
-                            data.Data.Employee = businessEmployeeViewModel;
-                            dbTran.Commit();
-                        }
-                        else
-                        {
-                            data.Status = false;
-                            var reason = "";
-                            if (responseBusiness <= 0)
-                                reason += "Business setup issue. ";
-                            if (responseServiceLocation <= 0)
-                                reason += " Service location issue.";
-                            if (responseBusinessEmployee <= 0)
-                                reason += " Business employee issue.";
-                            if (responseBusinessHour <= 0)
-                                reason += " Business hour issue.";
-
-                            data.Message = "Registration failed. reason: " + reason;
-                            data.Data.Business = new BusinessViewModel();
-                            data.Data.Employee = new BusinessEmployeeViewModel();
-                            dbTran.Rollback();
-                        }
+                        _db.tblBusinessHours.Add(businessHour);
                     }
-                    catch (Exception ex)
+                    var responseBusinessHour = _db.SaveChanges();
+                    //End
+
+                    var businessEmployee = new tblBusinessEmployee()
                     {
-                        data.Status = false;
-                        data.Message = "Registration failed. ex: " + ex.Message.ToString();
+                        FirstName = model.Employee.FirstName,
+                        LastName = model.Employee.LastName,
+                        Password = Security.Encrypt(model.Employee.Password, true),
+                        Email = model.Employee.Email,
+                        STD = model.Employee.STD,
+                        PhoneNumber = model.Employee.PhoneNumber,
+                        ServiceLocationId = serviceLocation.Id,
+                        IsAdmin = true,
+                        Created = DateTime.Now.ToUniversalTime(),
+                        IsActive = true
+                    };
+                    _db.tblBusinessEmployees.Add(businessEmployee);
+                    var responseBusinessEmployee = _db.SaveChanges();
+
+                    var businessViewModel = new BusinessViewModel()
+                    {
+                        Add1 = business.Add1,
+                        Add2 = business.Add2,
+                        BusinessCategoryId = business.BusinessCategoryId,
+                        City = business.City,
+                        CountryId = business.CountryId,
+                        Created = business.Created,
+                        Email = business.Email,
+                        FaxNumbers = business.FaxNumbers,
+                        Id = business.Id,
+                        IsActive = business.IsActive,
+                        IsInternational = business.IsInternational,
+                        Logo = business.Logo,
+                        MembershipId = business.MembershipId,
+                        Name = business.Name,
+                        PhoneNumbers = business.PhoneNumbers,
+                        ShortName = business.ShortName,
+                        State = business.State,
+                        TimezoneId = business.TimezoneId,
+                        Website = business.Website,
+                        Zip = business.Zip
+                    };
+
+                    var businessEmployeeViewModel = new BusinessEmployeeViewModel()
+                    {
+                        Created = businessEmployee.Created,
+                        Email = businessEmployee.Email,
+                        FirstName = businessEmployee.FirstName,
+                        Id = businessEmployee.Id,
+                        IsActive = businessEmployee.IsActive,
+                        IsAdmin = businessEmployee.IsAdmin,
+                        LastName = businessEmployee.LastName,
+                        PhoneNumber = businessEmployee.PhoneNumber,
+                        ServiceLocationId = businessEmployee.ServiceLocationId,
+                        STD = businessEmployee.STD
+                    };
+
+                    if (responseBusiness > 0 && responseServiceLocation > 0 && responseBusinessEmployee > 0 && responseBusinessHour > 0)
+                    {
+                        data.Status = true;
+                        data.Message = "Transaction successed.";
+                        data.Data = new RegisterViewModel();
                         data.Data.Business = new BusinessViewModel();
                         data.Data.Employee = new BusinessEmployeeViewModel();
-                        dbTran.Rollback();
+                        data.Data.Business = businessViewModel;
+                        data.Data.Employee = businessEmployeeViewModel;
+                        //dbTran.Commit();
                     }
+                    else
+                    {
+                        var reason = "";
+                        data.Status = false;
+                        if (responseBusiness <= 0)
+                            reason += "Business setup issue. ";
+                        if (responseServiceLocation <= 0)
+                            reason += " Service location issue.";
+                        if (responseBusinessEmployee <= 0)
+                            reason += " Business employee issue.";
+                        if (responseBusinessHour <= 0)
+                            reason += " Business hour issue.";
+
+                        data.Message = "Registration failed. reason: " + reason;
+                        data.Data.Business = new BusinessViewModel();
+                        data.Data.Employee = new BusinessEmployeeViewModel();
+                        //dbTran.Rollback();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    data.Status = false;
+                    data.Message = "Registration failed. ex: " + ex.Message.ToString();
+                    data.Data.Business = new BusinessViewModel();
+                    data.Data.Employee = new BusinessEmployeeViewModel();
+                    //dbTran.Rollback();
                 }
             }
             return data;
         }
-
     }
 }

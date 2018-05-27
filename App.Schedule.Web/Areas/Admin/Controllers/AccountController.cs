@@ -12,6 +12,12 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var result = await BusinessService.Get(RegisterViewModel.Business.Id);
             if (result != null && result.Status)
             {
+                if (result.Data != null && result.Data.Business != null)
+                {
+                    var country = await CountryService.Get(result.Data.Business.CountryId);
+                    if (result != null && result.Data != null)
+                        result.Data.Business.CountryName = country.Data.Name;
+                }
                 var response = new ResponseViewModel<BusinessViewModel>();
                 response.Status = result.Status;
                 response.Message = result.Message;

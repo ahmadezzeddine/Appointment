@@ -1,7 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
 using System.Threading.Tasks;
 using App.Schedule.Domains.ViewModel;
-using System.Linq;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
@@ -36,7 +36,6 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             }
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "Data")] ResponseViewModel<BusinessEmployeeViewModel> model)
@@ -54,7 +53,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 {
                     if (model.Data.Password == model.Data.ConfirmPassword)
                     {
-                        var response = await this.BusinessEmployeeService.Update(model.Data);
+                        var response = await this.BusinessEmployeeService.Update(model.Data, false);
                         if (response.Status)
                         {
                             result.Status = true;

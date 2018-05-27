@@ -81,6 +81,14 @@ namespace App.Schedule.WebApi.Controllers
         {
             try
             {
+                var timeZone = _db.tblTimezones.Find(model.TimezoneId);
+                if(timeZone!=null)
+                {
+                    var country = _db.tblCountries.Find(timeZone.CountryId);
+                    if (country != null)
+                        model.CountryId = country.Id;
+                }
+
                 var serviceLocation = new tblServiceLocation()
                 {
                     Name = model.Name,
@@ -153,6 +161,14 @@ namespace App.Schedule.WebApi.Controllers
                     return Ok(new { status = false, data = "", message = "Please provide a valid ID." });
                 else
                 {
+                    var timeZone = _db.tblTimezones.Find(model.TimezoneId);
+                    if (timeZone != null)
+                    {
+                        var country = _db.tblCountries.Find(timeZone.CountryId);
+                        if (country != null)
+                            model.CountryId = country.Id;
+                    }
+
                     var serviceLocation = _db.tblServiceLocations.Find(id);
                     if (serviceLocation != null)
                     {

@@ -1,8 +1,8 @@
 ﻿@using App.Schedule.Domains.ViewModel;
-@model ResponseViewModel<BusinessCustomerViewMdoel>
+@model ResponseViewModel<BusinessCustomerViewModel>
 
 @{
-    ViewBag.Title = "Deactive Customer";
+    ViewBag.Title = "Customer";
     Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
 }
 <div class="row">
@@ -20,7 +20,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>Deactive Customer</b>
+                <b>Information</b>
             </div>
             @using (Ajax.BeginForm("deactive", "customer", new AjaxOptions { }))
             {

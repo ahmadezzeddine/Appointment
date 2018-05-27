@@ -40,6 +40,43 @@
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
+                            <label>Unlimited</label>
+                            <div class="form-control">
+                                @{var isUnlimited = Model.Data.IsUnlimited ? "Yes" : "No";}
+                                @isUnlimited
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label>Offer Limit</label>
+                            <div class="form-control">
+                                @Model.Data.TotalOffers
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label>Location Limit</label>
+                            <div class="form-control">
+                                @Model.Data.TotalLocation
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label>Employee Limit</label>
+                            <div class="form-control">
+                                @Model.Data.TotalEmployee
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label>Customer Limit</label>
+                            <div class="form-control">
+                                @Model.Data.TotalCustomer
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label>Appointment Limit</label>
+                            <div class="form-control">
+                                @Model.Data.TotalAppointment
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
                             <label>About</label>
                             <div class="form-control text-overflow">
                                 @Model.Data.Description
@@ -49,13 +86,6 @@
                             <label>Benifits</label>
                             <div class="form-control">
                                 @Model.Data.Benifits
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label>Unlimited</label>
-                            <div class="form-control">
-                                @{var isUnlimited = Model.Data.IsUnlimited ? "Yes" : "No";}
-                                @isUnlimited
                             </div>
                         </div>
                     </div>

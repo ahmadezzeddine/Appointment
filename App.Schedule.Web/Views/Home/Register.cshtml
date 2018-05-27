@@ -75,30 +75,30 @@
                                 @Html.TextAreaFor(d => d.Data.Business.Add2, new { @class = "form-control", @rows = "1", @placeholder = "Address 2" })
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-12">
+                        <div class="col-lg-4 col-md-12">
                             <div class="form-group input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-file"></i></span>
                                 @Html.EditorFor(d => d.Data.Business.City, new { htmlAttributes = new { @class = "form-control", @placeholder = "City" } })
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-12">
+                        <div class="col-lg-4 col-md-12">
                             <div class="form-group input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-file"></i></span>
                                 @Html.EditorFor(d => d.Data.Business.State, new { htmlAttributes = new { @class = "form-control", @placeholder = "State" } })
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-12">
+                        <div class="col-lg-4 col-md-12">
                             <div class="form-group input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-file"></i></span>
                                 @Html.EditorFor(d => d.Data.Business.Zip, new { htmlAttributes = new { @class = "form-control", @placeholder = "Zip Code" } })
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-12">
+                        @*<div class="col-lg-3 col-md-12">
                             <div class="form-group input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-file"></i></span>
                                 @Html.DropDownListFor(d => d.Data.Business.CountryId, new SelectList(ViewBag.CountryId ?? null, "Value", "Text"), "--Select Country --", new { @class = "form-control" })
                             </div>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
                 <div class="step" style="border:0;">
@@ -127,6 +127,12 @@
                         </div>
                         <div class="col-lg-6 col-md-12">
                             <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-phone-alt"></i></span>
+                                @Html.EditorFor(d => d.Data.Employee.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Contact Number" } })
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+                            <div class="form-group input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                                 @Html.EditorFor(d => d.Data.Employee.Password, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Password" } })
                             </div>
@@ -135,12 +141,6 @@
                             <div class="form-group input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                                 @Html.EditorFor(d => d.Data.Employee.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Confirm Password" } })
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-12">
-                            <div class="form-group input-group">
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-phone-alt"></i></span>
-                                @Html.EditorFor(d => d.Data.Employee.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Contact Number" } })
                             </div>
                         </div>
                     </div>

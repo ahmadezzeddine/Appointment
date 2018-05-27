@@ -28,6 +28,7 @@ namespace App.Schedule.Web.Services
 
         //Country
         public const string GET_COUNTRIES = "api/country";
+        public const string GET_COUNTRIE_BYID = "api/country?id={0}";
 
         //Business Category
         public const string GET_BUSINESSCATEGORIES = "api/businesscategory";
@@ -74,6 +75,7 @@ namespace App.Schedule.Web.Services
         public const string GET_BUSINESSOFFERSERVICELOCATION = "api/businessofferlocation";
         public const string GET_BUSINESSOFFERSERVICELOCATIONBYID = "api/businessofferlocation?id={0}";
         public const string GETS_BUSINESSOFFERSERVICELOCATION = "api/businessofferlocation?id={0}&type={1}";
+        public const string GETS_BUSINESSOFFERSERVICELOCATION_TTYPE = "api/businessofferlocation?id={0}&tabletype={1}";
         public const string POST_BUSINESSOFFERSERVICELOCATION = "api/businessofferlocation";
         public const string PUT_BUSINESSOFFERSERVICELOCATION = "api/businessofferlocation?id={0}";
         public const string DELETE_BUSINESSOFFERSERVICELOCATION = "api/businessofferlocation?id={0}";

@@ -9,6 +9,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers.Base
     {
         protected AppointmentService AppointmentService;
         protected BusinessService BusinessService;
+        protected BusinessHourService BusinessHourService;
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -21,6 +22,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers.Base
             {
                 this.AppointmentService = new AppointmentService(this.Token);
                 this.BusinessService = new BusinessService(this.Token);
+                this.BusinessHourService = new BusinessHourService(this.Token);
             }
         }
 

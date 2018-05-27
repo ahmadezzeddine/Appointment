@@ -1,7 +1,7 @@
 ﻿@using App.Schedule.Domains.ViewModel;
 @model ResponseViewModel<DocumentCategoryViewModel>
 @{
-    ViewBag.Title = "Delete Category";
+    ViewBag.Title = "Category";
     Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
 }
 <div class="row">
@@ -20,7 +20,7 @@
         {
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Delete Category
+                    Information
                 </div>
                 <div class="panel-body">
                     @Html.AntiForgeryToken()
@@ -53,7 +53,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="col-lg-12">
-                                <input id="btnSave" class="btn btn-danger btn-sm " type="button" value="Delete" onclick="onSubmit(this,'@Url.Action("index", "documentcategory", new { area = "admin" })')" />
+                                <input id="btnSave" class="btn btn-danger btn-sm " type="button" value="Submit" onclick="onSubmit(this,'@Url.Action("index", "documentcategory", new { area = "admin" })')" />
                                 <input type="button" class="btn btn-default btn-sm" value="Back" onclick="@("window.location.href='" + @Url.Action("Index", "documentcategory") + "'");" />
                             </div>
                         </div>

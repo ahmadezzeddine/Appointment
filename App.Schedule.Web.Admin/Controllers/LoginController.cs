@@ -30,15 +30,15 @@ namespace App.Schedule.Web.Admin.Controllers
                 {
                     if (this.AdminService != null)
                     {
-                        var response = await this.AdminService.VerifyLoginCredential(model.Data.Email, model.Data.Password);
+                        var response = await this.AdminService.VerifyLoginCredential(model.Data.Email, model.Data.Password,false);
                         result.Status = response.Status;
                         result.Message = response.Message;
                         result.Data = response.Data;
                         if (response.Status)
                         {
                             var tokenResponse = await this.AdminService.VerifyAndGetAdminAccessToken(model.Data.Email, model.Data.Password);
-                            result.Status = result.Status;
-                            result.Message = result.Message;
+                            result.Status = tokenResponse.Status;
+                            result.Message = tokenResponse.Message;
                             if (tokenResponse.Status)
                             {
                                 if (string.IsNullOrEmpty(tokenResponse.Data))

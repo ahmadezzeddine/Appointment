@@ -7,6 +7,10 @@ using App.Schedule.Domains;
 using App.Schedule.Context;
 using App.Schedule.Domains.Helpers;
 using App.Schedule.Domains.ViewModel;
+using App.Schedule.WebApi.Services;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace App.Schedule.WebApi.Controllers
 {
@@ -59,22 +63,62 @@ namespace App.Schedule.WebApi.Controllers
 
         // GET: api/administrator/?email=value&password=value
         [AllowAnonymous]
-        public IHttpActionResult Get(string email, string password)
+        public async Task<IHttpActionResult> Get(string email, string password, bool hasForgot)
         {
             try
             {
-                password = HttpContext.Current.Server.UrlDecode(password);
-                var pass = Security.Encrypt(password, true);
-                var model = _db.tblAdministrators.Where(d => d.Email.ToLower() == email.ToLower() && d.Password
-                == pass && d.IsActive == true).FirstOrDefault();
-                if (model != null)
+                if (!hasForgot)
                 {
-                    model.Password = "";
-                    return Ok(new { status = true, data = model, message = "valid credential" });
+                    password = HttpContext.Current.Server.UrlDecode(password);
+                    var pass = Security.Encrypt(password, true);
+                    var model = _db.tblAdministrators.Where(d => d.Email.ToLower() == email.ToLower() && d.Password
+                    == pass).FirstOrDefault();
+                    if (model != null)
+                    {
+                        if (model.IsActive)
+                        {
+                            model.Password = "";
+                            return Ok(new { status = true, data = model, message = "Valid credential" });
+                        }
+                        else
+                        {
+                            return Ok(new { status = false, data = model, message = "You can't login. Admin needs to approve your credential." });
+                        }
+                    }
+                    else
+                    {
+                        return Ok(new { status = false, data = model, message = "Please enter valid credential." });
+                    }
                 }
                 else
                 {
-                    return Ok(new { status = false, data = model, message = "not a valid credential" });
+                    var model = _db.tblAdministrators.Where(d => d.Email.ToLower() == email.ToLower()).FirstOrDefault();
+                    if (model != null)
+                    {
+                        if (model.IsActive)
+                        {
+                            var admin = new AdministratorViewModel()
+                            {
+                                AdministratorId = model.AdministratorId,
+                                ContactNumber = model.ContactNumber,
+                                Created = model.Created,
+                                Email = model.Email,
+                                FirstName = model.FirstName,
+                                Id = model.Id,
+                                IsActive = model.IsActive,
+                                IsAdmin = model.IsAdmin,
+                                LastName = model.LastName,
+                                Password = model.Password
+                            };
+                            var response = await this.SendMail(admin);
+                            return Ok(new { status = response.Status, data = model, message = response.Message });
+                        }
+                        else
+                        {
+                            return Ok(new { status = false, data = model, message = "You can't get password. Admin needs to approve your credential." });
+                        }
+                    }
+                    return Ok(new { status = false, data = model, message = "Please enter valid credential." });
                 }
             }
             catch (Exception ex)
@@ -211,7 +255,7 @@ namespace App.Schedule.WebApi.Controllers
 
         [NonAction]
         [AllowAnonymous]
-        public ResponseViewModel<AdministratorViewModel> RegisterAdmin(AdministratorViewModel model)
+        public async Task<ResponseViewModel<AdministratorViewModel>> RegisterAdmin(AdministratorViewModel model)
         {
             var data = new ResponseViewModel<AdministratorViewModel>();
             try
@@ -242,6 +286,9 @@ namespace App.Schedule.WebApi.Controllers
 
                     data.Status = response > 0 ? true : false;
                     data.Message = response > 0 ? "success" : "failed";
+
+                    //Send Mail using Sendgrid
+                    await this.SendMail(model);
                 }
             }
             catch (Exception ex)
@@ -329,6 +376,70 @@ namespace App.Schedule.WebApi.Controllers
                 result = false;
             }
             return result;
+        }
+
+        [NonAction]
+        public ResponseViewModel<AdministratorViewModel> DeleteSiteAdmin(long? id)
+        {
+            var data = new ResponseViewModel<AdministratorViewModel>()
+            {
+                Status = false
+            };
+            try
+            {
+                if (id.HasValue)
+                {
+                    var siteAdmin = _db.tblAdministrators.Find(id);
+                    if (siteAdmin != null)
+                    {
+                        _db.Entry(siteAdmin).State = EntityState.Deleted;
+                        var response = _db.SaveChanges();
+                        data.Data = new AdministratorViewModel() { Email = siteAdmin.Email, Id = siteAdmin.Id };
+                        data.Message = response > 0 ? "success" : "failed";
+                        data.Status = response > 0 ? true : false;
+                    }
+                    else
+                    {
+                        data.Message = "Not a valid data to delete. Please provide a valid id.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                data.Message = ex.Message.ToString();
+            }
+            return data;
+        }
+
+        [NonAction]
+        private async Task<MailResponse> SendMail(AdministratorViewModel model)
+        {
+            var mailService = new MailService();
+            var toMail = new List<string>();
+            if (!String.IsNullOrEmpty(model.Email))
+            {
+                toMail.Add(model.Email);
+            }
+            var htmlMailBody = new StringBuilder();
+            htmlMailBody.Append("<div>");
+            htmlMailBody.Append("<div>Hi,</div><br /><br />");
+            htmlMailBody.Append("<div>Your Appointment Scheduler Login credential information:</div><br />");
+            htmlMailBody.Append(string.Format("<div>Login Id : {0}</div>", model.Email));
+            htmlMailBody.Append(string.Format("<div>Password : {0}</div>", model.Password));
+            htmlMailBody.Append("<br /><br />");
+            htmlMailBody.Append("<h4>Regard's</h4>");
+            htmlMailBody.Append("<h3>Appointment Scheduler</h3>");
+            htmlMailBody.Append("</div>");
+
+            var mailInfomration = new MailInformation()
+            {
+                To = toMail,
+                Subject = "Appointment Scheduler, Site admin login id and password",
+                HtmlText = htmlMailBody.ToString(),
+                PlainText = ""
+            };
+            var response = await mailService.SendMail(mailInfomration);
+            return response;
         }
     }
 }

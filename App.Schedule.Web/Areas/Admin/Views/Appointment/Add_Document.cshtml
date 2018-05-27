@@ -2,12 +2,12 @@
 @model ResponseViewModel<AppointmentDocumentViewModel>
 
 @{
-    ViewBag.Title = "New Document";
+    ViewBag.Title = "Appointment Document";
     Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
 }
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Appointment</h1>
+        <h1 class="page-header">New Appointment Document</h1>
     </div>
 </div>
 <div class="row">
@@ -20,7 +20,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>Add Document</b>
+                <b>Information</b>
             </div>
             @using (Ajax.BeginForm("add_document", "appointment", new AjaxOptions { }))
             {

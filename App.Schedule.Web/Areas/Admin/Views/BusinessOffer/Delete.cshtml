@@ -7,7 +7,7 @@
 }
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Business Offer Setup</h1>
+        <h1 class="page-header">Delete Business Offer</h1>
     </div>
 </div>
 <div class="row">
@@ -20,7 +20,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>Delete Business Offer</b>
+                <b>Information</b>
             </div>
             @using (Ajax.BeginForm("delete", "businessoffer", new AjaxOptions { }))
             {
@@ -36,7 +36,7 @@
                             @Html.HiddenFor(d => d.Data.Id)
                             @Html.HiddenFor(d => d.Data.BusinessEmployeeId)
                             <div class="panel-body">
-                                <div class="tab-content" style="padding:0px 10px;">
+                                <div class="tab-content" style="padding-bottom:10px;">
                                     <div class="form-group">
                                         <div class="text-danger">Are you sure want to delete?</div>
                                     </div>

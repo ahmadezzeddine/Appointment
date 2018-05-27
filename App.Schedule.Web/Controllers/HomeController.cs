@@ -4,7 +4,6 @@ using System.Web.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using App.Schedule.Domains.ViewModel;
-using App.Schedule.Web.Areas.Admin.Controllers;
 
 namespace App.Schedule.Web.Controllers
 {
@@ -43,12 +42,12 @@ namespace App.Schedule.Web.Controllers
             var result = new ResponseViewModel<RegisterViewModel>();
             try
             {
-                var Countries = await this.GetCountries();
-                ViewBag.CountryId = Countries.Select(s => new SelectListItem()
-                {
-                    Value = Convert.ToString(s.Id),
-                    Text = s.Name
-                });
+                //var Countries = await this.GetCountries();
+                //ViewBag.CountryId = Countries.Select(s => new SelectListItem()
+                //{
+                //    Value = Convert.ToString(s.Id),
+                //    Text = s.Name
+                //});
                 
                 var BusinessCategories = await this.GetBusinessCategories();
                 var parentCategories = BusinessCategories.ToDictionary(d => d.Id, d => d.Name);

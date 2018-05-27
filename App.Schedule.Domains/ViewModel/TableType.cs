@@ -12,6 +12,5 @@
         AppointmentFeedback = 7,
         CustomerId = 8,
         AppointmentInvitee = 9,
-
     }
 }

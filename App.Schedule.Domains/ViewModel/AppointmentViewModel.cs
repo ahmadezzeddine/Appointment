@@ -250,6 +250,8 @@ namespace App.Schedule.Domains.ViewModel
 
         public int? CountryId { get; set; }
 
+        public string CountryName { get; set; }
+
         public bool IsInternational { get; set; }
 
         public bool IsActive { get; set; }
@@ -1007,6 +1009,11 @@ namespace App.Schedule.Domains.ViewModel
         Yearly = 4
     }
 
+    public enum PatternTypeOnce
+    {
+        Once = 0,
+    }
+
     /// <summary>
     /// Enum is used to set holiday type.
     /// </summary>
@@ -1021,13 +1028,13 @@ namespace App.Schedule.Domains.ViewModel
     /// <summary>
     /// Enum is used to set holiday type.
     /// </summary>
-    //public enum HolidayType
-    //{
-    //    Specified = 0,
-    //    RpeatEveryWeek = 1,
-    //    RepeatEveryMonth = 2,
-    //    RepeatEveryYear = 4,
-    //}
+    public enum HolidayType
+    {
+        Specified = 0,
+        RpeatEveryWeek = 1,
+        RepeatEveryMonth = 2,
+        RepeatEveryYear = 4,
+    }
 
     /// <summary>
     /// Enum is used to set file type.

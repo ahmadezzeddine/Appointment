@@ -1,12 +1,12 @@
 ﻿@using App.Schedule.Domains.ViewModel;
 @model ServiceDataViewModel<MembershipViewModel> 
 @{
-    ViewBag.Title = "Edit Membership";
+    ViewBag.Title = "Update Membership";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Membership</h1>
+        <h1 class="page-header">Update Membership</h1>
     </div>
 </div>
 <div class="row">
@@ -20,11 +20,12 @@
         {
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-book fa-fw"></i> Update Membership
+                    <i class="fa fa-book fa-fw"></i> Information
                 </div>
                 <div class="panel-body">
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(model => model.Data.Id)
+                    @Html.HiddenFor(model => model.Data.IsActive)
                     <div class="form-group col-lg-6">
                         <label>Title</label>
                         @Html.EditorFor(model => model.Data.Title, new { htmlAttributes = new { @class = "form-control", placeholder = "Title" } })
@@ -61,12 +62,6 @@
                         <label>
                             @Html.CheckBoxFor(model => model.Data.IsUnlimited, new { htmlAttributes = new { @class = "form-control" } })
                             is Unlimited?
-                        </label>
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label>
-                            @Html.CheckBoxFor(model => model.Data.IsActive, new { htmlAttributes = new { @class = "form-control" } })
-                            is Active?
                         </label>
                     </div>
                 </div>

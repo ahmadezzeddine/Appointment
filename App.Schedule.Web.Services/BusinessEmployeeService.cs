@@ -190,9 +190,9 @@ namespace App.Schedule.Web.Services
                 var url = String.Format(AppointmentUserService.PUT_API_ACCOUNT);
                 var jsonContent = "";
                 if (hasPassword)
-                    jsonContent = JsonConvert.SerializeObject(updateUser);
-                else
                     jsonContent = JsonConvert.SerializeObject(model);
+                else
+                    jsonContent = JsonConvert.SerializeObject(updateUser);
 
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
                 var response = await this.appointmentUserService.httpClient.PutAsync(url, content);

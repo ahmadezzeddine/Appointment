@@ -2,12 +2,12 @@
 @model ResponseViewModel<BusinessServiceViewModel>
 
 @{
-    ViewBag.Title = "New Business Employee";
+    ViewBag.Title = "Business Employee";
     Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
 }
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Business Service Setup</h1>
+        <h1 class="page-header">New Business Service Setup</h1>
     </div>
 </div>
 <div class="row">
@@ -20,7 +20,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>Add Business Service</b>
+                <b>Information</b>
             </div>
             @using (Ajax.BeginForm("add", "businessservice", new AjaxOptions { }))
             {
