@@ -124,7 +124,7 @@ namespace App.Schedule.Web.Services
             {
                 var jsonContent = JsonConvert.SerializeObject(model);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-                var url = String.Format(AppointmentUserService.PUT_BUSINESS_BYTPE, model.Id, type);
+                var url = String.Format(AppointmentUserService.PUT_BUSINESS_BYTPE, model.Id, (int)type);
                 var response = await this.appointmentUserService.httpClient.PutAsync(url, content);
                 var business = await base.GetHttpResponse<BusinessViewModel>(response);
                 if (business != null && business.Status)

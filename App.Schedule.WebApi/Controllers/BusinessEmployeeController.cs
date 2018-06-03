@@ -63,9 +63,15 @@ namespace App.Schedule.WebApi.Controllers
                     }
                     return Ok(new { status = true, data = model, message = "success" });
                 }
-                else if(type == TableType.ServiceLocationId)
+                else if (type == TableType.ServiceLocationId)
                 {
                     var employees = _db.tblBusinessEmployees.Where(d => d.ServiceLocationId == id.Value).ToList();
+                    return Ok(new { status = true, data = employees, message = "success" });
+                }
+                else if (type == TableType.AppointmentInvitee)
+                {
+                    var appointmentInvitees = _db.tblAppointmentInvitees.Where(d => d.AppointmentId == id.Value).Select(s => s.BusinessEmployeeId).ToList();
+                    var employees = _db.tblBusinessEmployees.Where(d => appointmentInvitees.Contains(d.Id));
                     return Ok(new { status = true, data = employees, message = "success" });
                 }
                 else
@@ -104,24 +110,31 @@ namespace App.Schedule.WebApi.Controllers
 
         // GET: api/businessemployee/?emailid=value&password=value
         [AllowAnonymous]
-        public IHttpActionResult Get(string email, string password)
+        public async Task<IHttpActionResult> Get(string email, string password, bool hasForgot)
         {
             try
             {
-                var loginSession = new LoginSessionViewModel();
-                password = HttpContext.Current.Server.UrlDecode(password);
-                var pass = Security.Encrypt(password, true);
-                loginSession.Employee = _db.tblBusinessEmployees.Where(d => d.Email.ToLower() == email.ToLower() && d.Password
-                == pass && d.IsActive == true).FirstOrDefault();
-                if (loginSession.Employee != null)
+                if (!hasForgot)
                 {
-                    loginSession.Employee.Password = "";
-                    var serviceLocation = _db.tblServiceLocations.Find(loginSession.Employee.ServiceLocationId);
-                    if (serviceLocation != null)
+                    var loginSession = new LoginSessionViewModel();
+                    password = HttpContext.Current.Server.UrlDecode(password);
+                    var pass = Security.Encrypt(password, true);
+                    loginSession.Employee = _db.tblBusinessEmployees.Where(d => d.Email.ToLower() == email.ToLower() && d.Password
+                    == pass && d.IsActive == true).FirstOrDefault();
+                    if (loginSession.Employee != null)
                     {
-                        loginSession.ServiceLocation = serviceLocation;
-                        loginSession.Business = _db.tblBusinesses.Find(serviceLocation.BusinessId);
-                        return Ok(new { status = true, data = loginSession, message = "Valid credential" });
+                        loginSession.Employee.Password = "";
+                        var serviceLocation = _db.tblServiceLocations.Find(loginSession.Employee.ServiceLocationId);
+                        if (serviceLocation != null)
+                        {
+                            loginSession.ServiceLocation = serviceLocation;
+                            loginSession.Business = _db.tblBusinesses.Include(i => i.tblServiceLocations).Include(i => i.tblMembership).SingleOrDefault(d => d.Id == serviceLocation.BusinessId);
+                            return Ok(new { status = true, data = loginSession, message = "Valid credential" });
+                        }
+                        else
+                        {
+                            return Ok(new { status = false, data = "", message = "Not a valid credential" });
+                        }
                     }
                     else
                     {
@@ -130,7 +143,20 @@ namespace App.Schedule.WebApi.Controllers
                 }
                 else
                 {
-                    return Ok(new { status = false, data = "", message = "Not a valid credential" });
+                    var model = _db.tblBusinessEmployees.Where(d => d.Email.ToLower() == email.ToLower() && d.IsActive == true).FirstOrDefault();
+                    if (model != null)
+                    {
+                        if (model.IsActive)
+                        {
+                            var response = await this.SendMail(model);
+                            return Ok(new { status = response.Status, data = model, message = response.Message });
+                        }
+                        else
+                        {
+                            return Ok(new { status = false, data = model, message = "You can't get password. Admin needs to approve your credential." });
+                        }
+                    }
+                    return Ok(new { status = false, data = model, message = "Please enter valid credential." });
                 }
             }
             catch (Exception ex)
@@ -324,7 +350,7 @@ namespace App.Schedule.WebApi.Controllers
                 data.Message = response > 0 ? "success" : "failed";
                 data.Status = response > 0 ? true : false;
                 data.Data = model;
-                await this.SendMail(model);
+                await this.SendMail(businessEmployee);
             }
             return data;
         }
@@ -446,33 +472,38 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         [NonAction]
-        private async Task<MailResponse> SendMail(BusinessEmployeeViewModel model)
+        private async Task<MailResponse> SendMail(tblBusinessEmployee model)
         {
             var mailService = new MailService();
             var toMail = new List<string>();
-            if (String.IsNullOrEmpty(model.Email))
+            if (!String.IsNullOrEmpty(model.Email))
             {
                 toMail.Add(model.Email);
-            }
-            var htmlMailBody = new StringBuilder();
-            htmlMailBody.Append("<div>");
-            htmlMailBody.Append("<div>Hi,</div><br /><br />");
-            htmlMailBody.Append("<div>Your Appointment Scheduler Login credential information:</div><br />");
-            htmlMailBody.Append(string.Format("<div>Login Id : {0}</div>", model.Email));
-            htmlMailBody.Append(string.Format("<div>Password : {0}</div>", model.Password));
-            htmlMailBody.Append("<br /><br />");
-            htmlMailBody.Append("<h4>Regard's</h4>");
-            htmlMailBody.Append("<h3>Appointment Scheduler</h3>");
-            htmlMailBody.Append("</div>");
 
-            var mailInfomration = new MailInformation()
+                var htmlMailBody = new StringBuilder();
+                htmlMailBody.Append("<div>");
+                htmlMailBody.Append("<div>Hi,</div><br /><br />");
+                htmlMailBody.Append("<div>Your Appointment Scheduler Login credential information:</div><br />");
+                htmlMailBody.Append(string.Format("<div>Login Id : {0}</div>", model.Email));
+                htmlMailBody.Append(string.Format("<div>Password : {0}</div>", Security.Decrypt(model.Password, true)));
+                htmlMailBody.Append("<br /><br />");
+                htmlMailBody.Append("<h4>Regard's</h4>");
+                htmlMailBody.Append("<h3>Appointment Scheduler</h3>");
+                htmlMailBody.Append("</div>");
+
+                var mailInfomration = new MailInformation()
+                {
+                    To = toMail,
+                    Subject = "Appointment Scheduler, Business employee login id and password",
+                    HtmlText = htmlMailBody.ToString(),
+                    PlainText = ""
+                };
+                return await mailService.SendMail(mailInfomration);
+            }
+            else
             {
-                To = toMail,
-                Subject = "Appointment Scheduler, Site admin login id and password",
-                HtmlText = htmlMailBody.ToString(),
-                PlainText = ""
-            };
-            return await mailService.SendMail(mailInfomration);
+                return new MailResponse() { Status = false, Message = "Please provide valid email id." };
+            }
         }
     }
 }

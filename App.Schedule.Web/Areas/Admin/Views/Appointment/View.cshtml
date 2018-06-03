@@ -105,13 +105,13 @@
                     <div class="row">
                         <div class="form-group col-lg-12">
                             @customerWebGrid.GetHtml(htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
-                    tableStyle: "table table-striped",
-                    headerStyle: "active",
-                    footerStyle: "webgrid-footer",
-                    columns: customerWebGrid.Columns(
-             customerWebGrid.Column("FirstName", "First Name"),
-             customerWebGrid.Column("LastName", "Last Name"),
-             customerWebGrid.Column("Email", "Email")))
+                         tableStyle: "table table-striped",
+                         headerStyle: "active",
+                         footerStyle: "webgrid-footer",
+                         columns: customerWebGrid.Columns(
+                  customerWebGrid.Column("FirstName", "First Name"),
+                  customerWebGrid.Column("LastName", "Last Name"),
+                  customerWebGrid.Column("Email", "Email")))
                         </div>
                     </div>
                     <div class="row">
@@ -196,8 +196,9 @@
 
             $(document).ready(function () {
                       var id = $('#Data_BusinessCustomerId').val();
-                      if (id) {
-                          onGetData(id, '@Url.Action("GetCustomerById", "appointment", new { area = "admin" })').then((res) => {
+                if (id) {
+                    var data = { Id: id };
+                          onGetData(data, '@Url.Action("GetCustomerById", "appointment", new { area = "admin" })').then((res) => {
                               if (res && res.status) {
                                   console.log(res);
                                   setCustomer(res.data);

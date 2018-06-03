@@ -41,11 +41,16 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 businessEmployee.Values["aToken"] = token;
                 businessEmployee.Values["aEmpId"] = Convert.ToString(model.Employee.Id);
                 businessEmployee.Values["aBusinessId"] = Convert.ToString(model.Business.Id);
-                businessEmployee.Values["aMembershipId"] = Convert.ToString(model.Business.MembershipId);
                 businessEmployee.Values["aBusinessCategoryId"] = Convert.ToString(model.Business.BusinessCategoryId);
                 businessEmployee.Values["aTimezoneId"] = Convert.ToString(model.Business.TimezoneId);
                 businessEmployee.Values["aServiceLocationId"] = Convert.ToString(model.Employee.ServiceLocationId);
-
+                businessEmployee.Values["aMembershipId"] = Convert.ToString(model.Business.MembershipId);
+                businessEmployee.Values["aTotalAppointment"] = Convert.ToString(model.Business.tblMembership.TotalAppointment);
+                businessEmployee.Values["aTotalCustomer"] = Convert.ToString(model.Business.tblMembership.TotalCustomer);
+                businessEmployee.Values["aTotalEmployee"] = Convert.ToString(model.Business.tblMembership.TotalEmployee);
+                businessEmployee.Values["aTotalLocation"] = Convert.ToString(model.Business.tblMembership.TotalLocation);
+                businessEmployee.Values["aTotalOffers"] = Convert.ToString(model.Business.tblMembership.TotalOffers);
+                businessEmployee.Values["aIsUnlimited"] = Convert.ToString(model.Business.tblMembership.IsUnlimited);
                 Response.Cookies.Add(businessEmployee);
 
                 return true;
@@ -80,8 +85,17 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                         RegisterViewModel.Business.Id = Convert.ToInt64(AdminCookie.Values["aBusinessId"]);
                         RegisterViewModel.Business.TimezoneId = Convert.ToInt32(AdminCookie.Values["aTimezoneId"]);
                         RegisterViewModel.Business.BusinessCategoryId = Convert.ToInt32(AdminCookie.Values["aBusinessCategoryId"]);
-                        RegisterViewModel.Business.MembershipId = Convert.ToInt32(AdminCookie.Values["aMembershipId"]);
                         RegisterViewModel.Employee.ServiceLocationId = Convert.ToInt64(AdminCookie.Values["aServiceLocationId"]);
+
+                        RegisterViewModel.Business.MembershipId = Convert.ToInt32(AdminCookie.Values["aMembershipId"]);
+
+                        RegisterViewModel.Business.tblMembership.TotalOffers = Convert.ToInt32(AdminCookie.Values["aTotalOffers"]);
+                        RegisterViewModel.Business.tblMembership.IsUnlimited = Convert.ToBoolean(AdminCookie.Values["aIsUnlimited"]);
+                        RegisterViewModel.Business.tblMembership.TotalCustomer = Convert.ToInt32(AdminCookie.Values["aTotalCustomer"]);
+                        RegisterViewModel.Business.tblMembership.TotalEmployee = Convert.ToInt32(AdminCookie.Values["aTotalEmployee"]);
+                        RegisterViewModel.Business.tblMembership.TotalLocation = Convert.ToInt32(AdminCookie.Values["aTotalLocation"]);
+                        RegisterViewModel.Business.tblMembership.TotalAppointment = Convert.ToInt32(AdminCookie.Values["aTotalAppointment"]);
+
                         Token = AdminCookie.Values["aToken"];
                         return RegisterViewModel;
                     }

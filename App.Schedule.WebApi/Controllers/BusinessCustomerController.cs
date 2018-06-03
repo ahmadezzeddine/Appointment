@@ -39,32 +39,52 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         [AllowAnonymous]
-        public IHttpActionResult Get(string email, string password)
+        public async Task<IHttpActionResult> Get(string email, string password, bool hasForgot)
         {
             try
             {
-                var tblBusinessCustomer = new tblBusinessCustomer();
-                password = HttpContext.Current.Server.UrlDecode(password);
-                password = Security.Encrypt(password, true);
-                tblBusinessCustomer = _db.tblBusinessCustomers.Where(d => d.Email.ToLower() == email.ToLower() && d.Password == password && d.IsActive == true).FirstOrDefault();
-                if (tblBusinessCustomer != null)
+                if (!hasForgot)
                 {
-                    tblBusinessCustomer.Password = "";
-                    var tblServiceLocations = _db.tblServiceLocations.Find(tblBusinessCustomer.ServiceLocationId);
-                    if (tblServiceLocations != null)
+                    var tblBusinessCustomer = new tblBusinessCustomer();
+                    password = HttpContext.Current.Server.UrlDecode(password);
+                    password = Security.Encrypt(password, true);
+                    tblBusinessCustomer = _db.tblBusinessCustomers.Where(d => d.Email.ToLower() == email.ToLower() && d.Password == password && d.IsActive == true).FirstOrDefault();
+                    if (tblBusinessCustomer != null)
                     {
-                        var tblBusinesses = _db.tblBusinesses.Find(tblServiceLocations.BusinessId);
-                        if (tblBusinesses != null)
+                        tblBusinessCustomer.Password = "";
+                        var tblServiceLocations = _db.tblServiceLocations.Find(tblBusinessCustomer.ServiceLocationId);
+                        if (tblServiceLocations != null)
                         {
-                            return Ok(new { status = true, data = new { Customer = tblBusinessCustomer, ServiceLocation = tblServiceLocations, Business = tblBusinesses }, message = "Valid credential" });
+                            var tblBusinesses = _db.tblBusinesses.Find(tblServiceLocations.BusinessId);
+                            if (tblBusinesses != null)
+                            {
+                                return Ok(new { status = true, data = new { Customer = tblBusinessCustomer, ServiceLocation = tblServiceLocations, Business = tblBusinesses }, message = "Valid credential" });
+                            }
+                        }
+                        else
+                        {
+                            return Ok(new { status = false, data = "", message = "Not a valid credential" });
                         }
                     }
-                    else
-                    {
-                        return Ok(new { status = false, data = "", message = "Not a valid credential" });
-                    }
+                    return Ok(new { status = false, data = "", message = "Not a valid credential" });
                 }
-                return Ok(new { status = false, data = "", message = "Not a valid credential" });
+                else
+                {
+                    var model = _db.tblBusinessCustomers.Where(d => d.Email.ToLower() == email.ToLower() && d.IsActive ==true).FirstOrDefault();
+                    if (model != null)
+                    {
+                        if (model.IsActive)
+                        {
+                            var response = await this.SendMail(model);
+                            return Ok(new { status = response.Status, data = model, message = response.Message });
+                        }
+                        else
+                        {
+                            return Ok(new { status = false, data = model, message = "You can't get password. Admin needs to approve your credential." });
+                        }
+                    }
+                    return Ok(new { status = false, data = model, message = "Please enter valid credential." });
+                }
             }
             catch (Exception ex)
             {
@@ -345,7 +365,7 @@ namespace App.Schedule.WebApi.Controllers
                 data.Message = response > 0 ? "success" : "failed";
                 data.Status = response > 0 ? true : false;
                 data.Data = model;
-                await this.SendMail(model);
+                await this.SendMail(businessCustomer);
             }
             return data;
         }
@@ -423,33 +443,38 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         [NonAction]
-        private async Task SendMail(BusinessCustomerViewModel model)
+        private async Task<MailResponse> SendMail(tblBusinessCustomer model)
         {
             var mailService = new MailService();
             var toMail = new List<string>();
-            if (String.IsNullOrEmpty(model.Email))
+            if (!String.IsNullOrEmpty(model.Email))
             {
                 toMail.Add(model.Email);
-            }
-            var htmlMailBody = new StringBuilder();
-            htmlMailBody.Append("<div>");
-            htmlMailBody.Append("<div>Hi,</div><br /><br />");
-            htmlMailBody.Append("<div>Your Appointment Scheduler Login credential information:</div><br />");
-            htmlMailBody.Append(string.Format("<div>Login Id : {0}</div>", model.Email));
-            htmlMailBody.Append(string.Format("<div>Password : {0}</div>", model.Password));
-            htmlMailBody.Append("<br /><br />");
-            htmlMailBody.Append("<h4>Regard's</h4>");
-            htmlMailBody.Append("<h3>Appointment Scheduler</h3>");
-            htmlMailBody.Append("</div>");
+                var htmlMailBody = new StringBuilder();
+                htmlMailBody.Append("<div>");
+                htmlMailBody.Append("<div>Hi,</div><br /><br />");
+                htmlMailBody.Append("<div>Your Appointment Scheduler Login credential information:</div><br />");
+                htmlMailBody.Append(string.Format("<div>Login Id : {0}</div>", model.Email));
+                htmlMailBody.Append(string.Format("<div>Password : {0}</div>", Security.Decrypt(model.Password, true)));
+                htmlMailBody.Append("<br /><br />");
+                htmlMailBody.Append("<h4>Regard's</h4>");
+                htmlMailBody.Append("<h3>Appointment Scheduler</h3>");
+                htmlMailBody.Append("</div>");
 
-            var mailInfomration = new MailInformation()
+                var mailInfomration = new MailInformation()
+                {
+                    To = toMail,
+                    Subject = "Appointment Scheduler, Business customer login id and password",
+                    HtmlText = htmlMailBody.ToString(),
+                    PlainText = ""
+                };
+                var mailResponse = await mailService.SendMail(mailInfomration);
+                return mailResponse;
+            }
+            else
             {
-                To = toMail,
-                Subject = "Appointment Scheduler, Site admin login id and password",
-                HtmlText = htmlMailBody.ToString(),
-                PlainText = ""
-            };
-            var mailResponse = await mailService.SendMail(mailInfomration);
+                return new MailResponse() { Status = false, Message = "Please provide valid email id." };
+            }
         }
     }
 }

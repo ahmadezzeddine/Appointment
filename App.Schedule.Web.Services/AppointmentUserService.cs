@@ -91,7 +91,7 @@ namespace App.Schedule.Web.Services
         public const string DEACTIVE_BUSINESSSERVICEBYIDANDSTATUS = "api/businessservice?id={0}&status={1}";
 
         //Business Employee
-        public const string GET_BUSINESS_EMP_BYLOGINID = "api/businessemployee?email={0}&password={1}";
+        public const string GET_BUSINESS_EMP_BYLOGINID = "api/businessemployee?email={0}&password={1}&hasForgot={2}";
         public const string GET_EMPLOYEESBYID = "api/businessemployee?id={0}";
         public const string GET_EMPLOYEESBYIDANDTYPE = "api/businessemployee?id={0}&type={1}";
         public const string POST_EMPLOYEES = "api/businessemployee";
@@ -100,7 +100,7 @@ namespace App.Schedule.Web.Services
         public const string DEACTIVE_EMPLOYEES = "api/businessemployee?id={0}&status={1}";
 
         //Business Customer
-        public const string GET_BUSINESS_CUSTOMER_BYLOGINID = "api/businesscustomer?email={0}&password={1}";
+        public const string GET_BUSINESS_CUSTOMER_BYLOGINID = "api/businesscustomer?email={0}&password={1}&hasForgot={2}";
         public const string GET_BUSINESS_CUSTOMERBYID = "api/businesscustomer?id={0}";
         public const string GET_BUSINESS_CUSTOMERBYIDANDTYPE = "api/businesscustomer?id={0}&type={1}";
         public const string PUT_BUSINESS_CUSTOMER = "api/businesscustomer?id={0}";

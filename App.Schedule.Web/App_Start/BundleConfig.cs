@@ -11,6 +11,7 @@ namespace App.Schedule.Web
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
+                        "~/Scripts/jquery-ui-{version}.js",
                         "~/Scripts/site.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -40,8 +41,8 @@ namespace App.Schedule.Web
                       "~/Content/bootstrap.min.css",
                       "~/Scripts/vendor/css/sb-admin-2.css",
                       "~/Content/vendor/font-awesome.min.css",
+                      "~/Content/themes/base/jquery-ui.css",
                       "~/Content/site.css"));
-
         }
     }
 }

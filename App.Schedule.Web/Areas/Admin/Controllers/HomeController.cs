@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using System.Threading.Tasks;
 using App.Schedule.Domains.ViewModel;
+using App.Schedule.Web.Models;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
@@ -28,9 +29,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 }
                 else
                 {
-                    if (BusinessEmployeeService != null)
+                     if (BusinessEmployeeService != null)
                     {
-                        var response = await BusinessEmployeeService.VerifyLoginCredential(model.Data.Email, model.Data.Password);
+                        var response = await BusinessEmployeeService.VerifyLoginCredential(model.Data.Email, model.Data.Password, false);
                         result.Status = response.Status;
                         result.Message = response.Message;
                         result.Data = response.Data;
@@ -68,6 +69,25 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         public ActionResult Forgot()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Forgot(ForgotViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
+                return Json(new { status = false, message = errMessage }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var response = await this.BusinessEmployeeService.VerifyLoginCredential(model.Email, "", true);
+                if (response != null)
+                {
+                    return Json(new { status = response.Status, model = "", message = response.Message }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return Json(new { status = false, message = "There was a problem. Please try again later." }, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -209,6 +209,13 @@ namespace App.Schedule.Domains.ViewModel
     /// </summary>
     public class BusinessViewModel
     {
+        public BusinessViewModel()
+        {
+            this.tblBusinessCategory = new BusinessCategoryViewModel();
+            this.tblMembership = new MembershipViewModel();
+            this.tblTimezone = new TimezoneViewModel();
+        }
+
         public long Id { get; set; }
 
         [Required]

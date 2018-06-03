@@ -130,7 +130,6 @@ Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
                         @Html.FullCalendar(settings =>
                    {
                        settings.Name = "ApCalendar";
-                       settings.CssClass = "css-test";
                        settings.Header = new Header
                        {
                            Left = new ControlsBuilder().AddButton(HeaderButton.Prev).AddSeparator(HeaderSeparator.Adjacent)
@@ -184,7 +183,7 @@ Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
                            settings.EventStartEditable = false;
                            settings.EventDurationEditable = false;
                            settings.SlotDuration = TimeSpan.FromMinutes(30);
-                           settings.Events = new EventCollection(Url.Action("GetDiaryEvents", "Dashboard", new { start = DateTime.Now, end = DateTime.Now.AddDays(2), area = "Admin" }), EventCollectionType.JsonFeed);
+                           settings.Events = new EventCollection(Url.Action("GetDiaryEvents", "Dashboard", new { area = "Admin" }), EventCollectionType.JsonFeed);
                            settings.BusinessHours = ViewBag.BusinessHours;
                        })
                         </p>

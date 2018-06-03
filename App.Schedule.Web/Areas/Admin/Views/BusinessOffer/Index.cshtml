@@ -23,9 +23,12 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <b>Information</b>
-                <a href="@Url.Action("add", "businessoffer", new { area = "admin", id = ViewBag.EmployeeId })" class="btn btn-info btn-xs pull-right">
-                    <span class="fa fa-plus"></span> Add
-                </a>
+                @if (ViewBag.Total != null && ViewBag.Total >= Model.Data.Count)
+                {
+                    <a href="@Url.Action("add", "businessoffer", new { area = "admin", id = ViewBag.EmployeeId })" class="btn btn-info btn-xs pull-right">
+                        <span class="fa fa-plus"></span> Add
+                    </a>
+                }
             </div>
             <div class="panel-body">
                 @if (Model == null & Model.Data == null)
@@ -83,37 +86,37 @@
                                         {
                                             if (item != null)
                                             {
-                                            <tr>
-                                                <td style="vertical-align:top;">
-                                                    <b>@item.Name</b>
-                                                    <p>
-                                                        @item.Description
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    @item.Code
-                                                </td>
-                                                <td>
-                                                    @item.ValidFrom.ToLocalTime()
-                                                </td>
-                                                <td>
-                                                    @item.ValidTo.ToLocalTime()
-                                                </td>
-                                                <td>
-                                                    @item.IsActive
-                                                </td>
-                                                <td class="text-right">
-                                                    <a title="View" onclick="@("window.location.href='" + @Url.Action("location", "businessoffer", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
-                                                        <span class="fa fa-folder"></span>
-                                                    </a>
-                                                    <a title="Edit" onclick="@("window.location.href='" + @Url.Action("edit", "businessoffer", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
-                                                        <span class="fa fa-pencil"></span>
-                                                    </a>
-                                                    <a title="Edit" onclick="@("window.location.href='" + @Url.Action("delete", "businessoffer", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
-                                                        <span class="fa fa-trash"></span>
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                                <tr>
+                                                    <td style="vertical-align:top;">
+                                                        <b>@item.Name</b>
+                                                        <p>
+                                                            @item.Description
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        @item.Code
+                                                    </td>
+                                                    <td>
+                                                        @item.ValidFrom.ToLocalTime()
+                                                    </td>
+                                                    <td>
+                                                        @item.ValidTo.ToLocalTime()
+                                                    </td>
+                                                    <td>
+                                                        @item.IsActive
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <a title="View" onclick="@("window.location.href='" + @Url.Action("location", "businessoffer", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                            <span class="fa fa-folder"></span>
+                                                        </a>
+                                                        <a title="Edit" onclick="@("window.location.href='" + @Url.Action("edit", "businessoffer", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                            <span class="fa fa-pencil"></span>
+                                                        </a>
+                                                        <a title="Edit" onclick="@("window.location.href='" + @Url.Action("delete", "businessoffer", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                            <span class="fa fa-trash"></span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
                                             }
                                         }
                                     </tbody>

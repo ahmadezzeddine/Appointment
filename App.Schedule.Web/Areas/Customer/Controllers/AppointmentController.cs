@@ -83,24 +83,26 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
             var businessService = await this.GetBusinessServices(response.Data.BusinessServiceId.Value);
             response.Data.BusinessServiceName = string.Format("{0} (${1})", businessService.Name, Math.Round(businessService.Cost.Value, 2));
 
-            var invitees = await this.AppointmentInviteeService.Gets(response.Data.Id, TableType.AppointmentInvitee);
+            var employees = await this.GetBusinessEmployee(id);
+            ViewBag.BusinessEmployeeId = employees;
+            //var invitees = await this.AppointmentInviteeService.Gets(response.Data.Id, TableType.AppointmentInvitee);
 
-            if (invitees.Status)
-            {
-                var employees = await this.GetBusinessEmployee();
-                var appointmentInvitees = new List<BusinessEmployeeViewModel>();
-                var employee = employees.Find(d => d.Id == response.Data.BusinessEmployeeId);
-                if (employee != null)
-                    appointmentInvitees.Add(employee);
+            //if (invitees.Status)
+            //{
+            //    var employees = await this.GetBusinessEmployee(id);
+            //    var appointmentInvitees = new List<BusinessEmployeeViewModel>();
+            //    var employee = employees.Find(d => d.Id == response.Data.BusinessEmployeeId);
+            //    if (employee != null)
+            //        appointmentInvitees.Add(employee);
 
-                foreach (var invitee in invitees.Data)
-                {
-                    employee = employees.Find(d => d.Id == invitee.BusinessEmployeeId);
-                    if (employee != null)
-                        appointmentInvitees.Add(employee);
-                }
-                ViewBag.BusinessEmployeeId = appointmentInvitees;
-            }
+            //    foreach (var invitee in invitees.Data)
+            //    {
+            //        employee = employees.Find(d => d.Id == invitee.BusinessEmployeeId);
+            //        if (employee != null)
+            //            appointmentInvitees.Add(employee);
+            //    }
+            //    ViewBag.BusinessEmployeeId = appointmentInvitees;
+            //}
 
 
             response.Data.StartDate = response.Data.StartDate.Value;
@@ -166,17 +168,22 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
         }
 
         [NonAction]
-        private async Task<List<BusinessEmployeeViewModel>> GetBusinessEmployee()
+        private async Task<List<BusinessEmployeeViewModel>> GetBusinessEmployee(long? appointmentId)
         {
-            var response = await this.BusinessEmployeeService.Gets(RegisterCustomerViewModel.Business.Id, TableType.BusinessId);
-            if (response != null)
+            var employees = new List<BusinessEmployeeViewModel>(); ;
+            if (appointmentId.HasValue)
             {
-                return response.Data;
+                var response = await this.BusinessEmployeeService.Gets(appointmentId, TableType.AppointmentInvitee);
+                if (response != null)
+                    employees = response.Data;
             }
             else
             {
-                return new List<BusinessEmployeeViewModel>();
+                var response = await this.BusinessEmployeeService.Gets(RegisterCustomerViewModel.Customer.Id, TableType.BusinessId);
+                if (response != null)
+                    employees = response.Data;
             }
+            return employees;
         }
 
         [NonAction]

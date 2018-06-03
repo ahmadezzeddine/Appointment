@@ -21,6 +21,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             ViewBag.ServiceLocationId = RegisterViewModel.Employee.ServiceLocationId;
             ViewBag.EmployeeId = RegisterViewModel.Employee.Id;
 
+            ViewBag.Total = RegisterViewModel.Business.tblMembership.IsUnlimited ? long.MaxValue : RegisterViewModel.Business.tblMembership.TotalOffers;
+
             var result = await BusinessOfferService.Gets(RegisterViewModel.Employee.Id, TableType.EmployeeId);
             if (result.Status)
             {

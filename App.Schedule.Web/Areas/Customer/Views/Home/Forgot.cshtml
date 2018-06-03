@@ -1,24 +1,38 @@
-﻿
+﻿@model App.Schedule.Web.Models.ForgotViewModel
 @{
-    ViewBag.Title = "Customer Forgot Password";
+    ViewBag.Title = "Forgot";
     Layout = "~/Views/Shared/_NotAuthLayout.cshtml";
 }
-<div class="absolute-center is-forgot">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Forgot Password</h3>
-        </div>
-        <div class="panel-body">
-            <div class="form-group input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                @Html.Editor("Email", new { htmlAttributes = new { @class = "form-control", @placeholder = "Email Id" } })
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/SubViews/_Error.cshtml", Model)
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        @using (Ajax.BeginForm("forgot", "home", new AjaxOptions { }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="absolute-center is-forgot alert">
+                <div id="logo-container">Forgot Password</div>
+                <div class="col-sm-12 col-md-10 col-md-offset-1">
+                    <div class="form-group input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email Id" } })
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-def btn-block btn-dark" onclick="onSubmit(this,'@Url.Action("login","home", new { area = "customer" })');">Submit</button>
+                    </div>
+                    <div class="form-group text-center">
+                        <a href="@Url.Action("login","home", new { area = "customer" })" class="btn btn-link">Back</a>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <button type="button" class="btn btn-def btn-block bga-secondary" onclick="onSubmit(this,'@Url.Action("Login", "Home", new { area = "Admin" })');">Submit</button>
-            </div>
-            <div class="form-group text-center">
-                <a href="@Url.Action("Login","Home", new { area = "Admin" })" class="btn btn-link">Back</a>
-            </div>
+        }
+    </div>
+    <div class="footer-bottom">
+        <div>
+            &copy; @DateTime.Now.Year. All right reserved by Appointment.
         </div>
     </div>
 </div>

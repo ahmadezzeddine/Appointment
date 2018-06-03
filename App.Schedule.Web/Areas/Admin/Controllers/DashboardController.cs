@@ -6,6 +6,7 @@ using App.Schedule.Domains.ViewModel;
 using System.Threading.Tasks;
 using App.Schedule.Web.Models;
 using FullCalendar;
+using System.Drawing;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
@@ -58,10 +59,12 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var appoint = new SchedulerModel
             {
                 id = x.Id,
-                title = x.Title + " (" + x.BusinessCustomerName.ToUpper()+")",
+                title = x.Title + " (" + x.BusinessCustomerName.ToUpper() + ")",
                 start = x.StartTime,
                 end = x.EndTime,
-                color = x.BackColor,
+                color = x.BackColor.HasValue ? Color.FromArgb(x.BackColor.Value).ToString() : "#3a87ad",
+                textColor = x.TextColor.HasValue ? Color.FromArgb(x.TextColor.Value).ToString() : "#ffffff",
+                url = Url.Action("view", "appointment", new { role = "admin", id = x.Id }),
                 className = "",
                 someKey = x.Id,
                 allDay = x.IsAllDayEvent

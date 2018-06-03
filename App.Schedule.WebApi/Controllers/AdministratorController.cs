@@ -425,7 +425,7 @@ namespace App.Schedule.WebApi.Controllers
             htmlMailBody.Append("<div>Hi,</div><br /><br />");
             htmlMailBody.Append("<div>Your Appointment Scheduler Login credential information:</div><br />");
             htmlMailBody.Append(string.Format("<div>Login Id : {0}</div>", model.Email));
-            htmlMailBody.Append(string.Format("<div>Password : {0}</div>", model.Password));
+            htmlMailBody.Append(string.Format("<div>Password : {0}</div>", Security.Decrypt(model.Password,true)));
             htmlMailBody.Append("<br /><br />");
             htmlMailBody.Append("<h4>Regard's</h4>");
             htmlMailBody.Append("<h3>Appointment Scheduler</h3>");

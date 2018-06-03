@@ -16,13 +16,13 @@ namespace App.Schedule.Web.Services
             base.SetUpAppointmentService(token);
         }
 
-        public async Task<ResponseViewModel<RegisterViewModel>> VerifyLoginCredential(string Email, string Password)
+        public async Task<ResponseViewModel<RegisterViewModel>> VerifyLoginCredential(string Email, string Password, bool hasForgot)
         {
             var returnResponse = new ResponseViewModel<RegisterViewModel>();
             try
             {
                 Password = HttpContext.Current.Server.UrlEncode(Password);
-                var url = String.Format(AppointmentUserService.GET_BUSINESS_EMP_BYLOGINID, Email, Password);
+                var url = String.Format(AppointmentUserService.GET_BUSINESS_EMP_BYLOGINID, Email, Password, hasForgot);
                 var response = await this.appointmentUserService.httpClient.GetAsync(url);
                 returnResponse = await base.GetHttpResponse<RegisterViewModel>(response);
             }

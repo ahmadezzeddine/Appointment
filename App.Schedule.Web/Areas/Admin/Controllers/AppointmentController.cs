@@ -7,6 +7,7 @@ using App.Schedule.Web.Models;
 using System.Collections.Generic;
 using App.Schedule.Domains.Helpers;
 using App.Schedule.Domains.ViewModel;
+using App.Schedule.Web.Helpers;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
@@ -20,12 +21,12 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var model = this.ResponseHelper.GetResponse<IPagedList<AppointmentViewModel>>();
             var pageNumber = page ?? 1;
             ViewBag.search = search;
-            
 
             ViewBag.BusinessId = RegisterViewModel.Business.Id;
             ViewBag.ServiceLocationId = RegisterViewModel.Employee.ServiceLocationId;
 
             var result = await AppointmentService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
+            ViewBag.Total = RegisterViewModel.Business.tblMembership.IsUnlimited ? long.MaxValue : RegisterViewModel.Business.tblMembership.TotalAppointment;
             if (result.Status)
             {
                 if (type.HasValue)
@@ -47,7 +48,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                         result.Data = result.Data.Where(d => d.IsActive == false).ToList();
                     }
                 }
-                var data = result.Data.OrderByDescending(d => d.Id).ToList();
+                var data = result.Data.Where(d => d.BusinessEmployeeId == RegisterViewModel.Employee.Id).OrderByDescending(d => d.Id).ToList();
                 model.Status = result.Status;
                 model.Message = result.Message;
                 if (search == null)
@@ -105,7 +106,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 Text = String.Format("{0:C2} {1}", s.Cost, s.Name)
             });
 
-            var fromHours = Hour.GetHoursOfDay();
+            var hourHelper = new BusinessHourHelper(this.Token, this.RegisterViewModel.Employee.ServiceLocationId.Value);
+
+            var fromHours = await hourHelper.GetHoursOfDay((int)DateTime.Now.DayOfWeek);
             ViewBag.FromHours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
@@ -127,9 +130,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             response.Data.StartDate = DateTime.Now.Date;
             response.Data.EndDate = DateTime.Now.Date;
 
-            var employees = await this.GetBusinessEmployee();
-            var currentEmployee = employees.Find(d => d.Id == RegisterViewModel.Employee.Id);
-            employees.Remove(currentEmployee);
+            var employees = await this.GetBusinessEmployee(-1);
+            //var currentEmployee = employees.Find(d => d.Id == RegisterViewModel.Employee.Id);
+            //employees.Remove(currentEmployee);
             ViewBag.BusinessEmployeeId = employees;
             response.Data.BusinessEmployeeId = RegisterViewModel.Employee.Id;
             response.Data.IsActive = true;
@@ -229,27 +232,25 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             });
 
             //Hours
-            var fromHours = Hour.GetHoursOfDay();
-            var getFromHour = response.Data.StartDate.Value.ToShortTimeString();
+            var hourHelper = new BusinessHourHelper(this.Token, this.RegisterViewModel.Employee.ServiceLocationId.Value);
+
+            var fromHours = await hourHelper.GetHoursOfDay((int)DateTime.Now.DayOfWeek);
             ViewBag.FromHours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
-                Text = s.Value,
-                Selected = s.Value == getFromHour ? true : false
+                Text = s.Value
             });
-            var getToHour = response.Data.EndDate.Value.ToShortTimeString();
             ViewBag.ToHours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
-                Text = s.Value,
-                Selected = s.Value == getToHour ? true : false
+                Text = s.Value
             });
             response.Data.StartDate = response.Data.StartDate.Value;
             response.Data.EndDate = response.Data.StartDate.Value;
             //End
 
             //Pattern type
-            var patternType = from PatternType e in Enum.GetValues(typeof(PatternType))
+            var patternType = from PatternTypeOnce e in Enum.GetValues(typeof(PatternTypeOnce))
                               select new
                               {
                                   ID = (int)e,
@@ -258,9 +259,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             ViewBag.PatternType = new SelectList(patternType, "Id", "Name");
             //End
 
-            var employees = await this.GetBusinessEmployee();
-            var currentEmployee = employees.Find(d => d.Id == RegisterViewModel.Employee.Id);
-            employees.Remove(currentEmployee);
+            var employees = await this.GetBusinessEmployee(id);
+            //var currentEmployee = employees.Find(d => d.Id == RegisterViewModel.Employee.Id);
+            //employees.Remove(currentEmployee);
             ViewBag.BusinessEmployeeId = employees;
 
             return View(response);
@@ -625,26 +626,24 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             response.Data.StartDate = response.Data.StartDate.Value;
             response.Data.EndDate = response.Data.StartDate.Value;
 
-            var invitees = await this.AppointmentInviteeService.Gets(response.Data.Id, TableType.AppointmentInvitee);
+            var employees = await this.GetBusinessEmployee(id);
+            ViewBag.BusinessEmployeeId = employees;
+            //if (invitees.Status)
+            //{
+            //    var employees = await this.GetBusinessEmployee();
+            //    var appointmentInvitees = new List<BusinessEmployeeViewModel>();
+            //    var employee = employees.Find(d => d.Id == response.Data.BusinessEmployeeId);
+            //    if (employee != null)
+            //        appointmentInvitees.Add(employee);
 
-            if (invitees.Status)
-            {
-                var employees = await this.GetBusinessEmployee();
-                var appointmentInvitees = new List<BusinessEmployeeViewModel>();
-                var employee = employees.Find(d => d.Id == response.Data.BusinessEmployeeId);
-                if (employee != null)
-                    appointmentInvitees.Add(employee);
-
-                foreach (var invitee in invitees.Data)
-                {
-                    employee = employees.Find(d => d.Id == invitee.BusinessEmployeeId);
-                    if (employee != null)
-                        appointmentInvitees.Add(employee);
-                }
-                ViewBag.BusinessEmployeeId = appointmentInvitees;
-            }
-
-
+            //    foreach (var invitee in invitees.Data)
+            //    {
+            //        employee = employees.Find(d => d.Id == invitee.BusinessEmployeeId);
+            //        if (employee != null)
+            //            appointmentInvitees.Add(employee);
+            //    }
+            //    ViewBag.BusinessEmployeeId = appointmentInvitees;
+            //}
             return View(response);
         }
 
@@ -1049,17 +1048,22 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         }
 
         [NonAction]
-        private async Task<List<BusinessEmployeeViewModel>> GetBusinessEmployee()
+        private async Task<List<BusinessEmployeeViewModel>> GetBusinessEmployee(long? appointmentId)
         {
-            var response = await this.BusinessEmployeeService.Gets(RegisterViewModel.Business.Id,TableType.BusinessId);
-            if (response != null)
+            var employees = new List<BusinessEmployeeViewModel>(); ;
+            if (appointmentId.HasValue)
             {
-                return response.Data;
+                var response = await this.BusinessEmployeeService.Gets(appointmentId, TableType.AppointmentInvitee);
+                if (response != null)
+                    employees = response.Data;
             }
             else
             {
-                return new List<BusinessEmployeeViewModel>();
+                var response = await this.BusinessEmployeeService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
+                if (response != null)
+                    employees = response.Data;
             }
+            return employees;
         }
 
         public async Task<ActionResult> GetCustomerById(long? id)
@@ -1117,6 +1121,19 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             {
                 return new List<DocumentCategoryViewModel>();
             }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetHours(DateTime date)
+        {
+            var hourHelper = new BusinessHourHelper(this.Token, this.RegisterViewModel.Employee.ServiceLocationId.Value);
+            var getHours = await hourHelper.GetHoursOfDay((int)date.DayOfWeek);
+            var hours = getHours.Select(s => new SelectListItem()
+            {
+                Value = s.Value,
+                Text = s.Value
+            });
+            return Json(hours, JsonRequestBehavior.AllowGet);
         }
     }
 }

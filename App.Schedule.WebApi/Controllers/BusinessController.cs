@@ -122,10 +122,11 @@ namespace App.Schedule.WebApi.Controllers
                     var business = _db.tblBusinesses.Find(id);
                     if (business != null)
                     {
-                        var timeZone = _db.tblTimezones.Where(d => d.Id == model.TimezoneId).FirstOrDefault();
-                        var country = _db.tblCountries.Find(timeZone.CountryId);
                         if (type == FieldType.All)
                         {
+                            var timeZone = _db.tblTimezones.Where(d => d.Id == model.TimezoneId).FirstOrDefault();
+                            var country = _db.tblCountries.Find(timeZone.CountryId);
+
                             business.Name = model.Name;
                             business.ShortName = model.ShortName;
                             business.IsInternational = model.IsInternational;
@@ -163,7 +164,7 @@ namespace App.Schedule.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = false, data = "", message = "ex: " +ex.Message.ToString() });
             }
         }
 

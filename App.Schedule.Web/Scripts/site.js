@@ -94,14 +94,12 @@ function onUpdate(btnSubmit, Id, url, refreshCallback) {
     });
 }
 
-function onGetData(id, url) {
-    console.log('id: ' + id + ' url: ' + url);
+function onGetData(data, url) {
     return new Promise((resolve, reject) => {
-        console.log('id: ' + id + ' url: ' + url);
         $.ajax({
             type: "GET",
             url: url,
-            data: { Id: id },
+            data: data,
             success: function (data) {
                 resolve(data);
             },
