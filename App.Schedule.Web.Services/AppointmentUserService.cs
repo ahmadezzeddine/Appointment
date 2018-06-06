@@ -11,7 +11,7 @@ namespace App.Schedule.Web.Services
     public class AppointmentUserService
     {
         public HttpClient httpClient;
-        //private const string baseUrl = "http://appointment.why-fi.com";
+        //public const string baseUrl = "http://appointment.why-fi.com";
         public static string baseUrl = "http://localhost/appointmentapi/";
         //public static string baseUrl = "http://localhost:57433/";
 

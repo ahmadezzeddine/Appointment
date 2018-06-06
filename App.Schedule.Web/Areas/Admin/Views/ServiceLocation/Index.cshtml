@@ -22,7 +22,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <b>Information</b>
-                @if (ViewBag.Total != null && ViewBag.Total >= Model.Data.Count)
+                @if (ViewBag.Total != null && ViewBag.Total >= Model?.Data?.Count)
                 {
                     <a href="@Url.Action("add", "servicelocation", new { area = "admin", id = ViewBag.BusinessId })" class="btn btn-info btn-xs pull-right">
                         <span class="glyphicon glyphicon-plus"></span> Add
@@ -30,9 +30,9 @@
                 }
             </div>
             <div class="panel-body">
-                @if (Model == null & Model.Data == null)
+                @if (Model == null || Model.Data == null)
                 {
-                    <text>Please try again later.</text>
+                    <text>No records.</text>
                     return;
                 }
                 <div class="tab-content">

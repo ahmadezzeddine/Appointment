@@ -148,6 +148,7 @@ namespace App.Schedule.WebApi.Controllers
                     {
                         if (model.IsActive)
                         {
+                            model.Password = Security.Decrypt(model.Password, true);
                             var response = await this.SendMail(model);
                             return Ok(new { status = response.Status, data = model, message = response.Message });
                         }
@@ -223,13 +224,35 @@ namespace App.Schedule.WebApi.Controllers
                     var businessEmployee = _db.tblBusinessEmployees.Find(id);
                     if (businessEmployee != null)
                     {
-                        var verifyPass = Security.Encrypt(model.OldPassword, true);
-                        if (businessEmployee.Email.ToLower() == model.Email.ToLower() && businessEmployee.Password == verifyPass)
+                        if (model.OldPassword != null)
+                        {
+                            var verifyPass = Security.Encrypt(model.OldPassword, true);
+                            if (businessEmployee.Email.ToLower() == model.Email.ToLower() && businessEmployee.Password == verifyPass)
+                            {
+                                businessEmployee.FirstName = model.FirstName;
+                                businessEmployee.LastName = model.LastName;
+                                businessEmployee.STD = model.STD;
+                                businessEmployee.PhoneNumber = model.PhoneNumber;
+                                businessEmployee.ServiceLocationId = model.ServiceLocationId;
+                                _db.Entry(businessEmployee).State = EntityState.Modified;
+                                var response = _db.SaveChanges();
+                                if (response > 0)
+                                    return Ok(new { status = true, data = businessEmployee, message = "success" });
+                                else
+                                    return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
+                            }
+                            else
+                            {
+                                return Ok(new { status = false, data = "", message = "Please provide a valid email id and password to update." });
+                            }
+                        }
+                        else
                         {
                             businessEmployee.FirstName = model.FirstName;
                             businessEmployee.LastName = model.LastName;
                             businessEmployee.STD = model.STD;
                             businessEmployee.PhoneNumber = model.PhoneNumber;
+                            businessEmployee.IsAdmin = model.IsAdmin;
                             businessEmployee.ServiceLocationId = model.ServiceLocationId;
                             _db.Entry(businessEmployee).State = EntityState.Modified;
                             var response = _db.SaveChanges();
@@ -237,10 +260,6 @@ namespace App.Schedule.WebApi.Controllers
                                 return Ok(new { status = true, data = businessEmployee, message = "success" });
                             else
                                 return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
-                        }
-                        else
-                        {
-                            return Ok(new { status = false, data = "", message = "Please provide a valid email id and password to update." });
                         }
                     }
                     else
@@ -350,6 +369,7 @@ namespace App.Schedule.WebApi.Controllers
                 data.Message = response > 0 ? "success" : "failed";
                 data.Status = response > 0 ? true : false;
                 data.Data = model;
+                businessEmployee.Password = model.Password;
                 await this.SendMail(businessEmployee);
             }
             return data;
@@ -485,7 +505,7 @@ namespace App.Schedule.WebApi.Controllers
                 htmlMailBody.Append("<div>Hi,</div><br /><br />");
                 htmlMailBody.Append("<div>Your Appointment Scheduler Login credential information:</div><br />");
                 htmlMailBody.Append(string.Format("<div>Login Id : {0}</div>", model.Email));
-                htmlMailBody.Append(string.Format("<div>Password : {0}</div>", Security.Decrypt(model.Password, true)));
+                htmlMailBody.Append(string.Format("<div>Password : {0}</div>", model.Password));
                 htmlMailBody.Append("<br /><br />");
                 htmlMailBody.Append("<h4>Regard's</h4>");
                 htmlMailBody.Append("<h3>Appointment Scheduler</h3>");

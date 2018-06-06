@@ -28,7 +28,7 @@
                 @Html.HiddenFor(d => d.Data.ServiceLocationId)
                 @Html.HiddenFor(d => d.Data.Email)
                 <div class="panel-body">
-                    @if (Model == null & Model.Data == null)
+                    @if (Model == null || Model.Data == null)
                 {
                         <text>Please try again later.</text>
                         return;

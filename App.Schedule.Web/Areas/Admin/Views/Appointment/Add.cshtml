@@ -18,7 +18,7 @@
 </div>
 <div class="row">
     <div class="col-lg-12">
-        @if (Model == null & Model.Data == null)
+        @if (Model == null || Model.Data == null)
         {
             <text>Please try again later.</text>
             return;

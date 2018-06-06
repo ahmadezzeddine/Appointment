@@ -130,7 +130,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             response.Data.StartDate = DateTime.Now.Date;
             response.Data.EndDate = DateTime.Now.Date;
 
-            var employees = await this.GetBusinessEmployee(-1);
+            var employees = await this.GetBusinessEmployee(RegisterViewModel.Business.Id,TableType.BusinessId);
             //var currentEmployee = employees.Find(d => d.Id == RegisterViewModel.Employee.Id);
             //employees.Remove(currentEmployee);
             ViewBag.BusinessEmployeeId = employees;
@@ -259,7 +259,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             ViewBag.PatternType = new SelectList(patternType, "Id", "Name");
             //End
 
-            var employees = await this.GetBusinessEmployee(id);
+            var employees = await this.GetBusinessEmployee(id.Value, TableType.AppointmentInvitee);
             //var currentEmployee = employees.Find(d => d.Id == RegisterViewModel.Employee.Id);
             //employees.Remove(currentEmployee);
             ViewBag.BusinessEmployeeId = employees;
@@ -626,7 +626,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             response.Data.StartDate = response.Data.StartDate.Value;
             response.Data.EndDate = response.Data.StartDate.Value;
 
-            var employees = await this.GetBusinessEmployee(id);
+            var employees = await this.GetBusinessEmployee(id.Value, TableType.AppointmentInvitee);
             ViewBag.BusinessEmployeeId = employees;
             //if (invitees.Status)
             //{
@@ -1048,21 +1048,12 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         }
 
         [NonAction]
-        private async Task<List<BusinessEmployeeViewModel>> GetBusinessEmployee(long? appointmentId)
+        private async Task<List<BusinessEmployeeViewModel>> GetBusinessEmployee(long? appointmentId, TableType type)
         {
             var employees = new List<BusinessEmployeeViewModel>(); ;
-            if (appointmentId.HasValue)
-            {
-                var response = await this.BusinessEmployeeService.Gets(appointmentId, TableType.AppointmentInvitee);
-                if (response != null)
-                    employees = response.Data;
-            }
-            else
-            {
-                var response = await this.BusinessEmployeeService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
-                if (response != null)
-                    employees = response.Data;
-            }
+            var response = await this.BusinessEmployeeService.Gets(appointmentId, type);
+            if (response != null)
+                employees = response.Data;
             return employees;
         }
 

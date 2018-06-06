@@ -22,7 +22,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             ViewBag.Total = RegisterViewModel.Business.tblMembership.IsUnlimited ? long.MaxValue : RegisterViewModel.Business.tblMembership.TotalLocation;
 
             var result = await ServiceLocationService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
-            if (result.Status)
+
+            if (!result.Status)
             {
                 var data = result.Data;
                 model.Status = result.Status;
@@ -39,7 +40,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             else
             {
                 model.Status = false;
-                model.Message = result.Message;
+                model.Message = "No records found";
             }
             return View(model);
         }

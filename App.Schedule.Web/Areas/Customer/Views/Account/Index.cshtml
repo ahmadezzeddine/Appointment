@@ -17,7 +17,7 @@
                 <b>Profile Information</b>
             </div>
             <div class="panel-body">
-                @if (Model == null & Model.Data == null)
+                @if (Model == null || Model.Data == null)
                 {
                     <text>Please try again later.</text>
                     return;
