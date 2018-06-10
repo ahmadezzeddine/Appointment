@@ -50,6 +50,38 @@ namespace App.Schedule.Web.Admin.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> View(long? id)
+        {
+            if (!id.HasValue)
+                return RedirectToAction("index", "membership");
+
+            var model = new ServiceDataViewModel<MembershipViewModel>();
+            try
+            {
+                var res = await this.MembershipService.Get(id.Value);
+                if (res.Status)
+                {
+                    var countries = await this.DashboardService.GetMemberships();
+                    model.HasError = false;
+                    model.Data = res.Data;
+                }
+                else
+                {
+                    model.HasError = true;
+                    model.Error = res.Message;
+                }
+            }
+            catch (Exception ex)
+            {
+                model.HasError = true;
+                model.Error = "There was a problem. Please try again later.";
+                model.ErrorDescription = ex.Message.ToString();
+            }
+            return View(model);
+        }
+
+
+        [HttpGet]
         public ActionResult Create()
         {
             var model = new ServiceDataViewModel<MembershipViewModel>();

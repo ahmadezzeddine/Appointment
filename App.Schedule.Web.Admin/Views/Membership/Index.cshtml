@@ -76,7 +76,7 @@
                                     <tr>
                                         @Html.HiddenFor(modelItem => item.Id)
                                         <td class="row-bg">
-                                            @Html.DisplayFor(modelItem => item.Title)
+                                            <a href="@Url.Action("view","membership", new { id = item.Id })">@Html.DisplayFor(modelItem => item.Title)</a>
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Price)
@@ -85,21 +85,12 @@
                                             <div>
                                                 Total Allowed
                                             </div>
-                                            @*<div class="col-md-12 bg-gray">
-                                                Employees: @Html.DisplayFor(modelItem => item.TotalEmployee)
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    Employees: @Html.DisplayFor(modelItem => item.TotalEmployee) / Locations: @Html.DisplayFor(modelItem => item.TotalLocation) / Offers: @Html.DisplayFor(modelItem => item.TotalOffers) / Customers: @Html.DisplayFor(modelItem => item.TotalCustomer)
+                                                    / Appointments: @Html.DisplayFor(modelItem => item.TotalAppointment)
+                                                </div>
                                             </div>
-                                            <div class="col-md-12 bg-gray">
-                                                Locations: @Html.DisplayFor(modelItem => item.TotalLocation)
-                                            </div>
-                                            <div class="col-md-12 bg-gray">
-                                                Offers: @Html.DisplayFor(modelItem => item.TotalOffers)
-                                            </div>
-                                            <div class="col-md-12 bg-gray">
-                                                Customers: @Html.DisplayFor(modelItem => item.TotalCustomer)
-                                            </div>
-                                            <div class="col-md-12 bg-gray">
-                                                Appointments: @Html.DisplayFor(modelItem => item.TotalAppointment)
-                                            </div>*@
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.IsUnlimited)

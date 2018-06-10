@@ -52,6 +52,30 @@ namespace App.Schedule.Domains.ViewModel
         public long? AdministratorId { get; set; }
     }
 
+    public class AdministratorUpdateViewModel
+    {
+        public long Id { get; set; }
+
+        [Required(ErrorMessage = "Please enter first name.")]
+        [MinLength(3, ErrorMessage = "FirstName should have atleast 3 character long")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Please enter last name.")]
+        [MinLength(3, ErrorMessage = "LastName should have atleast 3 character long")]
+        public string LastName { get; set; }
+
+        [Required(ErrorMessage = "Please enter your email id.")]
+        [EmailAddress(ErrorMessage = "Please enter a valid email id")]
+        public string Email { get; set; }
+
+        [StringLength(50)]
+        public string ContactNumber { get; set; }
+
+        public bool IsAdmin { get; set; }
+
+        public long? AdministratorId { get; set; }
+    }
+
     /// <summary>
     /// Class is used to hold  country information.
     /// </summary>
@@ -110,6 +134,8 @@ namespace App.Schedule.Domains.ViewModel
         public long? AdministratorId { get; set; }
 
         public virtual AdministratorViewModel Administrator { get; }
+
+        public CountryViewModel Country { get; set; }
 
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<tblBusiness> tblBusinesses { get; set; }
@@ -222,36 +248,44 @@ namespace App.Schedule.Domains.ViewModel
         [StringLength(250)]
         public string Name { get; set; }
 
+        [Required]
         [StringLength(50)]
         public string ShortName { get; set; }
 
         public string Logo { get; set; }
 
+        [Required]
         [StringLength(250)]
         public string PhoneNumbers { get; set; }
 
         [StringLength(250)]
         public string FaxNumbers { get; set; }
 
+        [Required]
         [StringLength(250)]
-        [EmailAddress(ErrorMessage = "Please provide a valid email id.")]
+        [EmailAddress(ErrorMessage = "Please provide a valid business email id.")]
         public string Email { get; set; }
 
         [StringLength(250)]
         public string Website { get; set; }
 
+        [Required]
         [StringLength(250)]
         public string Add1 { get; set; }
 
+        [Required]
         [StringLength(250)]
         public string Add2 { get; set; }
 
+        [Required]
         [StringLength(250)]
         public string City { get; set; }
 
+        [Required]
         [StringLength(250)]
         public string State { get; set; }
 
+        [Required]
         [StringLength(50)]
         public string Zip { get; set; }
 
@@ -266,10 +300,13 @@ namespace App.Schedule.Domains.ViewModel
         [Column(TypeName = "date")]
         public DateTime Created { get; set; }
 
+        [Required(ErrorMessage ="Membership is required.")]
         public int? MembershipId { get; set; }
 
+        [Required(ErrorMessage ="Business category is required.")]
         public int? BusinessCategoryId { get; set; }
 
+        [Required(ErrorMessage ="Timezone is required.")]
         public int? TimezoneId { get; set; }
 
         public virtual TimezoneViewModel tblTimezone { get; set; }
@@ -298,7 +335,7 @@ namespace App.Schedule.Domains.ViewModel
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Please enter your email id.")]
-        [EmailAddress(ErrorMessage = "Please enter a valid email id")]
+        [EmailAddress(ErrorMessage = "Please enter a valid user email id")]
         public string Email { get; set; }
 
         public int? STD { get; set; }
@@ -343,7 +380,29 @@ namespace App.Schedule.Domains.ViewModel
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<tblBusinessService> tblBusinessServices { get; set; }
     }
+    
+    public class BusinessEmployeeUpdateViewModel
+    {
+        public long Id { get; set; }
 
+        [Required(ErrorMessage = "Please enter first name.")]
+        [MinLength(3, ErrorMessage = "FirstName should have atleast 3 character long")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Please enter last name.")]
+        [MinLength(3, ErrorMessage = "LastName should have atleast 3 character long")]
+        public string LastName { get; set; }
+
+        [Required(ErrorMessage = "Please enter your email id.")]
+        [EmailAddress(ErrorMessage = "Please enter a valid user email id")]
+        public string Email { get; set; }
+
+        [Required]
+        public int? STD { get; set; }
+
+        [StringLength(250)]
+        public string PhoneNumber { get; set; }
+    }
     /// <summary>
     /// Class is used to hold service location of business information.
     /// </summary>

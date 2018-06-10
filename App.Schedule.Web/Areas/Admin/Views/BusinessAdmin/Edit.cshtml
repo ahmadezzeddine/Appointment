@@ -1,5 +1,5 @@
 ﻿@using App.Schedule.Domains.ViewModel;
-@model ResponseViewModel<BusinessEmployeeViewModel>
+@model ResponseViewModel<BusinessEmployeeUpdateViewModel>
 
 @{
     ViewBag.Title = "Update Administrator";
@@ -25,7 +25,6 @@
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(d => d.Data.Id)
-                @Html.HiddenFor(d => d.Data.ServiceLocationId)
                 @Html.HiddenFor(d => d.Data.Email)
                 <div class="panel-body">
                     @if (Model == null || Model.Data == null)
@@ -34,37 +33,41 @@
                         return;
                     }
                     <div class="tab-pane">
-                        <div class="row">
-                            <div class="form-group col-lg-6">
+                        <div class="row col-lg-12">
+                            <div class="form-group col-lg-6 required control-label">
                                 <label>First Name</label>
                                 @Html.EditorFor(d => d.Data.FirstName, new { htmlAttributes = new { @class = "form-control", @placeholder = "First Name" } })
                             </div>
-                            <div class="form-group col-lg-6">
+                            <div class="form-group col-lg-6 required control-label">
                                 <label>Last Name</label>
                                 @Html.EditorFor(d => d.Data.LastName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Last Name" } })
                             </div>
-                            <div class="form-group col-lg-6">
+                            <div class="form-group col-lg-6 required control-label">
+                                <label>STD code</label>
+                                @Html.EditorFor(d => d.Data.STD, new { htmlAttributes = new { @class = "form-control", @placeholder = "STD code" } })
+                            </div>
+                            <div class="form-group col-lg-6 required control-label">
                                 <label>Phone No.</label>
                                 @Html.EditorFor(d => d.Data.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone No." } })
                             </div>
-                            <div class="form-group col-lg-6">
+                            <div class="form-group col-lg-6 required control-label">
                                 <label>Email</label>
                                 <div class="form-control">
                                     @Model.Data.Email
                                 </div>
                             </div>
-                            <div class="form-group col-lg-6">
-                                <label>Old Password</label>
-                                @Html.EditorFor(d => d.Data.OldPassword, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Old Password" } })
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label>New Password</label>
-                                @Html.EditorFor(d => d.Data.Password, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Password" } })
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label>Confirm Password</label>
-                                @Html.EditorFor(d => d.Data.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Confirm Password" } })
-                            </div>
+                            @*<div class="form-group col-lg-6">
+            <label>Old Password</label>
+            @Html.EditorFor(d => d.Data.OldPassword, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Old Password" } })
+        </div>
+        <div class="form-group col-lg-6">
+            <label>New Password</label>
+            @Html.EditorFor(d => d.Data.Password, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Password" } })
+        </div>
+        <div class="form-group col-lg-6">
+            <label>Confirm Password</label>
+            @Html.EditorFor(d => d.Data.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Confirm Password" } })
+        </div>*@
                         </div>
                     </div>
                 </div>

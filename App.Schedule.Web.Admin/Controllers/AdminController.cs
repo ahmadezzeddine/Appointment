@@ -52,6 +52,8 @@ namespace App.Schedule.Web.Admin.Controllers
         {
             var model = new ServiceDataViewModel<AdministratorViewModel>();
             model.Data = new AdministratorViewModel();
+            model.Data.IsActive = true;
+            model.Data.IsAdmin = true;
             return View(model);
         }
 
@@ -78,7 +80,7 @@ namespace App.Schedule.Web.Admin.Controllers
                 else
                 {
                     result.Status = false;
-                    result.Message = "There was a problem. Please try again later.";
+                    result.Message = response.Message!=null ? response.Message : "There was a problem. Please try again later.";
                 }
             }
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
@@ -87,7 +89,7 @@ namespace App.Schedule.Web.Admin.Controllers
         [HttpGet]
         public async Task<ActionResult> Edit(long? id)
         {
-            var model = new ServiceDataViewModel<AdministratorViewModel>();
+            var model = new ServiceDataViewModel<AdministratorUpdateViewModel>();
             try
             {
                 model.HasError = true;
@@ -97,26 +99,24 @@ namespace App.Schedule.Web.Admin.Controllers
                 }
                 else
                 {
-                    if (id.Value == admin.Id)
+                    var res = await this.AdminService.Get(id.Value);
+                    if (res.Status)
                     {
-                        var res = await this.AdminService.Get(id.Value);
-                        if (res.Status)
+                        model.HasError = false;
+                        model.Data = new AdministratorUpdateViewModel()
                         {
-                            model.HasError = false;
-                            model.Data = res.Data;
-                            model.Data.Password = "";
-                            model.Data.ConfirmPassword = "";
-                        }
-                        else
-                        {
-                            model.Error = res.Message;
-                        }
+                            Id = res.Data.Id,
+                            FirstName = res.Data.FirstName,
+                            LastName = res.Data.LastName,
+                            ContactNumber = res.Data.ContactNumber,
+                            Email = res.Data.Email,
+                            IsAdmin = res.Data.IsAdmin,
+                            AdministratorId = res.Data.AdministratorId
+                        };
                     }
                     else
                     {
-                        model.HasError = true;
-                        model.Error = "You can not update other user information.";
-                        model.ErrorDescription = "";
+                        model.Error = res.Message;
                     }
                 }
             }
@@ -130,7 +130,88 @@ namespace App.Schedule.Web.Admin.Controllers
         }
 
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Data")] ServiceDataViewModel<AdministratorViewModel> model)
+        public async Task<ActionResult> Edit([Bind(Include = "Data")] ServiceDataViewModel<AdministratorUpdateViewModel> model)
+        {
+            var result = new ResponseViewModel<string>();
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
+                    result.Status = false;
+                    result.Message = errMessage;
+                }
+                else
+                {
+                    var adminiUpdateViewModel = new AdministratorViewModel()
+                    {
+                        Id = model.Data.Id,
+                        LastName = model.Data.LastName,
+                        FirstName = model.Data.FirstName,
+                        Email = model.Data.Email,
+                        ContactNumber = model.Data.ContactNumber,
+                        IsAdmin = model.Data.IsAdmin,
+                        AdministratorId = model.Data.Id
+                    };
+                    model.Data.AdministratorId = admin.Id;
+                    var response = await this.AdminService.Update(adminiUpdateViewModel);
+                    if (response.Status)
+                    {
+                        result.Status = true;
+                        result.Message = response.Message;
+                    }
+                    else
+                    {
+                        result.Status = false;
+                        result.Message = response.Message;
+                    }
+                }
+            }
+            catch
+            {
+                result.Status = false;
+                result.Message = "There was a problem. Please try again later.";
+            }
+            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Update(long? id)
+        {
+            var model = new ServiceDataViewModel<AdministratorViewModel>();
+            try
+            {
+                model.HasError = true;
+                if (!id.HasValue)
+                {
+                    model.Error = "Please provide a valid id.";
+                }
+                else
+                {
+                    var res = await this.AdminService.Get(id.Value);
+                    if (res.Status)
+                    {
+                        model.HasError = false;
+                        model.Data = res.Data;
+                        model.Data.Password = "";
+                    }
+                    else
+                    {
+                        model.Error = res.Message;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                model.HasError = true;
+                model.Error = "There was a problem. Please try again later.";
+                model.ErrorDescription = ex.Message.ToString();
+            }
+            return View(model);
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Update([Bind(Include = "Data")] ServiceDataViewModel<AdministratorViewModel> model)
         {
             var result = new ResponseViewModel<string>();
             try
@@ -145,9 +226,8 @@ namespace App.Schedule.Web.Admin.Controllers
                 {
                     if (model.Data.Id == admin.Id)
                     {
-                        model.Data.Created = DateTime.Now.ToUniversalTime();
                         model.Data.AdministratorId = admin.Id;
-                        var response = await this.AdminService.Update(model.Data);
+                        var response = await this.AdminService.UpdatePassword(model.Data);
                         if (response.Status)
                         {
                             result.Status = true;
@@ -162,7 +242,7 @@ namespace App.Schedule.Web.Admin.Controllers
                     else
                     {
                         result.Status = false;
-                        result.Message = "You cann't update other user information.";
+                        result.Message = "You cann't change password of other user information.";
                     }
                 }
             }
@@ -173,6 +253,7 @@ namespace App.Schedule.Web.Admin.Controllers
             }
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
+
 
         [HttpGet]
         public async Task<ActionResult> Delete(long? id)
@@ -224,7 +305,7 @@ namespace App.Schedule.Web.Admin.Controllers
             var result = new ResponseViewModel<AdministratorViewModel>();
             try
             {
-                if (model.Data!=null)
+                if (model.Data != null)
                 {
                     if (model.Data.Email.ToLower() != this.admin.Email.ToLower())
                     {

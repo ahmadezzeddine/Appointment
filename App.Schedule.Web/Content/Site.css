@@ -2,6 +2,13 @@
     background: #F4F4F4;
 }
 
+.form-group.required.control-label:before {
+    color: red;
+    content: "*";
+    position: absolute;
+    margin-left: -10px;
+}
+
 .well {
     height: 250px;
 }

@@ -86,12 +86,41 @@ namespace App.Schedule.Web.Admin.Services
             try
             {
                 //model.Password = HttpContext.Current.Server.UrlEncode(model.Password);
+                //var registerModel = new UserViewModel()
+                //{
+                //    UserType = UserType.SiteAdmin,
+                //    SiteAdmin = model
+                //};
+                var jsonContent = JsonConvert.SerializeObject(model);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var url = String.Format(AppointmentService.PUT_ADMIN, model.Id);
+                var response = await this.appointmentService.httpClient.PutAsync(url, content);
+                var result = await base.GetHttpResponse<UserViewModel>(response);
+                returnResponse.Status = result.Status;
+                returnResponse.Message = result.Message;
+                returnResponse.Data = null;
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Please try again later. ex:  " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
+        public async Task<ResponseViewModel<AdministratorViewModel>> UpdatePassword(AdministratorViewModel model)
+        {
+            var returnResponse = new ResponseViewModel<AdministratorViewModel>();
+            try
+            {
+                model.Password = HttpContext.Current.Server.UrlEncode(model.Password);
                 var registerModel = new UserViewModel()
                 {
                     UserType = UserType.SiteAdmin,
                     SiteAdmin = model
                 };
-                var jsonContent = JsonConvert.SerializeObject(registerModel);
+                var jsonContent = JsonConvert.SerializeObject(model);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
                 var url = String.Format(AppointmentService.PUT_API_ACCOUNT_REGISTER);
                 var response = await this.appointmentService.httpClient.PutAsync(url, content);

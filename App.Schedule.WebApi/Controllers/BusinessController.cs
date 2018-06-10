@@ -50,7 +50,7 @@ namespace App.Schedule.WebApi.Controllers
                     model.tblBusinessCategory = _db.tblBusinessCategories.Find(model.BusinessCategoryId);
                     model.tblMembership = _db.tblMemberships.Find(model.MembershipId);
                     model.tblTimezone = _db.tblTimezones.Find(model.TimezoneId);
-
+                    
                     if (model != null)
                         return Ok(new { status = true, data = model, message = "success" });
                     else
@@ -354,7 +354,7 @@ namespace App.Schedule.WebApi.Controllers
                     if (responseBusiness > 0 && responseServiceLocation > 0 && responseBusinessEmployee > 0 && responseBusinessHour > 0)
                     {
                         data.Status = true;
-                        data.Message = "Transaction successed.";
+                        data.Message = "success";
                         data.Data = new RegisterViewModel();
                         data.Data.Business = new BusinessViewModel();
                         data.Data.Employee = new BusinessEmployeeViewModel();

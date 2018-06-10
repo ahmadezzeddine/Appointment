@@ -84,7 +84,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 {
                     var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
                     result.Status = false;
-                    result.Message = errMessage;
+                    //result.Message = errMessage;
+                    result.Message = "* Please fill up required field. "+errMessage;
                 }
                 else
                 {

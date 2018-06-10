@@ -23,24 +23,31 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<ActionResult> Edit()
         {
+            var response = this.ResponseHelper.GetResponse<BusinessEmployeeUpdateViewModel>();
             var result = await BusinessEmployeeService.Get(RegisterViewModel.Employee.Id);
             if (result != null && result.Status)
             {
-                result.Data.Password = "";
-                return View(result);
+                var updateModel = new BusinessEmployeeUpdateViewModel()
+                {
+                    Email = result.Data.Email,
+                    FirstName = result.Data.FirstName,
+                    Id = result.Data.Id,
+                    LastName = result.Data.LastName,
+                    PhoneNumber = result.Data.PhoneNumber,
+                    STD = result.Data.STD
+                };
+                response.Data = updateModel;
+                response.Message = result.Message;
+                response.Status = result.Status;
             }
-            else
-            {
-                var response = this.ResponseHelper.GetResponse<BusinessEmployeeViewModel>();
-                return View(Response);
-            }
+            return View(response);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Data")] ResponseViewModel<BusinessEmployeeViewModel> model)
+        public async Task<ActionResult> Edit([Bind(Include = "Data")] ResponseViewModel<BusinessEmployeeUpdateViewModel> model)
         {
-            var result = new ResponseViewModel<BusinessHourViewModel>();
+            var result = new ResponseViewModel<BusinessEmployeeUpdateViewModel>();
             try
             {
                 if (!ModelState.IsValid)
@@ -51,24 +58,25 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 }
                 else
                 {
-                    if (model.Data.Password == model.Data.ConfirmPassword)
+                    var adminInformation = new BusinessEmployeeViewModel()
                     {
-                        var response = await this.BusinessEmployeeService.Update(model.Data, false);
-                        if (response.Status)
-                        {
-                            result.Status = true;
-                            result.Message = response.Message;
-                        }
-                        else
-                        {
-                            result.Status = false;
-                            result.Message = response.Message;
-                        }
+                        FirstName = model.Data.FirstName,
+                        LastName = model.Data.LastName,
+                        Email = model.Data.Email,
+                        Id = model.Data.Id,
+                        PhoneNumber = model.Data.PhoneNumber,
+                        STD = model.Data.STD
+                    };
+                    var response = await this.BusinessEmployeeService.Update(adminInformation);
+                    if (response.Status)
+                    {
+                        result.Status = true;
+                        result.Message = response.Message;
                     }
                     else
                     {
                         result.Status = false;
-                        result.Message = "Please confirm your password.";
+                        result.Message = response.Message;
                     }
                 }
             }

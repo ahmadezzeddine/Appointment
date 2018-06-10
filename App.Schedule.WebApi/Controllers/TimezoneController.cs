@@ -4,6 +4,7 @@ using System.Web.Http;
 using System.Data.Entity;
 using App.Schedule.Context;
 using App.Schedule.Domains;
+using System.Collections.Generic;
 using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.WebApi.Controllers
@@ -24,8 +25,16 @@ namespace App.Schedule.WebApi.Controllers
         {
             try
             {
-                var model = _db.tblTimezones.ToList();
-                return Ok(new { status = true, data = model, message = "Transaction successed." });
+                var model = _db.tblTimezones.Join(_db.tblCountries, t => t.CountryId, c => c.Id, (t, c) => new {
+                    AdministratorId = t.AdministratorId,
+                    CountryId = t.CountryId,
+                    Id = t.Id,
+                    IsDST = t.IsDST,
+                    Title = t.Title,
+                    UtcOffset = t.UtcOffset,
+                    Country = c
+                }).ToList();
+                return Ok(new { status = true, data = model, message = "success" });
             }
             catch (Exception ex)
             {
@@ -44,7 +53,7 @@ namespace App.Schedule.WebApi.Controllers
                 {
                     var model = _db.tblTimezones.Find(id);
                     if (model != null)
-                        return Ok(new { status = true, data = model, message = "Transaction successed." });
+                        return Ok(new { status = true, data = model, message = "success" });
                     else
                         return Ok(new { status = false, data = "", message = "Not found." });
                 }
@@ -83,7 +92,7 @@ namespace App.Schedule.WebApi.Controllers
 
                 if (response > 0)
                 {
-                    return Ok(new { status = true, data = timeZone, message = "Transaction successed." });
+                    return Ok(new { status = true, data = timeZone, message = "success" });
                 }
                 return Ok(new { status = false, data = "", message = "Transaction failed." });
             }
@@ -115,7 +124,7 @@ namespace App.Schedule.WebApi.Controllers
                         _db.Entry(timeZone).State = EntityState.Modified;
                         var response = _db.SaveChanges();
                         if (response > 0)
-                            return Ok(new { status = true, data = timeZone, message = "Transaction successed." });
+                            return Ok(new { status = true, data = timeZone, message = "success" });
                         else
                             return Ok(new { status = false, data = "", message = "Transaction failed." });
                     }
@@ -146,7 +155,7 @@ namespace App.Schedule.WebApi.Controllers
                         _db.tblTimezones.Remove(timeZone);
                         var response = _db.SaveChanges();
                         if (response > 0)
-                            return Ok(new { status = true, data = timeZone, message = "Transaction successed." });
+                            return Ok(new { status = true, data = timeZone, message = "success" });
                         else
                             return Ok(new { status = false, data = "", message = "Transaction failed." });
                     }

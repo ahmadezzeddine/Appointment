@@ -12,8 +12,8 @@ namespace App.Schedule.Web.Admin.Services
     {
         public HttpClient httpClient;
         //private const string baseUrl = "http://appointment.why-fi.com";
-        public static string baseUrl = "http://localhost/appointmentapi/";
-        //public static string baseUrl = "http://localhost:57433/";
+        //public static string baseUrl = "http://localhost/appointmentapi/";
+        public static string baseUrl = "http://localhost:57433/";
 
         //Admin Identity Token API
         public const string POST_API_ACCOUNT_REGISTER = "api/account/register";
@@ -26,6 +26,7 @@ namespace App.Schedule.Web.Admin.Services
         public const string GET_ADMIN_BYID = "api/administrator?Id={0}";
         public const string GET_ADMIN_BYEMAIL = "api/administrator?email={0}&password={1}&hasForgot={2}";
         public const string POST_ADMIN = "api/administrator";
+        public const string PUT_ADMIN = "api/administrator?id={0}";
         public const string DELETE_ADMIN = "api/administrator?id={0}&status={1}&type={2}";
         public const string DEACTIVE_ADMIN = "api/administrator?id={0}&status={1}&type={2}";
 

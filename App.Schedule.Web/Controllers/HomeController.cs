@@ -114,6 +114,7 @@ namespace App.Schedule.Web.Controllers
                 var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
                 result.Status = false;
                 result.Message = errMessage;
+                //result.Message = "Please fill up all required fields.";
             }
             else
             {

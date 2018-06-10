@@ -25,15 +25,15 @@
                 <div class="panel-body">
 
                     @Html.AntiForgeryToken()
-                    <div class="form-group col-lg-6">
+                    <div class="form-group col-lg-6 required control-label">
                         <label>Name</label>
                         @Html.EditorFor(model => model.Data.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Country Name" } })
                     </div>
-                    <div class="form-group col-lg-6">
+                    <div class="form-group col-lg-6 required control-label">
                         <label>ISO(2)</label>
                         @Html.EditorFor(model => model.Data.ISO, new { htmlAttributes = new { @class = "form-control", placeholder = "ISO2 ex. IN, US, UK" } })
                     </div>
-                    <div class="form-group col-lg-6">
+                    <div class="form-group col-lg-6 required control-label">
                         <label>ISO(3)</label>
                         @Html.EditorFor(model => model.Data.ISO3, new { htmlAttributes = new { @class = "form-control", placeholder = "ISO 3 ex. IND, USA" } })
                     </div>

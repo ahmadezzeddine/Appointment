@@ -25,7 +25,7 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 var model = _db.tblCountries.ToList();
-                return Ok(new { status = true, data = model, message = "Transaction successed." });
+                return Ok(new { status = true, data = model, message = "success" });
             }
             catch (Exception ex)
             {
@@ -44,7 +44,7 @@ namespace App.Schedule.WebApi.Controllers
                 {
                     var model = _db.tblCountries.Find(id);
                     if (model != null)
-                        return Ok(new { status = true, data = model, message = "Transaction successed." });
+                        return Ok(new { status = true, data = model, message = "success" });
                     else
                         return Ok(new { status = false, data = "", message = "Not found." });
                 }
@@ -86,7 +86,7 @@ namespace App.Schedule.WebApi.Controllers
 
                 if (response > 0)
                 {
-                    return Ok(new { status = true, data = country, message = "Transaction successed." });
+                    return Ok(new { status = true, data = country, message = "success" });
                 }
                 return Ok(new { status = false, data = "", message = "Transaction failed." });
             }
@@ -118,7 +118,7 @@ namespace App.Schedule.WebApi.Controllers
                         _db.Entry(country).State = EntityState.Modified;
                         var response = _db.SaveChanges();
                         if (response > 0)
-                            return Ok(new { status = true, data = country, message = "Transaction successed." });
+                            return Ok(new { status = true, data = country, message = "success" });
                         else
                             return Ok(new { status = false, data = "", message = "Transaction failed." });
                     }
@@ -149,7 +149,7 @@ namespace App.Schedule.WebApi.Controllers
                         _db.tblCountries.Remove(country);
                         var response = _db.SaveChanges();
                         if (response > 0)
-                            return Ok(new { status = true, data = country, message = "Transaction successed." });
+                            return Ok(new { status = true, data = country, message = "success" });
                         else
                             return Ok(new { status = false, data = "", message = "Transaction failed." });
                     }

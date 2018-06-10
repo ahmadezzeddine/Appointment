@@ -186,9 +186,9 @@ namespace App.Schedule.WebApi.Controllers
                         {
                             admin.FirstName = model.FirstName;
                             admin.LastName = model.LastName;
-                            admin.Password = Security.Encrypt(model.Password, true);
+                            //admin.Password = Security.Encrypt(model.Password, true);
                             admin.IsAdmin = model.IsAdmin;
-                            admin.IsActive = model.IsActive;
+                            //admin.IsActive = model.IsActive;
                             admin.ContactNumber = model.ContactNumber;
 
                             _db.Entry(admin).State = EntityState.Modified;

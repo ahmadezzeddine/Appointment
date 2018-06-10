@@ -281,6 +281,8 @@
     <Content Include="Views\Membership\Deactive.cshtml" />
     <Content Include="Views\BusinessCategory\Delete.cshtml" />
     <Content Include="Views\BusinessCategory\SubDelete.cshtml" />
+    <Content Include="Views\Admin\Update.cshtml" />
+    <Content Include="Views\Membership\View.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

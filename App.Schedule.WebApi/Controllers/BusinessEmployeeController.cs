@@ -224,16 +224,16 @@ namespace App.Schedule.WebApi.Controllers
                     var businessEmployee = _db.tblBusinessEmployees.Find(id);
                     if (businessEmployee != null)
                     {
-                        if (model.OldPassword != null)
-                        {
-                            var verifyPass = Security.Encrypt(model.OldPassword, true);
-                            if (businessEmployee.Email.ToLower() == model.Email.ToLower() && businessEmployee.Password == verifyPass)
+                        //if (model.OldPassword != null)
+                        //{
+                            //if (businessEmployee.Email.ToLower() == model.Email.ToLower() && businessEmployee.Password == verifyPass)
+                            if (businessEmployee.Email.ToLower() == model.Email.ToLower())
                             {
                                 businessEmployee.FirstName = model.FirstName;
                                 businessEmployee.LastName = model.LastName;
                                 businessEmployee.STD = model.STD;
                                 businessEmployee.PhoneNumber = model.PhoneNumber;
-                                businessEmployee.ServiceLocationId = model.ServiceLocationId;
+                                //businessEmployee.ServiceLocationId = model.ServiceLocationId;
                                 _db.Entry(businessEmployee).State = EntityState.Modified;
                                 var response = _db.SaveChanges();
                                 if (response > 0)
@@ -245,22 +245,22 @@ namespace App.Schedule.WebApi.Controllers
                             {
                                 return Ok(new { status = false, data = "", message = "Please provide a valid email id and password to update." });
                             }
-                        }
-                        else
-                        {
-                            businessEmployee.FirstName = model.FirstName;
-                            businessEmployee.LastName = model.LastName;
-                            businessEmployee.STD = model.STD;
-                            businessEmployee.PhoneNumber = model.PhoneNumber;
-                            businessEmployee.IsAdmin = model.IsAdmin;
-                            businessEmployee.ServiceLocationId = model.ServiceLocationId;
-                            _db.Entry(businessEmployee).State = EntityState.Modified;
-                            var response = _db.SaveChanges();
-                            if (response > 0)
-                                return Ok(new { status = true, data = businessEmployee, message = "success" });
-                            else
-                                return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
-                        }
+                        //}
+                        //else
+                        //{
+                        //    businessEmployee.FirstName = model.FirstName;
+                        //    businessEmployee.LastName = model.LastName;
+                        //    businessEmployee.STD = model.STD;
+                        //    businessEmployee.PhoneNumber = model.PhoneNumber;
+                        //    businessEmployee.IsAdmin = model.IsAdmin;
+                        //    businessEmployee.ServiceLocationId = model.ServiceLocationId;
+                        //    _db.Entry(businessEmployee).State = EntityState.Modified;
+                        //    var response = _db.SaveChanges();
+                        //    if (response > 0)
+                        //        return Ok(new { status = true, data = businessEmployee, message = "success" });
+                        //    else
+                        //        return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
+                        //}
                     }
                     else
                     {
