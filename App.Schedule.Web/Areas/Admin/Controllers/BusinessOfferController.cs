@@ -220,7 +220,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 }
                 else
                 {
-                    model.Status = false;
+                    model.Status = result.Status;
                     model.Message = result.Message;
                     model.Data = null;
                 }

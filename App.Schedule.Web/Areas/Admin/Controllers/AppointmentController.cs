@@ -27,28 +27,38 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
             var result = await AppointmentService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
             ViewBag.Total = RegisterViewModel.Business.tblMembership.IsUnlimited ? long.MaxValue : RegisterViewModel.Business.tblMembership.TotalAppointment;
-            if (result.Status)
+            if (result.Status && result.Data != null)
             {
+                var appointmentsModel = result.Data.Where(d => d.BusinessEmployeeId != null && d.BusinessEmployeeId == RegisterViewModel.Employee.Id).ToList();
+
                 if (type.HasValue)
                 {
                     if (type.Value == AppointmentViewStatus.Canceled)
                     {
-                        result.Data = result.Data.Where(d => d.StatusType == (int)StatusType.Canceled).ToList();
+                        result.Data = appointmentsModel.Where(d => d.StatusType == (int)StatusType.Canceled).ToList();
                     }
                     else if (type.Value == AppointmentViewStatus.Completed)
                     {
-                        result.Data = result.Data.Where(d => d.StatusType == (int)StatusType.Completed).ToList();
+                        result.Data = appointmentsModel.Where(d => d.StatusType == (int)StatusType.Completed).ToList();
                     }
                     else if (type.Value == AppointmentViewStatus.Pending)
                     {
-                        result.Data = result.Data.Where(d => d.StatusType != (int)StatusType.Canceled && d.StatusType != (int)StatusType.Completed).ToList();
+                        result.Data = appointmentsModel.Where(d => d.StatusType != (int)StatusType.Canceled && d.StatusType != (int)StatusType.Completed).ToList();
                     }
                     else if (type.Value == AppointmentViewStatus.Deactivate)
                     {
-                        result.Data = result.Data.Where(d => d.IsActive == false).ToList();
+                        result.Data = appointmentsModel.Where(d => d.IsActive == false).ToList();
+                    }
+                    else
+                    {
+                        result.Data = appointmentsModel.ToList();
                     }
                 }
-                var data = result.Data.Where(d => d.BusinessEmployeeId == RegisterViewModel.Employee.Id).OrderByDescending(d => d.Id).ToList();
+                else
+                {
+                    result.Data = appointmentsModel.Where(d => d.StatusType != (int)StatusType.Completed && d.StatusType != (int)StatusType.Canceled).ToList();
+                }
+                var data = result.Data.Where(d => d.IsActive == true).OrderByDescending(d => d.Id).ToList();
                 model.Status = result.Status;
                 model.Message = result.Message;
                 if (search == null)
@@ -67,6 +77,44 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             }
             return View(model);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> DeactiveView(int? page, string search, AppointmentViewStatus? type)
+        {
+            var model = this.ResponseHelper.GetResponse<IPagedList<AppointmentViewModel>>();
+            var pageNumber = page ?? 1;
+            ViewBag.search = search;
+
+            ViewBag.BusinessId = RegisterViewModel.Business.Id;
+            ViewBag.ServiceLocationId = RegisterViewModel.Employee.ServiceLocationId;
+
+            var result = await AppointmentService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
+            ViewBag.Total = RegisterViewModel.Business.tblMembership.IsUnlimited ? long.MaxValue : RegisterViewModel.Business.tblMembership.TotalAppointment;
+            if (result.Status && result.Data != null)
+            {
+                var appointmentsModel = result.Data.Where(d => d.BusinessEmployeeId != null && d.BusinessEmployeeId == RegisterViewModel.Employee.Id).ToList();
+
+                    result.Data = appointmentsModel.Where(d => d.StatusType != (int)StatusType.Completed && d.StatusType != (int)StatusType.Canceled).ToList();
+                var data = result.Data.Where(d => d.IsActive == false).OrderByDescending(d => d.Id).ToList();
+                model.Status = result.Status;
+                model.Message = result.Message;
+                if (search == null)
+                {
+                    model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 5);
+                }
+                else
+                {
+                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                }
+            }
+            else
+            {
+                model.Status = false;
+                model.Message = result.Message;
+            }
+            return View(model);
+        }
+
 
         [HttpGet]
         public async Task<ActionResult> Add()
@@ -156,19 +204,32 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             {
                 if (!model.Data.IsAllDayEvent)
                 {
-                    if (model.Data.StartTime > model.Data.EndTime)
+                    if (model.Data.StartTime >= model.Data.EndTime)
                     {
                         result.Status = false;
-                        result.Message = "Provide valid end time.";
+                        result.Message = "Please provide a valid end time.";
                         return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
                     }
                 }
                 if (model.Data.StartDate > model.Data.EndDate)
                 {
                     result.Status = false;
-                    result.Message = "Provide valid end date.";
+                    result.Message = "Please provide a valid end date.";
                     return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
                 }
+                if (model.Data.BusinessCustomerId <= 0)
+                {
+                    result.Status = false;
+                    result.Message = "Please select a customer.";
+                    return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+                }
+                if (model.Data.SelectedEmployeeIds == null || model.Data.SelectedEmployeeIds.Count <= 0)
+                {
+                    result.Status = false;
+                    result.Message = "Please select at least one invitee.";
+                    return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+                }
+
                 model.Data.StatusType = (int)StatusType.Confirmed;
                 var startdate = model.Data.StartDate.HasValue ? model.Data.StartDate.Value : DateTime.Now;
                 var starttime = model.Data.StartTime.HasValue ? model.Data.StartTime.Value : DateTime.Now;
@@ -232,9 +293,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             });
 
             //Hours
-            var hourHelper = new BusinessHourHelper(this.Token, this.RegisterViewModel.Employee.ServiceLocationId.Value);
+            var hourHelper = new BusinessHourHelper(this.Token, response.Data.ServiceLocationId.Value);
 
-            var fromHours = await hourHelper.GetHoursOfDay((int)DateTime.Now.DayOfWeek);
+            var fromHours = await hourHelper.GetHoursOfDay((int)response.Data.StartDate.Value.DayOfWeek);
             ViewBag.FromHours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
@@ -288,14 +349,26 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                         if (model.Data.StartTime >= model.Data.EndTime)
                         {
                             result.Status = false;
-                            result.Message = "Provide valid end time.";
+                            result.Message = "Please provide a valid end time.";
                             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
                         }
                     }
                     if (model.Data.StartDate > model.Data.EndDate)
                     {
                         result.Status = false;
-                        result.Message = "Provide valid end date.";
+                        result.Message = "Please provide a valid end date.";
+                        return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+                    }
+                    if (model.Data.BusinessCustomerId <= 0)
+                    {
+                        result.Status = false;
+                        result.Message = "Please select a customer.";
+                        return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+                    }
+                    if (model.Data.SelectedEmployeeIds == null || model.Data.SelectedEmployeeIds.Count <= 0)
+                    {
+                        result.Status = false;
+                        result.Message = "Please select at least one invitee.";
                         return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
                     }
                     model.Data.StatusType = (int)StatusType.Resheduled;
@@ -401,34 +474,24 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             return View(response);
         }
 
-        [HttpDelete]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Deactive([Bind(Include = "Data")] ResponseViewModel<AppointmentViewModel> model)
         {
             var result = new ResponseViewModel<BusinessHolidayViewModel>();
             try
             {
-                if (!ModelState.IsValid)
+                if (model.Data.StatusType == null) model.Data.StatusType = 0;
+                var response = await this.AppointmentService.Deactive(model.Data.Id, model.Data.IsActive);
+                if (response.Status)
                 {
-                    var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
-                    result.Status = false;
-                    result.Message = errMessage;
+                    result.Status = true;
+                    result.Message = response.Message;
                 }
                 else
                 {
-                    if (model.Data.StatusType == null) model.Data.StatusType = 0;
-                    var response = await this.AppointmentService.Deactive(model.Data.Id, model.Data.IsActive);
-                    if (response.Status)
-                    {
-                        result.Status = true;
-                        result.Message = response.Message;
-                    }
-                    else
-                    {
-                        result.Status = false;
-                        result.Message = response.Message;
-                    }
-
+                    result.Status = false;
+                    result.Message = response.Message;
                 }
             }
             catch
@@ -550,7 +613,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var result = await AppointmentService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
             if (result.Status)
             {
-                var data = result.Data;
+                var data = result.Data.Where(d => d.BusinessEmployeeId == RegisterViewModel.Employee.Id).ToList();
                 model.Status = result.Status;
                 model.Message = result.Message;
                 if (search == null)
@@ -676,6 +739,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
             response.Data.StartDate = response.Data.StartDate.Value;
             response.Data.EndDate = response.Data.StartDate.Value;
+            response.Data.Payment.IsPaid = true;
             //End
 
             return View(response);
@@ -695,8 +759,33 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 }
                 else
                 {
+                    result.Status = false;
+                    model.Data.Payment.IsPaid = true;
                     if (model.Data.StatusType == null) model.Data.StatusType = (int)StatusType.Completed;
                     model.Data.Payment.AppointmentId = model.Data.Id;
+                    if(model.Data.Payment.BillingType == (int)BillingType.Cheque && model.Data.Payment.ChequeNumber == null )
+                    {
+                        result.Message = "Please enter cheque number.";
+                        return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+                    }
+                    else if(model.Data.Payment.BillingType == (int)BillingType.CreditCard)
+                    {
+                        if (model.Data.Payment.CCardNumber == null)
+                        {
+                            result.Message = "Please enter Card Number.";
+                            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+                        }
+                        else if (model.Data.Payment.CCFirstName == null)
+                        {
+                            result.Message = "Please enter First Name.";
+                            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+                        }
+                        else if (model.Data.Payment.CCLastName == null)
+                        {
+                            result.Message = "Please enter Last Name.";
+                            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+                        }
+                    }
                     var response = await this.AppointmentService.Resheduled(model.Data, "");
                     if (response.Status)
                     {
@@ -1115,9 +1204,11 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetHours(DateTime date)
+        public async Task<JsonResult> GetHours(DateTime date, long? LocationId)
         {
-            var hourHelper = new BusinessHourHelper(this.Token, this.RegisterViewModel.Employee.ServiceLocationId.Value);
+            if (!LocationId.HasValue)
+                LocationId = RegisterViewModel.Employee.ServiceLocationId;
+            var hourHelper = new BusinessHourHelper(this.Token, LocationId.Value);
             var getHours = await hourHelper.GetHoursOfDay((int)date.DayOfWeek);
             var hours = getHours.Select(s => new SelectListItem()
             {

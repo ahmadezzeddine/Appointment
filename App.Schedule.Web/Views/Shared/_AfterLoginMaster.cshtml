@@ -42,6 +42,7 @@
                     <ul class="dropdown-menu dropdown-user">
                         <li>
                             <a href="@Url.Action("index","account", new { area = "admin" })"><i class="fa fa-user fa-fw"></i> Profile</a>
+                            <a href="@Url.Action("security","businessadmin", new { area = "admin" })"><i class="fa fa-lock fa-fw"></i>Change Password</a>
                         </li>
                         <li class="divider"></li>
                         <li>
@@ -86,6 +87,7 @@
                             <ul class="nav nav-second-level">
                                 <li><a href="@Url.Action("index","appointment",new { area="admin" })">List All</a></li>
                                 <li><a href="@Url.Action("add","appointment",new { area="admin" })">Add New</a></li>
+                                <li><a href="@Url.Action("deactiveview","appointment",new { area="admin" })">Deactive</a></li>
                                 <li><a href="@Url.Action("search","appointment",new { area="admin" })">Search</a></li>
                                 <li><a href="@Url.Action("payments","appointment",new { area="admin" })">Payments</a></li>
                             </ul>

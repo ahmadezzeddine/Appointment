@@ -14,7 +14,10 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         {
             var result = await this.BusinessHolidayService.Gets(RegisterViewModel.Employee.ServiceLocationId.Value, TableType.ServiceLocationId);
             if (result != null && result.Status)
+            {
+                result.Data = result.Data.OrderByDescending(d => d.Id).ToList();
                 return View(result);
+            }
             else
             {
                 var response = this.ResponseHelper.GetResponse<List<BusinessHolidayViewModel>>();
@@ -23,9 +26,14 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult Add()
+        public ActionResult Add(long? servicelocationid)
         {
             var model = new ResponseViewModel<BusinessHolidayViewModel>();
+            model.Data = new BusinessHolidayViewModel();
+            if (servicelocationid.HasValue)
+                model.Data.ServiceLocationId = servicelocationid.Value;
+            else
+                model.Data.ServiceLocationId = this.RegisterViewModel.Employee.ServiceLocationId;
             var holidayTypes = from RecureType e in Enum.GetValues(typeof(RecureType))
                                select new
                                {
@@ -34,8 +42,6 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                                };
             ViewBag.HolidayType = new SelectList(holidayTypes, "Id", "Name");
             model.Status = true;
-            model.Data = new BusinessHolidayViewModel();
-            model.Data.ServiceLocationId = this.RegisterViewModel.Employee.ServiceLocationId;
             return View(model);
         }
 

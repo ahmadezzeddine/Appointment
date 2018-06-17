@@ -107,9 +107,7 @@
                 <hr />
                 <div>
                     <span class="text-left">
-                        <a href="@Url.Action("index", "accountsetup", new { area = "admin" })" class="btn btn-default btn-sm">
-                            Account Setup
-                        </a>
+                        <input type="button" class="btn btn-default btn-sm" value="Back" onclick="@("window.location.href='" + @Url.Action("index","servicelocation",new { area="admin"}) + "'");" />
                     </span>
                     <span class="pull-right">
                         @Html.PagedListPager(Model.Data, page => Url.Action("Index", new { page }))

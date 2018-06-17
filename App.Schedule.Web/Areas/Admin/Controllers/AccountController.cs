@@ -45,6 +45,19 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> Security()
+        {
+            var result = await BusinessEmployeeService.Get(RegisterViewModel.Employee.Id);
+            if (result != null && result.Status)
+                return View(result);
+            else
+            {
+                var response = this.ResponseHelper.GetResponse<BusinessEmployeeViewModel>();
+                return View(Response);
+            }
+        }
+
+        [HttpGet]
         public async Task<ActionResult> Membership()
         {
             var result = await MembershipService.Get(RegisterViewModel.Business.MembershipId);

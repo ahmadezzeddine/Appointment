@@ -26,16 +26,16 @@ namespace App.Schedule.Domains.ViewModel
         public string OldPassword { get; set; }
 
 
-        [Required(ErrorMessage = "Please enter your password")]
+        [Required(ErrorMessage = "Please enter  password")]
         [MinLength(8, ErrorMessage = "Password must be greater than 8 character")]
         [MaxLength(50, ErrorMessage = "Password must be less than 50 character")]
         public string Password { get; set; }
 
-        [Compare("Password", ErrorMessage = "Please cheque your confirm password")]
+        [Compare("Password", ErrorMessage = "Please check  confirm password")]
         public string ConfirmPassword { get; set; }
 
 
-        [Required(ErrorMessage = "Please enter your email id.")]
+        [Required(ErrorMessage = "Please enter  email id.")]
         [EmailAddress(ErrorMessage = "Please enter a valid email id")]
         public string Email { get; set; }
 
@@ -64,7 +64,7 @@ namespace App.Schedule.Domains.ViewModel
         [MinLength(3, ErrorMessage = "LastName should have atleast 3 character long")]
         public string LastName { get; set; }
 
-        [Required(ErrorMessage = "Please enter your email id.")]
+        [Required(ErrorMessage = "Please enter  email id.")]
         [EmailAddress(ErrorMessage = "Please enter a valid email id")]
         public string Email { get; set; }
 
@@ -324,6 +324,10 @@ namespace App.Schedule.Domains.ViewModel
     /// </summary>
     public class BusinessEmployeeViewModel
     {
+        public BusinessEmployeeViewModel()
+        {
+            this.LoggedUser = new RegisterViewModel();
+        }
         public long Id { get; set; }
 
         [Required(ErrorMessage = "Please enter first name.")]
@@ -334,7 +338,7 @@ namespace App.Schedule.Domains.ViewModel
         [MinLength(3, ErrorMessage = "LastName should have atleast 3 character long")]
         public string LastName { get; set; }
 
-        [Required(ErrorMessage = "Please enter your email id.")]
+        [Required(ErrorMessage = "Please enter email id.")]
         [EmailAddress(ErrorMessage = "Please enter a valid user email id")]
         public string Email { get; set; }
 
@@ -343,12 +347,12 @@ namespace App.Schedule.Domains.ViewModel
         [StringLength(250)]
         public string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Please enter your password")]
+        [Required(ErrorMessage = "Please enter password")]
         [MinLength(8, ErrorMessage = "Password must be greater than 8 character")]
         [MaxLength(50, ErrorMessage = "Password must be less than 50 character")]
         public string Password { get; set; }
 
-        [Compare("Password", ErrorMessage = "Please cheque your confirm password")]
+        [Compare("Password", ErrorMessage = "Please check confirm password")]
         public string ConfirmPassword { get; set; }
 
         [MinLength(8, ErrorMessage = "Password must be greater than 8 character")]
@@ -366,6 +370,8 @@ namespace App.Schedule.Domains.ViewModel
 
         public ServiceLocationViewModel ServiceLocation { get; set; }
 
+        public RegisterViewModel LoggedUser { get; set; }
+        
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<tblAppointmentFeedback> tblAppointmentFeedbacks { get; set; }
 
@@ -380,7 +386,7 @@ namespace App.Schedule.Domains.ViewModel
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<tblBusinessService> tblBusinessServices { get; set; }
     }
-    
+
     public class BusinessEmployeeUpdateViewModel
     {
         public long Id { get; set; }
@@ -393,7 +399,7 @@ namespace App.Schedule.Domains.ViewModel
         [MinLength(3, ErrorMessage = "LastName should have atleast 3 character long")]
         public string LastName { get; set; }
 
-        [Required(ErrorMessage = "Please enter your email id.")]
+        [Required(ErrorMessage = "Please enter email id.")]
         [EmailAddress(ErrorMessage = "Please enter a valid user email id")]
         public string Email { get; set; }
 
@@ -402,7 +408,37 @@ namespace App.Schedule.Domains.ViewModel
 
         [StringLength(250)]
         public string PhoneNumber { get; set; }
+
+        public long? ServiceLocationId { get; set; }
+
+        public ServiceLocationViewModel ServiceLocation { get; set; }
+
+        public RegisterViewModel LoggedUser { get; set; }
+
+        public bool IsAdmin { get; set; }
     }
+
+    public class BusinessEmployeeUpdateSecurityViewModel
+    {
+        public long Id { get; set; }
+
+        [Required(ErrorMessage = "Please enter email id.")]
+        [EmailAddress(ErrorMessage = "Please enter a valid user email id")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "Please enter password")]
+        [MinLength(8, ErrorMessage = "Password must be greater than 8 character")]
+        [MaxLength(50, ErrorMessage = "Password must be less than 50 character")]
+        public string Password { get; set; }
+
+        [Compare("Password", ErrorMessage = "Please check confirm password")]
+        public string ConfirmPassword { get; set; }
+
+        [MinLength(8, ErrorMessage = "Password must be greater than 8 character")]
+        [MaxLength(50, ErrorMessage = "Password must be less than 50 character")]
+        public string OldPassword { get; set; }
+    }
+
     /// <summary>
     /// Class is used to hold service location of business information.
     /// </summary>
@@ -641,8 +677,9 @@ namespace App.Schedule.Domains.ViewModel
         [StringLength(250)]
         public string PhoneNumber { get; set; }
 
-        [Required]
         [StringLength(250)]
+        [Required(ErrorMessage = "Please enter email id.")]
+        [EmailAddress(ErrorMessage = "Please enter a valid user email id")]
         public string Email { get; set; }
 
         [StringLength(250)]
@@ -660,17 +697,93 @@ namespace App.Schedule.Domains.ViewModel
         [StringLength(10)]
         public string Zip { get; set; }
 
-        [Required(ErrorMessage = "Please enter your password")]
+        [Required(ErrorMessage = "Please enter  password")]
         [MinLength(8, ErrorMessage = "Password must be greater than 8 character")]
         [MaxLength(50, ErrorMessage = "Password must be less than 50 character")]
         public string Password { get; set; }
 
-        [Compare("Password", ErrorMessage = "Please cheque your confirm password")]
+        [Compare("Password", ErrorMessage = "Please check  confirm password")]
         public string ConfirmPassword { get; set; }
 
         [MinLength(8, ErrorMessage = "Password must be greater than 8 character")]
         [MaxLength(50, ErrorMessage = "Password must be less than 50 character")]
         public string OldPassword { get; set; }
+
+        [Column(TypeName = "date")]
+        public DateTime Created { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public long? ServiceLocationId { get; set; }
+
+        public virtual ServiceLocationViewModel ServiceLocation { get; set; }
+
+        public string Picture
+        {
+            get
+            {
+                if (this.ProfilePicture != null)
+                    return String.Format("data:image/png;base64,{0}", Convert.ToBase64String(this.ProfilePicture));
+                else
+                    return "";
+            }
+        }
+
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        //public virtual ICollection<tblAppointment> tblAppointments { get; set; }
+
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        //public virtual ICollection<tblAppointmentFeedback> tblAppointmentFeedbacks { get; set; }
+
+        //public virtual tblTimezone tblTimezone { get; set; }
+
+        //public virtual tblServiceLocation tblServiceLocation { get; set; }
+    }
+
+    public class BusinessCustomerUpdateViewModel
+    {
+        public BusinessCustomerUpdateViewModel()
+        {
+            this.ProfilePicture = new List<byte>().ToArray();
+        }
+
+        public long Id { get; set; }
+
+        [Required]
+        [StringLength(250)]
+        public string FirstName { get; set; }
+
+        [Required]
+        [StringLength(250)]
+        public string LastName { get; set; }
+
+        [Column(TypeName = "image")]
+        public byte[] ProfilePicture { get; set; }
+
+        public int? StdCode { get; set; }
+
+        [StringLength(250)]
+        public string PhoneNumber { get; set; }
+
+        [StringLength(250)]
+        [Required(ErrorMessage = "Please enter email id.")]
+        [EmailAddress(ErrorMessage = "Please enter a valid user email id")]
+        public string Email { get; set; }
+
+        [StringLength(250)]
+        public string Add1 { get; set; }
+
+        [StringLength(250)]
+        public string Add2 { get; set; }
+
+        [StringLength(250)]
+        public string City { get; set; }
+
+        [StringLength(250)]
+        public string State { get; set; }
+
+        [StringLength(10)]
+        public string Zip { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime Created { get; set; }
@@ -710,13 +823,16 @@ namespace App.Schedule.Domains.ViewModel
     {
         public long Id { get; set; }
 
+        [Required(ErrorMessage = "The Global Appointment Id field is required.")]
         public string GlobalAppointmentId { get; set; }
 
+        [Required(ErrorMessage = "The Service Name field is required.")]
         public long? BusinessServiceId { get; set; }
 
-        [Required(ErrorMessage = "Please enter Title")]
+        [Required(ErrorMessage = "Please Enter Title")]
         public string Title { get; set; }
 
+        [Required(ErrorMessage = "The Pattern Type field is required.")]
         public int PatternType { get; set; }
 
         [DataType(DataType.Date)]
@@ -755,12 +871,15 @@ namespace App.Schedule.Domains.ViewModel
         [Column(TypeName = "date")]
         public DateTime Created { get; set; }
 
+        [Required(ErrorMessage = "The Offer Name field is required.")]
         public long? BusinessOfferId { get; set; }
 
+        [Required(ErrorMessage = "The Service Location Name field is required.")]
         public long? ServiceLocationId { get; set; }
 
         public long? BusinessEmployeeId { get; set; }
 
+        [Required(ErrorMessage = "The Customer Name field is required.")]
         public long? BusinessCustomerId { get; set; }
 
         public string BusinessServiceName { get; set; }
@@ -816,16 +935,20 @@ namespace App.Schedule.Domains.ViewModel
     {
         public long Id { get; set; }
 
+        [Required(ErrorMessage ="Please select if paid.")]
         public bool IsPaid { get; set; }
 
         public DateTime PaidDate { get; set; }
 
         [Column(TypeName = "money")]
+        [Required(ErrorMessage = "Please enter amount.")]
         public decimal? Amount { get; set; }
 
+        [Required(ErrorMessage = "Please select billing type.")]
         public int BillingType { get; set; }
 
         [StringLength(250)]
+        [Required(ErrorMessage = "Please enter order number.")]
         public string PurchaseOrderNo { get; set; }
 
         [StringLength(250)]
@@ -872,6 +995,7 @@ namespace App.Schedule.Domains.ViewModel
         public int? Rating { get; set; }
 
         [Column(TypeName = "ntext")]
+        [Required(ErrorMessage ="Please enter feedback message.")]
         public string Feedback { get; set; }
 
         public bool IsActive { get; set; }
@@ -930,14 +1054,17 @@ namespace App.Schedule.Domains.ViewModel
     {
         public long Id { get; set; }
 
+        [Required(ErrorMessage = "Please Enter Document Title.")]
         public string Title { get; set; }
 
+        [Required(ErrorMessage = "Please Enter Document Type.")]
         public int? DocumentType { get; set; }
 
         public bool IsEmployeeUpload { get; set; }
 
         public string DocumentLink { get; set; }
 
+        [Required(ErrorMessage = "Please Select Document Category.")]
         public long? DocumentCategoryId { get; set; }
 
         public long? AppointmentId { get; set; }

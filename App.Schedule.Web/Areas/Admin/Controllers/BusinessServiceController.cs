@@ -48,6 +48,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             response.Data = new BusinessServiceViewModel();
             response.Data.EmployeeId = RegisterViewModel.Employee.Id;
             response.Status = true;
+            response.Data.IsActive = true;
             return View(response);
         }
 
@@ -137,6 +138,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 {
                     if (response.Status)
                     {
+                        response.Data.IsActive = !response.Data.IsActive;
                         return View(response);
                     }
                 }

@@ -47,7 +47,7 @@ namespace App.Schedule.Web.Services
             var returnResponse = new ResponseViewModel<List<BusinessOfferServiceLocationViewModel>>();
             try
             {
-                var url = String.Format(AppointmentUserService.GETS_BUSINESSOFFERSERVICELOCATION, id.Value, TableType.All);
+                var url = String.Format(AppointmentUserService.GETS_BUSINESSOFFERSERVICELOCATION, id.Value, (int)TableType.BusinessOfferId);
                 var response = await this.appointmentUserService.httpClient.GetAsync(url);
                 returnResponse = await base.GetHttpResponse<List<BusinessOfferServiceLocationViewModel>>(response);
             }
@@ -65,7 +65,7 @@ namespace App.Schedule.Web.Services
             var returnResponse = new ResponseViewModel<List<BusinessOfferViewModel>>();
             try
             {
-                var url = String.Format(AppointmentUserService.GETS_BUSINESSOFFERSERVICELOCATION_TTYPE, id.Value, type);
+                var url = String.Format(AppointmentUserService.GETS_BUSINESSOFFERSERVICELOCATION, id.Value, type);
                 var response = await this.appointmentUserService.httpClient.GetAsync(url);
                 returnResponse = await base.GetHttpResponse<List<BusinessOfferViewModel>>(response);
             }

@@ -1,5 +1,5 @@
 ﻿@using App.Schedule.Domains.ViewModel;
-@model ResponseViewModel<BusinessCustomerViewModel>
+@model ResponseViewModel<BusinessCustomerUpdateViewModel>
 
 @{
     ViewBag.Title = "Update Profile";
@@ -26,10 +26,9 @@
                     }
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(d => d.Data.Id)
-                    @Html.HiddenFor(d => d.Data.ConfirmPassword)
                     @Html.HiddenFor(d => d.Data.ServiceLocationId)
                     <div class="tab-pane">
-                        <div class="row">
+                        @*<div class="row">
                             <div class="col-lg-12 text-center" style="padding:20px 0;">
                                 @if (Model.Data.ProfilePicture != null && Model.Data.ProfilePicture.Length > 0)
                                 {
@@ -45,7 +44,7 @@
                                     <span class="fa fa-pencil"></span>
                                 </a>
                             </div>
-                        </div>
+                        </div>*@
                         <div class="row">
                             <div class="form-group col-lg-6">
                                 <label>First Name</label>
@@ -89,11 +88,6 @@
                                     @Model.Data.Email
                                     @Html.HiddenFor(d => d.Data.Email)
                                 </div>
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label>Password</label>
-                                @Html.EditorFor(d => d.Data.Password, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Password" } })
-                                <div class="text-info">Enter your password to update information</div>
                             </div>
                         </div>
                     </div>

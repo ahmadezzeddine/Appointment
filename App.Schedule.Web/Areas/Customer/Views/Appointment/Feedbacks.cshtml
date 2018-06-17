@@ -70,11 +70,18 @@
                                                             <div class="col-lg-12">
                                                                 @item.Feedback
                                                             </div>
-                                                            @if (!item.IsEmployee)
+                                                            @if (!item.IsEmployee && item.Rating.HasValue)
                                                             {
-                                                            <div class="col-lg-12">
-                                                                <span class="fa fa-star-o" data-="@item.Rating"></span>
-                                                            </div>
+                                                                <div class="col-lg-12">
+                                                                    @for (int i = 0; i < item.Rating; i++)
+                                                                    {
+                                                                        <span class="fa fa-star checked"></span>
+                                                                    }
+                                                                    @for (int i = item.Rating.Value; i < 5; i++)
+                                                                    {
+                                                                        <span class="fa fa-star"></span>
+                                                                    }
+                                                                </div>
                                                             }
                                                         </div>
                                                     </td>
@@ -103,6 +110,6 @@
                         </span>
                     </div>
                 </div>
+            </div>
         </div>
     </div>
-</div>

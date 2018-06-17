@@ -39,13 +39,13 @@
     right: 0;
 }
 
-.absolute-center.is-login-box {
-    width: 50%;
-    height: 250px;
-    min-width: 300px;
-    max-width: 400px;
-    padding: 20px;
-}
+    .absolute-center.is-login-box {
+        width: 50%;
+        height: 250px;
+        min-width: 300px;
+        max-width: 400px;
+        padding: 20px;
+    }
 
     .absolute-center.is-login {
         width: 50%;
@@ -155,21 +155,22 @@
     max-height: 100px;
 }
 
-.ap-card{
-    margin:0;
+.ap-card {
+    margin: 0;
 }
 
-.ap-card .card-body{
-   padding-left:40px;
+    .ap-card .card-body {
+        padding-left: 40px;
+    }
+
+.ap-title {
+    font-size: 2em;
+    color: #384650;
 }
 
-.ap-title{
-    font-size:2em;
-    color:#384650;
-}
-.ap-other{
-    font-size:0.8em;
-    color:black;
+.ap-other {
+    font-size: 0.8em;
+    color: black;
 }
 
 #progress-wrp {
@@ -199,3 +200,7 @@
         display: inline-block;
         color: #000000;
     }
+
+.checked {
+    color: orange;
+}

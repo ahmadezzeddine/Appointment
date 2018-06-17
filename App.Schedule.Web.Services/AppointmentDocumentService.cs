@@ -64,7 +64,7 @@ namespace App.Schedule.Web.Services
                 {
                     returnResponse.Data.ForEach((data) =>
                     {
-                        data.DocumentLink = AppointmentUserService.baseUrl + data.DocumentLink.Substring(2);
+                        data.DocumentLink = AppointmentUserService.baseUrl+ data.DocumentLink?.Substring(2);
                     });
                 }
             }

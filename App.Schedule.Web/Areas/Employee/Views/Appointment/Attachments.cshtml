@@ -16,6 +16,9 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <b>Document List</b>
+                <a href="@Url.Action("add_document", "appointment", new { area = "employee", id = ViewBag.AppointmentId })" class="btn btn-info btn-xs pull-right">
+                    <span class="glyphicon glyphicon-plus"></span> Add
+                </a>
             </div>
             <div class="panel-body">
                 @if (Model == null || Model.Data == null)
@@ -77,8 +80,13 @@
                 </div>
                 <hr />
                 <div>
+                    <span class="text-left">
+                        <a href="@Request.UrlReferrer" class="btn btn-default btn-sm">
+                            Back
+                        </a>
+                    </span>
                     <span class="pull-right">
-                        @Html.PagedListPager(Model.Data, page => Url.Action("index", new { page, id= ViewBag.AppointmentId }))
+                        @Html.PagedListPager(Model.Data, page => Url.Action("index", new { page, id = ViewBag.AppointmentId }))
                     </span>
                 </div>
             </div>

@@ -62,11 +62,11 @@
                                                         }
                                                         else if (item.Type == (int)RecureType.RpeatEveryWeek)
                                                         {
-                                                            <text>Every </text> @item.OnDate.ToString("dd"); <text> day of the month since </text>  @item.OnDate.ToString("MMMM yyyy");
+                                                            <text>Every </text> @item.OnDate.ToString("dddd"); <text> since </text>  @item.OnDate.ToString("MMMM yyyy");
                                                         }
                                                         else if (item.Type == (int)RecureType.RepeatEveryMonth)
                                                         {
-                                                            <text>Every </text> @item.OnDate.ToString("dddd"); <text> since </text>  @item.OnDate.ToString("MMMM dd, yyyy");
+                                                            <text>Every </text> @item.OnDate.ToString("dd"); <text>  day of the month since </text>  @item.OnDate.ToString("MMMM dd, yyyy");
 
                                                         }
                                                         else if (item.Type == (int)RecureType.RepeatEveryYear)

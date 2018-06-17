@@ -19,67 +19,50 @@ namespace App.Schedule.WebApi.Controllers
             _db = new AppScheduleDbContext();
         }
 
-        // GET: api/businessofferservicelocation/5
-        public IHttpActionResult Get(long? id, string type)
+        // GET: api/businessemployee
+        public IHttpActionResult Get(long? id, TableType type)
         {
             try
             {
                 if (!id.HasValue)
                     return Ok(new { status = false, data = "", message = "Please provide valid ID." });
-                else
+
+                if(type == TableType.All)
                 {
-                    if (type != "all")
+                    var model = _db.tblBusinessOfferServiceLocations.ToList();
+                    if (model != null)
                     {
-                        var model = _db.tblBusinessOfferServiceLocations.ToList();
-                        if (model != null)
+                        var offerLocation = model.Select(s => new
                         {
-                            var offerLocation = model.Select(s => new
-                            {
-                                Id = s.Id,
-                                BusinessOfferId = s.BusinessOfferId,
-                                ServiceLocationId = s.ServiceLocationId,
-                                BusinessOfferViewModel = _db.tblBusinessOffers.Find(s.BusinessOfferId),
-                                ServiceLocationViewModel = _db.tblServiceLocations.Find(s.ServiceLocationId)
-                            });
-                            return Ok(new { status = true, data = offerLocation, message = "success" });
-                        }
-                        else
-                            return Ok(new { status = false, data = "", message = "Not found." });
+                            Id = s.Id,
+                            BusinessOfferId = s.BusinessOfferId,
+                            ServiceLocationId = s.ServiceLocationId,
+                            BusinessOfferViewModel = _db.tblBusinessOffers.Find(s.BusinessOfferId),
+                            ServiceLocationViewModel = _db.tblServiceLocations.Find(s.ServiceLocationId)
+                        });
+                        return Ok(new { status = true, data = offerLocation, message = "success" });
                     }
                     else
-                    {
-                        var offerLocations = _db.tblBusinessOfferServiceLocations.Where(d => d.BusinessOfferId == id).ToList();
-                        if (offerLocations.Count > 0)
-                        {
-                            var locations = offerLocations.Select(s => new
-                            {
-                                Id = s.Id,
-                                BusinessOfferId = s.BusinessOfferId,
-                                ServiceLocationId = s.ServiceLocationId,
-                                BusinessOfferViewModel = _db.tblBusinessOffers.Find(s.BusinessOfferId),
-                                ServiceLocationViewModel = _db.tblServiceLocations.Find(s.ServiceLocationId)
-                            });
-                            return Ok(new { status = true, data = locations, message = "success" });
-                        }
-                        return Ok(new { status = false, data = "", message = "No records." });
-                    }
+                        return Ok(new { status = false, data = "", message = "No Service Location Found." });
                 }
-            }
-            catch (Exception ex)
-            {
-                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
-            }
-        }
-
-        // GET: api/businessemployee
-        public IHttpActionResult Get(long? id, TableType tableType)
-        {
-            try
-            {
-                if (!id.HasValue)
-                    return Ok(new { status = false, data = "", message = "Please provide valid ID." });
-
-                if (tableType == TableType.ServiceLocationId)
+                else if(type == TableType.BusinessOfferId)
+                {
+                    var offerLocations = _db.tblBusinessOfferServiceLocations.Where(d => d.BusinessOfferId == id).ToList();
+                    if (offerLocations.Count > 0)
+                    {
+                        var locations = offerLocations.Select(s => new
+                        {
+                            Id = s.Id,
+                            BusinessOfferId = s.BusinessOfferId,
+                            ServiceLocationId = s.ServiceLocationId,
+                            BusinessOfferViewModel = _db.tblBusinessOffers.Find(s.BusinessOfferId),
+                            ServiceLocationViewModel = _db.tblServiceLocations.Find(s.ServiceLocationId)
+                        });
+                        return Ok(new { status = true, data = locations, message = "success" });
+                    }
+                    return Ok(new { status = false, data = "", message = "No Service Location Found." });
+                }
+                else if (type == TableType.ServiceLocationId)
                 {
                     var offerLocations = _db.tblBusinessOfferServiceLocations.Where(d => d.ServiceLocationId == id.Value).ToList();
                     var offers = new List<tblBusinessOffer>();
@@ -90,7 +73,7 @@ namespace App.Schedule.WebApi.Controllers
                     }
                     return Ok(new { status = true, data = offers, message = "success" });
                 }
-                else if(tableType == TableType.EmployeeId)
+                else if(type == TableType.EmployeeId)
                 {
                     var serviceModel = _db.tblBusinessOffers.Where(d => d.BusinessEmployeeId == id.Value).ToList();
                     return Ok(new { status = true, data = serviceModel, message = "success" });

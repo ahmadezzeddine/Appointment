@@ -1,5 +1,5 @@
 ﻿@using App.Schedule.Domains.ViewModel;
-@model ResponseViewModel<BusinessEmployeeViewModel>
+@model ResponseViewModel<BusinessEmployeeUpdateViewModel>
 
 @{
     ViewBag.Title = "Update Profile";
@@ -18,49 +18,44 @@
             </div>
             @using (Ajax.BeginForm("update", "account", new AjaxOptions { }))
             {
-                <div class="panel-body">
-                    @if (Model == null || Model.Data == null)
-                    {
-                        <text>Please try again later.</text>
-                        return;
-                    }
-                    @Html.AntiForgeryToken()
-                    @Html.HiddenFor(d => d.Data.Id)
-                    @Html.HiddenFor(d => d.Data.ConfirmPassword)
-                    @Html.HiddenFor(d => d.Data.ServiceLocationId)
-                    <div class="tab-pane">
-                        <div class="row">
-                            <div class="form-group col-lg-6">
-                                <label>First Name</label>
-                                @Html.EditorFor(model => model.Data.FirstName, new { htmlAttributes = new { @class = "form-control", placeholder = "First Name" } })
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label>Last Name</label>
-                                @Html.EditorFor(model => model.Data.LastName, new { htmlAttributes = new { @class = "form-control", placeholder = "Last Name" } })
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label>Std Code</label>
-                                @Html.EditorFor(model => model.Data.STD, new { htmlAttributes = new { @class = "form-control", placeholder = "Std Code" } })
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label>Phone</label>
-                                @Html.EditorFor(model => model.Data.PhoneNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Phone Number" } })
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label>Email</label>
-                                <div class="form-control">
-                                    @Model.Data.Email
-                                    @Html.HiddenFor(d => d.Data.Email)
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label>Password</label>
-                                @Html.EditorFor(d => d.Data.Password, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "Password" } })
-                                <div class="text-info">Enter your password to update information</div>
+            <div class="panel-body">
+                @if (Model == null || Model.Data == null)
+    {
+            <text>Please try again later.</text>
+return;
+}
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(d => d.Data.Id)
+                @Html.HiddenFor(d => d.Data.Email)
+                @Html.HiddenFor(d => d.Data.IsAdmin)
+                @Html.HiddenFor(d => d.Data.ServiceLocationId)
+                <div class="tab-pane">
+                    <div class="row col-lg-12">
+                        <div class="form-group col-lg-6 required control-label">
+                            <label>First Name</label>
+                            @Html.EditorFor(model => model.Data.FirstName, new { htmlAttributes = new { @class = "form-control", placeholder = "First Name" } })
+                        </div>
+                        <div class="form-group col-lg-6 required control-label">
+                            <label>Last Name</label>
+                            @Html.EditorFor(model => model.Data.LastName, new { htmlAttributes = new { @class = "form-control", placeholder = "Last Name" } })
+                        </div>
+                        <div class="form-group col-lg-6 required control-label">
+                            <label>Std Code</label>
+                            @Html.EditorFor(model => model.Data.STD, new { htmlAttributes = new { @class = "form-control", placeholder = "Std Code" } })
+                        </div>
+                        <div class="form-group col-lg-6 required control-label">
+                            <label>Phone</label>
+                            @Html.EditorFor(model => model.Data.PhoneNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Phone Number" } })
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label>Email</label>
+                            <div class="form-control">
+                                @Model.Data.Email
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
                 <div class="panel-footer">
                     <div class="row">
                         <div class="col-lg-12">
@@ -73,14 +68,3 @@
         </div>
     </div>
 </div>
-
-@section scripts{
-    <script>
-        $(document).ready(function () {
-            $("#Data_Password").on('keyup', function () {
-                console.log($("#Data_Password").val());
-                $("#Data_ConfirmPassword").val($("#Data_Password").val());
-            });
-        });
-    </script>
-}

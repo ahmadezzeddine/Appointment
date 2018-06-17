@@ -51,6 +51,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             response.Data = new BusinessCustomerViewModel();
             response.Data.ServiceLocationId = RegisterViewModel.Employee.ServiceLocationId;
             response.Status = true;
+            response.Data.IsActive = true;
 
             var ServiceLocations = await this.GetServiceLocations();
             ViewBag.ServiceLocationId = ServiceLocations.Select(s => new SelectListItem()
@@ -94,16 +95,36 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<ActionResult> Edit(long? id, long? locationid)
         {
+            var employeUpdateViewModel = new ResponseViewModel<BusinessCustomerUpdateViewModel>();
             if (id.HasValue && locationid.HasValue)
             {
                 ViewBag.CustomerId = id.Value;
-
                 var response = await this.BusinessCustomerService.Get(id.Value);
-
+                employeUpdateViewModel.Data = new BusinessCustomerUpdateViewModel();
+                employeUpdateViewModel.Status = response.Status;
+                employeUpdateViewModel.Message = response.Message;
                 if (response != null)
                 {
                     if (response.Status)
                     {
+                        if (response.Data != null)
+                        {
+                            employeUpdateViewModel.Data = new BusinessCustomerUpdateViewModel()
+                            {
+                                Id = response.Data.Id,
+                                FirstName = response.Data.FirstName,
+                                LastName = response.Data.LastName,
+                                Email = response.Data.Email,
+                                StdCode = response.Data.StdCode,
+                                PhoneNumber = response.Data.PhoneNumber,
+                                Add1 = response.Data.Add1,
+                                Add2 = response.Data.Add2,
+                                City = response.Data.City,
+                                State = response.Data.State,
+                                Zip = response.Data.Zip,
+                                ServiceLocationId = response.Data.ServiceLocationId
+                            };
+                        }
                         var ServiceLocations = await this.GetServiceLocations();
                         ViewBag.ServiceLocationId = ServiceLocations.Select(s => new SelectListItem()
                         {
@@ -112,8 +133,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                             Selected = s.Id == locationid.Value ? true : false
                         });
 
-                        response.Status = true;
-                        return View(response);
+                        employeUpdateViewModel.Status = true;
+                        return View(employeUpdateViewModel);
                     }
 
                 }
@@ -123,19 +144,44 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Data")]ResponseViewModel<BusinessCustomerViewModel> model)
+        public async Task<ActionResult> Edit([Bind(Include = "Data")]ResponseViewModel<BusinessCustomerUpdateViewModel> model)
         {
-            var result = new ResponseViewModel<BusinessCustomerViewModel>();
-            var response = await this.BusinessCustomerService.Update(model.Data);
-            if (response == null)
+            var result = new ResponseViewModel<BusinessCustomerUpdateViewModel>();
+            if (!ModelState.IsValid)
             {
+                var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
                 result.Status = false;
-                result.Message = response != null ? response.Message : "There was a problem. Please try again later.";
+                result.Message = errMessage;
             }
             else
             {
-                result.Status = response.Status;
-                result.Message = response.Message;
+                var businessEmployeeModel = new BusinessCustomerViewModel()
+                {
+                    Id = model.Data.Id,
+                    FirstName = model.Data.FirstName,
+                    LastName = model.Data.LastName,
+                    Email = model.Data.Email,
+                    StdCode = model.Data.StdCode,
+                    PhoneNumber = model.Data.PhoneNumber,
+                    Add1 = model.Data.Add1,
+                    Add2 = model.Data.Add2,
+                    City = model.Data.City,
+                    State = model.Data.State,
+                    Zip = model.Data.Zip,
+                    ServiceLocationId = model.Data.ServiceLocationId
+                };
+
+                var response = await this.BusinessCustomerService.Update(businessEmployeeModel);
+                if (response == null)
+                {
+                    result.Status = false;
+                    result.Message = response != null ? response.Message : "There was a problem. Please try again later.";
+                }
+                else
+                {
+                    result.Status = response.Status;
+                    result.Message = response.Message;
+                }
             }
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }

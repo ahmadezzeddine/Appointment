@@ -16,10 +16,11 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         public async Task<ActionResult> Index()
         {
             var appointments = await GetAppointments();
-            ViewBag.totalAppointmentCount = appointments.Count();
-            ViewBag.totalAppointmentPendingCount = appointments.Where(d => d.StatusType.Value != (int)StatusType.Completed && d.StatusType != (int)StatusType.Canceled).Count();
-            ViewBag.totalAppointmentCompletedCount = appointments.Where(d => d.StatusType.Value == (int)StatusType.Completed).Count();
-            ViewBag.totalAppointmentCanceledCount = appointments.Where(d => d.StatusType.Value == (int)StatusType.Canceled).Count();
+            var appointmentsModel = appointments.Where(d => d.BusinessEmployeeId != null && d.BusinessEmployeeId == RegisterViewModel.Employee.Id).ToList();
+            ViewBag.totalAppointmentCount = appointmentsModel.Count();
+            ViewBag.totalAppointmentPendingCount = appointmentsModel.Where(d => d.StatusType.Value != (int)StatusType.Completed && d.StatusType != (int)StatusType.Canceled).Count();
+            ViewBag.totalAppointmentCompletedCount = appointmentsModel.Where(d => d.StatusType.Value == (int)StatusType.Completed).Count();
+            ViewBag.totalAppointmentCanceledCount = appointmentsModel.Where(d => d.StatusType.Value == (int)StatusType.Canceled).Count();
             ViewBag.BusinessHours = await this.GetBusinessHours();
             return View();
         }
@@ -49,7 +50,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         public async Task<JsonResult> GetDiaryEvents(DateTime start, DateTime end)
         {
             var appointments = await GetAppointments();
-            var recurredAppointments = this.RecurreAppointments(appointments).ToArray();
+            var appointmentModel = appointments.Where(d => d.BusinessEmployeeId != null && d.BusinessEmployeeId == RegisterViewModel.Employee.Id && d.IsActive == true).ToList();
+            var recurredAppointments = this.RecurreAppointments(appointmentModel).ToArray();
             return Json(recurredAppointments, JsonRequestBehavior.AllowGet);
         }
 

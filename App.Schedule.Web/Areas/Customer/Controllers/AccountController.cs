@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using System.Threading.Tasks;
 using App.Schedule.Domains.ViewModel;
 using App.Schedule.Web.Areas.Customer.Controllers.Base;
+using System;
 
 namespace App.Schedule.Web.Areas.Customer.Controllers
 {
@@ -25,22 +26,48 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
         [HttpGet]
         public async Task<ActionResult> Update()
         {
-            var model = await this.BusinessCustomerService.Get(RegisterCustomerViewModel.Customer.Id);
-            if (model.Data != null && model.Data.ServiceLocation == null)
+            var updateModel = new ResponseViewModel<BusinessCustomerUpdateViewModel>();
+            updateModel.Status = false;
+            try
             {
-                model.Data.Password = "";
-                var serviceLocation = await this.ServiceLocationService.Get(model.Data.ServiceLocationId);
-                if (serviceLocation != null && serviceLocation.Data != null)
+                var model = await this.BusinessCustomerService.Get(RegisterCustomerViewModel.Customer.Id);
+                if (model.Data != null && model.Data.ServiceLocation == null)
                 {
-                    model.Data.ServiceLocation = serviceLocation.Data;
+                    updateModel.Status = model.Status;
+                    updateModel.Data = new BusinessCustomerUpdateViewModel()
+                    {
+                        Id = model.Data.Id,
+                        Add1 = model.Data.Add1,
+                        Add2 = model.Data.Add2,
+                        City = model.Data.City,
+                        Email = model.Data.Email,
+                        FirstName = model.Data.FirstName,
+                        LastName = model.Data.FirstName,
+                        PhoneNumber = model.Data.PhoneNumber,
+                        ProfilePicture = model.Data.ProfilePicture,
+                        State = model.Data.State,
+                        StdCode = model.Data.StdCode,
+                        Zip = model.Data.Zip,
+                        ServiceLocationId = model.Data.ServiceLocationId
+                    };
+                    var serviceLocation = await this.ServiceLocationService.Get(model.Data.ServiceLocationId);
+                    if (serviceLocation != null && serviceLocation.Data != null)
+                    {
+                        updateModel.Data.ServiceLocation = serviceLocation.Data;
+                    }
                 }
             }
-            return View(model);
+            catch
+            {
+                updateModel.Status = false;
+                updateModel.Message = "Please try again later.";
+            }
+            return View(updateModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Update([Bind(Include = "Data")] ResponseViewModel<BusinessCustomerViewModel> model)
+        public async Task<ActionResult> Update([Bind(Include = "Data")] ResponseViewModel<BusinessCustomerUpdateViewModel> model)
         {
             var result = new ResponseViewModel<BusinessCustomerViewModel>();
             try
@@ -53,7 +80,23 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
                 }
                 else
                 {
-                    var response = await this.BusinessCustomerService.Update(model.Data);
+                    var customerModel = new BusinessCustomerViewModel()
+                    {
+                        Id = model.Data.Id,
+                        Add1 = model.Data.Add1,
+                        Add2 = model.Data.Add2,
+                        City = model.Data.City,
+                        Email = model.Data.Email,
+                        FirstName = model.Data.FirstName,
+                        LastName = model.Data.LastName,
+                        PhoneNumber = model.Data.PhoneNumber,
+                        ProfilePicture = model.Data.ProfilePicture,
+                        State = model.Data.State,
+                        StdCode = model.Data.StdCode,
+                        Zip = model.Data.Zip,
+                        ServiceLocationId = model.Data.ServiceLocationId
+                    };
+                    var response = await this.BusinessCustomerService.Update(customerModel);
                     if (response.Status)
                     {
                         result.Status = true;

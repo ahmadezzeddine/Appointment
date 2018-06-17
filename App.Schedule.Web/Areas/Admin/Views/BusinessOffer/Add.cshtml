@@ -34,7 +34,7 @@
                         <div class="row">
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(d => d.Data.BusinessEmployeeId)
-                            <div class="form-group col-lg-6">
+                            <div class="form-group col-lg-6 required control-label">
                                 <label>Name</label>
                                 @Html.EditorFor(d => d.Data.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Business Offer Name" } })
                             </div>

@@ -50,6 +50,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
         public async Task<JsonResult> GetDiaryEvents()
         {
             var appointments = await GetAppointments();
+            var appointmentModel = appointments.Where(d => d.BusinessCustomerId != null && d.BusinessCustomerId == RegisterCustomerViewModel.Customer.Id && d.IsActive == true).ToList();
             var recurredAppointments = this.RecurreAppointments(appointments).ToArray();
             return Json(recurredAppointments, JsonRequestBehavior.AllowGet);
         }

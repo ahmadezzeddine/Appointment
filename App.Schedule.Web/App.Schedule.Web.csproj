@@ -408,6 +408,10 @@
     <Content Include="Areas\Admin\Views\ServiceLocation\Employees.cshtml" />
     <Content Include="Areas\Admin\Views\ServiceLocation\Customers.cshtml" />
     <Content Include="Areas\Admin\Views\ServiceLocation\Offers.cshtml" />
+    <Content Include="Areas\Employee\Views\Appointment\Add_Document.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\Security.cshtml" />
+    <Content Include="Areas\Admin\Views\BusinessAdmin\Security.cshtml" />
+    <Content Include="Areas\Admin\Views\Appointment\DeactiveView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />

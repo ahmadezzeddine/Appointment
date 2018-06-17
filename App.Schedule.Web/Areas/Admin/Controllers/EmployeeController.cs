@@ -18,6 +18,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             ViewBag.search = search;
 
             ViewBag.BusinessId = RegisterViewModel.Business.Id;
+            ViewBag.LoggedEmployeeEmailId = RegisterViewModel.Employee.Email;
             ViewBag.ServiceLocationId = RegisterViewModel.Employee.ServiceLocationId;
             ViewBag.Total = RegisterViewModel.Business.tblMembership.IsUnlimited ? long.MaxValue : RegisterViewModel.Business.tblMembership.TotalEmployee;
             var result = await BusinessEmployeeService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
@@ -69,8 +70,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
                 result.Status = false;
+                var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
                 result.Message = errMessage;
             }
             else
@@ -96,14 +97,25 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             if (id.HasValue && locationid.HasValue)
             {
                 ViewBag.EmployeeId = id.Value;
-
                 var response = await this.BusinessEmployeeService.Get(id.Value);
-
                 if (response != null)
                 {
                     if (response.Status)
                     {
-                       // response.Data.ConfirmPassword = response.Data.Password = response.Data.OldPassword = Security.Decrypt(response.Data.Password, true);
+                        var model = new ResponseViewModel<BusinessEmployeeUpdateViewModel>();
+                        model.Data = new BusinessEmployeeUpdateViewModel()
+                        {
+                            Email = response.Data.Email,
+                            FirstName = response.Data.FirstName,
+                            Id = response.Data.Id,
+                            IsAdmin = response.Data.IsAdmin,
+                            LastName = response.Data.LastName,
+                            PhoneNumber = response.Data.PhoneNumber,
+                            ServiceLocationId = response.Data.ServiceLocationId,
+                            STD = response.Data.STD,
+                            LoggedUser = RegisterViewModel
+                        };
+
                         var ServiceLocations = await this.GetServiceLocations();
                         ViewBag.ServiceLocationId = ServiceLocations.Select(s => new SelectListItem()
                         {
@@ -112,10 +124,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                             Selected = s.Id == locationid.Value ? true : false
                         });
 
-                        response.Status = true;
-                        return View(response);
+                        model.Status = true;
+                        return View(model);
                     }
-
                 }
             }
             return RedirectToAction("index");
@@ -123,22 +134,50 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Data")]ResponseViewModel<BusinessEmployeeViewModel> model)
+        public async Task<ActionResult> Edit([Bind(Include = "Data")]ResponseViewModel<BusinessEmployeeUpdateViewModel> model)
         {
-            var result = new ResponseViewModel<BusinessEmployeeViewModel>();
-
-            var response = await this.BusinessEmployeeService.Update(model.Data);
-            if (response == null)
+            var result = new ResponseViewModel<BusinessEmployeeUpdateViewModel>();
+            try
             {
-                result.Status = false;
-                result.Message = response != null ? response.Message : "There was a problem. Please try again later.";
+                if (!ModelState.IsValid)
+                {
+                    result.Status = false;
+                    var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
+                    result.Message = errMessage;
+                    return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var employeeUpdateModel = new BusinessEmployeeViewModel()
+                    {
+                        Email = model.Data.Email,
+                        FirstName = model.Data.FirstName,
+                        Id = model.Data.Id,
+                        IsAdmin = model.Data.IsAdmin,
+                        LastName = model.Data.LastName,
+                        PhoneNumber = model.Data.PhoneNumber,
+                        ServiceLocationId = model.Data.ServiceLocationId,
+                        STD = model.Data.STD,
+                        LoggedUser = RegisterViewModel
+                    };
+                    var response = await this.BusinessEmployeeService.Update(employeeUpdateModel);
+                    if (response == null)
+                    {
+                        result.Status = false;
+                        result.Message = response != null ? response.Message : "There was a problem. Please try again later.";
+                    }
+                    else
+                    {
+                        result.Status = response.Status;
+                        result.Message = response.Message;
+                    }
+                    return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+                }
             }
-            else
+            catch
             {
-                result.Status = response.Status;
-                result.Message = response.Message;
+                return Json(new { status = false, message = "There was a problem. Please try again later." }, JsonRequestBehavior.AllowGet);
             }
-            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -151,10 +190,12 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
                 if (response != null)
                 {
-                    if (response.Status)
+                    if (response.Status && response.Data!=null)
                     {
-                        response.Status = true;
-                        return View(response);
+                        if (response.Data.Email.ToLower() != RegisterViewModel.Employee.Email)
+                        {
+                            return View(response);
+                        }
                     }
 
                 }
@@ -190,10 +231,12 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
                 if (response != null)
                 {
-                    if (response.Status)
+                    if (response.Status && response.Data != null)
                     {
-                        response.Status = true;
-                        return View(response);
+                        if (response.Data.Email.ToLower() != RegisterViewModel.Employee.Email)
+                        {
+                            return View(response);
+                        }
                     }
 
                 }

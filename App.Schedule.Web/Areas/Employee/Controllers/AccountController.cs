@@ -29,24 +29,44 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
         [HttpGet]
         public async Task<ActionResult> Update()
         {
-            var model = await this.BusinessEmployeeService.Get(RegisterViewModel.Employee.Id);
-            if (model.Data != null && model.Data.ServiceLocation == null)
+            //var model = await this.BusinessEmployeeService.Get(RegisterViewModel.Employee.Id);
+            //if (model.Data != null && model.Data.ServiceLocation == null)
+            //{
+            //    var serviceLocation = await this.ServiceLocationService.Get(model.Data.ServiceLocationId);
+            //    if (serviceLocation != null && serviceLocation.Data != null)
+            //    {
+            //        model.Data.ServiceLocation = serviceLocation.Data;
+            //    }
+            //}
+            //return View(model);
+
+            var response = this.ResponseHelper.GetResponse<BusinessEmployeeUpdateViewModel>();
+            var result = await BusinessEmployeeService.Get(RegisterViewModel.Employee.Id);
+            if (result != null && result.Status)
             {
-                model.Data.Password = "";
-                var serviceLocation = await this.ServiceLocationService.Get(model.Data.ServiceLocationId);
-                if (serviceLocation != null && serviceLocation.Data != null)
+                var updateModel = new BusinessEmployeeUpdateViewModel()
                 {
-                    model.Data.ServiceLocation = serviceLocation.Data;
-                }
+                    Email = result.Data.Email,
+                    FirstName = result.Data.FirstName,
+                    Id = result.Data.Id,
+                    LastName = result.Data.LastName,
+                    PhoneNumber = result.Data.PhoneNumber,
+                    STD = result.Data.STD,
+                    IsAdmin = result.Data.IsAdmin,
+                    ServiceLocationId = result.Data.ServiceLocationId
+                };
+                response.Data = updateModel;
+                response.Message = result.Message;
+                response.Status = result.Status;
             }
-            return View(model);
+            return View(response);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Update([Bind(Include = "Data")] ResponseViewModel<BusinessEmployeeViewModel> model)
+        public async Task<ActionResult> Update([Bind(Include = "Data")] ResponseViewModel<BusinessEmployeeUpdateViewModel> model)
         {
-            var result = new ResponseViewModel<BusinessEmployeeViewModel>();
+            var result = new ResponseViewModel<BusinessEmployeeUpdateViewModel>();
             try
             {
                 if (!ModelState.IsValid)
@@ -57,7 +77,18 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
                 }
                 else
                 {
-                    var response = await this.BusinessEmployeeService.Update(model.Data);
+                    var adminInformation = new BusinessEmployeeViewModel()
+                    {
+                        FirstName = model.Data.FirstName,
+                        LastName = model.Data.LastName,
+                        Email = model.Data.Email,
+                        Id = model.Data.Id,
+                        PhoneNumber = model.Data.PhoneNumber,
+                        STD = model.Data.STD,
+                        IsAdmin = model.Data.IsAdmin,
+                        ServiceLocationId = model.Data.ServiceLocationId
+                    };
+                    var response = await this.BusinessEmployeeService.Update(adminInformation);
                     if (response.Status)
                     {
                         result.Status = true;
@@ -81,24 +112,33 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
         [HttpGet]
         public async Task<ActionResult> Password()
         {
-            var model = await this.BusinessEmployeeService.Get(RegisterViewModel.Employee.Id);
-            if (model.Data != null && model.Data.ServiceLocation == null)
+            var res = new ResponseViewModel<BusinessEmployeeUpdateSecurityViewModel>();
+            try
             {
-                model.Data.Password = "";
-                var serviceLocation = await this.ServiceLocationService.Get(model.Data.ServiceLocationId);
-                if (serviceLocation != null && serviceLocation.Data != null)
+                var model = await this.BusinessEmployeeService.Get(RegisterViewModel.Employee.Id);
+                if (model.Data != null)
                 {
-                    model.Data.ServiceLocation = serviceLocation.Data;
+                    res.Data = new BusinessEmployeeUpdateSecurityViewModel()
+                    {
+                        Id = model.Data.Id,
+                        Email = model.Data.Email,
+                    };
                 }
+                res.Status = true;
             }
-            return View(model);
+            catch
+            {
+                res.Status = false;
+                res.Message = "There was a problem. please try again later.";
+            }
+            return View(res);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Password([Bind(Include = "Data")] ResponseViewModel<BusinessEmployeeViewModel> model)
+        public async Task<ActionResult> Password([Bind(Include = "Data")] ResponseViewModel<BusinessEmployeeUpdateSecurityViewModel> model)
         {
-            var result = new ResponseViewModel<BusinessEmployeeViewModel>();
+            var result = new ResponseViewModel<BusinessEmployeeUpdateSecurityViewModel>();
             try
             {
                 if (!ModelState.IsValid)
@@ -115,7 +155,7 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
                         response.Data.Password = model.Data.Password;
                         response.Data.OldPassword = model.Data.OldPassword;
                         response.Data.ConfirmPassword = model.Data.ConfirmPassword;
-                        var getUserResponse = await this.BusinessEmployeeService.Update(response.Data, true);
+                        var getUserResponse = await this.BusinessEmployeeService.Update(response.Data, false);
                         if (getUserResponse.Status)
                         {
                             result.Status = true;

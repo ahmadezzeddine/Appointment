@@ -216,6 +216,7 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // PUT: api/BusinessCustomer/5,
+        [AllowAnonymous]
         public IHttpActionResult Put(long? id, [FromBody]BusinessCustomerViewModel model)
         {
             try
@@ -229,13 +230,12 @@ namespace App.Schedule.WebApi.Controllers
                         var businessCustomer = _db.tblBusinessCustomers.Find(id);
                         if (businessCustomer != null)
                         {
-                            var verifyPass = Security.Encrypt(model.Password, true);
-                            if (businessCustomer.Email.ToLower() == model.Email.ToLower() && businessCustomer.Password == verifyPass)
+                            //var verifyPass = Security.Encrypt(model.Password, true);
+                            //if (businessCustomer.Email.ToLower() == model.Email.ToLower() && businessCustomer.Password == verifyPass)
+                            if (businessCustomer.Email.ToLower() == model.Email.ToLower())
                             {
                                 businessCustomer.FirstName = model.FirstName;
                                 businessCustomer.LastName = model.LastName;
-                                businessCustomer.ProfilePicture = model.ProfilePicture;
-                                businessCustomer.Email = model.Email;
                                 businessCustomer.StdCode = model.StdCode;
                                 businessCustomer.PhoneNumber = model.PhoneNumber;
                                 businessCustomer.Add1 = model.Add1;
@@ -253,7 +253,7 @@ namespace App.Schedule.WebApi.Controllers
                             }
                             else
                             {
-                                return Ok(new { status = false, data = "", message = "Please provide a valid email id and password to update." });
+                                return Ok(new { status = false, data = "", message = "Please provide a valid email id." });
                             }
                         }
                     }

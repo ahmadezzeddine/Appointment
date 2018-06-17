@@ -7,7 +7,7 @@
 }
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Appointment</h1>
+        <h1 class="page-header">Appointment Feedback</h1>
     </div>
 </div>
 <div class="row">
@@ -20,7 +20,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>Add Feedback</b>
+                <b>Information</b>
             </div>
             @using (Ajax.BeginForm("add_feedback", "appointment", new AjaxOptions { }))
             {
@@ -34,7 +34,8 @@
                         <div class="row">
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(d => d.Data.AppointmentId)
-                            <div class="form-group col-lg-12">
+                            <div class="form-group col-lg-12 required control-label">
+                                <label>Message</label>
                                 @Html.EditorFor(d => d.Data.Feedback, new { htmlAttributes = new { @class = "form-control", @placeholder = "Type your text here" } })
                             </div>
                         </div>

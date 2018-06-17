@@ -79,29 +79,41 @@
                                         {
                                             if (item != null)
                                             {
-                                            <tr>
-                                                <td>
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            @item.Feedback
+                                                <tr>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                @item.Feedback
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <span class="fa fa-star-o" data-rating="@item.Rating"></span>
-                                                </td>
-                                                <td>
-                                                    @item.IsActive
-                                                </td>
-                                                <td>
-                                                    @item.Created
-                                                </td>
-                                                <td class="text-right">
-                                                    <a title="Delete" onclick="@("window.location.href='" + @Url.Action("delete_feedback", "appointment", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
-                                                        <span class="fa fa-trash"></span>
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                                    </td>
+                                                    <td>
+                                                        @if (!item.IsEmployee && item.Rating.HasValue)
+                                                        {
+                                                            <div class="col-lg-12">
+                                                                @for (int i = 0; i < item.Rating; i++)
+                                                                {
+                                                                    <span class="fa fa-star checked"></span>
+                                                                }
+                                                                @for (int i = item.Rating.Value; i < 5; i++)
+                                                                {
+                                                                    <span class="fa fa-star"></span>
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @item.IsActive
+                                                    </td>
+                                                    <td>
+                                                        @item.Created
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <a title="Delete" onclick="@("window.location.href='" + @Url.Action("delete_feedback", "appointment", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                            <span class="fa fa-trash"></span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
                                             }
                                         }
                                     </tbody>

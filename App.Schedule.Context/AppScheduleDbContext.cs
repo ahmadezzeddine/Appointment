@@ -36,6 +36,7 @@ namespace App.Schedule.Context
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            
             modelBuilder.Entity<tblAdministrator>()
                 .HasMany(e => e.tblCountries)
                 .WithOptional(e => e.tblAdministrator)
@@ -98,7 +99,8 @@ namespace App.Schedule.Context
             modelBuilder.Entity<tblBusinessCustomer>()
                 .HasMany(e => e.tblAppointments)
                 .WithOptional(e => e.tblBusinessCustomer)
-                .HasForeignKey(e => e.BusinessCustomerId);
+                .HasForeignKey(e => e.BusinessCustomerId)
+                .WillCascadeOnDelete(true);
 
             modelBuilder.Entity<tblBusinessCustomer>()
                 .HasMany(e => e.tblAppointmentFeedbacks)

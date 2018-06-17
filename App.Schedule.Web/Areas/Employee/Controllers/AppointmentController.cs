@@ -255,6 +255,62 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
         }
 
         [HttpGet]
+        [ActionName("add_document")]
+        public async Task<ActionResult> Add_Document(long? id)
+        {
+            if (!id.HasValue)
+                return RedirectToAction("index");
+
+            var response = this.ResponseHelper.GetResponse<AppointmentDocumentViewModel>();
+            response.Data = new AppointmentDocumentViewModel();
+            response.Status = true;
+
+            ViewBag.DocumentCategoryId = await this.GetGroupedDocumentCategories();
+
+            var documenttype = from DocumentType e in Enum.GetValues(typeof(DocumentType))
+                               select new
+                               {
+                                   Value = (int)e,
+                                   Text = e.ToString()
+                               };
+            ViewBag.DocumentType = new SelectList(documenttype, "Value", "Text");
+
+            response.Data.AppointmentId = id.Value;
+            return View(response);
+        }
+
+        [ValidateAntiForgeryToken]
+        [ActionName("add_document")]
+        public async Task<ActionResult> Add_Document([Bind(Include = "Data")]ResponseViewModel<AppointmentDocumentViewModel> model)
+        {
+            var result = new ResponseViewModel<AppointmentDocumentViewModel>();
+
+            if (!ModelState.IsValid)
+            {
+                var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
+                result.Status = false;
+                result.Message = errMessage;
+            }
+            else
+            {
+                model.Data.IsEmployeeUpload = true;
+                var response = await this.AppointmentDocumentService.Add(model.Data);
+                if (response == null)
+                {
+                    result.Status = false;
+                    result.Message = response != null ? response.Message : "There was a problem. Please try again later.";
+                }
+                else
+                {
+                    result.Status = response.Status;
+                    result.Message = response.Message;
+                }
+            }
+            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpGet]
         public async Task<ActionResult> Feedbacks(long? id, int? page)
         {
             if (!id.HasValue)

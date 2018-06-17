@@ -50,7 +50,8 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
         public async Task<JsonResult> GetDiaryEvents(DateTime start, DateTime end)
         {
             var appointments = await GetAppointments();
-            var recurredAppointments = this.RecurreAppointments(appointments).ToArray();
+            var appointmentModel = appointments.Where(d => d.BusinessEmployeeId != null && d.BusinessEmployeeId == RegisterViewModel.Employee.Id && d.IsActive == true).ToList();
+            var recurredAppointments = this.RecurreAppointments(appointmentModel).ToArray();
             return Json(recurredAppointments, JsonRequestBehavior.AllowGet);
         }
 

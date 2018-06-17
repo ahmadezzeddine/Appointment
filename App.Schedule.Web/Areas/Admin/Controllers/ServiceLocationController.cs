@@ -23,7 +23,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
             var result = await ServiceLocationService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
 
-            if (!result.Status)
+            if (result.Status)
             {
                 var data = result.Data;
                 model.Status = result.Status;
@@ -272,7 +272,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
             ViewBag.Id = id.Value;
 
-            var result = await this.BusinessEmployeeService.Gets(id.Value, TableType.ServiceLocationId);
+            var result = await this.BusinessEmployeeService.Gets(id, TableType.ServiceLocationId);
             if (result != null && result.Status)
             {
                 model.Status = result.Status;

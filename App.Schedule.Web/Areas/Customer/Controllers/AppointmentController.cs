@@ -315,7 +315,6 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
             {
                 model.Data.IsEmployee = false;
                 model.Data.BusinessCustomerId = RegisterCustomerViewModel.Customer.Id;
-                model.Data.Rating = 0;
                 var response = await this.AppointmentFeedbackService.Add(model.Data);
                 if (response == null)
                 {
