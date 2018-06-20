@@ -110,7 +110,7 @@
                                                         @item.IsAllDayEvent
                                                     </td>
                                                     <td>
-                                                        @if (item?.StatusType != null)
+                                                        @if (item.StatusType != null)
                                                         {
                                                             <text>@Enum.GetName(typeof(StatusType), (int)@item.StatusType)</text>
                                                         }
