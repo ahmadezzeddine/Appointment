@@ -340,8 +340,7 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         [NonAction]
-        [AllowAnonymous]
-        public async Task<ResponseViewModel<BusinessEmployeeViewModel>> Register(BusinessEmployeeViewModel model)
+        public async Task<ResponseViewModel<BusinessEmployeeViewModel>> Register(BusinessEmployeeViewModel model, AppScheduleDbContext dbContext)
         {
             var data = new ResponseViewModel<BusinessEmployeeViewModel>();
             var hasEmail = _db.tblBusinessEmployees.Any(d => d.Email.ToLower() == model.Email.ToLower() && d.ServiceLocationId == model.ServiceLocationId);
@@ -365,8 +364,8 @@ namespace App.Schedule.WebApi.Controllers
                     Created = DateTime.Now.ToUniversalTime(),
                     IsActive = true
                 };
-                _db.tblBusinessEmployees.Add(businessEmployee);
-                var response = _db.SaveChanges();
+                dbContext.tblBusinessEmployees.Add(businessEmployee);
+                var response = dbContext.SaveChanges();
                 data.Message = response > 0 ? "success" : "failed";
                 data.Status = response > 0 ? true : false;
                 data.Data = model;
@@ -418,7 +417,7 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         [NonAction]
-        public ResponseViewModel<BusinessEmployeeViewModel> UpdateEmployee(BusinessEmployeeViewModel model)
+        public ResponseViewModel<BusinessEmployeeViewModel> UpdateEmployee(BusinessEmployeeViewModel model, AppScheduleDbContext dbContext)
         {
             var data = new ResponseViewModel<BusinessEmployeeViewModel>();
             try
@@ -432,8 +431,8 @@ namespace App.Schedule.WebApi.Controllers
                         if (businessEmployee.Email.ToLower() == model.Email.ToLower())
                         {
                             businessEmployee.Password = Security.Encrypt(model.Password, true);
-                            _db.Entry(businessEmployee).State = EntityState.Modified;
-                            var response = _db.SaveChanges();
+                            dbContext.Entry(businessEmployee).State = EntityState.Modified;
+                            var response = dbContext.SaveChanges();
                             data.Message = response > 0 ? "success" : "failed";
                             data.Status = response > 0 ? true : false;
                         }
@@ -460,7 +459,7 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         [NonAction]
-        public ResponseViewModel<BusinessEmployeeViewModel> DeleteEmployee(long? id)
+        public ResponseViewModel<BusinessEmployeeViewModel> DeleteEmployee(long? id, AppScheduleDbContext dbContext)
         {
             var data = new ResponseViewModel<BusinessEmployeeViewModel>()
             {
@@ -473,8 +472,8 @@ namespace App.Schedule.WebApi.Controllers
                     var businessEmployee = _db.tblBusinessEmployees.Find(id);
                     if (businessEmployee != null)
                     {
-                        _db.Entry(businessEmployee).State = EntityState.Deleted;
-                        var response = _db.SaveChanges();
+                        dbContext.Entry(businessEmployee).State = EntityState.Deleted;
+                        var response = dbContext.SaveChanges();
                         data.Data = new BusinessEmployeeViewModel() { Email = businessEmployee.Email, Id = businessEmployee.Id };
                         data.Message = response > 0 ? "success" : "failed";
                         data.Status = response > 0 ? true : false;

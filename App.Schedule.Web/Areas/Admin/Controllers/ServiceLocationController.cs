@@ -214,16 +214,24 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         {
             var result = new ResponseViewModel<ServiceLocationViewModel>();
 
-            var response = await this.ServiceLocationService.Delete(model.Data.Id);
-            if (response == null)
+            if (RegisterViewModel.Employee.ServiceLocationId != model.Data.Id)
             {
-                result.Status = false;
-                result.Message = response != null ? response.Message : "There was a problem. Please try again later.";
+                var response = await this.ServiceLocationService.Delete(model.Data.Id);
+                if (response == null)
+                {
+                    result.Status = false;
+                    result.Message = response != null ? response.Message : "There was a problem. Please try again later.";
+                }
+                else
+                {
+                    result.Status = response.Status;
+                    result.Message = response.Message;
+                }
             }
             else
             {
-                result.Status = response.Status;
-                result.Message = response.Message;
+                result.Status = false;
+                result.Message = "You cann't remove your assigned service location.";
             }
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
@@ -356,7 +364,5 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 return new List<TimezoneViewModel>();
             }
         }
-
-
     }
 }

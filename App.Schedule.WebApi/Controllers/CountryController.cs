@@ -77,7 +77,7 @@ namespace App.Schedule.WebApi.Controllers
                     CurrencyName = model.CurrencyName,
                     ISO = model.ISO,
                     ISO3 = model.ISO3,
-                    PhoneCode = model.PhoneCode.Value,
+                    PhoneCode = model.PhoneCode,
                     AdministratorId = model.AdministratorId,
                 };
 
@@ -111,7 +111,7 @@ namespace App.Schedule.WebApi.Controllers
                         country.Name = model.Name;
                         country.ISO = model.ISO;
                         country.ISO3 = model.ISO3;
-                        country.PhoneCode = model.PhoneCode.Value;
+                        country.PhoneCode = model.PhoneCode;
                         country.CurrencyCode = model.CurrencyCode;
                         country.CurrencyName = model.CurrencyName;
 

@@ -22,7 +22,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <b>Information</b>
-                @if (ViewBag.Total != null && ViewBag.Total >= Model.Data.Count)
+                @if (ViewBag.Total != null && Model != null && Model.Data != null && ViewBag.Total >= Model.Data.Count)
                 {
                     <a href="@Url.Action("add", "customer", new { area = "admin" })" class="btn btn-info btn-xs pull-right">
                         <span class="glyphicon glyphicon-plus"></span> Add
@@ -81,6 +81,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @if (Model.Data.Count <= 0)
+                                        {
+                                            <tr>
+                                                <td colspan="7">
+                                                    No business customer has been created yet.
+                                                </td>
+                                            </tr>
+                                        }
                                         @foreach (var item in Model.Data)
                                         {
                                             if (item != null)
@@ -122,8 +130,8 @@
                                                             <span class="fa fa-check"></span>
                                                         </a>
                                                         @*<a title="Active or Deactive" onclick="@("window.location.href='" + @Url.Action("changepassword", "customer", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs disabled">
-                                                            <span class="fa fa-lock"></span>
-                                                        </a>*@
+                                                                <span class="fa fa-lock"></span>
+                                                            </a>*@
                                                         <a title="Delete" onclick="@("window.location.href='" + @Url.Action("delete", "customer", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
                                                             <span class="fa fa-trash"></span>
                                                         </a>

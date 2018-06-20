@@ -255,7 +255,7 @@ namespace App.Schedule.WebApi.Controllers
 
         [NonAction]
         [AllowAnonymous]
-        public async Task<ResponseViewModel<AdministratorViewModel>> RegisterAdmin(AdministratorViewModel model)
+        public async Task<ResponseViewModel<AdministratorViewModel>> RegisterAdmin(AdministratorViewModel model, AppScheduleDbContext dbContext)
         {
             var data = new ResponseViewModel<AdministratorViewModel>();
             try
@@ -281,8 +281,8 @@ namespace App.Schedule.WebApi.Controllers
                         AdministratorId = model.AdministratorId,
                     };
 
-                    _db.tblAdministrators.Add(admin);
-                    var response = _db.SaveChanges();
+                    dbContext.tblAdministrators.Add(admin);
+                    var response = dbContext.SaveChanges();
 
                     data.Status = response > 0 ? true : false;
                     data.Message = response > 0 ? "success" : "failed";
@@ -300,7 +300,7 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         [NonAction]
-        public ResponseViewModel<AdministratorViewModel> UpdateAdmin(AdministratorViewModel model)
+        public ResponseViewModel<AdministratorViewModel> UpdateAdmin(AdministratorViewModel model, AppScheduleDbContext dbContext)
         {
             var data = new ResponseViewModel<AdministratorViewModel>();
             try
@@ -310,17 +310,25 @@ namespace App.Schedule.WebApi.Controllers
                 {
                     if (admin.Email.ToLower() == model.Email.ToLower())
                     {
-                        admin.FirstName = model.FirstName;
-                        admin.LastName = model.LastName;
-                        admin.Password = Security.Encrypt(model.Password, true);
-                        admin.IsAdmin = model.IsAdmin;
-                        admin.IsActive = model.IsActive;
-                        admin.ContactNumber = model.ContactNumber;
+                        var password = Security.Decrypt(admin.Password, true);
+                        if (password == model.OldPassword)
+                        {
+                            //admin.FirstName = model.FirstName;
+                            //admin.LastName = model.LastName;
+                            admin.Password = Security.Encrypt(model.Password, true);
+                            //admin.IsAdmin = model.IsAdmin;
+                            //admin.IsActive = model.IsActive;
+                            //admin.ContactNumber = model.ContactNumber;
 
-                        _db.Entry(admin).State = EntityState.Modified;
-                        var response = _db.SaveChanges();
-                        data.Status = response > 0 ? true : false;
-                        data.Message = response > 0 ? "success" : "failed";
+                            dbContext.Entry(admin).State = EntityState.Modified;
+                            var response = dbContext.SaveChanges();
+                            data.Status = response > 0 ? true : false;
+                            data.Message = response > 0 ? "success" : "failed";
+                        }
+                        else
+                        {
+                            data.Message = "Please enter your valid old password.";
+                        }
                     }
                     else
                     {
@@ -379,7 +387,7 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         [NonAction]
-        public ResponseViewModel<AdministratorViewModel> DeleteSiteAdmin(long? id)
+        public ResponseViewModel<AdministratorViewModel> DeleteSiteAdmin(long? id, AppScheduleDbContext dbContext)
         {
             var data = new ResponseViewModel<AdministratorViewModel>()
             {
@@ -392,8 +400,8 @@ namespace App.Schedule.WebApi.Controllers
                     var siteAdmin = _db.tblAdministrators.Find(id);
                     if (siteAdmin != null)
                     {
-                        _db.Entry(siteAdmin).State = EntityState.Deleted;
-                        var response = _db.SaveChanges();
+                        dbContext.Entry(siteAdmin).State = EntityState.Deleted;
+                        var response = dbContext.SaveChanges();
                         data.Data = new AdministratorViewModel() { Email = siteAdmin.Email, Id = siteAdmin.Id };
                         data.Message = response > 0 ? "success" : "failed";
                         data.Status = response > 0 ? true : false;

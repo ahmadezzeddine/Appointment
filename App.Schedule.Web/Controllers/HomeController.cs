@@ -119,16 +119,24 @@ namespace App.Schedule.Web.Controllers
             }
             else
             {
-                var response = await this.BusinessService.Add(model.Data);
-                if (response.Status)
+                if (model.Data.Employee.Password.Length <= 8)
                 {
-                    result.Status = true;
-                    result.Message = response.Message;
+                    result.Status = false;
+                    result.Message = "Password must be greater than 8 character.";
                 }
                 else
                 {
-                    result.Status = false;
-                    result.Message = response!=null ? response.Message : "There was a problem. Please try again later.";
+                    var response = await this.BusinessService.Add(model.Data);
+                    if (response.Status)
+                    {
+                        result.Status = true;
+                        result.Message = response.Message;
+                    }
+                    else
+                    {
+                        result.Status = false;
+                        result.Message = response != null ? response.Message : "There was a problem. Please try again later.";
+                    }
                 }
             }
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);

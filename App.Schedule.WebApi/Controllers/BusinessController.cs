@@ -203,7 +203,7 @@ namespace App.Schedule.WebApi.Controllers
 
         [NonAction]
         [AllowAnonymous]
-        public ResponseViewModel<RegisterViewModel> Register(RegisterViewModel model)
+        public ResponseViewModel<RegisterViewModel> Register(RegisterViewModel model, AppScheduleDbContext dbContext)
         {
             var data = new ResponseViewModel<RegisterViewModel>();
 
@@ -248,8 +248,8 @@ namespace App.Schedule.WebApi.Controllers
                         TimezoneId = model.Business.TimezoneId
                     };
 
-                    _db.tblBusinesses.Add(business);
-                    var responseBusiness = _db.SaveChanges();
+                    dbContext.tblBusinesses.Add(business);
+                    var responseBusiness = dbContext.SaveChanges();
 
                     var serviceLocation = new tblServiceLocation()
                     {
@@ -267,8 +267,8 @@ namespace App.Schedule.WebApi.Controllers
                         Description = ""
                     };
 
-                    _db.tblServiceLocations.Add(serviceLocation);
-                    var responseServiceLocation = _db.SaveChanges();
+                    dbContext.tblServiceLocations.Add(serviceLocation);
+                    var responseServiceLocation = dbContext.SaveChanges();
 
                     //Setup default business hours
                     //var businessHourController = new BusinessHourController();
@@ -292,9 +292,9 @@ namespace App.Schedule.WebApi.Controllers
                             ToSplit2 = null,
                             ServiceLocationId = serviceLocation.Id
                         };
-                        _db.tblBusinessHours.Add(businessHour);
+                        dbContext.tblBusinessHours.Add(businessHour);
                     }
-                    var responseBusinessHour = _db.SaveChanges();
+                    var responseBusinessHour = dbContext.SaveChanges();
                     //End
 
                     var businessEmployee = new tblBusinessEmployee()
@@ -310,8 +310,8 @@ namespace App.Schedule.WebApi.Controllers
                         Created = DateTime.Now.ToUniversalTime(),
                         IsActive = true
                     };
-                    _db.tblBusinessEmployees.Add(businessEmployee);
-                    var responseBusinessEmployee = _db.SaveChanges();
+                    dbContext.tblBusinessEmployees.Add(businessEmployee);
+                    var responseBusinessEmployee = dbContext.SaveChanges();
 
                     var businessViewModel = new BusinessViewModel()
                     {

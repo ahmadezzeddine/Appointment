@@ -23,7 +23,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <b>Information</b>
-                @if (ViewBag.Total != null && ViewBag.Total >= Model.Data.Count)
+                @if (ViewBag.Total != null && Model != null && Model.Data != null && ViewBag.Total >= Model.Data.Count)
                 {
                     <a href="@Url.Action("add", "businessoffer", new { area = "admin", id = ViewBag.EmployeeId })" class="btn btn-info btn-xs pull-right">
                         <span class="fa fa-plus"></span> Add
@@ -34,7 +34,6 @@
                 @if (Model == null || Model.Data == null)
                 {
                     <text>Please try again later.</text>
-                    return;
                 }
                 <div class="tab-content">
                     <div class="tab-pane active">
@@ -80,7 +79,6 @@
                                                     No business offer has been created yet.
                                                 </td>
                                             </tr>
-                                            return;
                                         }
                                         @foreach (var item in Model.Data)
                                         {

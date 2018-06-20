@@ -321,8 +321,7 @@ namespace App.Schedule.Web.Admin.Controllers
                     var data = response.Data.Where(d => d.ParentId != null && d.ParentId == id.Value).ToList();
                     if (search == null)
                     {
-                        if (data.Count > 0)
-                            model.Data = data.ToPagedList<BusinessCategoryViewModel>(pageNumber, 10);
+                        model.Data = data.ToPagedList<BusinessCategoryViewModel>(pageNumber, 10);
                         return View(model);
                     }
                     else

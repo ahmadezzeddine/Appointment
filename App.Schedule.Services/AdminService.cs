@@ -67,9 +67,12 @@ namespace App.Schedule.Web.Admin.Services
                 var url = String.Format(AppointmentService.POST_API_ACCOUNT_REGISTER);
                 var response = await this.appointmentService.httpClient.PostAsync(url, content);
                 var result = await base.GetHttpResponse<UserViewModel>(response);
-                returnResponse.Status = result.Status;
-                returnResponse.Message = result.Message;
-                returnResponse.Data = result.Data.SiteAdmin;
+                if (result != null)
+                {
+                    returnResponse.Status = result.Status;
+                    returnResponse.Message = result.Message;
+                    returnResponse.Data = (result.Data != null && result.Data.SiteAdmin != null) ? result.Data.SiteAdmin : null;
+                }
             }
             catch (Exception ex)
             {
@@ -120,7 +123,7 @@ namespace App.Schedule.Web.Admin.Services
                     UserType = UserType.SiteAdmin,
                     SiteAdmin = model
                 };
-                var jsonContent = JsonConvert.SerializeObject(model);
+                var jsonContent = JsonConvert.SerializeObject(registerModel);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
                 var url = String.Format(AppointmentService.PUT_API_ACCOUNT_REGISTER);
                 var response = await this.appointmentService.httpClient.PutAsync(url, content);

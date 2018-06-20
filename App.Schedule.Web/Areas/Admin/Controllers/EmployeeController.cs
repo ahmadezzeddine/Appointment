@@ -76,16 +76,24 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             }
             else
             {
-                var response = await this.BusinessEmployeeService.Add(model.Data);
-                if (response == null)
+                if (model.Data.Password.Length <= 8)
                 {
                     result.Status = false;
-                    result.Message = response != null ? response.Message : "There was a problem. Please try again later.";
+                    result.Message = "Password must be greater than 8 character.";
                 }
                 else
                 {
-                    result.Status = response.Status;
-                    result.Message = response.Message;
+                    var response = await this.BusinessEmployeeService.Add(model.Data);
+                    if (response == null)
+                    {
+                        result.Status = false;
+                        result.Message = response != null ? response.Message : "There was a problem. Please try again later.";
+                    }
+                    else
+                    {
+                        result.Status = response.Status;
+                        result.Message = response.Message;
+                    }
                 }
             }
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);

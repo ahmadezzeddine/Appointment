@@ -47,6 +47,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @if (Model.Data.Count <= 0)
+                                        {
+                                            <tr>
+                                                <td colspan="7">
+                                                    No business holiday has been created yet.
+                                                </td>
+                                            </tr>
+                                        }
                                         @foreach (var item in Model.Data)
                                         {
                                             if (item == null)
@@ -62,16 +70,16 @@
                                                         }
                                                         else if (item.Type == (int)RecureType.RpeatEveryWeek)
                                                         {
-                                                            <text>Every </text> @item.OnDate.ToString("dddd"); <text> since </text>  @item.OnDate.ToString("MMMM yyyy");
+                                                            <text>Every </text> @item.OnDate.ToString("dddd"); <text> since </text> @item.OnDate.ToString("MMMM yyyy");
                                                         }
                                                         else if (item.Type == (int)RecureType.RepeatEveryMonth)
                                                         {
-                                                            <text>Every </text> @item.OnDate.ToString("dd"); <text>  day of the month since </text>  @item.OnDate.ToString("MMMM dd, yyyy");
+                                                            <text>Every </text> @item.OnDate.ToString("dd"); <text>  day of the month since </text> @item.OnDate.ToString("MMMM dd, yyyy");
 
                                                         }
                                                         else if (item.Type == (int)RecureType.RepeatEveryYear)
                                                         {
-                                                            <text>On </text> @item.OnDate.ToString("MMMM dd"); <text> every year since </text>  @item.OnDate.ToString("yyyy");
+                                                            <text>On </text> @item.OnDate.ToString("MMMM dd"); <text> every year since </text> @item.OnDate.ToString("yyyy");
                                                         }
                                                     }
                                                 </td>
@@ -84,7 +92,7 @@
                                                     </a>
                                                 </td>
                                             </tr>
-                                          }
+                                        }
                                     </tbody>
                                 </table>
                             </div>

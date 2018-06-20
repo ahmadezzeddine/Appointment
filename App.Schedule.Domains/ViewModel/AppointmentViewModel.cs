@@ -105,7 +105,8 @@ namespace App.Schedule.Domains.ViewModel
         [StringLength(50)]
         public string CurrencyCode { get; set; }
 
-        public int? PhoneCode { get; set; }
+        [Required(ErrorMessage = "Please enter Phone code.")]
+        public int PhoneCode { get; set; }
 
         public long? AdministratorId { get; set; }
 
@@ -348,14 +349,14 @@ namespace App.Schedule.Domains.ViewModel
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Please enter password")]
-        [MinLength(8, ErrorMessage = "Password must be greater than 8 character")]
+        [MinLength(9, ErrorMessage = "Password must be greater than 8 character")]
         [MaxLength(50, ErrorMessage = "Password must be less than 50 character")]
         public string Password { get; set; }
 
         [Compare("Password", ErrorMessage = "Please check confirm password")]
         public string ConfirmPassword { get; set; }
 
-        [MinLength(8, ErrorMessage = "Password must be greater than 8 character")]
+        [MinLength(9, ErrorMessage = "Password must be greater than 8 character")]
         [MaxLength(50, ErrorMessage = "Password must be less than 50 character")]
         public string OldPassword { get; set; }
 

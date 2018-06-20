@@ -42,7 +42,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
                         City = model.Data.City,
                         Email = model.Data.Email,
                         FirstName = model.Data.FirstName,
-                        LastName = model.Data.FirstName,
+                        LastName = model.Data.LastName,
                         PhoneNumber = model.Data.PhoneNumber,
                         ProfilePicture = model.Data.ProfilePicture,
                         State = model.Data.State,
@@ -148,28 +148,41 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
                 }
                 else
                 {
-                    var response = await this.BusinessCustomerService.Get(RegisterCustomerViewModel.Customer.Id);
-                    if (response.Status)
+                    if (model.Data.Password.Length <= 8)
                     {
-                        response.Data.Password = model.Data.Password;
-                        response.Data.OldPassword = model.Data.OldPassword;
-                        response.Data.ConfirmPassword = model.Data.ConfirmPassword;
-                        var getUserResponse = await this.BusinessCustomerService.Update(response.Data,true);
-                        if (getUserResponse.Status)
+                        result.Status = false;
+                        result.Message = "Password must be greater than 8 character.";
+                    }
+                    else if (model.Data.Password.ToLower() == model.Data.OldPassword.ToLower())
+                    {
+                        result.Status = false;
+                        result.Message = "Old password and new password cannot be same.";
+                    }
+                    else
+                    {
+                        var response = await this.BusinessCustomerService.Get(RegisterCustomerViewModel.Customer.Id);
+                        if (response.Status)
                         {
-                            result.Status = true;
-                            result.Message = getUserResponse.Message;
+                            response.Data.Password = model.Data.Password;
+                            response.Data.OldPassword = model.Data.OldPassword;
+                            response.Data.ConfirmPassword = model.Data.ConfirmPassword;
+                            var getUserResponse = await this.BusinessCustomerService.Update(response.Data, true);
+                            if (getUserResponse.Status)
+                            {
+                                result.Status = true;
+                                result.Message = getUserResponse.Message;
+                            }
+                            else
+                            {
+                                result.Status = false;
+                                result.Message = getUserResponse.Message;
+                            }
                         }
                         else
                         {
                             result.Status = false;
-                            result.Message = getUserResponse.Message;
+                            result.Message = response.Message;
                         }
-                    }
-                    else
-                    {
-                        result.Status = false;
-                        result.Message = response.Message;
                     }
                 }
             }

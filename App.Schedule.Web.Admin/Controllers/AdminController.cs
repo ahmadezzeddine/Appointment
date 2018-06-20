@@ -69,18 +69,26 @@ namespace App.Schedule.Web.Admin.Controllers
             }
             else
             {
-                model.Data.Created = DateTime.Now.ToUniversalTime();
-                model.Data.AdministratorId = admin.Id;
-                var response = await this.AdminService.Add(model.Data);
-                if (response.Status)
+                if (model.Data.Password.Length <= 8)
                 {
-                    result.Status = true;
-                    result.Message = response.Message;
+                    result.Status = false;
+                    result.Message = "Password must be greater than 8 character.";
                 }
                 else
                 {
-                    result.Status = false;
-                    result.Message = response.Message!=null ? response.Message : "There was a problem. Please try again later.";
+                    model.Data.Created = DateTime.Now.ToUniversalTime();
+                    model.Data.AdministratorId = admin.Id;
+                    var response = await this.AdminService.Add(model.Data);
+                    if (response.Status)
+                    {
+                        result.Status = true;
+                        result.Message = response.Message;
+                    }
+                    else
+                    {
+                        result.Status = false;
+                        result.Message = response.Message != null ? response.Message : "There was a problem. Please try again later.";
+                    }
                 }
             }
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
@@ -226,17 +234,35 @@ namespace App.Schedule.Web.Admin.Controllers
                 {
                     if (model.Data.Id == admin.Id)
                     {
-                        model.Data.AdministratorId = admin.Id;
-                        var response = await this.AdminService.UpdatePassword(model.Data);
-                        if (response.Status)
+                        if(model.Data.OldPassword == null)
                         {
-                            result.Status = true;
-                            result.Message = response.Message;
+                            result.Status = false;
+                            result.Message = "Old password required.";
+                        }
+                        else if (model.Data.Password.Length <= 8)
+                        {
+                            result.Status = false;
+                            result.Message = "Password must be greater than 8 character.";
+                        }
+                        else if (model.Data.Password.ToLower() == model.Data.OldPassword.ToLower())
+                        {
+                            result.Status = false;
+                            result.Message = "Old password and new password cannot be same.";
                         }
                         else
                         {
-                            result.Status = false;
-                            result.Message = response.Message;
+                            model.Data.AdministratorId = admin.Id;
+                            var response = await this.AdminService.UpdatePassword(model.Data);
+                            if (response.Status)
+                            {
+                                result.Status = true;
+                                result.Message = response.Message;
+                            }
+                            else
+                            {
+                                result.Status = false;
+                                result.Message = response.Message;
+                            }
                         }
                     }
                     else
