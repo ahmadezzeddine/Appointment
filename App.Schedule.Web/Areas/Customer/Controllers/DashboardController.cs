@@ -41,7 +41,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
             var response = await this.AppointmentService.Gets(RegisterCustomerViewModel.Customer.Id, TableType.CustomerId);
             if (response.Status)
             {
-                data = response.Data;
+                data = response.Data.Where(d => d.StatusType != (int)StatusType.Completed && d.IsActive == true && d.BusinessCustomerId != null).ToList();
             }
             return data;
         }
@@ -49,9 +49,8 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
         [HttpGet]
         public async Task<JsonResult> GetDiaryEvents()
         {
-            var appointments = await GetAppointments();
-            var appointmentModel = appointments.Where(d => d.BusinessCustomerId != null && d.BusinessCustomerId == RegisterCustomerViewModel.Customer.Id && d.IsActive == true).ToList();
-            var recurredAppointments = this.RecurreAppointments(appointments).ToArray();
+            var appointmentModel = await GetAppointments();
+            var recurredAppointments = this.RecurreAppointments(appointmentModel).ToArray();
             return Json(recurredAppointments, JsonRequestBehavior.AllowGet);
         }
 

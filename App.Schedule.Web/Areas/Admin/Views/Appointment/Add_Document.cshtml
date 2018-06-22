@@ -61,7 +61,7 @@
                 <div class="panel-footer">
                     <div class="row">
                         <div class="col-lg-12">
-                            <input id="btnSave" class="btn btn-info btn-sm " type="button" value="Save" onclick="onSubmit(this,'@Url.Action("attachments", "appointment", new { area = "admin", id = Model.Data.AppointmentId })')" />
+                            <input id="btnSave" class="btn btn-info btn-sm"  type="button" value="Save" onclick="onSubmit(this,'@Url.Action("attachments", "appointment", new { area = "admin", id = Model.Data.AppointmentId })')" />
                             <input type="button" class="btn btn-default btn-sm" value="Back" onclick="@("window.location.href='" + @Url.Action("attachments", "appointment", new { area = "admin", id = Model.Data.AppointmentId }) + "'");" />
                         </div>
                     </div>
@@ -89,10 +89,7 @@
         Upload.prototype.doUpload = function () {
             var that = this;
             var formData = new FormData();
-
-            // add assoc key values, this will be posts values
             formData.append("file", this.file, this.getName());
-
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("documentupload", "appointment")",
@@ -104,15 +101,17 @@
                     return myXhr;
                 },
                 success: function (res) {
-                    console.log('data: ' + res.data);
-                    $('#Data_DocumentLink').val(res.data);
+                    if (res.data) {
+                        console.log('data: ' + res.data);
+                        $('#Data_DocumentLink').val(res.data);
+                        $('#progress-wrp').attr('style', 'display: none;');
+                        $('#btnSave').removeAttr("disabled");
+                    }
                 },
                 error: function (error) {
                     console.log('data: '+error);
                 },
-                async: true,
                 data: formData,
-                cache: false,
                 contentType: false,
                 processData: false,
                 timeout: 60000
@@ -127,26 +126,23 @@
             if (event.lengthComputable) {
                 percent = Math.ceil(position / total * 100);
             }
-            // update progressbars classes so it fits your code
             $(progress_bar_id + " .progress-bar").css("width", +percent + "%");
             $(progress_bar_id + " .status").text(percent + "%");
             if (percent > 0) {
                 $('#progress-wrp').attr('style', 'display: block;');
             }
             if (percent >= 100) {
-                $('#progress-wrp').attr('style', 'display: none;');
+                $(progress_bar_id + " .status").text("uploading...");
+                //$('#progress-wrp').attr('style', 'display: none;');
             }
         };
 
         $(document).ready(function () {
-            //Change id to your id
+            $('#btnSave').attr('disabled', 'true');
+
             $("#documentUpload").on("change", function (e) {
                 var file = $(this)[0].files[0];
                 var upload = new Upload(file);
-
-                // maby check size or type here with upload.getSize() and upload.getType()
-
-                // execute upload
                 upload.doUpload();
             });
         });

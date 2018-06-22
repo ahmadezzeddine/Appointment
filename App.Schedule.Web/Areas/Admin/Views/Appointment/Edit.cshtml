@@ -184,14 +184,14 @@
                                 <div class="row">
                                     <div class="form-group col-lg-12">
                                         @customerWebGrid.GetHtml(htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
-                                                 tableStyle: "table table-striped",
-                                                 headerStyle: "active",
-                                                 footerStyle: "webgrid-footer",
-                                                 columns: customerWebGrid.Columns(
-                                                 customerWebGrid.Column(format: @<text><input name="Data.SelectedEmployeeIds" checked="@Model?.Data?.SelectedEmployeeIds?.Contains(item.Id)" value="@item.Id" type="checkbox" /></text>, header: "Select"),
-customerWebGrid.Column("FirstName", "First Name"),
-customerWebGrid.Column("LastName", "Last Name"),
-customerWebGrid.Column("Email", "Email")))
+                                                      tableStyle: "table table-striped",
+                                                      headerStyle: "active",
+                                                      footerStyle: "webgrid-footer",
+                                                      columns: customerWebGrid.Columns(
+                                                      customerWebGrid.Column(format: @<text><input name="Data.SelectedEmployeeIds" checked="@Model.Data.SelectedEmployeeIds.Contains(item.Id)" value="@item.Id" type="checkbox" /></text>, header: "Select"),
+                                                    customerWebGrid.Column("FirstName", "First Name"),
+                                                    customerWebGrid.Column("LastName", "Last Name"),
+                                                    customerWebGrid.Column("Email", "Email")))
                                     </div>
                                 </div>
                             </div>

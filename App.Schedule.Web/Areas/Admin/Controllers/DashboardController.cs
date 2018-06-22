@@ -41,7 +41,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var response = await this.AppointmentService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
             if (response.Status)
             {
-                data = response.Data;
+                data = response.Data.Where(d => d.StatusType != (int)StatusType.Completed && d.IsActive == true).ToList();
             }
             return data;
         }

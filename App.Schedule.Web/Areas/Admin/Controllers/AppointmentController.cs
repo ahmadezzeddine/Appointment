@@ -320,7 +320,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             ViewBag.PatternType = new SelectList(patternType, "Id", "Name");
             //End
 
-            var employees = await this.GetBusinessEmployee(id.Value, TableType.AppointmentInvitee);
+            var employees = await this.GetBusinessEmployee(RegisterViewModel.Business.Id, TableType.BusinessId);
+            //var appointmentInvitees = await this.GetBusinessEmployee(id.Value, TableType.AppointmentInvitee);
             //var currentEmployee = employees.Find(d => d.Id == RegisterViewModel.Employee.Id);
             //employees.Remove(currentEmployee);
             ViewBag.BusinessEmployeeId = employees;
