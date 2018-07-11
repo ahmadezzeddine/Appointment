@@ -3,13 +3,9 @@
 
 @{
     ViewBag.Title = "Appointment Document";
-    Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
+    Layout = "~/Views/Shared/_AfterLoginEmployeeMaster.cshtml";
+
 }
-<div class="row">
-    <div class="col-lg-12">
-        <h1 class="page-header">New Appointment Document</h1>
-    </div>
-</div>
 <div class="row">
     <div class="col-lg-12">
         @Html.Partial("~/Views/SubViews/_ErrorView.cshtml", Model)
@@ -17,9 +13,10 @@
 </div>
 <div class="row">
     <div class="col-lg-12">
+
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>Information</b>
+                <b>Document Information</b>
             </div>
             @using (Ajax.BeginForm("add_document", "appointment", new AjaxOptions { }))
             {
@@ -38,21 +35,21 @@
                                 <div class="progress-bar"></div>
                                 <div class="status">0%</div>
                             </div>
-                            <div class="form-group col-lg-6 required control-label">
+                            <div class="form-group col-lg-6">
                                 <label>Title</label>
                                 @Html.EditorFor(d => d.Data.Title, new { htmlAttributes = new { @class = "form-control", @placeholder = "Title" } })
                             </div>
-                            @*<div class="form-group col-lg-6 required control-label">
+                            <div class="form-group col-lg-6">
                                 <label>Type</label>
                                 @Html.DropDownListFor(d => d.Data.DocumentType, new SelectList(ViewBag.DocumentType, "Value", "Text"), "--Select Document Type --", new { @class = "form-control" })
-                            </div>*@
-                            <div class="form-group col-lg-6 required control-label">
-                                <label>Document Category</label>
-                                @Html.DropDownListFor(d => d.Data.DocumentCategoryId, new SelectList(ViewBag.DocumentCategoryId, "Value", "Text", "Group.Name", -1), "--Select Document --", new { @class = "form-control" })
                             </div>
                             <div class="form-group col-lg-6">
                                 <label>File</label>
                                 <input id="documentUpload" type="file" class="form-control" />
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Document Category</label>
+                                @Html.DropDownListFor(d => d.Data.DocumentCategoryId, new SelectList(ViewBag.DocumentCategoryId, "Value", "Text", "Group.Name", -1), "--Select Document --", new { @class = "form-control" })
                             </div>
                         </div>
                     </div>
@@ -60,8 +57,8 @@
                 <div class="panel-footer">
                     <div class="row">
                         <div class="col-lg-12">
-                            <input id="btnSave" class="btn btn-info btn-sm"  type="button" value="Save" onclick="onSubmit(this,'@Url.Action("attachments", "appointment", new { area = "admin", id = Model.Data.AppointmentId })')" />
-                            <input type="button" class="btn btn-default btn-sm" value="Back" onclick="@("window.location.href='" + @Url.Action("attachments", "appointment", new { area = "admin", id = Model.Data.AppointmentId }) + "'");" />
+                            <input id="btnSave" class="btn btn-info btn-sm " type="button" value="Save" onclick="onSubmit(this,'@Url.Action("attachments", "appointment", new { area = "employee", id = Model.Data.AppointmentId })')" />
+                            <input type="button" class="btn btn-default btn-sm" value="Back" onclick="@("window.location.href='" + @Url.Action("attachments", "appointment", new { area = "employee", id = Model.Data.AppointmentId }) + "'");" />
                         </div>
                     </div>
                 </div>
@@ -88,7 +85,10 @@
         Upload.prototype.doUpload = function () {
             var that = this;
             var formData = new FormData();
+
+            // add assoc key values, this will be posts values
             formData.append("file", this.file, this.getName());
+
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("documentupload", "appointment")",
@@ -100,17 +100,15 @@
                     return myXhr;
                 },
                 success: function (res) {
-                    if (res.data) {
-                        console.log('data: ' + res.data);
-                        $('#Data_DocumentLink').val(res.data);
-                        $('#progress-wrp').attr('style', 'display: none;');
-                        $('#btnSave').removeAttr("disabled");
-                    }
+                    console.log('data: ' + res.data);
+                    $('#Data_DocumentLink').val(res.data);
                 },
                 error: function (error) {
                     console.log('data: '+error);
                 },
+                async: true,
                 data: formData,
+                cache: false,
                 contentType: false,
                 processData: false,
                 timeout: 60000
@@ -125,23 +123,26 @@
             if (event.lengthComputable) {
                 percent = Math.ceil(position / total * 100);
             }
+            // update progressbars classes so it fits your code
             $(progress_bar_id + " .progress-bar").css("width", +percent + "%");
             $(progress_bar_id + " .status").text(percent + "%");
             if (percent > 0) {
                 $('#progress-wrp').attr('style', 'display: block;');
             }
             if (percent >= 100) {
-                $(progress_bar_id + " .status").text("uploading...");
-                //$('#progress-wrp').attr('style', 'display: none;');
+                $('#progress-wrp').attr('style', 'display: none;');
             }
         };
 
         $(document).ready(function () {
-            $('#btnSave').attr('disabled', 'true');
-
+            //Change id to your id
             $("#documentUpload").on("change", function (e) {
                 var file = $(this)[0].files[0];
                 var upload = new Upload(file);
+
+                // maby check size or type here with upload.getSize() and upload.getType()
+
+                // execute upload
                 upload.doUpload();
             });
         });

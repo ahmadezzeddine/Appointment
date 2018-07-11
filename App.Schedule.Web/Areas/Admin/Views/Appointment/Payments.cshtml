@@ -138,6 +138,9 @@
                                                             <a title="View" onclick="@("window.location.href='" + @Url.Action("view", "appointment", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
                                                                 <span class="fa fa-eye"></span>
                                                             </a>
+                                                            <a title="Invoice" target="_blank" href="@Url.Action("invoicehtml", "appointment", new { area = "admin", id = item.Id })" class="btn btn-default btn-xs">
+                                                                <span class="fa fa-file-pdf-o"></span>
+                                                            </a>
                                                         }
                                                     </td>
                                                 </tr>

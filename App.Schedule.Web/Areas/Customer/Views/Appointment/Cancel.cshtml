@@ -1,0 +1,157 @@
+﻿@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<AppointmentViewModel>
+
+@{
+    ViewBag.Title = "Cancel Appointment Request";
+    Layout = "~/Views/Shared/_AfterLoginCustomerMaster.cshtml";
+    var customerWebGrid = new WebGrid(ViewBag.BusinessEmployeeId);
+}
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/SubViews/_ErrorView.cshtml", Model)
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+
+
+        @using (Ajax.BeginForm("cancel", "appointment", new AjaxOptions { }))
+        {
+            <div class="panel panel-danger">
+
+                <div class="panel-heading">
+                    <b>Are you sure want to cancel request for this appointment?</b>
+                    <input type="button" class="btn btn-default btn-xs pull-right" value="No" onclick="@("window.location.href='" + @Url.Action("index", "appointment", new { area = "customer" }) + "'");" />
+                    <input id="btnCancel" class="btn btn-danger btn-xs pull-right " style="margin-right:5px;" type="button" value="Yes" onclick="onSubmit(this,'@Url.Action("index", "appointment", new { area = "customer" })')" />
+                </div>
+                <div>
+                    @if (Model == null)
+                    {
+                        <text>Please try again later.</text>
+                    }
+                    else
+                    {
+                        <div class="panel-body">
+                            @if (Model == null || Model.Data == null)
+                            {
+                                <text>Please try again later.</text>
+                            }
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(d => d.Data.Id)
+                            @Html.HiddenFor(d => d.Data.GlobalAppointmentId)
+                            <div class="row">
+                                <div class="form-group col-lg-6 control-label required">
+                                    <label>Reason</label>
+                                    @Html.TextAreaFor(d => d.Data.CancelReason, new { @class = "form-control col-lg-12", @rows = 6, @placeholder = "Type your reason here" })
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-lg-12 text-right">
+                                    #@Model.Data.GlobalAppointmentId
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label>Title</label>
+                                    <div class="form-control">
+                                        @Model.Data.Title
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label>Service Type</label>
+                                    <div class="form-control">
+                                        @Model.Data.BusinessServiceName
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label>Location</label>
+                                    <div class="form-control">
+                                        @Model.Data.ServiceLocationName
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label>Offer</label>
+                                    <div class="form-control">
+                                        @Model.Data.BusinessOfferName
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="alert alert-success">
+                                        Employee Information
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-12">
+                                    @customerWebGrid.GetHtml(htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
+                                                  tableStyle: "table table-striped",
+                                                  headerStyle: "active",
+                                                  footerStyle: "webgrid-footer",
+                                                  columns: customerWebGrid.Columns(
+                                           customerWebGrid.Column("FirstName", "First Name"),
+                                           customerWebGrid.Column("LastName", "Last Name"),
+                                           customerWebGrid.Column("Email", "Email")))
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="alert alert-success">
+                                        Schedule Information
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <label>Recurrence</label>
+                                    <div class="form-control">
+                                        @Enum.GetName(typeof(PatternType), (int)Model.Data.PatternType)
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label>Is All Day</label>
+                                    <div class="form-control">
+                                        @Model.Data.IsAllDayEvent
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label>Start Date</label>
+                                    <div class="form-control">
+                                        @string.Format("{0:MM/dd/yyyy}", Model.Data.StartDate.Value)
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label>End Date</label>
+                                    <div class="form-control">
+                                        @string.Format("{0:MM/dd/yyyy}", Model.Data.EndDate.Value)
+                                    </div>
+                                </div>
+                                <div id="timeView">
+                                    <div class="form-group col-lg-6">
+                                        <label>Start</label>
+                                        <div class="form-control">
+                                            @string.Format("{0:hh:mm tt}", Model.Data.StartTime.Value)
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label>End</label>
+                                        <div class="form-control">
+                                            @string.Format("{0:hh:mm tt}", Model.Data.EndTime.Value)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label>Is Active</label>
+                                    <div class="form-control">
+                                        @Model.Data.IsActive
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        }
+    </div>
+</div>

@@ -6,6 +6,7 @@
         Pending = 1,
         Completed = 2,
         Canceled = 3,
-        Deactivate = 4
+        Deactivate = 4,
+        CancelRequested = 5
     }
 }

@@ -79,7 +79,7 @@
                             <ul class="nav nav-second-level">
                                 <li><a href="@Url.Action("index","calendar", new { area="admin" })">View</a></li>
                                 <li><a href="@Url.Action("week","calendar", new { area="admin" })">Week</a></li>
-                                <li><a  href="@Url.Action("timeline","calendar", new { area="admin" })">Timeline</a></li>
+                                <li><a href="@Url.Action("timeline","calendar", new { area="admin" })">Timeline</a></li>
                             </ul>
                         </li>
                         <li>
@@ -87,9 +87,12 @@
                             <ul class="nav nav-second-level">
                                 <li><a href="@Url.Action("index","appointment",new { area="admin" })">List All</a></li>
                                 <li><a href="@Url.Action("add","appointment",new { area="admin" })">Add New</a></li>
+                                <li><a href="@Url.Action("CancelRequest","appointment",new { area="admin" })">Cancel Request</a></li>
+                                <li><a href="@Url.Action("Canceled","appointment",new { area="admin" })">Canceled</a></li>
                                 <li><a href="@Url.Action("deactiveview","appointment",new { area="admin" })">Deactive</a></li>
                                 <li><a href="@Url.Action("search","appointment",new { area="admin" })">Search</a></li>
                                 <li><a href="@Url.Action("payments","appointment",new { area="admin" })">Payments</a></li>
+                                <li><a href="@Url.Action("reports","appointment",new { area="admin" })">Print &amp; Reports</a></li>
                             </ul>
                         </li>
                     </ul>

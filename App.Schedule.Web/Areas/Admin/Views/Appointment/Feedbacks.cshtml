@@ -30,7 +30,6 @@
                 @if (Model == null || Model.Data == null)
                 {
                     <text>Please try again later.</text>
-                    return;
                 }
                 <div class="tab-content">
                     <div class="tab-pane active">
@@ -73,7 +72,6 @@
                                                     No appointment feedbacks has been created yet.
                                                 </td>
                                             </tr>
-                                            return;
                                         }
                                         @foreach (var item in Model.Data)
                                         {
@@ -125,7 +123,7 @@
                 <hr />
                 <div>
                     <span class="text-left">
-                        <a href="@Url.Action("index", "appointment", new { area = "admin" })" class="btn btn-default btn-sm">
+                        <a href="@Request.UrlReferrer" class="btn btn-default btn-sm">
                             Back
                         </a>
                     </span>

@@ -1,7 +1,9 @@
 ﻿body {
     background: #F4F4F4;
 }
-
+.center-block {
+    float: none !important
+}
 .form-group.required.control-label:before {
     color: red;
     content: "*";

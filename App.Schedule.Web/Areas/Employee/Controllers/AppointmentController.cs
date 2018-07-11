@@ -267,13 +267,13 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
 
             ViewBag.DocumentCategoryId = await this.GetGroupedDocumentCategories();
 
-            var documenttype = from DocumentType e in Enum.GetValues(typeof(DocumentType))
-                               select new
-                               {
-                                   Value = (int)e,
-                                   Text = e.ToString()
-                               };
-            ViewBag.DocumentType = new SelectList(documenttype, "Value", "Text");
+            //var documenttype = from DocumentType e in Enum.GetValues(typeof(DocumentType))
+            //                   select new
+            //                   {
+            //                       Value = (int)e,
+            //                       Text = e.ToString()
+            //                   };
+            //ViewBag.DocumentType = new SelectList(documenttype, "Value", "Text");
 
             response.Data.AppointmentId = id.Value;
             return View(response);
@@ -379,5 +379,29 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
 
+        public async Task<ActionResult> DocumentUpload()
+        {
+            var httpRequest = HttpContext.Request;
+            if (httpRequest.Files.Count > 0)
+            {
+                var response = await this.AppointmentService.FileUpload(httpRequest);
+                if (response == null)
+                {
+                    response.Status = false;
+                    response.Message = response != null ? response.Message : "There was a problem. Please try again later.";
+                }
+                else
+                {
+                    response.Data = response.Data;
+                    response.Status = response.Status;
+                    response.Message = response.Message;
+                }
+                return Json(new { status = response.Status, data = response.Data, message = response.Message }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { status = false, data = "", message = "No file selected." }, JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }

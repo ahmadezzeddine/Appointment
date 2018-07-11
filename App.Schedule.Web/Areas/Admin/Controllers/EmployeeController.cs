@@ -16,15 +16,16 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var model = this.ResponseHelper.GetResponse<IPagedList<BusinessEmployeeViewModel>>();
             var pageNumber = page ?? 1;
             ViewBag.search = search;
-
+            model.hasAdd = true;
             ViewBag.BusinessId = RegisterViewModel.Business.Id;
             ViewBag.LoggedEmployeeEmailId = RegisterViewModel.Employee.Email;
             ViewBag.ServiceLocationId = RegisterViewModel.Employee.ServiceLocationId;
-            ViewBag.Total = RegisterViewModel.Business.tblMembership.IsUnlimited ? long.MaxValue : RegisterViewModel.Business.tblMembership.TotalEmployee;
+            var total = RegisterViewModel.Business.tblMembership.IsUnlimited ? long.MaxValue : RegisterViewModel.Business.tblMembership.TotalEmployee;
             var result = await BusinessEmployeeService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
             if (result.Status)
             {
                 var data = result.Data;
+                model.hasAdd = result.Data != null && result.Data.Count <= total ? true : false;
                 model.Status = result.Status;
                 model.Message = result.Message;
                 if (search == null)

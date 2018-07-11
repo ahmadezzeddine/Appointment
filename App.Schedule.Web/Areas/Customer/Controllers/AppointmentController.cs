@@ -44,17 +44,21 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
                     {
                         result.Data = result.Data.Where(d => d.IsActive == false).ToList();
                     }
+                    else if(type.Value == AppointmentViewStatus.CancelRequested)
+                    {
+                        result.Data = result.Data.Where(d => d.StatusType == (int)StatusType.CancelRequest).ToList();
+                    }
                 }
-                var data = result.Data.OrderByDescending(d => d.Id).ToList();
+                var data = result.Data.OrderByDescending(d => d.Id).ToList().OrderBy(d => d.StatusType).ToList();
                 model.Status = result.Status;
                 model.Message = result.Message;
                 if (search == null)
                 {
-                    model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 5);
+                    model.Data = data.Where(d => d.IsActive == true).ToPagedList<AppointmentViewModel>(pageNumber, 5);
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower()) && d.IsActive == true).ToList().ToPagedList(pageNumber, 5);
                 }
             }
             else
@@ -330,5 +334,74 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> Cancel(long? id)
+        {
+            if (!id.HasValue)
+                return RedirectToAction("index", "appointment", new { area = "customer" });
+
+            var response = await this.AppointmentService.Get(id.Value);
+            if (response.Status == false)
+                return RedirectToAction("index", "appointment", new { area = "customer" });
+
+            response.Data.ServiceLocationName = RegisterCustomerViewModel.ServiceLocation.Name;
+
+            var BusinessOffers = await this.GetOffers();
+            response.Data.BusinessOfferName = BusinessOffers.Find(d => d.Id == response.Data.BusinessOfferId).Name;
+
+            var businessService = await this.GetBusinessServices(response.Data.BusinessServiceId.Value);
+            response.Data.BusinessServiceName = string.Format("{0} (${1})", businessService.Name, Math.Round(businessService.Cost.Value, 2));
+
+            var employees = await this.GetBusinessEmployee(id);
+            ViewBag.BusinessEmployeeId = employees;
+
+            response.Data.StartDate = response.Data.StartDate.Value;
+            response.Data.EndDate = response.Data.StartDate.Value;
+
+            return View(response);
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Cancel([Bind(Include = "Data")]ResponseViewModel<AppointmentViewModel> model)
+        {
+            var result = new ResponseViewModel<AppointmentFeedbackViewModel>();
+
+            if (String.IsNullOrEmpty(model.Data.CancelReason))
+            {
+                result.Message = "Please provide cancelation reason.";
+            }
+            else
+            {
+                model.Data.StatusType = (int)StatusType.CancelRequest;
+                model.Data.BusinessCustomerId = RegisterCustomerViewModel.Customer.Id;
+                var response = await this.AppointmentService.Cancel(model.Data.Id, StatusType.CancelRequest, model.Data.CancelReason);
+                if (response == null)
+                {
+                    result.Status = false;
+                    result.Message = response != null ? response.Message : "There was a problem. Please try again later.";
+                }
+                else
+                {
+                    result.Status = response.Status;
+                    result.Message = response.Message;
+                }
+            }
+            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> InvoiceHtml(long? id)
+        {
+            if (!id.HasValue)
+                return RedirectToAction("index", "appointment", new { area = "admin" });
+
+            var response = await this.AppointmentService.GetPaymentById(id.Value);
+            response.Status = true;
+
+            if (response == null || response.Data == null)
+                return RedirectToAction("payments", "appointment", new { area = "admin" });
+
+            return View(response);
+        }
     }
 }

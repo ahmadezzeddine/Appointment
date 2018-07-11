@@ -1,0 +1,150 @@
+﻿@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<ReportViewModel>
+@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Reports</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/SubViews/_ErrorView.cshtml", Model)
+    </div>
+</div>
+@using (Html.BeginForm("reports", "appointment", new AjaxOptions { }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Date Range
+                </div>
+                <div class="panel-body">
+                    <div class="container-fluid" id="dateRange">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                @Html.RadioButtonFor(d => d.Data.ReportTypeId, ReportType.Today)
+                                @Html.Label("Today") (@DateTime.Now.ToString("dddd, MMMM dd yyyy"))
+                            </div>
+                            <div class="col-lg-6">
+                                @Html.RadioButtonFor(d => d.Data.ReportTypeId, ReportType.Tomorrow)
+                                @Html.Label("Tomorrow") (@DateTime.Now.AddDays(1).ToString("dddd, MMMM dd yyyy"))
+                            </div>
+                            <div class="col-lg-6">
+                                @Html.RadioButtonFor(d => d.Data.ReportTypeId, ReportType.ThisWeek)
+                                @Html.Label("This Week") (@DateTime.Now.StartOfWeek(DayOfWeek.Monday).ToString("MMMM dd yyyy") to @DateTime.Now.StartOfWeek(DayOfWeek.Monday).AddDays(7).ToString("MMMM dd yyyy"))
+                            </div>
+                            <div class="col-lg-6">
+                                @Html.RadioButtonFor(d => d.Data.ReportTypeId, ReportType.NextWeek)
+                                @Html.Label("Next Week") (@DateTime.Now.StartOfWeek(DayOfWeek.Monday).AddDays(7).ToString("MMMM dd yyyy") to @DateTime.Now.StartOfWeek(DayOfWeek.Monday).AddDays(14).ToString("MMMM dd yyyy"))
+                            </div>
+
+                            <div class="col-lg-6">
+                                @Html.RadioButtonFor(d => d.Data.ReportTypeId, ReportType.ThisMonth)
+                                @Html.Label("This Month")  (@DateTime.Now.StartOfMonth().ToString("MMMM dd yyyy") to @DateTime.Now.StartOfMonth().AddMonths(1).AddDays(-1).ToString("MMMM dd yyyy"))
+                            </div>
+                            <div class="col-lg-6">
+                                @Html.RadioButtonFor(d => d.Data.ReportTypeId, ReportType.NextMonth)
+                                @Html.Label("Next Month")  (@DateTime.Now.StartOfMonth().AddMonths(1).ToString("MMMM dd yyyy") to @DateTime.Now.StartOfMonth().AddMonths(2).AddDays(-1).ToString("MMMM dd yyyy"))
+                            </div>
+
+                            <div class="col-lg-6">
+                                @Html.RadioButtonFor(d => d.Data.ReportTypeId, ReportType.ThisYear)
+                                @Html.Label("This Year") (@DateTime.Now.StartOfYear().ToString("MMMM dd yyyy") to @DateTime.Now.StartOfYear().AddYears(1).AddDays(-1).ToString("MMMM dd yyyy"))
+                            </div>
+                            <div class="col-lg-6">
+                                @Html.RadioButtonFor(d => d.Data.ReportTypeId, ReportType.NextYear)
+                                @Html.Label("Next Year") (@DateTime.Now.StartOfYear().AddYears(1).ToString("MMMM dd yyyy") to @DateTime.Now.StartOfYear().AddYears(2).AddDays(-1).ToString("MMMM dd yyyy"))
+                            </div>
+                            <div class="col-lg-6">
+                                @Html.RadioButtonFor(d => d.Data.ReportTypeId, ReportType.Yesterday)
+                                @Html.Label("Yesterday") (@DateTime.Now.AddDays(-1).ToString("dddd, MMMM dd yyyy"))
+                            </div>
+                            <div class="col-lg-6">
+                                @Html.RadioButtonFor(d => d.Data.ReportTypeId, ReportType.LastWeek)
+                                @Html.Label("Last Week") (@DateTime.Now.StartOfWeek(DayOfWeek.Monday).AddDays(-7).ToString("MMMM dd yyyy") to @DateTime.Now.StartOfWeek(DayOfWeek.Monday).ToString("MMMM dd yyyy")
+                            </div>
+                            <div class="col-lg-6">
+                                @Html.RadioButtonFor(d => d.Data.ReportTypeId, ReportType.LastMonth)
+                                @Html.Label("Last Month")  (@DateTime.Now.StartOfMonth().AddMonths(-1).ToString("MMMM dd yyyy") to @DateTime.Now.StartOfMonth().AddDays(-1).ToString("MMMM dd yyyy"))
+                            </div>
+                            <div class="col-lg-6">
+                                @Html.RadioButtonFor(d => d.Data.ReportTypeId, ReportType.LastYear)
+                                @Html.Label("Last Year") (@DateTime.Now.StartOfYear().AddYears(-1).ToString("MMMM dd yyyy") to @DateTime.Now.StartOfYear().AddDays(-1).ToString("MMMM dd yyyy"))
+                            </div>
+                        </div>
+                        <div class="row" style="margin:20px; border:1px solid #d1d1d1; padding:20px;">
+                            <div class="col-lg-10">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        @Html.RadioButtonFor(d => d.Data.ReportTypeId, ReportType.Custom)
+                                        @Html.Label("Custom")  (enter dates below in mm/dd/yyyy format or leave blanks to specify open date range)
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i> From</span>
+                                            @Html.EditorFor(d => d.Data.From, new { htmlAttributes = new { @class = "form-control col-lg-12", @placeholder = "MM/DD/YYYY", @value = Model.Data.From.HasValue ? Model.Data.From.Value.ToString("MM/dd/yyyy") : DateTime.Now.ToString("MM/dd/yyyy"), @type = "date" } })
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i> To</span>
+                                            @Html.EditorFor(d => d.Data.To, new { htmlAttributes = new { @class = "form-control col-lg-12", @placeholder = "MM/DD/YYYY", @value = Model.Data.To.HasValue ? Model.Data.To.Value.ToString("MM/dd/yyyy") : DateTime.Now.ToString("MM/dd/yyyy"), @type = "date" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Appointment Status
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        @for (int i = 0; i < Model.Data.AppointmentStatusTypeId.Count; i++)
+                        {
+                            <div class="col-lg-4">
+                                @Html.CheckBoxFor(d => d.Data.AppointmentStatusTypeId[i].Checked, new { Style = "vertical-align:3px}" })
+                                @Html.Label(Model.Data.AppointmentStatusTypeId[i].Name)
+                                @Html.HiddenFor(d => d.Data.AppointmentStatusTypeId[i].Id)
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Customer
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        @for (int i = 0; i < Model.Data.CustomerId.Count; i++)
+                        {
+                            <div class="col-lg-4">
+                                @Html.CheckBoxFor(d => d.Data.CustomerId[i].Checked, new { Style = "vertical-align:3px}" })
+                                @Html.Label(Model.Data.CustomerId[i].Name)
+                                @Html.HiddenFor(d => d.Data.CustomerId[i].Id)
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                    @Html.CheckBoxFor(d => d.Data.hasOnlyBusinessEmployeeId.Checked, new { Style = "vertical-align:3px}" })
+                    @Html.Label(Model.Data.hasOnlyBusinessEmployeeId.Name)
+                    <input type="submit" class="btn btn-info btn-sm" value="Search">
+                </div>
+            </div>
+        </div>
+    </div>
+}

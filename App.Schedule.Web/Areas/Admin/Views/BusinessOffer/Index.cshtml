@@ -23,7 +23,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <b>Information</b>
-                @if (ViewBag.Total != null && Model != null && Model.Data != null && ViewBag.Total >= Model.Data.Count)
+                @if (Model != null && Model.hasAdd)
                 {
                     <a href="@Url.Action("add", "businessoffer", new { area = "admin", id = ViewBag.EmployeeId })" class="btn btn-info btn-xs pull-right">
                         <span class="fa fa-plus"></span> Add
