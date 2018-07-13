@@ -404,7 +404,6 @@ namespace App.Schedule.Domains.ViewModel
         [EmailAddress(ErrorMessage = "Please enter a valid user email id")]
         public string Email { get; set; }
 
-        [Required]
         public int? STD { get; set; }
 
         [StringLength(250)]
@@ -1058,7 +1057,6 @@ namespace App.Schedule.Domains.ViewModel
         [Required(ErrorMessage = "Please Enter Document Title.")]
         public string Title { get; set; }
 
-        [Required(ErrorMessage = "Please Enter Document Type.")]
         public int? DocumentType { get; set; }
 
         public bool IsEmployeeUpload { get; set; }
@@ -1188,7 +1186,8 @@ namespace App.Schedule.Domains.ViewModel
         Canceled = 2,
         Completed = 3,
         Attended = 4,
-        NotAttended = 5
+        NotAttended = 5,
+        CancelRequest = 6
     }
 
     /// <summary>
@@ -1253,5 +1252,60 @@ namespace App.Schedule.Domains.ViewModel
         WordDocument = 3,
         Excel = 4,
         Access = 5
+    }
+
+
+    public class CustomerAppointmentPaymentViewModel
+    {
+        public long CustomerId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public byte[] ProfilePicture { get; set; }
+        public int? StdCode { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
+        public string Add1 { get; set; }
+        public string Add2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Zip { get; set; }
+        public long AppointmentId { get; set; }
+        public string GlobalAppointmentId { get; set; }
+        public long? BusinessServiceId { get; set; }
+        public string Title { get; set; }
+        public int PatternType { get; set; }
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
+        public bool IsRecuring { get; set; }
+        public bool IsAllDayEvent { get; set; }
+        public int? TextColor { get; set; }
+        public int? BackColor { get; set; }
+        public int? RecureEvery { get; set; }
+        public int? EndAfter { get; set; }
+        public DateTime? EndAfterDate { get; set; }
+        public int? StatusType { get; set; }
+        public string CancelReason { get; set; }
+        public bool IsActive { get; set; }
+        public long? BusinessOfferId { get; set; }
+        public long? ServiceLocationId { get; set; }
+        public long? BusinessEmployeeId { get; set; }
+        public long? BusinessCustomerId { get; set; }
+        public string BusinessOfferName { get; set; }
+        public string BusinessEmployeeName { get; set; }
+        public string BusinessServiceLocationName { get; set; }
+        public string BusinessServiceName { get; set; }
+        public long PaymentId { get; set; }
+        public bool IsPaid { get; set; }
+        public DateTime PaidDate { get; set; }
+        public decimal? Amount { get; set; }
+        public int BillingType { get; set; }
+        public string PurchaseOrderNo { get; set; }
+        public string ChequeNumber { get; set; }
+        public int? CardType { get; set; }
+        public string CCFirstName { get; set; }
+        public string CCLastName { get; set; }
+        public string CCardNumber { get; set; }
+        public string CCSecurityCode { get; set; }
+        public DateTime? CCExpirationDate { get; set; }
     }
 }

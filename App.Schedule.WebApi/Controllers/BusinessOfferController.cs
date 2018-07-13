@@ -28,9 +28,20 @@ namespace App.Schedule.WebApi.Controllers
                     var businessOffers = _db.tblBusinessOffers.Where(d => d.BusinessEmployeeId == id).ToList();
                     return Ok(new { status = true, data = businessOffers, message = "success" });
                 }
+                else if(type == TableType.ServiceLocationId)
+                {
+                    var model = (from offer in _db.tblBusinessOffers
+                                 join employee in _db.tblBusinessEmployees.Where(s => s.ServiceLocationId == id.Value)
+                                 on offer.BusinessEmployeeId equals employee.Id
+                                 select offer).ToList();
+                    return Ok(new { status = true, data = model, message = "success" });
+                }
                 else
                 {
-                    var model = _db.tblBusinessOffers.ToList();
+                    var model = (from offer in _db.tblBusinessOffers
+                                 join employee in _db.tblBusinessEmployees
+                                 on offer.BusinessEmployeeId equals employee.Id
+                                 select offer).ToList();
                     return Ok(new { status = true, data = model, message = "success" });
                 }
             }

@@ -70,8 +70,9 @@
                             <ul class="nav nav-second-level">
                                 <li><a href="@Url.Action("index","appointment",new { area="employee", type = 0})">All</a></li>
                                 <li><a href="@Url.Action("index","appointment",new { area="employee", type = 1 })">Pending</a></li>
-                                <li><a href="@Url.Action("index","appointment",new { area="employee", type = 2 })">Completed</a></li>
+                                <li><a href="@Url.Action("payment","appointment",new { area="employee", type = 2 })">Completed</a></li>
                                 <li><a href="@Url.Action("index","appointment",new { area="employee", type = 3 })">Canceled</a></li>
+                                <li><a href="@Url.Action("index","appointment",new { area="employee", type = 4 })">Deactive</a></li>
                             </ul>
                         </li>
                     </ul>

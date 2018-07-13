@@ -16,6 +16,12 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <b>Appointmet List</b>
+                @if (Model != null && Model.hasAdd)
+                {
+                    <a href="@Url.Action("add", "appointment", new { area = "employee" })" class="btn btn-info btn-xs pull-right">
+                        <span class="glyphicon glyphicon-plus"></span> Add
+                    </a>
+                }
             </div>
             <div class="panel-body">
                 @if (Model == null || Model.Data == null)
@@ -116,6 +122,24 @@
                                                         @item.IsActive
                                                     </td>
                                                     <td class="text-right">
+                                                        @if (item.BusinessEmployeeId == ViewBag.EmployeeId)
+                                                        {
+                                                            if (item.StatusType == (int)StatusType.Completed)
+                                                            {
+                                                                <a title="Invoice" target="_blank" href="@Url.Action("invoicehtml", "appointment", new { area = "employee", id = item.Id })" class="btn btn-default btn-xs">
+                                                                    <span class="fa fa-file-pdf-o"></span>
+                                                                </a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a title="Active or Deactive" onclick="@("window.location.href='" + @Url.Action("deactive", "appointment", new { area = "employee", id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                                    <span class="fa fa-check"></span>
+                                                                </a>
+                                                                <a title="Close" onclick="@("window.location.href='" + @Url.Action("close", "appointment", new { area = "employee", id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                                    <span class="fa fa-close"></span>
+                                                                </a>
+                                                            }
+                                                        }
                                                         <a title="Attachment" onclick="@("window.location.href='" + @Url.Action("attachments", "appointment", new { area = "employee", id = item.Id }) + "'");" class="btn btn-default btn-xs">
                                                             <span class="fa fa-file"></span>
                                                         </a>
@@ -137,8 +161,13 @@
                 </div>
                 <hr />
                 <div>
+                    <span class="text-left">
+                        <a href="@Url.Action("index", "dashboard", new { area = "employee" })" class="btn btn-default btn-sm">
+                            Dashboard
+                        </a>
+                    </span>
                     <span class="pull-right">
-                        @Html.PagedListPager(Model.Data, page => Url.Action("index", new { page }))
+                        @Html.PagedListPager(Model.Data, page => Url.Action("index", new { page, type = ViewBag.type }))
                     </span>
                 </div>
             </div>

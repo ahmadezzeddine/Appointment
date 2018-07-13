@@ -1,0 +1,170 @@
+﻿@using App.Schedule.Domains.ViewModel;
+@model ResponseViewModel<AppointmentPayViewModel>
+
+@{
+    ViewBag.Title = "Appointment";
+    Layout = "~/Views/Shared/_AfterLoginEmployeeMaster.cshtml";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Close appointment</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/SubViews/_ErrorView.cshtml", Model)
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <b>Information</b>
+            </div>
+            @using (Ajax.BeginForm("close", "appointment", new AjaxOptions { }))
+            {
+                <div class="panel-body">
+                    @if (Model == null || Model.Data == null)
+                    {
+                        <text>Please try again later.</text>
+                        return;
+                    }
+                    <div class="tab-content">
+                        <div class="row">
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(d => d.Data.Id)
+                            @Html.HiddenFor(d => d.Data.Title)
+                            @Html.HiddenFor(d => d.Data.StartTime)
+                            @Html.HiddenFor(d => d.Data.EndTime)
+                            @Html.HiddenFor(d => d.Data.StartDate)
+                            @Html.HiddenFor(d => d.Data.EndDate)
+                            @Html.HiddenFor(d => d.Data.Created)
+                            @Html.HiddenFor(d => d.Data.IsActive)
+                            @Html.HiddenFor(d => d.Data.GlobalAppointmentId)
+                            @Html.HiddenFor(d => d.Data.BusinessEmployeeId)
+                            @Html.HiddenFor(d => d.Data.BusinessCustomerId)
+                            @Html.HiddenFor(d => d.Data.BusinessOfferId)
+                            @Html.HiddenFor(d => d.Data.BusinessServiceId)
+                            @Html.HiddenFor(d => d.Data.CancelReason)
+                            @Html.HiddenFor(d => d.Data.ServiceLocationId)
+                            <div class="form-group col-lg-6">
+                                <label>Title</label>
+                                <div class="form-control">
+                                    @Model.Data.Title
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Global Id</label>
+                                <div class="form-control">
+                                    @Model.Data.GlobalAppointmentId
+                                </div>
+                            </div>
+                            @*<div class="form-group col-lg-12">
+                                    <label>Service Type</label>
+                                    <div class="form-control">
+                                        @Model.Data.BusinessServiceName
+                                    </div>
+                                </div>*@
+                            <div class="col-lg-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        Payment information
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group col-lg-6 required control-label">
+                                            <label>Amount</label>
+                                            @Html.EditorFor(d => d.Data.Payment.Amount, new { htmlAttributes = new { @class = "form-control", @placeholder = "Amount" } })
+                                        </div>
+                                        <div class="form-group col-lg-6 required control-label">
+                                            <label>PO Number</label>
+                                            @Html.EditorFor(d => d.Data.Payment.PurchaseOrderNo, new { htmlAttributes = new { @class = "form-control", @placeholder = "Purchase Order No." } })
+                                        </div>
+                                        @*<div class="form-group col-lg-6 required control-label">
+                                                <label>Is Paid</label>
+                                                <div class="form-control">
+                                                    @Html.CheckBoxFor(d => d.Data.Payment.IsPaid, new { onclick = "isAllDay()", @checked = "checked" })
+                                                </div>
+                                            </div>*@
+                                        <div class="form-group col-lg-6 required control-label">
+                                            <label>Billing Type</label>
+                                            @Html.DropDownListFor(d => d.Data.Payment.BillingType, new SelectList(ViewBag.BillingType, "Value", "Text"), new { @class = "form-control" })
+                                        </div>
+                                        <div id="chequeNumberView" class="form-group col-lg-6 required control-label" style="display:none;">
+                                            <label>Cheque Number</label>
+                                            @Html.EditorFor(d => d.Data.Payment.ChequeNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Cheque No." } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="cardInfoView" class="col-lg-12" style="display:none;">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Card Information</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group col-lg-12">
+                                            <label>Card Type</label>
+                                            @Html.DropDownListFor(d => d.Data.Payment.CardType, new SelectList(ViewBag.CardType, "Value", "Text"), new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group col-lg-6 required control-label">
+                                            <label>First Name</label>
+                                            @Html.EditorFor(d => d.Data.Payment.CCFirstName, new { htmlAttributes = new { @class = "form-control", @placeholder = "First Name" } })
+                                        </div>
+                                        <div class="form-group col-lg-6 required control-label">
+                                            <label>Last Name</label>
+                                            @Html.EditorFor(d => d.Data.Payment.CCLastName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Last Name" } })
+                                        </div>
+                                        <div class="form-group col-lg-6 required control-label">
+                                            <label>Card No.</label>
+                                            @Html.EditorFor(d => d.Data.Payment.CCardNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Card Number" } })
+                                        </div>
+                                        <div class="form-group col-lg-3">
+                                            <label>Security Code</label>
+                                            @Html.EditorFor(d => d.Data.Payment.CCSecurityCode, new { htmlAttributes = new { @class = "form-control", @placeholder = "Card Security Code" } })
+                                        </div>
+                                        <div class="form-group col-lg-3">
+                                            <label>Expiration Date</label>
+                                            @Html.EditorFor(d => d.Data.Payment.CCExpirationDate, new { htmlAttributes = new { @class = "form-control", @placeholder = "dd/mm/yyyy" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <input id="btnSave" class="btn btn-success btn-sm " type="button" value="Submit & Close" onclick="onSubmit(this,'@Url.Action("index", "appointment", new { area = "employee" })')" />
+                            <input type="button" class="btn btn-default btn-sm" value="Back" onclick="@("window.location.href='" + @Url.Action("index", "appointment", new { area = "employee" }) + "'");" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+          $(document).ready(function () {
+              $("#Data_Payment_BillingType").change(function () {
+                  var value = $('option:selected', $(this)).val();
+                  console.log(value);
+                  if (value == 1) {
+                      $('#chequeNumberView').attr('style', 'display: none;');
+                      $('#cardInfoView').attr('style', 'display: none;');
+                  }
+                  else if(value == 2) {
+                      $('#chequeNumberView').attr('style', 'display: block;');
+                      $('#cardInfoView').attr('style', 'display: none;');
+                  }
+                  else if (value == 3) {
+                      $('#chequeNumberView').attr('style', 'display: none;');
+                      $('#cardInfoView').attr('style', 'display: block;');
+                  }
+            });
+        });
+
+    </script>
+}

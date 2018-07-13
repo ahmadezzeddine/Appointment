@@ -48,6 +48,12 @@ namespace App.Schedule.Web.Areas.Employee.Controllers.Base
                 businessEmployee.Values["aServiceLocationId"] = Convert.ToString(model.Employee.ServiceLocationId);
                 businessEmployee.Values["aBusinessName"] = string.Format("{0} ({1})", model.Business.Name, model.Business.ShortName);
                 businessEmployee.Values["aServiceLocationName"] = model.ServiceLocation.Name;
+                businessEmployee.Values["aTotalAppointment"] = Convert.ToString(model.Business.tblMembership.TotalAppointment);
+                businessEmployee.Values["aTotalCustomer"] = Convert.ToString(model.Business.tblMembership.TotalCustomer);
+                businessEmployee.Values["aTotalEmployee"] = Convert.ToString(model.Business.tblMembership.TotalEmployee);
+                businessEmployee.Values["aTotalLocation"] = Convert.ToString(model.Business.tblMembership.TotalLocation);
+                businessEmployee.Values["aTotalOffers"] = Convert.ToString(model.Business.tblMembership.TotalOffers);
+                businessEmployee.Values["aIsUnlimited"] = Convert.ToString(model.Business.tblMembership.IsUnlimited);
 
                 Response.Cookies.Add(businessEmployee);
 
@@ -89,6 +95,12 @@ namespace App.Schedule.Web.Areas.Employee.Controllers.Base
                         RegisterViewModel.Employee.ServiceLocationId = Convert.ToInt64(AdminCookie.Values["aServiceLocationId"]);
                         RegisterViewModel.ServiceLocation.Name = AdminCookie.Values["aServiceLocationName"];
                         Token = AdminCookie.Values["aToken"];
+                        RegisterViewModel.Business.tblMembership.TotalOffers = Convert.ToInt32(AdminCookie.Values["aTotalOffers"]);
+                        RegisterViewModel.Business.tblMembership.IsUnlimited = Convert.ToBoolean(AdminCookie.Values["aIsUnlimited"]);
+                        RegisterViewModel.Business.tblMembership.TotalCustomer = Convert.ToInt32(AdminCookie.Values["aTotalCustomer"]);
+                        RegisterViewModel.Business.tblMembership.TotalEmployee = Convert.ToInt32(AdminCookie.Values["aTotalEmployee"]);
+                        RegisterViewModel.Business.tblMembership.TotalLocation = Convert.ToInt32(AdminCookie.Values["aTotalLocation"]);
+                        RegisterViewModel.Business.tblMembership.TotalAppointment = Convert.ToInt32(AdminCookie.Values["aTotalAppointment"]);
                         return RegisterViewModel;
                     }
                     else

@@ -41,6 +41,15 @@ namespace App.Schedule.WebApi.Controllers
                     var model = _db.tblServiceLocations.Where(d => d.BusinessId == id.Value).ToList();
                     return Ok(new { status = true, data = model, message = "success" });
                 }
+                else if(type == TableType.EmployeeId)
+                {
+                    var model = (from employee in _db.tblBusinessEmployees.Where(d => d.Id == id.Value).ToList()
+                                 join location in _db.tblServiceLocations
+                                 on employee.ServiceLocationId.Value equals location.Id
+                                 select location)
+                                 .ToList();
+                    return Ok(new { status = true, data = model, message = "success" });
+                }
                 else
                 {
                     var model = _db.tblServiceLocations.ToList();

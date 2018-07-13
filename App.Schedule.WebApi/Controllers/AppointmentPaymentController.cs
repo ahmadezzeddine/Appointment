@@ -9,6 +9,7 @@ using App.Schedule.Domains.ViewModel;
 namespace App.Schedule.WebApi.Controllers
 {
     [Authorize]
+    //[AllowAnonymous]
     public class AppointmentPaymentController : ApiController
     {
         private readonly AppScheduleDbContext _db;
@@ -24,11 +25,11 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 var model = _db.tblAppointmentPayments.ToList();
-                return Ok(new { status = true, data = model });
+                return Ok(new { status = true, data = model, message = "success" });
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = true, data = "", message = ex.Message.ToString() });
             }
         }
 
@@ -38,19 +39,75 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "Please provide valid ID." });
+                    return Ok(new { status = false, data = "", message = "Please provide a valid id." });
                 else
                 {
-                    var model = _db.tblAppointmentPayments.Find(id);
-                    if (model != null)
-                        return Ok(new { status = true, data = model });
-                    else
-                        return Ok(new { status = false, data = "Not found." });
+                    var model = (from appointment in _db.tblAppointments
+                                 join payment in _db.tblAppointmentPayments
+                                 on appointment.Id equals payment.AppointmentId
+                                 join customer in _db.tblBusinessCustomers
+                                 on appointment.BusinessCustomerId equals customer.Id
+                                 join employee in _db.tblBusinessEmployees
+                                 on appointment.BusinessEmployeeId equals employee.Id
+                                 select new CustomerAppointmentPaymentViewModel
+                                 {
+                                     Add1 = customer.Add1,
+                                     Add2 = customer.Add2,
+                                     Amount = payment.Amount,
+                                     AppointmentId = appointment.Id,
+                                     BackColor = appointment.BackColor,
+                                     BillingType = payment.BillingType,
+                                     BusinessCustomerId = appointment.BusinessCustomerId,
+                                     BusinessEmployeeId = appointment.BusinessEmployeeId,
+                                     BusinessOfferId = appointment.BusinessOfferId,
+                                     BusinessServiceId = appointment.BusinessServiceId,
+                                     CancelReason = appointment.CancelReason,
+                                     CardType = payment.CardType,
+                                     CCardNumber = payment.CCardNumber,
+                                     CCExpirationDate = payment.CCExpirationDate,
+                                     CCFirstName = payment.CCFirstName,
+                                     CCLastName = payment.CCLastName,
+                                     CCSecurityCode = payment.CCSecurityCode,
+                                     ChequeNumber = payment.ChequeNumber,
+                                     City = customer.City,
+                                     CustomerId = customer.Id,
+                                     Email = customer.Email,
+                                     EndAfter = appointment.EndAfter,
+                                     EndAfterDate = appointment.EndAfterDate,
+                                     EndTime = appointment.EndTime,
+                                     FirstName = customer.FirstName,
+                                     LastName = customer.LastName,
+                                     GlobalAppointmentId = appointment.GlobalAppointmentId,
+                                     IsActive = appointment.IsActive,
+                                     PhoneNumber = customer.PhoneNumber,
+                                     IsAllDayEvent = appointment.IsAllDayEvent,
+                                     PaymentId = payment.Id,
+                                     IsPaid = payment.IsPaid,
+                                     IsRecuring = appointment.IsRecuring,
+                                     PaidDate = payment.PaidDate,
+                                     PatternType = appointment.PatternType,
+                                     ProfilePicture = customer.ProfilePicture,
+                                     ServiceLocationId = appointment.ServiceLocationId,
+                                     PurchaseOrderNo = payment.PurchaseOrderNo,
+                                     RecureEvery = appointment.RecureEvery,
+                                     StartTime = appointment.StartTime,
+                                     State = customer.State,
+                                     StatusType = appointment.StatusType,
+                                     StdCode = customer.StdCode,
+                                     TextColor = appointment.TextColor,
+                                     Title = appointment.Title,
+                                     Zip = customer.Zip,
+                                     BusinessEmployeeName = employee.FirstName +"-"+ employee.LastName,
+                                     BusinessOfferName =appointment.tblBusinessOffer.Name,
+                                     BusinessServiceLocationName = appointment.tblServiceLocation.Name,
+                                     BusinessServiceName = appointment.tblBusinessService.Name
+                                 }).FirstOrDefault();
+                    return Ok(new { status = true, data = model, message = "Success" });
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = true, data = "", message = ex.Message.ToString() });
             }
         }
 
@@ -81,18 +138,18 @@ namespace App.Schedule.WebApi.Controllers
                     _db.tblAppointmentPayments.Add(appointmentPayment);
                     var response = _db.SaveChanges();
                     if (response > 0)
-                        return Ok(new { status = true, data = appointmentPayment });
+                        return Ok(new { status = true, data = appointmentPayment, message = "success" });
                     else
-                        return Ok(new { status = false, data = "There was a problem." });
+                        return Ok(new { status = false, data = "", message = "There was a problem." });
                 }
                 else
                 {
-                    return Ok(new { status = false, data = "There was a problem." });
+                    return Ok(new { status = false, data = "", message = "There was a problem." });
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = true, data = "", message = ex.Message.ToString() });
             }
         }
 
@@ -128,17 +185,17 @@ namespace App.Schedule.WebApi.Controllers
                             _db.Entry(appointmentPayment).State = EntityState.Modified;
                             var response = _db.SaveChanges();
                             if (response > 0)
-                                return Ok(new { status = true, data = appointmentPayment });
+                                return Ok(new { status = true, data = appointmentPayment, message = "success" });
                             else
                                 return Ok(new { status = false, data = "There was a problem to update the data." });
                         }
                     }
-                    return Ok(new { status = false, data = "Not a valid data to update. Please provide a valid id." });
+                    return Ok(new { status = false, data = "", message = "Not a valid data to update. Please provide a valid id." });
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = true, data = "", message = ex.Message.ToString() });
             }
         }
 
@@ -148,7 +205,7 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 if (!id.HasValue)
-                    return Ok(new { status = false, data = "Please provide a valid ID." });
+                    return Ok(new { status = false, data = "Please provide a valid id." });
                 else
                 {
                     var appointmentPayment = _db.tblAppointmentPayments.Find(id);
@@ -157,19 +214,19 @@ namespace App.Schedule.WebApi.Controllers
                         _db.tblAppointmentPayments.Remove(appointmentPayment);
                         var response = _db.SaveChanges();
                         if (response > 0)
-                            return Ok(new { status = true, data = "Successfully removed" });
+                            return Ok(new { status = true, data = "", message = "success" });
                         else
-                            return Ok(new { status = false, data = "There was a problem to update the data." });
+                            return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
                     }
                     else
                     {
-                        return Ok(new { status = false, data = "Not a valid data to update. Please provide a valid id." });
+                        return Ok(new { status = false, data = "", message = "Not a valid data to update. Please provide a valid id." });
                     }
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = true, data = "", message = ex.Message.ToString() });
             }
         }
     }

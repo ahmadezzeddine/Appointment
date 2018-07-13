@@ -22,6 +22,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
             ViewBag.CustomerId = RegisterCustomerViewModel.Customer.Id;
             ViewBag.BusinessId = RegisterCustomerViewModel.Business.Id;
             ViewBag.ServiceLocationId = RegisterCustomerViewModel.Customer.ServiceLocationId;
+            ViewBag.Type = type.HasValue ? (int)type.Value : 0;
 
             var result = await AppointmentService.Gets(RegisterCustomerViewModel.Customer.Id, TableType.CustomerId);
             if (result.Status)
@@ -30,31 +31,39 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
                 {
                     if (type.Value == AppointmentViewStatus.Canceled)
                     {
-                        result.Data = result.Data.Where(d => d.StatusType == (int)StatusType.Canceled).ToList();
+                        result.Data = result.Data.Where(d => d.StatusType == (int)StatusType.Canceled && d.IsActive == true).ToList();
                     }
                     else if (type.Value == AppointmentViewStatus.Completed)
                     {
-                        result.Data = result.Data.Where(d => d.StatusType == (int)StatusType.Completed).ToList();
+                        result.Data = result.Data.Where(d => d.StatusType == (int)StatusType.Completed && d.IsActive == true).ToList();
                     }
                     else if (type.Value == AppointmentViewStatus.Pending)
                     {
-                        result.Data = result.Data.Where(d => d.StatusType != (int)StatusType.Canceled && d.StatusType != (int)StatusType.Completed).ToList();
+                        result.Data = result.Data.Where(d => d.StatusType != (int)StatusType.Canceled && d.StatusType != (int)StatusType.Completed && d.IsActive == true).ToList();
                     }
                     else if (type.Value == AppointmentViewStatus.Deactivate)
                     {
                         result.Data = result.Data.Where(d => d.IsActive == false).ToList();
                     }
-                    else if(type.Value == AppointmentViewStatus.CancelRequested)
+                    else if (type.Value == AppointmentViewStatus.CancelRequested)
                     {
-                        result.Data = result.Data.Where(d => d.StatusType == (int)StatusType.CancelRequest).ToList();
+                        result.Data = result.Data.Where(d => d.StatusType == (int)StatusType.CancelRequest && d.IsActive == true).ToList();
                     }
+                    else
+                    {
+                        result.Data = result.Data.ToList();
+                    }
+                }
+                else
+                {
+                    result.Data = result.Data.Where(d => d.IsActive == true).ToList();
                 }
                 var data = result.Data.OrderByDescending(d => d.Id).ToList().OrderBy(d => d.StatusType).ToList();
                 model.Status = result.Status;
                 model.Message = result.Message;
                 if (search == null)
                 {
-                    model.Data = data.Where(d => d.IsActive == true).ToPagedList<AppointmentViewModel>(pageNumber, 5);
+                    model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 5);
                 }
                 else
                 {
@@ -72,6 +81,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
         [HttpGet]
         public async Task<ActionResult> View(long? id)
         {
+            try { 
             if (!id.HasValue)
                 return RedirectToAction("index", "appointment", new { area = "customer" });
 
@@ -113,6 +123,11 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
             response.Data.EndDate = response.Data.StartDate.Value;
 
             return View(response);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("index","dashboard", new { area = "customer" });
+            }
         }
 
         [NonAction]

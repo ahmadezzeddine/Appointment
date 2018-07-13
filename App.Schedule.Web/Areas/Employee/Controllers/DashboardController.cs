@@ -18,9 +18,10 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
         {
             var appointments = await GetAppointments();
             ViewBag.totalAppointmentCount = appointments.Count();
-            ViewBag.totalAppointmentPendingCount = appointments.Where(d => d.StatusType.Value != (int)StatusType.Completed && d.StatusType != (int)StatusType.Canceled).Count();
-            ViewBag.totalAppointmentCompletedCount = appointments.Where(d => d.StatusType.Value == (int)StatusType.Completed).Count();
-            ViewBag.totalAppointmentCanceledCount = appointments.Where(d => d.StatusType.Value == (int)StatusType.Canceled).Count();
+            ViewBag.totalAppointmentPendingCount = appointments.Where(d => d.StatusType.Value != (int)StatusType.Completed && d.StatusType != (int)StatusType.Canceled && d.IsActive == true).Count();
+            ViewBag.totalAppointmentDeactiveCount = appointments.Where(d => d.IsActive == false).Count();
+            ViewBag.totalAppointmentCompletedCount = appointments.Where(d => d.StatusType.Value == (int)StatusType.Completed && d.IsActive == true).Count();
+            ViewBag.totalAppointmentCanceledCount = appointments.Where(d => d.StatusType.Value == (int)StatusType.Canceled && d.IsActive == true).Count();
             ViewBag.BusinessHours = await this.GetBusinessHours();
             return View();
         }
@@ -41,7 +42,7 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
             var response = await this.AppointmentService.Gets(RegisterViewModel.Employee.Id, TableType.EmployeeId);
             if (response.Status)
             {
-                data = response.Data.Where(d => d.StatusType != (int)StatusType.Completed && d.IsActive == true && d.BusinessEmployeeId != null).ToList();
+                data = response.Data.Where(d => d.BusinessEmployeeId != null).ToList();
             }
             return data;
         }
@@ -63,14 +64,93 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
                 title = x.Title + " (" + x.BusinessCustomerName.ToUpper() + ")",
                 start = x.StartTime,
                 end = x.EndTime,
-                color = x.BackColor.HasValue ? Color.FromArgb(x.BackColor.Value).ToString() : "#3a87ad",
-                textColor = x.TextColor.HasValue ? Color.FromArgb(x.TextColor.Value).ToString() : "#ffffff",
-                url = Url.Action("view", "appointment", new { role = "admin", id = x.Id }),
+                color = x.BackColor.HasValue ? Color.FromArgb(x.BackColor.Value).ToString() : SetBackColor(x.StatusType.Value, x.IsActive),
+                textColor = x.TextColor.HasValue ? Color.FromArgb(x.TextColor.Value).ToString() : SetTextColor(x.StatusType.Value, x.IsActive),
+                url = Url.Action("view", "appointment", new { area = "employee", id = x.Id }),
                 className = "",
                 someKey = x.Id,
                 allDay = x.IsAllDayEvent
             };
             return appoint;
+        }
+
+        [NonAction]
+        private string SetBackColor(int type, bool status)
+        {
+            var color = "blue";
+            if (status == false)
+            {
+                color = "#f5f5f5";
+            }
+            else
+            {
+                if (type == (int)StatusType.Completed)
+                {
+                    color = "#dff0d8";
+                }
+                else if (type == (int)StatusType.Confirmed)
+                {
+                    color = "#d9edf7";
+                }
+                else if (type == (int)StatusType.CancelRequest)
+                {
+                    color = "#f2dede";
+                }
+                else if (type == (int)StatusType.Canceled)
+                {
+                    color = "#f2dede";
+                }
+                else if (type == (int)StatusType.Resheduled)
+                {
+                    color = "yellow";
+                }
+                else
+                {
+                    color = "blue";
+                }
+            }
+            return color;
+        }
+
+        [NonAction]
+        private string SetTextColor(int type, bool status)
+        {
+            {
+                var color = "#000";
+                if (status == false)
+                {
+                    color = "#333333";
+                }
+                else
+                {
+                    if (type == (int)StatusType.Completed)
+                    {
+                        color = "#3c763d";
+                    }
+                    else if (type == (int)StatusType.Confirmed)
+                    {
+                        color = "#31708f";
+                    }
+                    else if (type == (int)StatusType.CancelRequest)
+                    {
+                        color = "#a94442";
+                    }
+                    else if (type == (int)StatusType.Canceled)
+                    {
+                        color = "#a94442";
+                    }
+                    else if (type == (int)StatusType.Resheduled)
+                    {
+                        color = "#fff";
+                    }
+                    else
+                    {
+                        color = "#000";
+                    }
+                }
+                return color;
+            }
+
         }
 
         [NonAction]

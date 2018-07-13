@@ -111,11 +111,13 @@ namespace App.Schedule.Web.Services
         public const string GET_APPOINTMENT  = "api/appointment";
         public const string GET_APPOINTMENT_BYID = "api/appointment?id={0}";
         public const string GET_APPOINTMENT_BYBUSINESSIDANDTYPE = "api/appointment?id={0}&type={1}";
+        public const string GET_APPOINTMENT_PAYMENT_BY_ID = "api/appointmentpayment?id={0}";
         public const string POST_APPOINTMENT = "api/appointment";
         public const string PUT_APPOINTMENT = "api/appointment?id={0}";
         public const string DELETE_APPOINTMENT = "api/appointment?id={0}";
         public const string DEACTIVE_APPOINTMENT = "api/appointment?id={0}&status={1}";
         public const string CLOSE_APPOINTMENT = "api/appointment?type={0}&reason={1}";
+        public const string CANCEL_APPOINTMENT = "api/appointment?id={0}&type={1}&reason={2}";
 
         //Document Category
         public const string GET_DOCUMENTCATEGORIES = "api/documentcategory";
@@ -232,4 +234,6 @@ namespace App.Schedule.Web.Services
             return model;
         }
     }
+
+    
 }

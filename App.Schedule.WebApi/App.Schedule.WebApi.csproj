@@ -250,6 +250,7 @@
     <Compile Include="Controllers\BusinessServiceController.cs" />
     <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\DocumentCategoryController.cs" />
+    <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MembershipController.cs" />
     <Compile Include="Controllers\ServiceLocationController.cs" />

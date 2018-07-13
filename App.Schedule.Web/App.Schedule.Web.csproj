@@ -445,6 +445,11 @@
     <Content Include="Areas\Admin\Views\Appointment\ReportsView.cshtml" />
     <Content Include="Areas\Admin\Views\Appointment\InvoiceHtml.cshtml" />
     <Content Include="Areas\Customer\Views\Appointment\InvoiceHtml.cshtml" />
+    <Content Include="Areas\Employee\Views\Appointment\Add.cshtml" />
+    <Content Include="Areas\Employee\Views\Appointment\Deactive.cshtml" />
+    <Content Include="Areas\Employee\Views\Appointment\Close.cshtml" />
+    <Content Include="Areas\Employee\Views\Appointment\InvoiceHtml.cshtml" />
+    <Content Include="Areas\Employee\Views\Appointment\Payment.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -597,7 +602,6 @@
     <Folder Include="Areas\Customer\Models\" />
     <Folder Include="Areas\Customer\Views\Shared\" />
     <Folder Include="Areas\Employee\Models\" />
-    <Folder Include="Areas\Employee\Views\AccountBase\" />
     <Folder Include="Areas\Employee\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>

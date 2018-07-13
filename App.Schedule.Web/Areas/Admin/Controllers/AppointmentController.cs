@@ -13,7 +13,6 @@ using System.IO;
 using System.Web.UI;
 using System.Data;
 using System.Text;
-using iTextSharp.text.html.simpleparser;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
 using System.Web;
@@ -32,6 +31,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var pageNumber = page ?? 1;
             ViewBag.search = search;
             model.hasAdd = true;
+            ViewBag.type = type.HasValue ? (int)type.Value : 0;
             ViewBag.BusinessId = RegisterViewModel.Business.Id;
             ViewBag.ServiceLocationId = RegisterViewModel.Employee.ServiceLocationId;
 
@@ -39,21 +39,22 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var total = RegisterViewModel.Business.tblMembership.IsUnlimited ? long.MaxValue : RegisterViewModel.Business.tblMembership.TotalAppointment;
             if (result.Status && result.Data != null)
             {
-                var appointmentsModel = result.Data.Where(d => d.BusinessEmployeeId != null && d.BusinessEmployeeId == RegisterViewModel.Employee.Id).ToList();
+                //var appointmentsModel = result.Data.Where(d => d.BusinessEmployeeId != null && d.BusinessEmployeeId == RegisterViewModel.Employee.Id).ToList();
+                var appointmentsModel = result.Data.ToList();
                 model.hasAdd = appointmentsModel != null && appointmentsModel.Count <= total ? true : false;
                 if (type.HasValue)
                 {
                     if (type.Value == AppointmentViewStatus.Canceled)
                     {
-                        result.Data = appointmentsModel.Where(d => d.StatusType == (int)StatusType.Canceled).ToList();
+                        result.Data = appointmentsModel.Where(d => d.StatusType == (int)StatusType.Canceled && d.IsActive == true).ToList();
                     }
                     else if (type.Value == AppointmentViewStatus.Completed)
                     {
-                        result.Data = appointmentsModel.Where(d => d.StatusType == (int)StatusType.Completed).ToList();
+                        result.Data = appointmentsModel.Where(d => d.StatusType == (int)StatusType.Completed && d.IsActive == true).ToList();
                     }
                     else if (type.Value == AppointmentViewStatus.Pending)
                     {
-                        result.Data = appointmentsModel.Where(d => d.StatusType != (int)StatusType.Canceled && d.StatusType != (int)StatusType.Completed).ToList();
+                        result.Data = appointmentsModel.Where(d => d.StatusType != (int)StatusType.Canceled && d.StatusType != (int)StatusType.Completed && d.IsActive == true).ToList();
                     }
                     else if (type.Value == AppointmentViewStatus.Deactivate)
                     {
@@ -66,9 +67,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 }
                 else
                 {
-                    result.Data = appointmentsModel.Where(d => d.StatusType != (int)StatusType.Completed && d.StatusType != (int)StatusType.Canceled).ToList();
+                    result.Data = appointmentsModel.Where(d => d.StatusType != (int)StatusType.Completed && d.StatusType != (int)StatusType.Canceled && d.IsActive == true).ToList();
                 }
-                var data = result.Data.Where(d => d.IsActive == true).OrderByDescending(d => d.Id).ToList();
+                var data = result.Data.OrderByDescending(d => d.Id).ToList();
                 model.Status = result.Status;
                 model.Message = result.Message;
                 if (search == null)
@@ -185,7 +186,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                     result.Message = response.Message;
                 }
             }
-            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+            return RedirectToAction("CancelRequest");
         }
 
         [HttpGet]
@@ -922,41 +923,42 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 return RedirectToAction("index", "appointment", new { area = "admin" });
 
             var response = await this.AppointmentService.Get(id.Value);
-            response.Status = true;
-            response.Data.BusinessEmployeeId = RegisterViewModel.Employee.Id;
-            response.Data.GlobalAppointmentId = String.Format("{0}{1}{2}", DateTime.Now.Ticks, RegisterViewModel.Business.Id, RegisterViewModel.Employee.Id);
+            if (response != null)
+            {
+                response.Status = true;
+                response.Data.BusinessEmployeeId = RegisterViewModel.Employee.Id;
+                response.Data.GlobalAppointmentId = String.Format("{0}{1}{2}", DateTime.Now.Ticks, RegisterViewModel.Business.Id, RegisterViewModel.Employee.Id);
 
-            var ServiceLocations = await this.GetServiceLocations();
-            response.Data.ServiceLocationName = ServiceLocations.Find(d => d.Id == response.Data.ServiceLocationId).Name;
+                var ServiceLocations = await this.GetServiceLocations();
+                var location = ServiceLocations.SingleOrDefault(d => d.Id == response.Data.ServiceLocationId);
+                if (location != null)
+                {
+                    response.Data.ServiceLocationName = location.Name;
+                }
 
-            var BusinessOffers = await this.GetOffers();
-            response.Data.BusinessOfferName = BusinessOffers.Find(d => d.Id == response.Data.BusinessOfferId).Name;
+                var BusinessOffers = await this.GetOffers();
+                var offer = BusinessOffers.SingleOrDefault(d => d.Id == response.Data.BusinessOfferId);
+                if (offer != null) {
+                    response.Data.BusinessOfferName = offer.Name;
+                }
 
-            var BusinessServices = await this.GetBusinessServices();
-            response.Data.BusinessServiceName = BusinessServices.Find(d => d.Id == response.Data.BusinessServiceId).Name;
+                var BusinessServices = await this.GetBusinessServices();
+                var serivce = BusinessServices.SingleOrDefault(d => d.Id == response.Data.BusinessServiceId);
+                if (serivce!=null)
+                {
+                    response.Data.BusinessServiceName = serivce.Name;
+                }
+                response.Data.StartDate = response.Data.StartDate.Value;
+                response.Data.EndDate = response.Data.StartDate.Value;
 
-            response.Data.StartDate = response.Data.StartDate.Value;
-            response.Data.EndDate = response.Data.StartDate.Value;
-
-            var employees = await this.GetBusinessEmployee(id.Value, TableType.AppointmentInvitee);
-            ViewBag.BusinessEmployeeId = employees;
-            //if (invitees.Status)
-            //{
-            //    var employees = await this.GetBusinessEmployee();
-            //    var appointmentInvitees = new List<BusinessEmployeeViewModel>();
-            //    var employee = employees.Find(d => d.Id == response.Data.BusinessEmployeeId);
-            //    if (employee != null)
-            //        appointmentInvitees.Add(employee);
-
-            //    foreach (var invitee in invitees.Data)
-            //    {
-            //        employee = employees.Find(d => d.Id == invitee.BusinessEmployeeId);
-            //        if (employee != null)
-            //            appointmentInvitees.Add(employee);
-            //    }
-            //    ViewBag.BusinessEmployeeId = appointmentInvitees;
-            //}
-            return View(response);
+                var employees = await this.GetBusinessEmployee(id.Value, TableType.AppointmentInvitee);
+                ViewBag.BusinessEmployeeId = employees;
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("view");
+            }
         }
 
         [HttpGet]
@@ -1562,7 +1564,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                         using (var hw = new HtmlTextWriter(sw))
                         {
                             var sb = new StringBuilder();
-                            
+
                             sb.Append("<table border='1' style='width: 100%; line-height: 0.5em; border: 1px solid #f7f7f7; border-collapse: collapse;'>");
                             sb.Append("<tr>");
                             sb.Append("<td style='background-color: #f7f7f7; padding:10px;'>");
@@ -1640,22 +1642,22 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                                 var phoneNumber = appointment.BusinessCustomerName;
                                 var faxNumber = appointment.BusinessCustomerName;
                                 var Email = appointment.BusinessCustomerName;
-                                sb.Append("<td style='text-align: left; padding: 10px;'>"+phoneNumber+"</td>");
-                                sb.Append("<td style='text-align: left; padding: 10px;'>"+faxNumber+"</td>");
-                                sb.Append("<td style='text-align: left; padding: 10px;'>"+faxNumber+"</td>");
-                                sb.Append("<td style='text-align: left; width:200px; padding: 10px;'>" + Email+"</td>");
+                                sb.Append("<td style='text-align: left; padding: 10px;'>" + phoneNumber + "</td>");
+                                sb.Append("<td style='text-align: left; padding: 10px;'>" + faxNumber + "</td>");
+                                sb.Append("<td style='text-align: left; padding: 10px;'>" + faxNumber + "</td>");
+                                sb.Append("<td style='text-align: left; width:200px; padding: 10px;'>" + Email + "</td>");
                                 sb.Append("</tr>");
                                 sb.Append("<tr>");
                                 var serviceName = appointment.BusinessServiceName;
                                 var locatioName = appointment.ServiceLocationName;
                                 var offerName = appointment.BusinessOfferName;
-                                sb.Append("<td colspan='3' style='text-align: left; padding:10px;'>"+serviceName+"</td>");
-                                sb.Append("<td style='text-align: left; padding:10px;'>"+ locatioName + "</td>");
+                                sb.Append("<td colspan='3' style='text-align: left; padding:10px;'>" + serviceName + "</td>");
+                                sb.Append("<td style='text-align: left; padding:10px;'>" + locatioName + "</td>");
                                 sb.Append("</tr>");
                                 sb.Append("<tr>");
-                                sb.Append("<td colspan='3' style='text-align: left; padding:10px;'>"+ offerName + "</td>");
+                                sb.Append("<td colspan='3' style='text-align: left; padding:10px;'>" + offerName + "</td>");
                                 var statusType = Enum.GetName(typeof(StatusType), appointment.StatusType);
-                                sb.Append("<td style='text-align: left; padding:10px;'>"+statusType+"</td>");
+                                sb.Append("<td style='text-align: left; padding:10px;'>" + statusType + "</td>");
                                 sb.Append("</tr>");
                                 sb.Append("</table>");
                                 sb.Append("</td>");
@@ -1682,19 +1684,6 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                             Response.Cache.SetCacheability(HttpCacheability.NoCache);
                             Response.Write(pdfDoc);
                             Response.End();
-
-
-                            //var sr = new StringReader(sb.ToString());
-                            //Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
-                            //PdfWriter writer = PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
-                            //pdfDoc.Open();
-                            //XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
-                            //pdfDoc.Close();
-                            //Response.ContentType = "application/pdf";
-                            //Response.AddHeader("content-disposition", "attachment;filename=GridViewExport.pdf");
-                            //Response.Cache.SetCacheability(HttpCacheability.NoCache);
-                            //Response.Write(pdfDoc);
-                            //Response.End();
                         }
                     }
                 }

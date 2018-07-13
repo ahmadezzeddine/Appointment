@@ -103,43 +103,70 @@ namespace App.Schedule.WebApi.Controllers
 
                 if (type == TableType.BusinessId)
                 {
-                    var locations = _db.tblServiceLocations.Where(d => d.BusinessId == id.Value).ToList();
-                    var model = new List<BusinessCustomerViewModel>();
-                    foreach (var location in locations)
-                    {
-                        var customers = _db.tblBusinessCustomers.Where(d => d.ServiceLocationId == location.Id).Select(s => new BusinessCustomerViewModel
-                        {
-                            Created = s.Created,
-                            Email = s.Email,
-                            FirstName = s.FirstName,
-                            Id = s.Id,
-                            IsActive = s.IsActive,
-                            LastName = s.LastName,
-                            Password = s.Password,
-                            PhoneNumber = s.PhoneNumber,
-                            ServiceLocationId = s.ServiceLocationId,
-                            Add1 = s.Add1,
-                            Add2 = s.Add2,
-                            City = s.City,
-                            State = s.City,
-                            ProfilePicture = s.ProfilePicture,
-                            StdCode = s.StdCode,
-                            Zip = s.Zip,
-                            ServiceLocation = new ServiceLocationViewModel() { Name = location.Name, Description = location.Description }
-                        }).ToList();
-                        if (customers.Count > 0)
-                        {
-                            foreach (var customer in customers)
-                            {
-                                model.Add(customer);
-                            }
-                        }
-                    }
+                    var model = (from location in _db.tblServiceLocations.Where(d => d.BusinessId == id.Value).ToList()
+                                 join customer in _db.tblBusinessCustomers
+                                 on location.Id equals customer.ServiceLocationId
+                                 select new BusinessCustomerViewModel
+                                 {
+                                     Created = customer.Created,
+                                     Email = customer.Email,
+                                     FirstName = customer.FirstName,
+                                     Id = customer.Id,
+                                     IsActive = customer.IsActive,
+                                     LastName = customer.LastName,
+                                     Password = customer.Password,
+                                     PhoneNumber = customer.PhoneNumber,
+                                     ServiceLocationId = customer.ServiceLocationId,
+                                     Add1 = customer.Add1,
+                                     Add2 = customer.Add2,
+                                     City = customer.City,
+                                     State = customer.City,
+                                     ProfilePicture = customer.ProfilePicture,
+                                     StdCode = customer.StdCode,
+                                     Zip = customer.Zip,
+                                     ServiceLocation = location != null ? new ServiceLocationViewModel()
+                                     {
+                                         Add1 = location.Add1,
+                                         Add2 = location.Add2,
+                                         BusinessId = location.BusinessId,
+                                         City = location.City,
+                                         CountryId = location.CountryId,
+                                         Created = location.Created,
+                                         Description = location.Description,
+                                         Id = location.Id,
+                                         IsActive = location.IsActive,
+                                         Name = location.Name,
+                                         State = location.State,
+                                         TimezoneId = location.TimezoneId,
+                                         Zip = location.Zip
+                                     } : new ServiceLocationViewModel()
+                                 }).ToList();
+                    //var locations = ;
+                    //var model = new List<BusinessCustomerViewModel>();
+                    //foreach (var location in locations)
+                    //{
+                    //    var customers = _db.tblBusinessCustomers.Where(d => d.ServiceLocationId == location.Id).Select(s => new BusinessCustomerViewModel
+                    //    {
+
+                    //    }).ToList();
+                    //    if (customers.Count > 0)
+                    //    {
+                    //        foreach (var customer in customers)
+                    //        {
+                    //            model.Add(customer);
+                    //        }
+                    //    }
+                    //}
                     return Ok(new { status = true, data = model, message = "success" });
+                }
+                else if(type == TableType.ServiceLocationId)
+                {
+                    var serviceModel = _db.tblBusinessCustomers.Where(d => d.ServiceLocationId == id.Value).ToList();
+                    return Ok(new { status = true, data = serviceModel, message = "success" });
                 }
                 else
                 {
-                    var serviceModel = _db.tblBusinessCustomers.Where(d => d.ServiceLocationId == id.Value).ToList();
+                    var serviceModel = _db.tblBusinessCustomers.Where(d => d.Id == id.Value).ToList();
                     return Ok(new { status = true, data = serviceModel, message = "success" });
                 }
             }

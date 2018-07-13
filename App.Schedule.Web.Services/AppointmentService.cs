@@ -54,6 +54,24 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
+        public async Task<ResponseViewModel<CustomerAppointmentPaymentViewModel>> GetPaymentById(long? id)
+        {
+            var returnResponse = new ResponseViewModel<CustomerAppointmentPaymentViewModel>();
+            try
+            {
+                var url = String.Format(AppointmentUserService.GET_APPOINTMENT_PAYMENT_BY_ID, id);
+                var response = this.appointmentUserService.httpClient.GetAsync(url);
+                returnResponse = await base.GetHttpResponse<CustomerAppointmentPaymentViewModel>(response.Result);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
         public async Task<ResponseViewModel<AppointmentDocumentViewModel>> GetAttachments(long? id)
         {
             var returnResponse = new ResponseViewModel<AppointmentDocumentViewModel>();
@@ -144,6 +162,31 @@ namespace App.Schedule.Web.Services
                 else
                 {
                     var url = String.Format(AppointmentUserService.DEACTIVE_APPOINTMENT, id.Value, status);
+                    var response = await this.appointmentUserService.httpClient.DeleteAsync(url);
+                    returnResponse = await base.GetHttpResponse<AppointmentViewModel>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
+        public async Task<ResponseViewModel<AppointmentViewModel>> Cancel(long? id, StatusType status, string reason)
+        {
+            var returnResponse = new ResponseViewModel<AppointmentViewModel>();
+            try
+            {
+                if (!id.HasValue)
+                {
+                    returnResponse.Status = false;
+                    returnResponse.Message = "Please enter a valid offer id.";
+                }
+                else
+                {
+                    var url = String.Format(AppointmentUserService.CANCEL_APPOINTMENT, id, (int)status, reason);
                     var response = await this.appointmentUserService.httpClient.DeleteAsync(url);
                     returnResponse = await base.GetHttpResponse<AppointmentViewModel>(response);
                 }

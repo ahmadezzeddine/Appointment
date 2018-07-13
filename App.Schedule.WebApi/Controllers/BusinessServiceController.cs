@@ -8,7 +8,8 @@ using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.WebApi.Controllers
 {
-    [Authorize]
+    //[Authorize]
+    [AllowAnonymous]
     public class BusinessServiceController : ApiController
     {
         private readonly AppScheduleDbContext _db;
@@ -28,7 +29,7 @@ namespace App.Schedule.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(new { status = false, data = "", message = "ex: "+ex.Message.ToString()});
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 
@@ -38,9 +39,25 @@ namespace App.Schedule.WebApi.Controllers
         {
             try
             {
-                if (id.HasValue && type == TableType.EmployeeId)
+                if (!id.HasValue)
+                {
+                    return Ok(new { status = true, data = "", message = "Please provide a valid id." });
+                }
+                if (type == TableType.EmployeeId)
                 {
                     var model = _db.tblBusinessServices.Where(emp => emp.EmployeeId == id.Value).ToList();
+                    return Ok(new { status = true, data = model, message = "success" });
+                }
+                else if (type == TableType.BusinessId)
+                {
+                    var model = (from business in _db.tblBusinesses.Where(d => d.Id == id.Value).ToList()
+                                 join location in _db.tblServiceLocations
+                                 on business.Id equals location.BusinessId
+                                 join employee in _db.tblBusinessEmployees
+                                 on location.Id equals employee.ServiceLocationId
+                                 join service in _db.tblBusinessServices
+                                 on employee.Id equals service.EmployeeId
+                                 select service).ToList();
                     return Ok(new { status = true, data = model, message = "success" });
                 }
                 else
@@ -139,7 +156,7 @@ namespace App.Schedule.WebApi.Controllers
                                 return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
                         }
                     }
-                    return Ok(new { status = false, data ="", message = "Not a valid data to update. Please provide a valid id." });
+                    return Ok(new { status = false, data = "", message = "Not a valid data to update. Please provide a valid id." });
                 }
             }
             catch (Exception ex)

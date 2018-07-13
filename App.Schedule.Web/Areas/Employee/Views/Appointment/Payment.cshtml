@@ -3,15 +3,9 @@
 @using App.Schedule.Domains.ViewModel;
 @model ResponseViewModel<IPagedList<AppointmentViewModel>>
 @{
-    ViewBag.Title = "Appointments";
-    Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
+    ViewBag.Title = "Appointments Completed";
+    Layout = "~/Views/Shared/_AfterLoginEmployeeMaster.cshtml";
 }
-
-<div class="row">
-    <div class="col-lg-12">
-        <h1 class="page-header">Appointments</h1>
-    </div>
-</div>
 <div class="row">
     <div class="col-lg-12">
         @Html.Partial("~/Views/SubViews/_ErrorView.cshtml", Model)
@@ -21,13 +15,7 @@
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>Information</b>
-                @if (Model != null && Model.hasAdd)
-                {
-                    <a href="@Url.Action("add", "appointment", new { area = "admin" })" class="btn btn-info btn-xs pull-right">
-                        <span class="glyphicon glyphicon-plus"></span> Add
-                    </a>
-                }
+                <b>Appointmet List</b>
             </div>
             <div class="panel-body">
                 @if (Model == null || Model.Data == null)
@@ -58,7 +46,7 @@
                                                 Time
                                             </th>
                                             <th>
-                                                All-Day
+                                                Is All Day
                                             </th>
                                             <th>
                                                 Status
@@ -128,45 +116,24 @@
                                                         @item.IsActive
                                                     </td>
                                                     <td class="text-right">
-                                                        @if (item.StatusType != (int)StatusType.Canceled)
+                                                        @if (item.BusinessEmployeeId == ViewBag.EmployeeId)
                                                         {
-                                                            var getStatus = item.StatusType <= 1 ? true : false;
-                                                            if (getStatus)
-                                                            {
-                                                                <text>
-                                                                    <a title="Edit" onclick="@("window.location.href='" + @Url.Action("edit", "appointment", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
-                                                                        <span class="fa fa-pencil"></span>
-                                                                    </a>
-                                                                </text>
-                                                            }
-
                                                             if (item.StatusType == (int)StatusType.Completed)
                                                             {
-                                                                <a title="Invoice" target="_blank" href="@Url.Action("invoicehtml", "appointment", new { area = "admin", id = item.Id })" class="btn btn-default btn-xs">
+                                                                <a title="Invoice" target="_blank" href="@Url.Action("invoicehtml", "appointment", new { area = "employee", id = item.Id })" class="btn btn-default btn-xs">
                                                                     <span class="fa fa-file-pdf-o"></span>
                                                                 </a>
                                                             }
-                                                            else
-                                                            {
-                                                                <a title="Active or Deactive" onclick="@("window.location.href='" + @Url.Action("deactive", "appointment", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
-                                                                    <span class="fa fa-check"></span>
-                                                                </a>
-                                                                <a title="Close" onclick="@("window.location.href='" + @Url.Action("close", "appointment", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
-                                                                    <span class="fa fa-close"></span>
-                                                                </a>
-                                                            }
-
-
-                                                            <a title="Attachment" onclick="@("window.location.href='" + @Url.Action("attachments", "appointment", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
-                                                                <span class="fa fa-file"></span>
-                                                            </a>
-                                                            <a title="Feedback" onclick="@("window.location.href='" + @Url.Action("feedbacks", "appointment", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
-                                                                <span class="fa fa-hand-peace-o"></span>
-                                                            </a>
-                                                            <a title="Delete" onclick="@("window.location.href='" + @Url.Action("delete", "appointment", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
-                                                                <span class="fa fa-trash"></span>
-                                                            </a>
                                                         }
+                                                        <a title="Attachment" onclick="@("window.location.href='" + @Url.Action("attachments", "appointment", new { area = "employee", id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                            <span class="fa fa-file"></span>
+                                                        </a>
+                                                        <a title="Feedback" onclick="@("window.location.href='" + @Url.Action("feedbacks", "appointment", new { area = "employee", id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                            <span class="fa fa-hand-peace-o"></span>
+                                                        </a>
+                                                        <a title="View" onclick="@("window.location.href='" + @Url.Action("view", "appointment", new { area = "employee", id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                            <span class="fa fa-eye"></span>
+                                                        </a>
                                                     </td>
                                                 </tr>
                                             }
@@ -180,12 +147,12 @@
                 <hr />
                 <div>
                     <span class="text-left">
-                        <a href="@Url.Action("index", "accountsetup", new { area = "admin" })" class="btn btn-default btn-sm">
-                            Account Setup
+                        <a href="@Url.Action("index", "dashboard", new { area = "employee" })" class="btn btn-default btn-sm">
+                            Dashboard
                         </a>
                     </span>
                     <span class="pull-right">
-                        @Html.PagedListPager(Model.Data, page => Url.Action("Index", new { page, type = ViewBag.type }))
+                        @Html.PagedListPager(Model.Data, page => Url.Action("index", new { page, type = ViewBag.type }))
                     </span>
                 </div>
             </div>

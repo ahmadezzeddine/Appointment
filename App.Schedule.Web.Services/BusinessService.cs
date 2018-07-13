@@ -81,6 +81,27 @@ namespace App.Schedule.Web.Services
             return returnResponse;
         }
 
+        public async Task<ResponseViewModel<List<BusinessServiceViewModel>>> Gets(long? empId, int type)
+        {
+            var returnResponse = new ResponseViewModel<List<BusinessServiceViewModel>>();
+            try
+            {
+                if (empId.HasValue)
+                {
+                    var url = String.Format(AppointmentUserService.GETS_BUSINESSSERVICEBYTYPEID, empId.Value, type);
+                    var response = await this.appointmentUserService.httpClient.GetAsync(url);
+                    returnResponse = await base.GetHttpResponse<List<BusinessServiceViewModel>>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
         public async Task<ResponseViewModel<BusinessServiceViewModel>> Add(BusinessServiceViewModel model)
         {
             var returnResponse = new ResponseViewModel<BusinessServiceViewModel>();

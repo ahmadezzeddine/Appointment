@@ -12,6 +12,7 @@
         AppointmentFeedback = 7,
         CustomerId = 8,
         AppointmentInvitee = 9,
-        BusinessOfferId = 10
+        BusinessOfferId = 10,
+        Document = 11
     }
 }

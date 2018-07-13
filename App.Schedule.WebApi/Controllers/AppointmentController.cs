@@ -407,6 +407,37 @@ namespace App.Schedule.WebApi.Controllers
             }
         }
 
+        [HttpDelete]
+        [AllowAnonymous]
+        public IHttpActionResult Cancel(StatusType type, string reason, int? id)
+        {
+            try
+            {
+                if (!id.HasValue)
+                    return Ok(new { status = false, data = "", message = "Please provide a valid information." });
+                else
+                {
+                    var appointment = _db.tblAppointments.SingleOrDefault(d => d.Id == id.Value);
+                    if (appointment != null)
+                    {
+                        if(type == StatusType.Canceled)
+                        {
+                            appointment.IsActive = false;
+                        }
+                        appointment.StatusType = (int)type;
+                        _db.Entry(appointment).State = EntityState.Modified;
+                        _db.SaveChanges();
+                        return Ok(new { status = true, data = appointment, message = "success" });
+                    }
+                    return Ok(new { status = false, data = "", message = "Not a valid data to update. Please provide a valid id." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
+            }
+        }
+
         // PUT: api/Appointment/5
         [HttpPut]
         public IHttpActionResult Close(StatusType type, string reason, [FromBody]AppointmentPayViewModel model)
@@ -479,7 +510,7 @@ namespace App.Schedule.WebApi.Controllers
                 return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
-
+        
         [NonAction]
         public List<AppointmentViewModel> GetApppointments()
         {
