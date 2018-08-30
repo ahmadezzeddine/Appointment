@@ -1,0 +1,106 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@using App.Schedule.Domains.ViewModel;
+@model ServiceDataViewModel<IPagedList<BusinessViewModel>>
+
+@{
+    ViewBag.Title = "Businesses";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Businesses</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/SubViews/_Error.cshtml", Model)
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-globe fa-fw"></i> View
+                <div class="pull-right">
+                    <div class="btn-group">
+                        @if (Model.Data != null)
+                        {
+                            <text>Total: @Model.Data.Count()</text>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                @if (Model.Data == null)
+                {
+                    <div class="alert alert-danger">No Businesses!</div>
+                }
+                else
+                {
+                    <div class="form-group input-group input-group-sm">
+                        <input type="text" class="form-control" id="searchKeyword" value="@ViewBag.search" placeholder="Search here" />
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index")?search=' + $('#searchKeyword').val()">
+                                <i class="glyphicon glyphicon-search"></i>
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-condensed table-striped table-hover sortable" cellspacing="0" cellpadding="0">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Country
+                                    </th>
+                                    <th>
+                                        Website
+                                    </th>
+                                    <th class="text-right">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Data)
+                                {
+                                    <tr>
+                                        @Html.HiddenFor(modelItem => item.Id)
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CountryName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Website)
+                                        </td>
+                                        <td class="text-right">
+                                            <a title="Employees" onclick="@("window.location.href='" + @Url.Action("Employees", new { Id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                <span class="fa fa-user"></span>
+                                            </a>
+                                            <a title="Customers" onclick="@("window.location.href='" + @Url.Action("Customers", new { Id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                <span class="fa fa-users"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr />
+                    <div>
+                        <span class="pull-right">
+                            @Html.PagedListPager(Model.Data, page => Url.Action("Index", new { page }))
+                        </span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

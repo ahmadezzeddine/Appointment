@@ -23,14 +23,22 @@ namespace App.Schedule.Web.Admin.Controllers
             }
             else
             {
-                var response = await this.AdminService.Add(model);
-                if (response.Status)
+                var verifyUser = await this.AdminService.VerifyByEmail(model.Email);
+                if (verifyUser != null && !verifyUser.Status)
                 {
-                    return Json(new { status = true, message = "Successfully registered." }, JsonRequestBehavior.AllowGet);
+                    var response = await this.AdminService.Add(model);
+                    if (response.Status)
+                    {
+                        return Json(new { status = true, message = "Successfully registered." }, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(new { status = false, message = "There was a problem. Please try again later."}, JsonRequestBehavior.AllowGet);
+                    }
                 }
                 else
                 {
-                    return Json(new { status = false, message = "There was a problem. Please try again later. " + response.Data }, JsonRequestBehavior.AllowGet);
+                    return Json(new { status = false, message = "The email address you have entered is already registered. Did you forgot your login information?" }, JsonRequestBehavior.AllowGet);
                 }
             }
         }

@@ -61,6 +61,28 @@ namespace App.Schedule.WebApi.Controllers
             }
         }
 
+        [AllowAnonymous]
+        public IHttpActionResult Get(string email)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(email))
+                    return Ok(new { status = true, data = "", message = "Please provide a valid email id." });
+                else
+                {
+                    var model = _db.tblAdministrators.Where(d => d.Email == email);
+                    if (model != null)
+                        return Ok(new { status = true, data = model, message = "success" });
+                    else
+                        return Ok(new { status = false, data = "", message = "not found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = true, data = "", message = "ex: " + ex.Message.ToString() });
+            }
+        }
+
         // GET: api/administrator/?email=value&password=value
         [AllowAnonymous]
         public async Task<IHttpActionResult> Get(string email, string password, bool hasForgot)

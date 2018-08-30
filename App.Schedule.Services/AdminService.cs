@@ -34,6 +34,24 @@ namespace App.Schedule.Web.Admin.Services
             return returnResponse;
         }
 
+        public async Task<ResponseViewModel<AdministratorViewModel>> VerifyByEmail(string email)
+        {
+            var returnResponse = new ResponseViewModel<AdministratorViewModel>();
+            try
+            {
+                var url = String.Format(AppointmentService.GET_ADMIN_BY_EMAIL_ID, email);
+                var response = await this.appointmentService.httpClient.GetAsync(url);
+                returnResponse = await base.GetHttpResponse<AdministratorViewModel>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Please try again later. ex:  " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
         public async Task<ResponseViewModel<List<AdministratorViewModel>>> Gets()
         {
             var returnResponse = new ResponseViewModel<List<AdministratorViewModel>>();

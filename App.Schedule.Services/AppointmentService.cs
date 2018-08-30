@@ -11,8 +11,8 @@ namespace App.Schedule.Web.Admin.Services
     public class AppointmentService
     {
         public HttpClient httpClient;
-        public const string baseUrl = "http://appointment.why-fi.com/";
-        //public static string baseUrl = "http://localhost/appointmentapi/";
+        //public const string baseUrl = "http://appointment.why-fi.com/";
+        public static string baseUrl = "http://localhost/appointmentapi/";
         //public static string baseUrl = "http://localhost:57433/";
 
         //Admin Identity Token API
@@ -24,6 +24,7 @@ namespace App.Schedule.Web.Admin.Services
         //Administrator API
         public const string GET_ADMINS = "api/administrator";
         public const string GET_ADMIN_BYID = "api/administrator?Id={0}";
+        public const string GET_ADMIN_BY_EMAIL_ID = "api/administrator?email={0}";
         public const string GET_ADMIN_BYEMAIL = "api/administrator?email={0}&password={1}&hasForgot={2}";
         public const string POST_ADMIN = "api/administrator";
         public const string PUT_ADMIN = "api/administrator?id={0}";
@@ -59,6 +60,16 @@ namespace App.Schedule.Web.Admin.Services
         public const string PUT_BUSINESSCATEGORY_BYID = "api/businesscategory?id={0}";
         public const string PUT_BUSINESSCATEGORY = "api/businesscategory?id={0}&status={1}&type={2}";
         public const string DELETE_BUSINESSCATEGORY = "api/businesscategory?id={0}&status={1}&type={2}";
+
+        //BUSINESS API
+        public const string GET_BUSINESSES = "api/business";
+
+        //BUSINESS EMPLOYEE API
+        public const string GET_BUSINESS_EMPLOYEES = "api/businessemployee?id={0}&type={1}";
+
+        //BUSINESS CUSTOMER API
+        public const string GET_BUSINESS_CUSTOMERS = "api/businesscustomer?id={0}&type={1}";
+
 
         public AppointmentService()
         {

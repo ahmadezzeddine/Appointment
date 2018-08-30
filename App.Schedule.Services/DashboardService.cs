@@ -91,5 +91,21 @@ namespace App.Schedule.Web.Admin.Services
             }
             return model;
         }
+
+        public async Task<IEnumerable<BusinessViewModel>> GetBusinesses()
+        {
+            var model = new List<BusinessViewModel>();
+            try
+            {
+                var url = String.Format(AppointmentService.GET_BUSINESSES);
+                var response = await this.appointmentService.httpClient.GetAsync(url);
+                model = await base.GetHttpResponseList<BusinessViewModel>(response);
+            }
+            catch
+            {
+                model = null;
+            }
+            return model;
+        }
     }
 }

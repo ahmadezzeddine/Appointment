@@ -47,6 +47,7 @@
     <Compile Include="AdminService.cs" />
     <Compile Include="AppointmentService.cs" />
     <Compile Include="BusinessCategoryService.cs" />
+    <Compile Include="BusinessService.cs" />
     <Compile Include="CountryService.cs" />
     <Compile Include="DashboardService.cs" />
     <Compile Include="IAppointmentService.cs" />

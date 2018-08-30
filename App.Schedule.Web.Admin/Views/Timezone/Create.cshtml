@@ -29,18 +29,24 @@
                         @Html.EditorFor(model => model.Data.Title, new { htmlAttributes = new { @class = "form-control", placeholder = "Title" } })
                     </div>
                     <div class="form-group col-lg-6 required control-label">
-                        <label>UTC Offset</label>
-                        @Html.EditorFor(model => model.Data.UtcOffset, new { htmlAttributes = new { @class = "form-control", placeholder = "UtC offset" } })
-                    </div>
-                    <div class="form-group col-lg-6 required control-label">
                         <label>Country</label>
                         @Html.DropDownListFor(model => model.Data.CountryId, new SelectList(ViewBag.CountryId, "Value", "Text"), "--Select Country--", new { @class = "form-control" })
                     </div>
-                    <div class="form-group col-lg-12">
-                        <label>
-                            @Html.CheckBoxFor(model => model.Data.IsDST, new { htmlAttributes = new { @class = "form-control" } })
-                            Has DST?
-                        </label>
+                    <div class="form-group col-lg-6 required control-label">
+                        <label>UTC Offset</label>
+                        @Html.EditorFor(model => model.Data.UtcOffset, new { htmlAttributes = new { @class = "form-control", placeholder = "UtC offset" } })
+                        <small>
+                            It is time difference between UTC time and local time, in minutes. <br />
+                            ex. : let say time zone of Beirut is +3:00, so UTC offset calculaion ( -3 x 60 = -180 ).<br />
+                            ex. : let say time zone of Argentina is -3:00, so UTC offset calculaion ( -(-3) x 60 = 180 ).
+                        </small>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label>Has DST?</label>
+                        <div class="form-control">
+                            @Html.CheckBoxFor(model => model.Data.IsDST)
+                        </div>
+                        <small>(Daylight Saving Time (DST) is the practice of turning the clock ahead as warmer weather approaches and back as it becomes colder again so that people will have one more hour of daylight in the afternoon and evening during the warmer season of the year.)</small>
                     </div>
                 </div>
                 <div class="panel-footer">

@@ -152,8 +152,10 @@
     <Compile Include="Controllers\AdminProfileController.cs" />
     <Compile Include="Controllers\AdminBaseController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\BusinessBaseController.cs" />
     <Compile Include="Controllers\BusinessCategoryBaseController.cs" />
     <Compile Include="Controllers\BusinessCategoryController.cs" />
+    <Compile Include="Controllers\BusinessController.cs" />
     <Compile Include="Controllers\CountryBaseController.cs" />
     <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\DashboardBaseController.cs" />
@@ -283,10 +285,14 @@
     <Content Include="Views\BusinessCategory\SubDelete.cshtml" />
     <Content Include="Views\Admin\Update.cshtml" />
     <Content Include="Views\Membership\View.cshtml" />
+    <Content Include="Views\Business\Index.cshtml" />
+    <Content Include="Views\Business\Employees.cshtml" />
+    <Content Include="Views\Business\Customers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Services\" />
+    <Folder Include="Views\BusinessBase\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

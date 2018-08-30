@@ -35,26 +35,13 @@ namespace App.Schedule.Web.Admin.Controllers
                     var timezones = await this.DashboardService.GetTimezones();
                     var memberships = await this.DashboardService.GetMemberships();
                     var businessCategories = await this.DashboardService.GetBusinessCategories();
-                    if (admins != null)
-                    {
-                        model.AdminsCount = admins.Count();
-                    }
-                    if (countries != null)
-                    {
-                        model.CountryCount = countries.Count();
-                    }
-                    if (timezones != null)
-                    {
-                        model.TimezonCount = timezones.Count();
-                    }
-                    if (memberships != null)
-                    {
-                        model.MembershipCount = memberships.Count();
-                    }
-                    if (businessCategories != null)
-                    {
-                        model.BusinessCategoryCount = businessCategories.Count();
-                    }
+                    var businesses = await this.DashboardService.GetBusinesses();
+                    model.AdminsCount = (admin != null) ? admins.Count() : 0;
+                    model.CountryCount = (countries != null) ? countries.Count() : 0;
+                    model.TimezonCount = (timezones != null) ? timezones.Count() : 0;
+                    model.MembershipCount = (memberships != null) ? memberships.Count() : 0;
+                    model.BusinessCategoryCount = (businessCategories != null) ? businessCategories.Count() : 0;
+                    model.BusinessCount = (businesses != null) ? businesses.Count() : 0;
                 }
                 else
                 {
