@@ -288,13 +288,11 @@
     <Content Include="Views\Business\Index.cshtml" />
     <Content Include="Views\Business\Employees.cshtml" />
     <Content Include="Views\Business\Customers.cshtml" />
-    <Content Include="Views\Business\EmployeesAppointments.cshtml" />
     <Content Include="Views\Business\Appointments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Services\" />
-    <Folder Include="Views\BusinessBase\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

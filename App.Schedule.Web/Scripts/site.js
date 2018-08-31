@@ -11,6 +11,7 @@
 }
 
 function onSubmit(btnSubmit, target) {
+    console.log('sub: ', btnSubmit);
     if (!ValidateForm(btnSubmit))
         return false;
 
