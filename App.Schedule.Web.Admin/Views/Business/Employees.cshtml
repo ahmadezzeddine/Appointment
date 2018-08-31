@@ -72,6 +72,9 @@
                                     <th>
                                         Created
                                     </th>
+                                    <th>
+                                        Action
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -99,6 +102,11 @@
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Created)
+                                    </td>
+                                    <td>
+                                        <a title="Employees" onclick="@("window.location.href='" + @Url.Action("appointments", new { Id = item.Id, user = "emp" }) + "'");" class="btn btn-default btn-xs">
+                                            <span class="fa fa-arrow-right"></span>
+                                        </a>
                                     </td>
                                 </tr>
                                 }

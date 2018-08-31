@@ -70,6 +70,8 @@ namespace App.Schedule.Web.Admin.Services
         //BUSINESS CUSTOMER API
         public const string GET_BUSINESS_CUSTOMERS = "api/businesscustomer?id={0}&type={1}";
 
+        //USERS APPOINTMENTS
+        public const string GET_USERS_APPOINTMENTS = "api/appointment?id={0}&type={1}";
 
         public AppointmentService()
         {

@@ -70,6 +70,27 @@ namespace App.Schedule.Services
             return returnResponse;
         }
 
+        public async Task<ResponseViewModel<List<AppointmentViewModel>>> GetAppointmentss(long? id, TableType type)
+        {
+            var returnResponse = new ResponseViewModel<List<AppointmentViewModel>>();
+            try
+            {
+                if (!id.HasValue)
+                    return returnResponse;
+
+                var url = String.Format(AppointmentService.GET_USERS_APPOINTMENTS, id.Value, (int)type);
+                var response = await this.appointmentService.httpClient.GetAsync(url);
+                returnResponse = await base.GetHttpResponse<List<AppointmentViewModel>>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Please try again later. ex: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
         public Task<ResponseViewModel<BusinessViewModel>> Add(BusinessViewModel model)
         {
             throw new NotImplementedException();

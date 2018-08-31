@@ -128,5 +128,44 @@ namespace App.Schedule.Web.Admin.Controllers
             }
             return View(model);
         }
+
+        public async Task<ActionResult> Appointments(long? id,string user, int? page, string search)
+        {
+            var model = new ServiceDataViewModel<IPagedList<AppointmentViewModel>>();
+            try
+            {
+                Session["HomeLink"] = string.Format("appointments?id={0}&user={1}",id.Value,user);
+                var pageNumber = page ?? 1;
+                ViewBag.search = search;
+                var type = user.ToLower() == "cust" ? TableType.CustomerId : TableType.EmployeeId;
+                var response = await this.BusinessService.GetAppointmentss(id.Value, type);
+                if (response.Status)
+                {
+                    var data = response.Data;
+                    if (search == null)
+                    {
+                        model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 10);
+                        return View(model);
+                    }
+                    else
+                    {
+                        model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                        return View(model);
+                    }
+                }
+                else
+                {
+                    model.HasError = !response.Status;
+                    model.Error = response.Message;
+                }
+            }
+            catch (Exception ex)
+            {
+                model.HasError = true;
+                model.Error = "There was a problem. Please try again later.";
+                model.ErrorDescription = ex.Message.ToString();
+            }
+            return View(model);
+        }
     }
 }
