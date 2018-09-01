@@ -234,6 +234,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var response = this.ResponseHelper.GetResponse<AppointmentViewModel>();
             response.Data = new AppointmentViewModel();
             response.Status = true;
+            ViewBag.BusinessId = RegisterViewModel.Business.Id;
+            ViewBag.EmployeeId = RegisterViewModel.Employee.Id;
             response.Data.BusinessEmployeeId = RegisterViewModel.Employee.Id;
             //response.Data.GlobalAppointmentId = String.Format("{0}{1}{2}{3}", Unique.GetValue(), DateTime.Now.Ticks, RegisterViewModel.Business.Id, RegisterViewModel.Employee.Id);
             response.Data.GlobalAppointmentId = String.Format("{0}{1}{2}", DateTime.Now.Ticks, RegisterViewModel.Business.Id, RegisterViewModel.Employee.Id);
@@ -1068,7 +1070,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var pageNumber = page ?? 1;
             var model = this.ResponseHelper.GetResponse<IPagedList<AppointmentDocumentViewModel>>();
 
-            var response = await this.AppointmentDocumentService.Gets(id.Value);
+            var response = await this.AppointmentDocumentService.Gets(id.Value,TableType.AppointmentDocument);
             if (response.Status)
             {
                 model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 5);
@@ -1295,6 +1297,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         public async Task<ActionResult> DocumentUpload()
         {
             var httpRequest = HttpContext.Request;
+            var file = Request.Files.Count;
             if (httpRequest.Files.Count > 0)
             {
                 var response = await this.AppointmentService.FileUpload(httpRequest);

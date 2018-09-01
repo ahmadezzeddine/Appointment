@@ -285,5 +285,68 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 return new List<ServiceLocationViewModel>();
             }
         }
+
+        public async Task<ActionResult> Appointments(long? id, string user, int? page, string search)
+        {
+            var model = new ResponseViewModel<IPagedList<AppointmentViewModel>>();
+            try
+            {
+                var pageNumber = page ?? 1;
+                ViewBag.search = search;
+                ViewBag.Id = id.Value;
+                var response = await this.AppointmentService.Gets(id.Value, TableType.CustomerId);
+                if (response.Status)
+                {
+                    var data = response.Data;
+                    model.Status = response.Status;
+                    model.Message = response.Message;
+                    if (search == null)
+                    {
+                        model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 10);
+                        return View(model);
+                    }
+                    else
+                    {
+                        model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                        return View(model);
+                    }
+                }
+                else
+                {
+                    model.Status = false;
+                    model.Message = response.Message;
+                }
+            }
+            catch (Exception ex)
+            {
+                model.Message = "There was a problem. Please try again later.";
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Attachments(long? id, int? page)
+        {
+            if (!id.HasValue)
+                return RedirectToAction("index", "appointment", new { area = "admin" });
+
+            var pageNumber = page ?? 1;
+            var model = this.ResponseHelper.GetResponse<IPagedList<AppointmentDocumentViewModel>>();
+            ViewBag.Id = id.Value;
+            var response = await this.AppointmentDocumentService.Gets(id.Value, TableType.CustomerId);
+            if (response.Status)
+            {
+                model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 5);
+                model.Status = response.Status;
+                model.Message = response.Message;
+            }
+            else
+            {
+                model.Status = false;
+                model.Message = response.Message;
+            }
+            return View(model);
+        }
+
     }
 }

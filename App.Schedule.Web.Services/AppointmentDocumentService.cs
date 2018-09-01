@@ -52,12 +52,14 @@ namespace App.Schedule.Web.Services
         }
 
 
-        public async Task<ResponseViewModel<List<AppointmentDocumentViewModel>>> Gets(long? id)
+        public async Task<ResponseViewModel<List<AppointmentDocumentViewModel>>> Gets(long? id, TableType type)
         {
             var returnResponse = new ResponseViewModel<List<AppointmentDocumentViewModel>>();
             try
             {
                 var url = String.Format(AppointmentUserService.GET_APPOINTMENT_DOCUMENT_BYBUSINESSIDANDTYPE, id.Value, TableType.AppointmentDocument);
+                if(type == TableType.CustomerId)
+                    url = String.Format(AppointmentUserService.GET_APPOINTMENT_DOCUMENT_BYBUSINESSIDANDTYPE,id.Value, (int)type);
                 var response = this.appointmentUserService.httpClient.GetAsync(url);
                 returnResponse = await base.GetHttpResponse<List<AppointmentDocumentViewModel>>(response.Result);
                 if(returnResponse!=null && returnResponse.Data != null)

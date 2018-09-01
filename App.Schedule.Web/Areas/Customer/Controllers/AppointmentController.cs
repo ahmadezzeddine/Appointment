@@ -257,7 +257,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
             var pageNumber = page ?? 1;
             var model = this.ResponseHelper.GetResponse<IPagedList<AppointmentDocumentViewModel>>();
             ViewBag.AppointmentId = id.Value;
-            var response = await this.AppointmentDocumentService.Gets(id.Value);
+            var response = await this.AppointmentDocumentService.Gets(id.Value,TableType.AppointmentDocument);
             if (response.Status)
             {
                 model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 5);

@@ -123,6 +123,9 @@
                                                         @item.Created
                                                     </td>
                                                     <td class="text-right">
+                                                        <a title="Appointments" onclick="@("window.location.href='" + @Url.Action("appointments", "customer", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                            <span class="fa fa-book"></span>
+                                                        </a>
                                                         <a title="Edit" onclick="@("window.location.href='" + @Url.Action("edit", "customer", new { area = "admin", id = item.Id, locationid = item.ServiceLocationId }) + "'");" class="btn btn-default btn-xs">
                                                             <span class="fa fa-pencil"></span>
                                                         </a>

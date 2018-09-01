@@ -19,17 +19,23 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // GET: api/AppointmentDocument
-        public IHttpActionResult Get(long? id,TableType type)
+        public IHttpActionResult Get(long? id, TableType type)
         {
             try
             {
-                if(!id.HasValue)
+                if (!id.HasValue)
                     return Ok(new { status = false, data = "", message = "Please provide a valid id." });
 
                 if (type == TableType.AppointmentDocument)
                 {
                     var model = _db.tblAppointmentDocuments.Where(d => d.AppointmentId == id.Value).ToList();
                     return Ok(new { status = true, data = model, message = "success" });
+                }
+                else if (type == TableType.CustomerId)
+                {
+                    var model = _db.tblAppointmentDocuments.Include(i => i.tblAppointment).ToList();
+                    var filterModel = model.Where(d => d.tblAppointment.BusinessCustomerId == id.Value).ToList();
+                    return Ok(new { status = true, data = filterModel, message = "success" });
                 }
                 else
                 {
@@ -39,7 +45,7 @@ namespace App.Schedule.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(new { status = false, data = "", message = "ex: "+ex.Message.ToString() });
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 
@@ -61,7 +67,7 @@ namespace App.Schedule.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(new { status = false, data = "", message = "ex: "+ex.Message.ToString() });
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 
@@ -74,17 +80,17 @@ namespace App.Schedule.WebApi.Controllers
                 {
                     var appointmentDocument = new tblAppointmentDocument()
                     {
-                       AppointmentId = model.AppointmentId,
-                       DocumentCategoryId = model.DocumentCategoryId,
-                       DocumentLink = model.DocumentLink,
-                       DocumentType = model.DocumentType,
-                       Title = model.Title,
-                       IsEmployeeUpload = model.IsEmployeeUpload
+                        AppointmentId = model.AppointmentId,
+                        DocumentCategoryId = model.DocumentCategoryId,
+                        DocumentLink = model.DocumentLink,
+                        DocumentType = model.DocumentType,
+                        Title = model.Title,
+                        IsEmployeeUpload = model.IsEmployeeUpload
                     };
                     _db.tblAppointmentDocuments.Add(appointmentDocument);
                     var response = _db.SaveChanges();
                     if (response > 0)
-                        return Ok(new { status = true, data  = appointmentDocument, message = "success" });
+                        return Ok(new { status = true, data = appointmentDocument, message = "success" });
                     else
                         return Ok(new { status = false, data = "", message = "There was a problem." });
                 }
@@ -95,7 +101,7 @@ namespace App.Schedule.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(new { status = false, data = "", message = "ex: "+ex.Message.ToString() });
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 
@@ -133,7 +139,7 @@ namespace App.Schedule.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(new { status = false, data = "", message = "ex: "+ex.Message.ToString() });
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 

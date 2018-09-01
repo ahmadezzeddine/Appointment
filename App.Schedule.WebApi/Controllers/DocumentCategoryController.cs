@@ -54,6 +54,39 @@ namespace App.Schedule.WebApi.Controllers
             }
         }
 
+        // GET: api/businesscategory/5
+        public IHttpActionResult Get(long? id, TableType type)
+        {
+            try
+            {
+                if (!id.HasValue)
+                    return Ok(new { status = false, data = "", message = "please provide a valid business category id." });
+                else
+                {
+                    if (type == TableType.BusinessId)
+                    {
+                        var model = _db.tblDocumentCategories.Find(id);
+                        if (model != null)
+                            return Ok(new { status = true, data = model, message = "success" });
+                        else
+                            return Ok(new { status = false, data = model, message = "Not found." });
+                    }
+                    else
+                    {
+                        var model = _db.tblDocumentCategories.Find(id);
+                        if (model != null)
+                            return Ok(new { status = true, data = model, message = "success" });
+                        else
+                            return Ok(new { status = false, data = model, message = "Not found." });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
+            }
+        }
+
         // POST: api/businesscategory
         public IHttpActionResult Post([FromBody]DocumentCategoryViewModel model)
         {

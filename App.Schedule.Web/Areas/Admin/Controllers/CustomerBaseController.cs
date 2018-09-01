@@ -7,6 +7,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
     {
         protected BusinessCustomerService BusinessCustomerService;
         protected ServiceLocationService ServiceLocationService;
+        protected AppointmentService AppointmentService;
+        protected AppointmentDocumentService AppointmentDocumentService;
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -19,6 +21,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             {
                 this.BusinessCustomerService = new BusinessCustomerService(this.Token);
                 this.ServiceLocationService = new ServiceLocationService(this.Token);
+                this.AppointmentService = new AppointmentService(this.Token);
+                this.AppointmentDocumentService = new AppointmentDocumentService(this.Token);
             }
         }
     }

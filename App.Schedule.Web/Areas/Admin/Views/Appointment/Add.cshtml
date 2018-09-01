@@ -51,15 +51,30 @@
                                     </div>
                                     <div class="form-group col-lg-6 required control-label">
                                         <label>Service Type</label>
-                                        @Html.DropDownListFor(d => d.Data.BusinessServiceId, new SelectList(ViewBag.BusinessServiceId ?? null, "Value", "Text"), "-- Select Service Type --", new { @class = "form-control" })
+                                        <div class="input-group">
+                                            @Html.DropDownListFor(d => d.Data.BusinessServiceId, new SelectList(ViewBag.BusinessServiceId ?? null, "Value", "Text"), "-- Select Service Type --", new { @class = "form-control" })
+                                            <span class="input-group-btn">
+                                                <a class="btn btn-default" href="@Url.Action("add", "businessservice", new { area = "admin"})" >+ Add</a>
+                                            </span>
+                                        </div>
                                     </div>
                                     <div class="form-group col-lg-6 required control-label">
                                         <label>Location</label>
-                                        @Html.DropDownListFor(d => d.Data.ServiceLocationId, new SelectList(ViewBag.ServiceLocationId ?? null, "Value", "Text"), "-- Select Location --", new { @class = "form-control" })
+                                        <div class="input-group">
+                                            @Html.DropDownListFor(d => d.Data.ServiceLocationId, new SelectList(ViewBag.ServiceLocationId ?? null, "Value", "Text"), "-- Select Location --", new { @class = "form-control" })
+                                            <span class="input-group-btn">
+                                                <a class="btn btn-default"  href="@Url.Action("add", "servicelocation", new { area = "admin", id = ViewBag.BusinessId })">+ Add</a>
+                                            </span>
+                                        </div>
                                     </div>
                                     <div class="form-group col-lg-6 required control-label">
                                         <label>Offer</label>
-                                        @Html.DropDownListFor(d => d.Data.BusinessOfferId, new SelectList(ViewBag.BusinessOfferId ?? null, "Value", "Text"), "-- Select Offer --", new { @class = "form-control" })
+                                        <div class="input-group">
+                                            @Html.DropDownListFor(d => d.Data.BusinessOfferId, new SelectList(ViewBag.BusinessOfferId ?? null, "Value", "Text"), "-- Select Offer --", new { @class = "form-control" })
+                                            <span class="input-group-btn">
+                                                <a class="btn btn-default" href="@Url.Action("add", "businessoffer", new { area = "admin", id = ViewBag.EmployeeId })">+ Add</a>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

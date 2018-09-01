@@ -11,8 +11,8 @@ namespace App.Schedule.Web.Admin.Services
     public class AppointmentService
     {
         public HttpClient httpClient;
-        //public const string baseUrl = "http://appointment.why-fi.com/";
-        public static string baseUrl = "http://localhost/appointmentapi/";
+        public const string baseUrl = "http://appointment.why-fi.com/";
+        //public static string baseUrl = "http://localhost/appointmentapi/";
         //public static string baseUrl = "http://localhost:57433/";
 
         //Admin Identity Token API

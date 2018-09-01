@@ -450,6 +450,8 @@
     <Content Include="Areas\Employee\Views\Appointment\Close.cshtml" />
     <Content Include="Areas\Employee\Views\Appointment\InvoiceHtml.cshtml" />
     <Content Include="Areas\Employee\Views\Appointment\Payment.cshtml" />
+    <Content Include="Areas\Admin\Views\Customer\Appointments.cshtml" />
+    <Content Include="Areas\Admin\Views\Customer\Attachments.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
