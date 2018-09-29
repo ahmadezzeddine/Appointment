@@ -13,6 +13,24 @@ namespace App.Schedule.Services
             base.SetUpAppointmentService(token);
         }
 
+        public async Task<ResponseViewModel<BusinessViewModel>> Get(long? id)
+        {
+            var returnResponse = new ResponseViewModel<BusinessViewModel>();
+            try
+            {
+                var url = String.Format(AppointmentService.GET_BUSINESS_BYID, id.Value);
+                var response = await this.appointmentService.httpClient.GetAsync(url);
+                returnResponse = await base.GetHttpResponse<BusinessViewModel>(response);
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Data = null;
+                returnResponse.Message = "Please try again later. ex: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
+        }
+
         public async Task<ResponseViewModel<List<BusinessViewModel>>> Gets()
         {
             var returnResponse = new ResponseViewModel<List<BusinessViewModel>>();
@@ -96,9 +114,29 @@ namespace App.Schedule.Services
             throw new NotImplementedException();
         }
 
-        public Task<ResponseViewModel<BusinessViewModel>> Deactive(long? id, bool status)
+        public async Task<ResponseViewModel<BusinessViewModel>> Deactive(long? id, bool status)
         {
-            throw new NotImplementedException();
+            var returnResponse = new ResponseViewModel<BusinessViewModel>();
+            try
+            {
+                if (!id.HasValue)
+                {
+                    returnResponse.Status = false;
+                    returnResponse.Message = "Please enter a valid offer id.";
+                }
+                else
+                {
+                    var url = String.Format(AppointmentService.DEACTIVE_BUSINESSRBYIDANDSTATUS, id.Value, status);
+                    var response = await this.appointmentService.httpClient.DeleteAsync(url);
+                    returnResponse = await base.GetHttpResponse<BusinessViewModel>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnResponse.Message = "Reason: " + ex.Message.ToString();
+                returnResponse.Status = false;
+            }
+            return returnResponse;
         }
 
         public Task<ResponseViewModel<BusinessViewModel>> Delete(long? id)
@@ -111,9 +149,6 @@ namespace App.Schedule.Services
             throw new NotImplementedException();
         }
 
-        Task<ResponseViewModel<BusinessViewModel>> IAppointmentService<BusinessViewModel>.Get(long? id)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

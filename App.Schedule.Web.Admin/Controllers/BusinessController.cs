@@ -167,5 +167,58 @@ namespace App.Schedule.Web.Admin.Controllers
             }
             return View(model);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> Status(long? id)
+        {
+            var model = new ServiceDataViewModel<BusinessViewModel>();
+            try
+            {
+                model.HasError = true;
+                var res = await this.BusinessService.Get(id.Value);
+                if (res.Status)
+                {
+                    model.HasError = false;
+                    model.Data = res.Data;
+                }
+                else
+                {
+                    model.Error = res.Message;
+                }
+            }
+            catch (Exception ex)
+            {
+                model.HasError = true;
+                model.Error = "There was a problem. Please try again later.";
+                model.ErrorDescription = ex.Message.ToString();
+            }
+            return View(model);
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Status([Bind(Include = "Data")] ServiceDataViewModel<MembershipViewModel> model)
+        {
+            var result = new ResponseViewModel<MembershipViewModel>();
+            try
+            {
+                var response = await this.BusinessService.Deactive(model.Data.Id, model.Data.IsActive);
+                if (response != null)
+                {
+                    result.Status = response.Status;
+                    result.Message = response.Message;
+                }
+                else
+                {
+                    result.Status = false;
+                    result.Message = response.Message;
+                }
+            }
+            catch
+            {
+                result.Status = false;
+                result.Message = "There was a problem. Please try again later.";
+            }
+            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

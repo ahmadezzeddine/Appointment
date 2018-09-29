@@ -289,6 +289,7 @@
     <Content Include="Views\Business\Employees.cshtml" />
     <Content Include="Views\Business\Customers.cshtml" />
     <Content Include="Views\Business\Appointments.cshtml" />
+    <Content Include="Views\Business\Status.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

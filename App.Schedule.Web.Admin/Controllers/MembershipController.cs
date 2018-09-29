@@ -80,7 +80,6 @@ namespace App.Schedule.Web.Admin.Controllers
             return View(model);
         }
 
-
         [HttpGet]
         public ActionResult Create()
         {

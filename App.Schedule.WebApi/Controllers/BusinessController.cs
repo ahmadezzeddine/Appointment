@@ -29,7 +29,7 @@ namespace App.Schedule.WebApi.Controllers
             try
             {
                 var model = _db.tblBusinesses.ToList();
-                return Ok(new { status = true, data = model });
+                return Ok(new { status = true, data = model, message = "success" });
             }
             catch (Exception ex)
             {
@@ -196,10 +196,41 @@ namespace App.Schedule.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = false, data = "", message = "You can not delete. It is in use." });
             }
         }
 
+        [HttpDelete]
+        public IHttpActionResult Deactive(int? id, bool status)
+        {
+            try
+            {
+                if (!id.HasValue)
+                    return Ok(new { status = false, data = "", message = "Please provide a valid ID." });
+                else
+                {
+                    var business = _db.tblBusinesses.Find(id);
+                    if (business != null)
+                    {
+                        business.IsActive = status;
+                        _db.Entry(business).State = EntityState.Modified;
+                        var response = _db.SaveChanges();
+                        if (response > 0)
+                            return Ok(new { status = true, data = business, message = "success" });
+                        else
+                            return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
+                    }
+                    else
+                    {
+                        return Ok(new { status = false, data = "", message = "Not a valid data to update. Please provide a valid id." });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
+            }
+        }
 
         [NonAction]
         [AllowAnonymous]

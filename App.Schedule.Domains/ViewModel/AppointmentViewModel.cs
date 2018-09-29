@@ -542,7 +542,7 @@ namespace App.Schedule.Domains.ViewModel
 
         //public virtual tblServiceLocation tblServiceLocation { get; set; }
     }
-
+    
     /// <summary>
     /// Class is used to hold business holiday information.
     /// </summary>

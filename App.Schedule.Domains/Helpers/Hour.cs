@@ -6,6 +6,7 @@ namespace App.Schedule.Domains.Helpers
     public class Hour
     {
         public static Dictionary<int, string> GetHoursOfDay()
+        //public static Dictionary<int, DateTime> GetHoursOfDay()
         {
             var hours = new Dictionary<int, string>();
             try
@@ -15,6 +16,7 @@ namespace App.Schedule.Domains.Helpers
                 for (var i = 1; i <= 48; i++)
                 {
                     hours.Add(i, date.ToString("hh:mm tt"));
+                    //hours.Add(i, date);
                     date = date.AddMinutes(30);
                 }
             }

@@ -170,7 +170,7 @@ namespace App.Schedule.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(new { status = false, data = "", message = ex.Message.ToString() });
+                return Ok(new { status = false, data = "", message = "You can not delete. It is in use." });
             }
         }
     }

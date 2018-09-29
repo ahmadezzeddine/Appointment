@@ -11,9 +11,9 @@ namespace App.Schedule.Web.Admin.Services
     public class AppointmentService
     {
         public HttpClient httpClient;
-        public const string baseUrl = "http://appointment.why-fi.com/";
+        //public const string baseUrl = "http://appointment.why-fi.com/";
         //public static string baseUrl = "http://localhost/appointmentapi/";
-        //public static string baseUrl = "http://localhost:57433/";
+        public static string baseUrl = "http://localhost:57433/";
 
         //Admin Identity Token API
         public const string POST_API_ACCOUNT_REGISTER = "api/account/register";
@@ -63,6 +63,8 @@ namespace App.Schedule.Web.Admin.Services
 
         //BUSINESS API
         public const string GET_BUSINESSES = "api/business";
+        public const string GET_BUSINESS_BYID = "api/business?id={0}";
+        public const string DEACTIVE_BUSINESSRBYIDANDSTATUS = "api/business?id={0}&status={1}";
 
         //BUSINESS EMPLOYEE API
         public const string GET_BUSINESS_EMPLOYEES = "api/businessemployee?id={0}&type={1}";

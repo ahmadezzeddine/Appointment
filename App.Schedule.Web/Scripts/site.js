@@ -1,4 +1,5 @@
-﻿function ValidateForm(btnSubmit) {
+﻿
+function ValidateForm(btnSubmit) {
     var $form = $(btnSubmit).parent('form');
     var validator = $form.validate();
 

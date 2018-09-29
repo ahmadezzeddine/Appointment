@@ -60,6 +60,9 @@
                                     <th>
                                         Website
                                     </th>
+                                    <th>
+                                        Status
+                                    </th>
                                     <th class="text-right">
                                         Action
                                     </th>
@@ -79,12 +82,18 @@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Website)
                                         </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IsActive)
+                                        </td>
                                         <td class="text-right">
                                             <a title="Employees" onclick="@("window.location.href='" + @Url.Action("Employees", new { Id = item.Id }) + "'");" class="btn btn-default btn-xs">
                                                 <span class="fa fa-user"></span>
                                             </a>
                                             <a title="Customers" onclick="@("window.location.href='" + @Url.Action("Customers", new { Id = item.Id }) + "'");" class="btn btn-default btn-xs">
                                                 <span class="fa fa-users"></span>
+                                            </a>
+                                            <a title="Active/Deactive" onclick="@("window.location.href='" + @Url.Action("Status", new { Id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                <span class="fa fa-minus-square"></span>
                                             </a>
                                         </td>
                                     </tr>

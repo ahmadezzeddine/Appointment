@@ -29,17 +29,49 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var model = await this.BusinessHourService.Get(id);
             var fromHours = Hour.GetHoursOfDay();
             model.Status = true;
-            ViewBag.FromHours = fromHours.Select(s => new SelectListItem()
+
+            //ViewBag.FromHours = fromHours.Select(s => new SelectListItem()
+            //{
+            //    Value = s.Value,
+            //    Text = s.Value
+            //});
+            //ViewBag.ToHours = fromHours.Select(s => new SelectListItem()
+            //{
+            //    Value = s.Value,
+            //    Text = s.Value,
+            //    Selected = DateTime.Parse(s.Value.ToString()) > DateTime.Parse(s.Value.ToString()) ? true : false
+            //});
+
+            var hours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
                 Text = s.Value
             });
-            ViewBag.ToHours = fromHours.Select(s => new SelectListItem()
-            {
-                Value = s.Value,
-                Text = s.Value
-            });
+
+            ViewBag.From = new SelectList(hours, "Value", "Text", SelectDate(hours,model.Data.From));
+            ViewBag.To = new SelectList(hours, "Value", "Text", SelectDate(hours,model.Data.To));
+
+            ViewBag.FromSplit1 = new SelectList(hours, "Value", "Text", model.Data.FromSplit1.HasValue ? SelectDate(hours, model.Data.FromSplit1.Value) : 1);
+            ViewBag.ToSplit1 = new SelectList(hours, "Value", "Text", model.Data.ToSplit1.HasValue ? SelectDate(hours, model.Data.ToSplit1.Value) : 1);
+
+            ViewBag.FromSplit2 = new SelectList(hours, "Value", "Text", model.Data.FromSplit2.HasValue ? SelectDate(hours, model.Data.FromSplit2.Value) : 1);
+            ViewBag.ToSplit2 = new SelectList(hours, "Value", "Text", model.Data.ToSplit2.HasValue ? SelectDate(hours, model.Data.ToSplit2.Value) : 1);
+
             return View(model);
+        }
+
+        public int SelectDate(IEnumerable<SelectListItem> hours, DateTime time)
+        {
+            var index = 0;
+            foreach (var hour in hours.Select((data,i) =>  new { i, data }))
+            {
+                var timeString = time.ToString("hh:mm tt");
+                if (hour.data.Value == timeString)
+                {
+                    index = hour.i;
+                }
+            }
+            return index;
         }
 
         [HttpPost]
