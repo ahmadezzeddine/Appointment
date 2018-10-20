@@ -31,15 +31,15 @@
                     </div>
                     <div class="form-group col-lg-6 required control-label">
                         <label>ISO(2)</label>
-                        @Html.EditorFor(model => model.Data.ISO, new { htmlAttributes = new { @class = "form-control", placeholder = "ISO2 ex. IN, US, UK" } })
+                        @Html.EditorFor(model => model.Data.ISO, new { htmlAttributes = new { @class = "form-control", placeholder = "ISO2 ex. IN, US, UK", onkeypress = "return isNumberKey(event)", maxlength = "2" } })
                     </div>
                     <div class="form-group col-lg-6 required control-label">
                         <label>ISO(3)</label>
-                        @Html.EditorFor(model => model.Data.ISO3, new { htmlAttributes = new { @class = "form-control", placeholder = "ISO 3 ex. IND, USA" } })
+                        @Html.EditorFor(model => model.Data.ISO3, new { htmlAttributes = new { @class = "form-control", placeholder = "ISO 3 ex. IND, USA", onkeypress = "return isNumberKey(event)", maxlength = "3" } })
                     </div>
                     <div class="form-group col-lg-6 required control-label">
                         <label>Phone Code</label>
-                        @Html.EditorFor(model => model.Data.PhoneCode, new { htmlAttributes = new { @class = "form-control", placeholder = "Phone Code" } })
+                        @Html.EditorFor(model => model.Data.PhoneCode, new { htmlAttributes = new { @class = "form-control", placeholder = "Phone Code", min = "0" } })
                     </div>
                     <div class="form-group col-lg-6">
                         <label>Currency Sign</label>

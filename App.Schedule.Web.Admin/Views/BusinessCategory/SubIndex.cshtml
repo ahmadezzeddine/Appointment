@@ -103,7 +103,7 @@
                                         <a title="Update" onclick="@("window.location.href='" + @Url.Action("SubEdit", new { Id = item.Id }) + "'");" class="btn btn-default btn-xs">
                                             <span class="fa fa-pencil"></span>
                                         </a>
-                                        <a title="Change Status" onclick="@("window.location.href='" + @Url.Action("SubDeactive",new { Id = item.Id }) + "'");" class="btn btn-xs btn-default">
+                                        <a title="Active/Deactive" onclick="@("window.location.href='" + @Url.Action("SubDeactive",new { Id = item.Id }) + "'");" class="btn btn-xs btn-default">
                                             <span class="fa fa-minus-square"></span>
                                         </a>
                                         <a title="Delete" onclick="@("window.location.href='" + @Url.Action("SubDelete",new { Id = item.Id }) + "'");" class="btn btn-xs btn-default">

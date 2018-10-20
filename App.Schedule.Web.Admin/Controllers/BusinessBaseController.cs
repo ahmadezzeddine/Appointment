@@ -6,6 +6,7 @@ namespace App.Schedule.Web.Admin.Controllers
     public class BusinessBaseController : BaseController
     {
         protected BusinessService BusinessService;
+        protected long? BusinessId;
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {

@@ -298,7 +298,6 @@ namespace App.Schedule.Web.Admin.Controllers
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
 
-
         public async Task<ActionResult> SubIndex(int? page, string search, int? id)
         {
             var model = new ServiceDataViewModel<IPagedList<BusinessCategoryViewModel>>();
@@ -326,7 +325,7 @@ namespace App.Schedule.Web.Admin.Controllers
                     }
                     else
                     {
-                        model.Data = data.Where(d => d.Name.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                        model.Data = data.Where(d => d.Name.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                         return View(model);
                     }
                 }

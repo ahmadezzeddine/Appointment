@@ -41,7 +41,7 @@
                     <div class="form-group input-group input-group-sm">
                         <input type="text" class="form-control" id="searchKeyword" value="@ViewBag.search" placeholder="Search here" />
                         <div class="input-group-btn">
-                            <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index")?search=' + $('#searchKeyword').val()">
+                            <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("appointments")?user=@ViewBag.user&search=' + $('#searchKeyword').val()">
                                 <i class="glyphicon glyphicon-search"></i>
                                 Search
                             </button>
@@ -80,7 +80,7 @@
                                                 </div>
                                                 <div class="col-lg-12">
                                                     <small>
-                                                        <a href="@Url.Action("view", "appointment", new { id = item.Id})">
+                                                        <a href="@Url.Action("view", "appointment", new { id = item.Id })">
                                                             #@item.GlobalAppointmentId
                                                         </a>
                                                     </small>
@@ -122,10 +122,10 @@
                     <hr />
                     <div>
                         <span class="pull-left">
-                            <a href="@Request.UrlReferrer" class="btn btn-default btn-sm">Back</a>
+                            <a href="@ViewBag.BackLink" class="btn btn-default btn-sm">Back</a>
                         </span>
                         <span class="pull-right">
-                            @Html.PagedListPager(Model.Data, page => Url.Action("Index", new { page }))
+                            @Html.PagedListPager(Model.Data, page => Url.Action("Index", new { page, user = ViewBag.user }))
                         </span>
                     </div>
                 }

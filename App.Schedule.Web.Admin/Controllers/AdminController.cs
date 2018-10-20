@@ -28,7 +28,7 @@ namespace App.Schedule.Web.Admin.Controllers
                     }
                     else
                     {
-                        model.Data = data.Where(d => d.FirstName.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                        model.Data = data.Where(d => d.FirstName.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                         return View(model);
                     }
                 }

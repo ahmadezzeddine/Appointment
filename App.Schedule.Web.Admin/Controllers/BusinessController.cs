@@ -24,12 +24,12 @@ namespace App.Schedule.Web.Admin.Controllers
                     var data = response.Data;
                     if (search == null)
                     {
-                        model.Data = data.ToPagedList<BusinessViewModel>(pageNumber, 10);
+                        model.Data = data.OrderByDescending(d => d.IsActive).ToPagedList<BusinessViewModel>(pageNumber, 10);
                         return View(model);
                     }
                     else
                     {
-                        model.Data = data.Where(d => d.Name.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                        model.Data = data.Where(d => d.Name.ToLower().Contains(search.ToLower())).OrderByDescending(d => d.IsActive).ToList().ToPagedList(pageNumber, 10);
                         return View(model);
                     }
                 }
@@ -71,7 +71,7 @@ namespace App.Schedule.Web.Admin.Controllers
                     }
                     else
                     {
-                        model.Data = data.Where(d => d.FirstName.ToLower().Contains(search.ToLower()) || d.LastName.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                        model.Data = data.Where(d => d.FirstName.ToLower().Contains(search.ToLower()) || d.LastName.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                         return View(model);
                     }
                 }
@@ -110,7 +110,7 @@ namespace App.Schedule.Web.Admin.Controllers
                     }
                     else
                     {
-                        model.Data = data.Where(d => d.FirstName.ToLower().Contains(search.ToLower()) || d.LastName.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                        model.Data = data.Where(d => d.FirstName.ToLower().Contains(search.ToLower()) || d.LastName.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                         return View(model);
                     }
                 }
@@ -134,10 +134,26 @@ namespace App.Schedule.Web.Admin.Controllers
             var model = new ServiceDataViewModel<IPagedList<AppointmentViewModel>>();
             try
             {
-                Session["HomeLink"] = string.Format("appointments?id={0}&user={1}",id.Value,user);
                 var pageNumber = page ?? 1;
                 ViewBag.search = search;
+                ViewBag.user = user;
+
+                var backLink = "index";
                 var type = user.ToLower() == "cust" ? TableType.CustomerId : TableType.EmployeeId;
+                if(type == TableType.CustomerId)
+                {
+                    backLink = Url.Action("customers", "business", new { id = id.Value });
+                }
+                else if(type == TableType.EmployeeId)
+                {
+                    backLink = Url.Action("employees", "business", new { id = id.Value });
+                }
+                else
+                {
+                    backLink = Url.Action("index", "business");
+                }
+                ViewBag.BackLink = backLink;
+
                 var response = await this.BusinessService.GetAppointmentss(id.Value, type);
                 if (response.Status)
                 {
@@ -149,7 +165,7 @@ namespace App.Schedule.Web.Admin.Controllers
                     }
                     else
                     {
-                        model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                        model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                         return View(model);
                     }
                 }

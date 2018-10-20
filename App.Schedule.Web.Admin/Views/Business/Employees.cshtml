@@ -41,7 +41,7 @@
                     <div class="form-group input-group input-group-sm">
                         <input type="text" class="form-control" id="searchKeyword" value="@ViewBag.search" placeholder="Search here" />
                         <div class="input-group-btn">
-                            <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index")?search=' + $('#searchKeyword').val()">
+                            <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("employees")?search=' + $('#searchKeyword').val()">
                                 <i class="glyphicon glyphicon-search"></i>
                                 Search
                             </button>
@@ -104,7 +104,7 @@
                                         @Html.DisplayFor(modelItem => item.Created)
                                     </td>
                                     <td>
-                                        <a title="Employees" onclick="@("window.location.href='" + @Url.Action("appointments", new { Id = item.Id, user = "emp" }) + "'");" class="btn btn-default btn-xs">
+                                        <a title="Appointments" onclick="@("window.location.href='" + @Url.Action("appointments", new { Id = item.Id, user = "emp" }) + "'");" class="btn btn-default btn-xs">
                                             <span class="fa fa-arrow-right"></span>
                                         </a>
                                     </td>
@@ -116,7 +116,7 @@
                     <hr />
                     <div>
                         <span class="pull-left">
-                            <a href="@Request.UrlReferrer" class="btn btn-default btn-sm">Back</a>
+                            <a href="@Url.Action("index","business")" class="btn btn-default btn-sm">Back</a>
                         </span>
                         <span class="pull-right">
                             @Html.PagedListPager(Model.Data, page => Url.Action("Index", new { page }))
