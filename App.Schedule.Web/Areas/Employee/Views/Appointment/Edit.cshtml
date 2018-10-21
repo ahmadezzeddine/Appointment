@@ -3,7 +3,7 @@
 
 @{
     ViewBag.Title = "Update Appointment";
-    Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
+    Layout = "~/Views/Shared/_AfterLoginEmployeeMaster.cshtml";
     var customerWebGrid = new WebGrid(ViewBag.BusinessEmployeeId);
 }
 <div class="row">
@@ -111,10 +111,10 @@
                                             <label>Start</label>
                                             @*@Html.DropDownListFor(d => d.Data.StartTime, new SelectList(ViewBag.FromHours, "Value", "Text"), new { @class = "form-control" })*@
                                             <select id="Data_StartTime" name="Data.StartTime" class="form-control">
-                                                @foreach (var fromsplit1 in (IEnumerable<SelectListItem>)ViewBag.FromHours)
+                                                @foreach (var to in (IEnumerable<SelectListItem>)ViewBag.FromHours)
                                                 {
-                                                    <option value="@fromsplit1.Value" @(fromsplit1.Selected ? "selected" : "")>
-                                                        @fromsplit1.Text
+                                                    <option value="@to.Value" @(to.Selected ? "selected" : "")>
+                                                        @to.Text
                                                     </option>
                                                 }
                                             </select>
@@ -123,10 +123,10 @@
                                             <label>End</label>
                                             @*@Html.DropDownListFor(d => d.Data.EndTime, new SelectList(ViewBag.ToHours, "Value", "Text"), new { @class = "form-control" })*@
                                             <select id="Data_EndTime" name="Data.EndTime" class="form-control">
-                                                @foreach (var fromsplit1 in (IEnumerable<SelectListItem>)ViewBag.ToHours)
+                                                @foreach (var to in (IEnumerable<SelectListItem>)ViewBag.ToHours)
                                                 {
-                                                    <option value="@fromsplit1.Value" @(fromsplit1.Selected ? "selected" : "")>
-                                                        @fromsplit1.Text
+                                                    <option value="@to.Value" @(to.Selected ? "selected" : "")>
+                                                        @to.Text
                                                     </option>
                                                 }
                                             </select>
@@ -199,14 +199,14 @@
                                 <div class="row">
                                     <div class="form-group col-lg-12">
                                         @customerWebGrid.GetHtml(htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
-                                                           tableStyle: "table table-striped",
-                                                           headerStyle: "active",
-                                                           footerStyle: "webgrid-footer",
-                                                           columns: customerWebGrid.Columns(
-                                                           customerWebGrid.Column(format: @<text><input name="Data.SelectedEmployeeIds" checked="@Model.Data.SelectedEmployeeIds.Contains(item.Id)" value="@item.Id" type="checkbox" /></text>, header: "Select"),
-                               customerWebGrid.Column("FirstName", "First Name"),
-                               customerWebGrid.Column("LastName", "Last Name"),
-                               customerWebGrid.Column("Email", "Email")))
+                                                                tableStyle: "table table-striped",
+                                                                headerStyle: "active",
+                                                                footerStyle: "webgrid-footer",
+                                                                columns: customerWebGrid.Columns(
+                                                                customerWebGrid.Column(format: @<text><input name="Data.SelectedEmployeeIds" checked="@Model.Data.SelectedEmployeeIds.Contains(item.Id)" value="@item.Id" type="checkbox" /></text>, header: "Select"),
+             customerWebGrid.Column("FirstName", "First Name"),
+             customerWebGrid.Column("LastName", "Last Name"),
+             customerWebGrid.Column("Email", "Email")))
                                     </div>
                                 </div>
                             </div>

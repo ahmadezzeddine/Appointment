@@ -56,7 +56,7 @@ namespace App.Schedule.Web.Services
             var returnResponse = new ResponseViewModel<List<AppointmentFeedbackViewModel>>();
             try
             {
-                var url = String.Format(AppointmentUserService.GET_APPOINTMENT_FEEDBACK_BYBUSINESSIDANDTYPE, id.Value, TableType.AppointmentFeedback);
+                var url = String.Format(AppointmentUserService.GET_APPOINTMENT_FEEDBACK_BYBUSINESSIDANDTYPE, id.Value, (int)TableType.AppointmentFeedback);
                 var response = this.appointmentUserService.httpClient.GetAsync(url);
                 returnResponse = await base.GetHttpResponse<List<AppointmentFeedbackViewModel>>(response.Result);
             }

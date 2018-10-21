@@ -23,14 +23,19 @@
                     @if (Model == null || Model.Data == null)
                     {
                         <text>Please try again later.</text>
-                        return;
+                        
                     }
                     <div class="tab-content" style="padding:0px 10px;">
                         <div class="row">
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(d => d.Data.AppointmentId)
                             <div class="form-group col-lg-12">
+                                <label>Message</label>
                                 @Html.EditorFor(d => d.Data.Feedback, new { htmlAttributes = new { @class = "form-control", @placeholder = "Type your text here" } })
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Rate</label>
+                                @Html.DropDownListFor(d => d.Data.Rating, new SelectList(ViewBag.Rating, "Value", "Text"), new { @class = "form-control" })
                             </div>
                         </div>
                     </div>

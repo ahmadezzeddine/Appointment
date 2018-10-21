@@ -19,9 +19,9 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
             var appointments = await GetAppointments();
             ViewBag.totalAppointmentCount = appointments.Count();
             ViewBag.totalAppointmentPendingCount = appointments.Where(d => d.StatusType.Value != (int)StatusType.Completed && d.StatusType != (int)StatusType.Canceled && d.IsActive == true).Count();
-            ViewBag.totalAppointmentDeactiveCount = appointments.Where(d => d.IsActive == false).Count();
             ViewBag.totalAppointmentCompletedCount = appointments.Where(d => d.StatusType.Value == (int)StatusType.Completed && d.IsActive == true).Count();
-            ViewBag.totalAppointmentCanceledCount = appointments.Where(d => d.StatusType.Value == (int)StatusType.Canceled && d.IsActive == true).Count();
+            ViewBag.totalAppointmentDeactiveCount = appointments.Where(d => d.StatusType.Value == (int)StatusType.Canceled || d.IsActive == false).Count();
+            //ViewBag.totalAppointmentCanceledCount = appointments.Where(d => d.StatusType.Value == (int)StatusType.Canceled && d.IsActive == true).Count();
             ViewBag.BusinessHours = await this.GetBusinessHours();
             return View();
         }

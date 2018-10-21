@@ -30,11 +30,11 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 model.Message = result.Message;
                 if (search == null)
                 {
-                    model.Data = data.ToPagedList<ServiceLocationViewModel>(pageNumber, 5);
+                    model.Data = data.ToPagedList<ServiceLocationViewModel>(pageNumber, 10);
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.Name.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                    model.Data = data.Where(d => d.Name.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -231,7 +231,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             else
             {
                 result.Status = false;
-                result.Message = "You cann't remove your assigned service location.";
+                result.Message = "You cann't remove, It is in use.";
             }
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }

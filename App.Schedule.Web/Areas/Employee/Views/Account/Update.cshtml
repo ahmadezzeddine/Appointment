@@ -22,7 +22,7 @@
                 @if (Model == null || Model.Data == null)
     {
             <text>Please try again later.</text>
-return;
+
 }
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(d => d.Data.Id)
@@ -41,11 +41,11 @@ return;
                         </div>
                         <div class="form-group col-lg-6 required control-label">
                             <label>Std Code</label>
-                            @Html.EditorFor(model => model.Data.STD, new { htmlAttributes = new { @class = "form-control", placeholder = "Std Code" } })
+                            @Html.EditorFor(model => model.Data.STD, new { htmlAttributes = new { @class = "form-control", min = "0", @type = "number", placeholder = "Std Code" } })
                         </div>
                         <div class="form-group col-lg-6 required control-label">
                             <label>Phone</label>
-                            @Html.EditorFor(model => model.Data.PhoneNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Phone Number" } })
+                            @Html.EditorFor(model => model.Data.PhoneNumber, new { htmlAttributes = new { @class = "form-control", min = "0", @type = "number", placeholder = "Phone Number" } })
                         </div>
                         <div class="form-group col-lg-6">
                             <label>Email</label>

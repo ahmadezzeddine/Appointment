@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.IO;
+using App.Schedule.Domains.Attributes;
 
 namespace App.Schedule.Domains.ViewModel
 {
@@ -835,15 +835,20 @@ namespace App.Schedule.Domains.ViewModel
         [Required(ErrorMessage = "The Pattern Type field is required.")]
         public int PatternType { get; set; }
 
+        //[Required(ErrorMessage ="Please provide a valid date.")]
         [DataType(DataType.Date)]
         public DateTime? StartDate { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime? EndDate { get; set; }
 
         [DataType(DataType.Time)]
+        [Required]
         public DateTime? StartTime { get; set; }
 
         [DataType(DataType.Time)]
+        [Required]
+        [CompareDate("StartTime")]
         public DateTime? EndTime { get; set; }
 
         public bool IsRecuring { get; set; }
@@ -892,19 +897,19 @@ namespace App.Schedule.Domains.ViewModel
 
         public List<long> SelectedEmployeeIds { get; set; }
 
-        //public virtual ICollection<tblAppointmentDocument> tblAppointmentDocuments { get; set; }
+        public ICollection<tblAppointmentDocument> tblAppointmentDocuments { get; set; }
 
-        //public virtual ICollection<tblAppointmentPayment> tblAppointmentPayments { get; set; }
+        public ICollection<tblAppointmentPayment> tblAppointmentPayments { get; set; }
 
-        //public virtual ICollection<tblAppointmentInvitee> tblAppointmentInvitees { get; set; }
+        public ICollection<tblAppointmentInvitee> tblAppointmentInvitees { get; set; }
 
-        //public virtual tblServiceLocation tblServiceLocation { get; set; }
+        public tblServiceLocation tblServiceLocation { get; set; }
 
-        //public virtual tblBusinessCustomer tblBusinessCustomer { get; set; }
+        public tblBusinessCustomer tblBusinessCustomer { get; set; }
 
-        //public virtual tblBusinessOffer tblBusinessOffer { get; set; }
+        public tblBusinessOffer tblBusinessOffer { get; set; }
 
-        //public virtual tblBusinessService tblBusinessService { get; set; }
+        public tblBusinessService tblBusinessService { get; set; }
     }
 
     public class AppointmentPayViewModel : AppointmentViewModel
@@ -1005,11 +1010,11 @@ namespace App.Schedule.Domains.ViewModel
 
         public long? AppointmentId { get; set; }
 
-        //public virtual tblAppointment tblAppointment { get; set; }
+        public tblAppointment tblAppointment { get; set; }
 
-        //public virtual tblBusinessCustomer tblBusinessCustomer { get; set; }
+        public tblBusinessCustomer tblBusinessCustomer { get; set; }
 
-        //public virtual tblBusinessEmployee tblBusinessEmployee { get; set; }
+        public tblBusinessEmployee tblBusinessEmployee { get; set; }
     }
 
     /// <summary>

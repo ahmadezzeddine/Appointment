@@ -27,10 +27,10 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 Session["aEmail"] = model.Employee.Email;
                 var businessEmployee = new HttpCookie("aadminappointment");
 
-                if (isKeepLoggedIn)
-                    businessEmployee.Expires = DateTime.Now.AddDays(365);
-                else
-                    businessEmployee.Expires = DateTime.Now.AddDays(1);
+                //if (isKeepLoggedIn)
+                //    businessEmployee.Expires = DateTime.Now.AddDays(365);
+                //else
+                //    businessEmployee.Expires = DateTime.Now.AddDays(1);
 
                 businessEmployee.Values["aFirstName"] = model.Employee.FirstName;
                 businessEmployee.Values["aLastName"] = model.Employee.LastName;

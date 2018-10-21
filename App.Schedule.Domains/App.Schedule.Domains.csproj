@@ -54,6 +54,8 @@
     <Compile Include="AspRole\AspNetUser.cs" />
     <Compile Include="AspRole\AspNetUserClaim.cs" />
     <Compile Include="AspRole\AspNetUserLogin.cs" />
+    <Compile Include="Attributes\CompareDateAttributes.cs" />
+    <Compile Include="Attributes\CompareDateAttribute.cs" />
     <Compile Include="Helpers\Hour.cs" />
     <Compile Include="Helpers\Security.cs" />
     <Compile Include="Helpers\Unique.cs" />

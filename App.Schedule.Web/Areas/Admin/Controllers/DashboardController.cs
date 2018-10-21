@@ -17,10 +17,11 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         {
             var appointments = await GetAppointments();
             ViewBag.totalAppointmentCount = appointments.Count();
-            ViewBag.totalAppointmentPendingCount = appointments.Where(d => d.StatusType.Value != (int)StatusType.Completed && d.StatusType != (int)StatusType.Canceled && d.IsActive == true).Count();
-            ViewBag.totalAppointmentDeactiveCount = appointments.Where(d => d.IsActive == false).Count();
+            ViewBag.totalAppointmentPendingCount = appointments.Where(d => d.StatusType.Value != (int)StatusType.Completed && d.StatusType.Value != (int)StatusType.CancelRequest && d.StatusType != (int)StatusType.Canceled && d.IsActive == true).Count();
             ViewBag.totalAppointmentCompletedCount = appointments.Where(d => d.StatusType.Value == (int)StatusType.Completed && d.IsActive == true).Count();
-            ViewBag.totalAppointmentCanceledCount = appointments.Where(d => d.StatusType.Value == (int)StatusType.Canceled && d.IsActive == true).Count();
+            ViewBag.totalAppointmentDeactiveCount = appointments.Where(d => d.StatusType.Value == (int)StatusType.Canceled && d.StatusType.Value != (int)StatusType.CancelRequest || d.IsActive == false).Count();
+            //ViewBag.totalAppointmentCanceledCount = appointments.Where(d => d.StatusType.Value == (int)StatusType.Canceled && d.IsActive == true).Count();
+            ViewBag.totalAppointmentCanceledRequestCount = appointments.Where(d => d.StatusType.Value == (int)StatusType.CancelRequest && d.IsActive == true).Count();
             ViewBag.BusinessHours = await this.GetBusinessHours();
             return View();
         }

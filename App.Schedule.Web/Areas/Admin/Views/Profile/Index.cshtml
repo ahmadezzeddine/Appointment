@@ -27,7 +27,7 @@
                 @if (Model == null || Model.Data == null)
                 {
                     <text>Please try again later.</text>
-                    return;
+                    
                 }
                 <div class="tab-pane col-lg-12">
                     <div class="row">
@@ -35,6 +35,7 @@
                         @Html.HiddenFor(d => d.Data.Id)
                         @Html.HiddenFor(d => d.Data.CountryId)
                         @Html.HiddenFor(d => d.Data.MembershipId)
+                        @Html.HiddenFor(d => d.Data.Email)
                         <div class="form-group col-lg-6 required control-label">
                             <label>Category</label>
                             @Html.DropDownListFor(d => d.Data.BusinessCategoryId, new SelectList(ViewBag.BusinessCategoryId, "Value", "Text", "Group.Name", -1), "-- Select Category --", new { @class = "form-control" })
@@ -49,7 +50,7 @@
                         </div>
                         <div class="form-group col-lg-6 required control-label">
                             <label>Phone No.</label>
-                            @Html.EditorFor(model => model.Data.PhoneNumbers, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone No." } })
+                            @Html.EditorFor(model => model.Data.PhoneNumbers, new { htmlAttributes = new { @class = "form-control", min="0", @type="number", @placeholder = "Phone No." } })
                         </div>
                         <div class="form-group col-lg-6">
                             <label>Fax No.</label>
@@ -57,7 +58,9 @@
                         </div>
                         <div class="form-group col-lg-6 required control-label">
                             <label>Email</label>
-                            @Html.EditorFor(model => model.Data.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Business Email" } })
+                            <div class="form-control">
+                                @Model.Data.Email
+                            </div>
                         </div>
                         <div class="form-group col-lg-6">
                             <label>Website</label>

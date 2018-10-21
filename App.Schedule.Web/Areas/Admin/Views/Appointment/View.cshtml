@@ -26,7 +26,7 @@
                 @if (Model == null || Model.Data == null)
                 {
                     <text>Please try again later.</text>
-                    return;
+
                 }
                 @using (Ajax.BeginForm("update", "appointment", new AjaxOptions { }))
                 {
@@ -69,32 +69,47 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="form-group col-lg-6">
-                            <label>First Name</label>
-                            <div class="form-control" id="customer_firstName"></div>
+                    if (Model.Data.tblBusinessCustomer != null)
+                    {
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <label>First Name</label>
+                                <div class="form-control">
+                                    @Model.Data.tblBusinessCustomer.FirstName
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Last Name</label>
+                                <div class="form-control">
+                                    @Model.Data.tblBusinessCustomer.LastName
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Email</label>
+                                <div class="form-control">
+                                    @Model.Data.tblBusinessCustomer.Email
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Phone Number</label>
+                                <div class="form-control">
+                                    @Model.Data.tblBusinessCustomer.PhoneNumber
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Address</label>
+                                <div class="form-control">
+                                    @Model.Data.tblBusinessCustomer.Add1 @Model.Data.tblBusinessCustomer.Add2
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Location</label>
+                                <div class="form-control">
+                                    @Model.Data.ServiceLocationName
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group col-lg-6">
-                            <label>Last Name</label>
-                            <div class="form-control" id="customer_lastName"></div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label>Email</label>
-                            <div class="form-control" id="customer_email"></div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label>Phone Number</label>
-                            <div class="form-control" id="customer_phoneNumber"></div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label>Address</label>
-                            <div class="form-control" id="customer_add1"></div>
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label>Location</label>
-                            <div class="form-control" id="customer_serviceName"></div>
-                        </div>
-                    </div>
+                    }
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="alert alert-success">
@@ -105,13 +120,13 @@
                     <div class="row">
                         <div class="form-group col-lg-12">
                             @customerWebGrid.GetHtml(htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
-                         tableStyle: "table table-striped",
-                         headerStyle: "active",
-                         footerStyle: "webgrid-footer",
-                         columns: customerWebGrid.Columns(
-                  customerWebGrid.Column("FirstName", "First Name"),
-                  customerWebGrid.Column("LastName", "Last Name"),
-                  customerWebGrid.Column("Email", "Email")))
+                       tableStyle: "table table-striped",
+                       headerStyle: "active",
+                       footerStyle: "webgrid-footer",
+                       columns: customerWebGrid.Columns(
+                customerWebGrid.Column("FirstName", "First Name"),
+                customerWebGrid.Column("LastName", "Last Name"),
+                customerWebGrid.Column("Email", "Email")))
                         </div>
                     </div>
                     <div class="row">
@@ -183,57 +198,15 @@
 </div>
 @section scripts{
     <script>
-            function isAllDay() {
-                var isChecked = $('#Data_IsAllDayEvent').prop('checked');
-                console.log('print:: ', isChecked);
-                if (isChecked) {
-                    $("#timeView").attr('style', 'display: none;');
-                }
-                else {
-                    $("#timeView").attr('style', 'display: block;');
-                }
+        function isAllDay() {
+            var isChecked = $('#Data_IsAllDayEvent').prop('checked');
+            console.log('print:: ', isChecked);
+            if (isChecked) {
+                $("#timeView").attr('style', 'display: none;');
             }
-
-            $(document).ready(function () {
-                      var id = $('#Data_BusinessCustomerId').val();
-                if (id) {
-                    var data = { Id: id };
-                          onGetData(data, '@Url.Action("GetCustomerById", "appointment", new { area = "admin" })').then((res) => {
-                              if (res && res.status) {
-                                  console.log(res);
-                                  setCustomer(res.data);
-                              }
-                          }).catch((error) => {
-                              console.error(error);
-                              $('#customerInformation').attr('style', 'none');
-                              setCustomer(null);
-                          });
-                      }
-                      else {
-                          setCustomer(null);
-                      }
-            });
-
-            function setCustomer(data) {
-                if (data) {
-                    var address = data.Add1 + ',' + data.Add2 + ',' + data.City + ', ' + data.State + ', ' + data.Country + ', ' + data.Zip;
-                    $('#customerInformation').attr('style', 'display: block;');
-                    $('#customer_firstName').text(data.FirstName);
-                    $('#customer_lastName').text(data.LastName);
-                    $('#customer_email').text(data.Email);
-                    $('#customer_phoneNumber').text(data.PhoneNumber);
-                    $('#customer_add1').text(address);
-                    $('#customer_serviceName').text(data.ServiceLocation.Name);
-                }
-                else {
-                    $('#customerInformation').attr('style', 'display: none;');
-                    $('#customer_firstName').text('');
-                    $('#customer_lastName').text('');
-                    $('#customer_email').text('');
-                    $('#customer_phoneNumber').text('');
-                    $('#customer_add1').text('');
-                    $('#customer_serviceName').text('');
-                }
+            else {
+                $("#timeView").attr('style', 'display: block;');
             }
+        }
     </script>
 }

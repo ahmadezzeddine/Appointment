@@ -33,7 +33,7 @@
                 @if (Model == null || Model.Data == null)
                 {
                     <text>Please try again later.</text>
-                    return;
+                    
                 }
                 <div class="tab-content">
                     <div class="tab-pane active">
@@ -123,6 +123,12 @@
                                                         @item.Created
                                                     </td>
                                                     <td class="text-right">
+                                                        @*<a title="Documents" onclick="@("window.location.href='" + @Url.Action("appointments", "customer", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                                <span class="fa fa-book"></span>
+                                                            </a>*@
+                                                        <a title="Documents" onclick="@("window.location.href='" + @Url.Action("Attachments", "customer", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                            <span class="fa fa-file"></span>
+                                                        </a>
                                                         <a title="Appointments" onclick="@("window.location.href='" + @Url.Action("appointments", "customer", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
                                                             <span class="fa fa-book"></span>
                                                         </a>

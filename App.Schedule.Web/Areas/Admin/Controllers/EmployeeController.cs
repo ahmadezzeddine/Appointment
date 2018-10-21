@@ -30,11 +30,11 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 model.Message = result.Message;
                 if (search == null)
                 {
-                    model.Data = data.ToPagedList<BusinessEmployeeViewModel>(pageNumber, 5);
+                    model.Data = data.ToPagedList<BusinessEmployeeViewModel>(pageNumber, 10);
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.FirstName.ToLower().Contains(search.ToLower()) || d.LastName.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                    model.Data = data.Where(d => d.FirstName.ToLower().Contains(search.ToLower()) || d.LastName.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else

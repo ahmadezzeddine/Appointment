@@ -25,7 +25,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <ul class="nav nav-tabs">
-                    <li class="active disabled"><a href="#homeTab">Information</a></li>
+                    <li class="active"><a href="#homeTab">Information</a></li>
                     <li><a href="#scheduleTab">Schedule</a></li>
                     <li><a href="#customerTab">Customer</a></li>
                     <li><a href="#inviteeTab">Invitees</a></li>
@@ -37,6 +37,7 @@
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(d => d.Data.GlobalAppointmentId)
                 @Html.HiddenFor(d => d.Data.BusinessEmployeeId)
+                @Html.HiddenFor(d => d.Data.IsActive)
                 <div class="tab-content">
                     <div id="homeTab" class="tab-pane fade in active">
                         <div class="panel-body">
@@ -45,35 +46,43 @@
                                     <div class="col-lg-12 text-right">
                                         #@Model.Data.GlobalAppointmentId
                                     </div>
-                                    <div class="form-group col-lg-6 required control-label">
-                                        <label>Title</label>
-                                        @Html.EditorFor(d => d.Data.Title, new { htmlAttributes = new { @class = "form-control", @placeholder = "Title" } })
-                                    </div>
-                                    <div class="form-group col-lg-6 required control-label">
-                                        <label>Service Type</label>
-                                        <div class="input-group">
-                                            @Html.DropDownListFor(d => d.Data.BusinessServiceId, new SelectList(ViewBag.BusinessServiceId ?? null, "Value", "Text"), "-- Select Service Type --", new { @class = "form-control" })
-                                            <span class="input-group-btn">
-                                                <a class="btn btn-default" href="@Url.Action("add", "businessservice", new { area = "admin"})" >+ Add</a>
-                                            </span>
+                                    <div class="col-lg-6">
+                                        <div class="form-group required control-label">
+                                            <label>Title</label>
+                                            @Html.EditorFor(d => d.Data.Title, new { htmlAttributes = new { @class = "form-control", @placeholder = "Title" } })
+                                            @Html.ValidationMessageFor(m => m.Data.Title, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="form-group required control-label">
+                                            <label>Location</label>
+                                            <div class="input-group">
+                                                @Html.DropDownListFor(d => d.Data.ServiceLocationId, new SelectList(ViewBag.ServiceLocationId ?? null, "Value", "Text"), "-- Select Location --", new { @class = "form-control" })
+                                                <span class="input-group-btn">
+                                                    <a class="btn btn-default" href="@Url.Action("add", "servicelocation", new { area = "admin", id = ViewBag.BusinessId })">+ Add</a>
+                                                </span>
+                                            </div>
+                                                @Html.ValidationMessageFor(m => m.Data.ServiceLocationId, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
-                                    <div class="form-group col-lg-6 required control-label">
-                                        <label>Location</label>
-                                        <div class="input-group">
-                                            @Html.DropDownListFor(d => d.Data.ServiceLocationId, new SelectList(ViewBag.ServiceLocationId ?? null, "Value", "Text"), "-- Select Location --", new { @class = "form-control" })
-                                            <span class="input-group-btn">
-                                                <a class="btn btn-default"  href="@Url.Action("add", "servicelocation", new { area = "admin", id = ViewBag.BusinessId })">+ Add</a>
-                                            </span>
+                                    <div class="col-lg-6">
+                                        <div class="form-group required control-label">
+                                            <label>Service Type</label>
+                                            <div class="input-group">
+                                                @Html.DropDownListFor(d => d.Data.BusinessServiceId, new SelectList(ViewBag.BusinessServiceId ?? null, "Value", "Text"), "-- Select Service Type --", new { @class = "form-control" })
+                                                <span class="input-group-btn">
+                                                    <a class="btn btn-default" href="@Url.Action("add", "businessservice", new { area = "admin"})">+ Add</a>
+                                                </span>
+                                            </div>
+                                                @Html.ValidationMessageFor(m => m.Data.BusinessServiceId, "", new { @class = "text-danger" })
                                         </div>
-                                    </div>
-                                    <div class="form-group col-lg-6 required control-label">
-                                        <label>Offer</label>
-                                        <div class="input-group">
-                                            @Html.DropDownListFor(d => d.Data.BusinessOfferId, new SelectList(ViewBag.BusinessOfferId ?? null, "Value", "Text"), "-- Select Offer --", new { @class = "form-control" })
-                                            <span class="input-group-btn">
-                                                <a class="btn btn-default" href="@Url.Action("add", "businessoffer", new { area = "admin", id = ViewBag.EmployeeId })">+ Add</a>
-                                            </span>
+                                        <div class="form-group required control-label">
+                                            <label>Offer</label>
+                                            <div class="input-group">
+                                                @Html.DropDownListFor(d => d.Data.BusinessOfferId, new SelectList(ViewBag.BusinessOfferId ?? null, "Value", "Text"), "-- Select Offer --", new { @class = "form-control" })
+                                                <span class="input-group-btn">
+                                                    <a class="btn btn-default" href="@Url.Action("add", "businessoffer", new { area = "admin", id = ViewBag.EmployeeId })">+ Add</a>
+                                                </span>
+                                            </div>
+                                                @Html.ValidationMessageFor(m => m.Data.BusinessOfferId, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>
@@ -83,7 +92,7 @@
                             <div class="row">
                                 <div class="col-lg-12 text-right">
                                     <input type="button" class="btn btn-default btn-sm" value="Back" onclick="@("window.location.href='" + @Url.Action("index", "appointment", new { area = "admin" }) + "'");" />
-                                    <input type="button" class="btn btn-info btn-sm" value="Next" onclick="activeTab('scheduleTab')" />
+                                    <input type="button" class="btn btn-info btn-sm" value="Next" onclick="activeTab('scheduleTab',this)" />
                                 </div>
                             </div>
                         </div>
@@ -95,6 +104,7 @@
                                     <div class="form-group col-lg-6 required control-label">
                                         <label>Recurrence</label>
                                         @Html.DropDownListFor(d => d.Data.PatternType, new SelectList(ViewBag.PatternType, "Value", "Text"), new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.Data.PatternType, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group col-lg-6">
                                         <label>Is All Day</label>
@@ -102,32 +112,36 @@
                                             @Html.CheckBoxFor(d => d.Data.IsAllDayEvent, new { onclick = "isAllDay()" })
                                         </div>
                                     </div>
-                                    <div class="form-group col-lg-6">
+                                    <div class="form-group col-lg-6 required control-label">
                                         <label>Start Date</label>
-                                        @Html.EditorFor(m => m.Data.StartDate, new { htmlAttributes = new { @class = "form-control", @type = "datetime", @readonly = "true", @placeholder = "Start Date" } })
+                                        @Html.EditorFor(m => m.Data.StartDate, new { htmlAttributes = new { @class = "form-control", @type = "date", @value =DateTime.Now, @placeholder = "Start Date" } })
+@*                                        @Html.EditorFor(m => m.Data.StartDate, new { htmlAttributes = new { @class = "form-control datepicker", @type = "date", @placeholder = "Start Date" } })*@
+                                        @Html.ValidationMessageFor(m => m.Data.StartDate, "", new { @class = "text-danger" })
                                     </div>
 
-                                    <div class="form-group col-lg-6">
+                                    @*<div class="form-group col-lg-6">
                                         <label>Is Active</label>
                                         <div class="form-control">
                                             @Html.CheckBoxFor(d => d.Data.IsActive)
                                         </div>
-                                    </div>
+                                    </div>*@
                                     <div id="timeView">
-                                        <div class="form-group col-lg-6">
+                                        <div class="form-group col-lg-6 required control-label">
                                             <label>Start</label>
                                             @Html.DropDownListFor(d => d.Data.StartTime, new SelectList(ViewBag.FromHours, "Value", "Text"), new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Data.StartTime, "", new { @class = "text-danger" })
                                         </div>
-                                        <div class="form-group col-lg-6">
+                                        <div class="form-group col-lg-6 required control-label">
                                             <label>End</label>
                                             @Html.DropDownListFor(d => d.Data.EndTime, new SelectList(ViewBag.ToHours, "Value", "Text"), new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Data.EndTime, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
 
                                     <span id="dateError" class="col-lg-12 text-danger">
                                         @if (Model.Data.StartTime != null)
                                         {
-                                            <text>The date you have selected has holiday.Please select another date.</text>
+                                            <text>The date you have selected has holiday. Please select another date.</text>
                                         }
                                     </span>
                                 </div>
@@ -136,8 +150,8 @@
                         <div class="panel-footer">
                             <div class="row">
                                 <div class="col-lg-12 text-right">
-                                    <input type="button" class="btn btn-default btn-sm" value="Back" onclick="activeTab('homeTab')" />
-                                    <input type="button" class="btn btn-info btn-sm" value="Next" onclick="activeTab('customerTab')" />
+                                    <input type="button" class="btn btn-default btn-sm" value="Back" onclick="activeTab('homeTab',this)" />
+                                    <input type="button" class="btn btn-info btn-sm" value="Next" onclick="activeTab('customerTab',this)" />
                                 </div>
                             </div>
                         </div>
@@ -148,8 +162,9 @@
                                 <div class="form-group col-lg-6 required control-label">
                                     <label>Customer</label>
                                     @Html.DropDownListFor(d => d.Data.BusinessCustomerId, new SelectList(ViewBag.BusinessCustomerId ?? null, "Value", "Text"), "-- Select Customer --", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Data.BusinessCustomerId, "", new { @class = "text-danger" })
                                 </div>
-                                <div id="customerInformation"  class="row" style="display:none;">
+                                <div id="customerInformation" class="row" style="display:none;">
                                     <div class="col-lg-12">
                                         <div class="form-group col-lg-6">
                                             <label>First Name</label>
@@ -182,8 +197,8 @@
                         <div class="panel-footer">
                             <div class="row">
                                 <div class="col-lg-12 text-right">
-                                    <input type="button" class="btn btn-default btn-sm" value="Back" onclick="activeTab('scheduleTab')" />
-                                    <input type="button" class="btn btn-info btn-sm" value="Next" onclick="activeTab('inviteeTab')" />
+                                    <input type="button" class="btn btn-default btn-sm" value="Back" onclick="activeTab('scheduleTab',this)" />
+                                    <input type="button" class="btn btn-info btn-sm" value="Next" onclick="activeTab('inviteeTab',this)" />
                                 </div>
                             </div>
                         </div>
@@ -194,11 +209,11 @@
                                 <div class="row">
                                     <div class="form-group col-lg-12">
                                         @customerWebGrid.GetHtml(htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
-                                        tableStyle: "table table-striped",
-                                        headerStyle: "active",
-                                        footerStyle: "webgrid-footer",
-                                        columns: customerWebGrid.Columns(
-                                        customerWebGrid.Column(format: @<text><input name="Data.SelectedEmployeeIds" value="@item.Id" type="checkbox" /></text>, header: "Select"), customerWebGrid.Column("FirstName", "First Name"), customerWebGrid.Column("LastName", "Last Name"), customerWebGrid.Column("Email", "Email")))
+                                             tableStyle: "table table-striped",
+                                             headerStyle: "active",
+                                             footerStyle: "webgrid-footer",
+                                             columns: customerWebGrid.Columns(
+                                             customerWebGrid.Column(format: @<text><input name="Data.SelectedEmployeeIds" value="@item.Id" type="checkbox" /></text>, header: "Select"), customerWebGrid.Column("FirstName", "First Name"), customerWebGrid.Column("LastName", "Last Name"), customerWebGrid.Column("Email", "Email")))
                                     </div>
                                 </div>
                             </div>
@@ -207,8 +222,8 @@
                         <div class="panel-footer">
                             <div class="row">
                                 <div class="col-lg-12 text-right">
-                                    <input type="button" class="btn btn-default btn-sm" value="Back" onclick="activeTab('customerTab')" />
-                                    <input type="button" class="btn btn-info btn-sm" value="Next" onclick="activeTab('confirmTab')" />
+                                    <input type="button" class="btn btn-default btn-sm" value="Back" onclick="activeTab('customerTab',this)" />
+                                    <input type="button" class="btn btn-info btn-sm" value="Next" onclick="activeTab('confirmTab',this)" />
                                 </div>
                             </div>
                         </div>
@@ -231,7 +246,7 @@
                         <div class="panel-footer">
                             <div class="row">
                                 <div class="col-lg-12 text-right">
-                                    <input type="button" class="btn btn-default btn-sm" value="Back" onclick="activeTab('inviteeTab')" />
+                                    <input type="button" class="btn btn-default btn-sm" value="Back" onclick="activeTab('inviteeTab',this)" />
                                     <input id="btnSave" class="btn btn-info btn-sm " type="button" value="Submit" onclick="onSubmit(this,'@Url.Action("index", "appointment", new { area = "admin" })')" />
                                 </div>
                             </div>
@@ -256,7 +271,7 @@
         }
 
         $(document).ready(function () {
-            activeTab('homeTab');
+            //activeTab('homeTab');
 
 
             //var dateStartTime = $('Data_StartTime option').val();
@@ -348,16 +363,18 @@
             }
         }
 
-        function activeTab(tab) {
-            $('.nav-tabs a[href="#' + tab + '"]').tab('show');
-            $('#ap_title').text($('#Data_Title').val());
-            $('#ap_serviceType').text($('#Data_BusinessServiceId option:selected').text());
-            $('#ap_location').text($('#Data_ServiceLocationId option:selected').text());
-            $('#ap_customer').text($('#Data_BusinessCustomerId option:selected').text());
-            var time = 'Start: ' + $('#Data_StartTime option:selected').text() + ' To: ' + $('#Data_EndTime option:selected').text();
-            $('#ap_time').text(time);
-            var date = 'From: ' + $('#Data_StartDate').val() + ' To: ' + $('#Data_StartDate').val();
-            $('#ap_date').text(date);
+        function activeTab(tab, btn) {
+            if ($('#form0').valid()) {
+                $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+                $('#ap_title').text($('#Data_Title').val());
+                $('#ap_serviceType').text($('#Data_BusinessServiceId option:selected').text());
+                $('#ap_location').text($('#Data_ServiceLocationId option:selected').text());
+                $('#ap_customer').text($('#Data_BusinessCustomerId option:selected').text());
+                var time = 'Start: ' + $('#Data_StartTime option:selected').text() + ' To: ' + $('#Data_EndTime option:selected').text();
+                $('#ap_time').text(time);
+                var date = 'From: ' + $('#Data_StartDate').val() + ' To: ' + $('#Data_StartDate').val();
+                $('#ap_date').text(date);
+            }
         };
     </script>
 }

@@ -32,7 +32,7 @@
                     @if (Model == null || Model.Data == null)
                 {
                         <text>Please try again later.</text>
-                        return;
+                        
                     }
                     <div class="tab-pane">
                         <div class="row col-lg-12">
@@ -50,7 +50,7 @@
                             </div>
                             <div class="form-group col-lg-6 required control-label">
                                 <label>Phone No.</label>
-                                @Html.EditorFor(d => d.Data.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone No." } })
+                                @Html.EditorFor(d => d.Data.PhoneNumber, new { htmlAttributes = new { @class = "form-control", min = "0", @type = "number", @placeholder = "Phone No." } })
                             </div>
                             <div class="form-group col-lg-6 required control-label">
                                 <label>Email</label>

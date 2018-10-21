@@ -52,7 +52,7 @@
 
                         <div class="form-group col-lg-12 required control-label">
                             <label>Phone No.</label>
-                            @Html.EditorFor(d => d.Data.Business.PhoneNumbers, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone No." } })
+                            @Html.EditorFor(d => d.Data.Business.PhoneNumbers, new { htmlAttributes = new { @class = "form-control", min = "0", @type = "number", @placeholder = "Phone No." } })
                             <span class="text-danger">
                                 @Html.ValidationMessageFor(d => d.Data.Business.PhoneNumbers)
                             </span>
@@ -147,7 +147,7 @@
 
                         <div class="form-group col-lg-12 required control-label">
                             <label>Phone No.</label>
-                            @Html.EditorFor(d => d.Data.Employee.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Contact Number" } })
+                            @Html.EditorFor(d => d.Data.Employee.PhoneNumber, new { htmlAttributes = new { @class = "form-control", min = "0", @type = "number", @placeholder = "Contact Number" } })
                             <span class="text-danger">
                                 @Html.ValidationMessageFor(d => d.Data.Employee.PhoneNumber)
                             </span>

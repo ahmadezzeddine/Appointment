@@ -31,15 +31,11 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
 
             if (result.Status)
             {
-                var appointmentsModel = result.Data.Where(d => d.BusinessEmployeeId != null && d.BusinessEmployeeId == RegisterViewModel.Employee.Id).ToList();
+                var appointmentsModel = result.Data.Where(d => d.BusinessEmployeeId != null).ToList();
                 model.hasAdd = appointmentsModel != null && appointmentsModel.Count <= total ? true : false;
                 if (type.HasValue)
                 {
-                    if (type.Value == AppointmentViewStatus.Canceled)
-                    {
-                        result.Data = appointmentsModel.Where(d => d.StatusType == (int)StatusType.Canceled && d.IsActive == true).ToList();
-                    }
-                    else if (type.Value == AppointmentViewStatus.Completed)
+                    if (type.Value == AppointmentViewStatus.Completed)
                     {
                         result.Data = appointmentsModel.Where(d => d.StatusType == (int)StatusType.Completed && d.IsActive == true).ToList();
                     }
@@ -49,27 +45,32 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
                     }
                     else if (type.Value == AppointmentViewStatus.Deactivate)
                     {
-                        result.Data = appointmentsModel.Where(d => d.IsActive == false).ToList();
+                        result.Data = appointmentsModel.Where(d => d.StatusType == (int)StatusType.Canceled || d.IsActive == false).ToList();
+                    }
+                    else if (type.Value == AppointmentViewStatus.CancelRequested)
+                    {
+                        result.Data = appointmentsModel.Where(d => d.StatusType == (int)StatusType.CancelRequest).ToList();
                     }
                     else
                     {
-                        result.Data = result.Data.ToList();
+                        result.Data = result.Data.Where(d => d.StatusType != (int)StatusType.Canceled && d.StatusType != (int)StatusType.CancelRequest && d.IsActive == true).ToList();
                     }
                 }
                 else
                 {
-                    result.Data = appointmentsModel.Where(d => d.StatusType != (int)StatusType.Completed && d.StatusType != (int)StatusType.Canceled && d.IsActive == true).ToList();
+                    result.Data = result.Data.Where(d => d.StatusType != (int)StatusType.Canceled && d.StatusType != (int)StatusType.CancelRequest && d.IsActive == true).ToList();
+                    //result.Data = appointmentsModel.Where(d => d.StatusType != (int)StatusType.Completed && d.StatusType != (int)StatusType.Canceled && d.IsActive == true).ToList();
                 }
                 var data = result.Data.OrderByDescending(d => d.Id).ToList();
                 model.Status = result.Status;
                 model.Message = result.Message;
                 if (search == null)
                 {
-                    model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 5);
+                    model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 10);
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -102,11 +103,11 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
                 model.Message = result.Message;
                 if (search == null)
                 {
-                    model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 5);
+                    model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 10);
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -149,6 +150,20 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
             }
         }
 
+        public async Task<ActionResult> GetCustomerById(long? id)
+        {
+            if (id.HasValue)
+            {
+                var response = await this.BusinessCustomerService.Gets(RegisterViewModel.Business.Id, TableType.BusinessId);
+                if (response.Status)
+                {
+                    var customer = response.Data.Find(d => d.Id == id.Value);
+                    return Json(new { status = true, data = customer, message = "found" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return Json(new { status = false, data = "", message = "No records found" }, JsonRequestBehavior.AllowGet);
+        }
+        
         [NonAction]
         private async Task<List<ServiceLocationViewModel>> GetServiceLocations()
         {
@@ -278,7 +293,7 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
             var response = await this.AppointmentDocumentService.Gets(id.Value, TableType.AppointmentDocument);
             if (response.Status)
             {
-                model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 5);
+                model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 10);
                 model.Status = response.Status;
                 model.Message = response.Message;
             }
@@ -348,7 +363,7 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult> Feedbacks(long? id, int? page)
+        public async Task<ActionResult> Feedbacks(long? id, int? page,string search)
         {
             if (!id.HasValue)
                 return RedirectToAction("index", "appointment", new { area = "employee" });
@@ -359,7 +374,7 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
             var response = await this.AppointmentFeedbackService.Gets(id.Value);
             if (response.Status)
             {
-                model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 5);
+                model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 10);
                 model.Status = response.Status;
                 model.Message = response.Message;
             }
@@ -367,6 +382,14 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
             {
                 model.Status = false;
                 model.Message = response.Message;
+            }
+            if (search != null)
+            {
+                model.Data = model.Data.Where(d => d.Feedback.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+            }
+            else
+            {
+                model.Data = model.Data.ToPagedList(pageNumber, 10);
             }
             ViewBag.AppointmentId = id.Value;
             return View(model);
@@ -381,6 +404,13 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
             var response = this.ResponseHelper.GetResponse<AppointmentFeedbackViewModel>();
             response.Data = new AppointmentFeedbackViewModel();
             response.Status = true;
+            var ratingValue = new List<object>();
+            ratingValue.Add(new { Value = 1, Text = "1 Star" });
+            ratingValue.Add(new { Value = 2, Text = "2 Star" });
+            ratingValue.Add(new { Value = 3, Text = "3 Star" });
+            ratingValue.Add(new { Value = 4, Text = "4 Star" });
+            ratingValue.Add(new { Value = 5, Text = "5 Star" });
+            ViewBag.Rating = new SelectList(ratingValue, "Value", "Text");
             response.Data.AppointmentId = id.Value;
             return View(response);
         }
@@ -400,7 +430,6 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
             {
                 model.Data.IsEmployee = true;
                 model.Data.BusinessEmployeeId = RegisterViewModel.Employee.Id;
-                model.Data.Rating = 0;
                 var response = await this.AppointmentFeedbackService.Add(model.Data);
                 if (response == null)
                 {
@@ -567,6 +596,165 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
             return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> Edit(long? id)
+        {
+            if (!id.HasValue)
+                return RedirectToAction("index", "appointment", new { area = "admin" });
+
+            var response = await this.AppointmentService.Get(id.Value);
+            response.Status = true;
+            response.Data.BusinessEmployeeId = RegisterViewModel.Employee.Id;
+            //response.Data.GlobalAppointmentId = String.Format("{0}{1}{2}{3}", Unique.GetValue(), DateTime.Now.Ticks, RegisterViewModel.Business.Id, RegisterViewModel.Employee.Id);
+            response.Data.GlobalAppointmentId = String.Format("{0}{1}{2}", DateTime.Now.Ticks, RegisterViewModel.Business.Id, RegisterViewModel.Employee.Id);
+
+            var ServiceLocations = await this.GetServiceLocations();
+            ViewBag.ServiceLocationId = ServiceLocations.Select(s => new SelectListItem()
+            {
+                Value = Convert.ToString(s.Id),
+                Text = s.Name
+            });
+
+            var BusinessCustomers = await this.GetCustomers();
+            ViewBag.BusinessCustomerId = BusinessCustomers.Select(s => new SelectListItem()
+            {
+                Value = Convert.ToString(s.Id),
+                Text = String.Format("{0} {1} - {2}", s.FirstName, s.LastName, s.City)
+            });
+
+            var BusinessOffers = await this.GetOffers();
+            ViewBag.BusinessOfferId = BusinessOffers.Select(s => new SelectListItem()
+            {
+                Value = Convert.ToString(s.Id),
+                Text = String.Format("{0} {1} - valid: {2}", s.Code, s.Name, s.ValidTo)
+            });
+            var BusinessServices = await this.GetBusinessServices();
+            ViewBag.BusinessServiceId = BusinessServices.Select(s => new SelectListItem()
+            {
+                Value = Convert.ToString(s.Id),
+                Text = String.Format("{0:C2} {1}", s.Cost, s.Name)
+            });
+
+            //Hours
+            var hourHelper = new BusinessHourHelper(this.Token, response.Data.ServiceLocationId.Value);
+
+            var fromHours = await hourHelper.GetHoursOfDay((int)response.Data.StartDate.Value.DayOfWeek);
+            ViewBag.FromHours = fromHours.Select(s => new SelectListItem()
+            {
+                Value = s.Value,
+                Text = s.Value,
+                Selected = response.Data.StartTime.HasValue && s.Value == response.Data.StartTime.Value.ToString("hh:mm tt") ? true : false
+            });
+            ViewBag.ToHours = fromHours.Select(s => new SelectListItem()
+            {
+                Value = s.Value,
+                Text = s.Value,
+                Selected = response.Data.EndTime.HasValue && s.Value == response.Data.EndTime.Value.ToString("hh:mm tt") ? true : false
+
+            });
+            response.Data.StartDate = response.Data.StartDate.Value;
+            response.Data.EndDate = response.Data.StartDate.Value;
+            //End
+
+            //Pattern type
+            var patternType = from PatternTypeOnce e in Enum.GetValues(typeof(PatternTypeOnce))
+                              select new
+                              {
+                                  ID = (int)e,
+                                  Name = e.ToString()
+                              };
+            ViewBag.PatternType = new SelectList(patternType, "Id", "Name");
+            //End
+
+            var employees = await this.GetBusinessEmployee(RegisterViewModel.Business.Id, TableType.BusinessId);
+            ViewBag.BusinessEmployeeId = employees;
+
+            return View(response);
+        }
+
+        [HttpPost]
+        [ActionName("update")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit([Bind(Include = "Data")] ResponseViewModel<AppointmentViewModel> model)
+        {
+            var result = new ResponseViewModel<BusinessHolidayViewModel>();
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var errMessage = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
+                    result.Status = false;
+                    result.Message = errMessage;
+                }
+                else
+                {
+                    if (!model.Data.IsAllDayEvent)
+                    {
+                        if (model.Data.StartTime >= model.Data.EndTime)
+                        {
+                            result.Status = false;
+                            result.Message = "Please provide a valid end time.";
+                            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                    if (model.Data.StartDate >= model.Data.EndDate)
+                    {
+                        result.Status = false;
+                        result.Message = "Please provide a valid end date.";
+                        return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+                    }
+                    if (model.Data.BusinessCustomerId <= 0)
+                    {
+                        result.Status = false;
+                        result.Message = "Please select a customer.";
+                        return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+                    }
+                    if (model.Data.SelectedEmployeeIds == null || model.Data.SelectedEmployeeIds.Count <= 0)
+                    {
+                        result.Status = false;
+                        result.Message = "Please select at least one invitee.";
+                        return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+                    }
+                    model.Data.StatusType = (int)StatusType.Resheduled;
+
+                    var startdate = model.Data.StartDate.HasValue ? model.Data.StartDate.Value : DateTime.Now;
+                    var starttime = model.Data.StartTime.HasValue ? model.Data.StartTime.Value : DateTime.Now;
+                    var enddate = model.Data.EndDate.HasValue ? model.Data.EndDate.Value : DateTime.Now;
+                    var endtime = model.Data.EndTime.HasValue ? model.Data.EndTime.Value : DateTime.Now;
+                    model.Data.StartTime = new DateTime(startdate.Year, startdate.Month, startdate.Day, starttime.Hour, starttime.Minute, starttime.Second);
+                    model.Data.EndTime = new DateTime(enddate.Year, enddate.Month, enddate.Day, endtime.Hour, endtime.Minute, endtime.Second);
+
+                    var response = await this.AppointmentService.Update(model.Data);
+                    if (response.Status)
+                    {
+                        result.Status = true;
+                        result.Message = response.Message;
+                    }
+                    else
+                    {
+                        result.Status = false;
+                        result.Message = response.Message;
+                    }
+
+                }
+            }
+            catch
+            {
+                result.Status = false;
+                result.Message = "There was a problem. Please try again later.";
+            }
+            return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+        }
+
+        [NonAction]
+        private async Task<List<BusinessEmployeeViewModel>> GetBusinessEmployee(long? appointmentId, TableType type)
+        {
+            var employees = new List<BusinessEmployeeViewModel>(); ;
+            var response = await this.BusinessEmployeeService.Gets(appointmentId, type);
+            if (response != null)
+                employees = response.Data;
+            return employees;
+        }
 
         [NonAction]
         private async Task<List<BusinessServiceViewModel>> GetBusinessServices()

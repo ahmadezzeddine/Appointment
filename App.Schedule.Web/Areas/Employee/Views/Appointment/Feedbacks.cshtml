@@ -24,7 +24,6 @@
                 @if (Model == null || Model.Data == null)
                 {
                     <text>Please try again later.</text>
-                    return;
                 }
                 <div class="tab-content">
                     <div class="tab-pane active">
@@ -33,7 +32,7 @@
                                 <div class="form-group input-group input-group-sm">
                                     <input type="text" class="form-control" id="searchKeyword" value="@ViewBag.search" placeholder="Search here" />
                                     <div class="input-group-btn">
-                                        <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index")?search=' + $('#searchKeyword').val()">
+                                        <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("feedbacks")?search=' + $('#searchKeyword').val()">
                                             <i class="glyphicon glyphicon-search"></i>
                                             Search
                                         </button>
@@ -46,7 +45,13 @@
                                                 Text
                                             </th>
                                             <th>
+                                                Status
+                                            </th>
+                                            <th>
                                                 DateTime
+                                            </th>
+                                            <th class="col-lg-2 text-right">
+                                                Action
                                             </th>
                                         </tr>
                                     </thead>
@@ -58,7 +63,6 @@
                                                     No appointment feedbacks has been created yet.
                                                 </td>
                                             </tr>
-                                            return;
                                         }
                                         @foreach (var item in Model.Data)
                                         {
@@ -70,16 +74,38 @@
                                                             <div class="col-lg-12">
                                                                 @item.Feedback
                                                             </div>
-                                                            @if (!item.IsEmployee)
-                                                            {
-                                                                <div class="col-lg-12">
-                                                                    <span class="fa fa-star-o" data-="@item.Rating"></span>
-                                                                </div>
-                                                            }
+                                                            <div class="col-lg-12">
+                                                                <small>
+                                                                    @item.tblBusinessEmployee.FirstName @item.tblBusinessEmployee.LastName
+                                                                </small>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                @if (item.Rating.HasValue)
+                                                                {
+                                                                    <div>
+                                                                        @for (int i = 0; i < item.Rating; i++)
+                                                                        {
+                                                                            <span class="fa fa-star checked"></span>
+                                                                        }
+                                                                        @for (int i = item.Rating.Value; i < 5; i++)
+                                                                        {
+                                                                            <span class="fa fa-star"></span>
+                                                                        }
+                                                                    </div>
+                                                                }
+                                                            </div>
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        @item.Created.ToLocalTime()
+                                                        @item.IsActive
+                                                    </td>
+                                                    <td>
+                                                        @item.Created
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <a title="Delete" onclick="@("window.location.href='" + @Url.Action("delete_feedback", "appointment", new { area = "admin", id = item.Id }) + "'");" class="btn btn-default btn-xs">
+                                                            <span class="fa fa-trash"></span>
+                                                        </a>
                                                     </td>
                                                 </tr>
                                             }

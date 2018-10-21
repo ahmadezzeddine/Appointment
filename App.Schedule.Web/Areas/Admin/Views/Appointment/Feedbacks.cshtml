@@ -35,7 +35,7 @@
                     <div class="tab-pane active">
                         <div class="col-lg-12">
                             <div class="row">
-                                <div class="form-group input-group input-group-sm">
+                                @*<div class="form-group input-group input-group-sm">
                                     <input type="text" class="form-control" id="searchKeyword" value="@ViewBag.search" placeholder="Search here" />
                                     <div class="input-group-btn">
                                         <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index")?search=' + $('#searchKeyword').val()">
@@ -43,7 +43,7 @@
                                             Search
                                         </button>
                                     </div>
-                                </div>
+                                </div>*@
                                 <table class="table table-condensed sortable" cellspacing="0" cellpadding="0">
                                     <thead>
                                         <tr>
@@ -51,10 +51,7 @@
                                                 Text
                                             </th>
                                             <th>
-                                                Rates
-                                            </th>
-                                            <th>
-                                                Is All Day
+                                                Status
                                             </th>
                                             <th>
                                                 DateTime
@@ -83,22 +80,27 @@
                                                             <div class="col-lg-12">
                                                                 @item.Feedback
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        @if (!item.IsEmployee && item.Rating.HasValue)
-                                                        {
                                                             <div class="col-lg-12">
-                                                                @for (int i = 0; i < item.Rating; i++)
+                                                                <small>
+                                                                    @item.tblBusinessEmployee.FirstName @item.tblBusinessEmployee.LastName
+                                                                </small>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                @if (item.Rating.HasValue)
                                                                 {
-                                                                    <span class="fa fa-star checked"></span>
-                                                                }
-                                                                @for (int i = item.Rating.Value; i < 5; i++)
-                                                                {
-                                                                    <span class="fa fa-star"></span>
+                                                                    <div>
+                                                                        @for (int i = 0; i < item.Rating; i++)
+                                                                        {
+                                                                            <span class="fa fa-star checked"></span>
+                                                                        }
+                                                                        @for (int i = item.Rating.Value; i < 5; i++)
+                                                                        {
+                                                                            <span class="fa fa-star"></span>
+                                                                        }
+                                                                    </div>
                                                                 }
                                                             </div>
-                                                        }
+                                                        </div>
                                                     </td>
                                                     <td>
                                                         @item.IsActive

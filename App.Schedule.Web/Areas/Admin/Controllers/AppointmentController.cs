@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using App.Schedule.Web.Models;
 using System.Collections.Generic;
 using App.Schedule.Domains.Helpers;
-using App.Schedule.Domains.ViewModel;
 using App.Schedule.Web.Helpers;
 using System.Web.UI.WebControls;
 using System.IO;
@@ -17,6 +16,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.text;
 using System.Web;
 using iTextSharp.tool.xml;
+using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
@@ -44,11 +44,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 model.hasAdd = appointmentsModel != null && appointmentsModel.Count <= total ? true : false;
                 if (type.HasValue)
                 {
-                    if (type.Value == AppointmentViewStatus.Canceled)
-                    {
-                        result.Data = appointmentsModel.Where(d => d.StatusType == (int)StatusType.Canceled && d.IsActive == true).ToList();
-                    }
-                    else if (type.Value == AppointmentViewStatus.Completed)
+                    if (type.Value == AppointmentViewStatus.Completed)
                     {
                         result.Data = appointmentsModel.Where(d => d.StatusType == (int)StatusType.Completed && d.IsActive == true).ToList();
                     }
@@ -58,11 +54,15 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                     }
                     else if (type.Value == AppointmentViewStatus.Deactivate)
                     {
-                        result.Data = appointmentsModel.Where(d => d.IsActive == false).ToList();
+                        result.Data = appointmentsModel.Where(d => d.StatusType == (int)StatusType.Canceled || d.IsActive == false).ToList();
+                    }
+                    else if (type.Value == AppointmentViewStatus.CancelRequested)
+                    {
+                        result.Data = appointmentsModel.Where(d => d.StatusType == (int)StatusType.CancelRequest).ToList();
                     }
                     else
                     {
-                        result.Data = appointmentsModel.ToList();
+                        result.Data = appointmentsModel.Where(d => d.StatusType != (int)StatusType.Canceled && d.StatusType != (int)StatusType.CancelRequest && d.IsActive == true).ToList();
                     }
                 }
                 else
@@ -74,11 +74,11 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 model.Message = result.Message;
                 if (search == null)
                 {
-                    model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 5);
+                    model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 10);
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -105,17 +105,16 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             {
                 var appointmentsModel = result.Data.Where(d => d.BusinessEmployeeId != null && d.BusinessEmployeeId == RegisterViewModel.Employee.Id).ToList();
 
-                result.Data = appointmentsModel.Where(d => d.StatusType != (int)StatusType.Completed && d.StatusType != (int)StatusType.Canceled).ToList();
-                var data = result.Data.Where(d => d.IsActive == false).OrderByDescending(d => d.Id).ToList();
+                result.Data = appointmentsModel.Where(d => d.StatusType == (int)StatusType.Canceled || d.IsActive == false).ToList();
                 model.Status = result.Status;
                 model.Message = result.Message;
                 if (search == null)
                 {
-                    model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 5);
+                    model.Data = result.Data.ToPagedList<AppointmentViewModel>(pageNumber, 10);
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                    model.Data = result.Data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -140,7 +139,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var total = RegisterViewModel.Business.tblMembership.IsUnlimited ? long.MaxValue : RegisterViewModel.Business.tblMembership.TotalAppointment;
             if (result.Status && result.Data != null)
             {
-                var appointmentsModel = result.Data.Where(d => d.BusinessEmployeeId != null && d.BusinessEmployeeId == RegisterViewModel.Employee.Id).ToList();
+                var appointmentsModel = result.Data.Where(d => d.BusinessEmployeeId != null).ToList();
                 model.hasAdd = appointmentsModel != null && appointmentsModel.Count <= total ? true : false;
 
                 result.Data = appointmentsModel.Where(d => d.StatusType == (int)StatusType.CancelRequest && d.IsActive == true).ToList().OrderByDescending(d => d.Id).ToList();
@@ -149,11 +148,11 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 model.Message = result.Message;
                 if (search == null)
                 {
-                    model.Data = result.Data.ToPagedList<AppointmentViewModel>(pageNumber, 5);
+                    model.Data = result.Data.ToPagedList<AppointmentViewModel>(pageNumber, 10);
                 }
                 else
                 {
-                    model.Data = result.Data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                    model.Data = result.Data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -212,11 +211,11 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 model.Message = result.Message;
                 if (search == null)
                 {
-                    model.Data = result.Data.ToPagedList<AppointmentViewModel>(pageNumber, 5);
+                    model.Data = result.Data.ToPagedList<AppointmentViewModel>(pageNumber, 10);
                 }
                 else
                 {
-                    model.Data = result.Data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                    model.Data = result.Data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -412,17 +411,18 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             ViewBag.FromHours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
-                Text = s.Value
+                Text = s.Value,
+                Selected = (response.Data.StartTime.HasValue &&  s.Value.Contains(response.Data.StartTime.Value.ToString("hh:mm tt"))) ? true : false
             });
             ViewBag.ToHours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
-                Text = s.Value
+                Text = s.Value,
+                Selected = (response.Data.EndTime.HasValue && s.Value == response.Data.EndTime.Value.ToString("hh:mm tt")) ? true : false
             });
             response.Data.StartDate = response.Data.StartDate.Value;
             response.Data.EndDate = response.Data.StartDate.Value;
             //End
-
             //Pattern type
             var patternType = from PatternTypeOnce e in Enum.GetValues(typeof(PatternTypeOnce))
                               select new
@@ -732,11 +732,11 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 model.Message = result.Message;
                 if (search == null)
                 {
-                    model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 5);
+                    model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 10);
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.GlobalAppointmentId.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                    model.Data = data.Where(d => d.GlobalAppointmentId.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -765,11 +765,11 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 model.Message = result.Message;
                 if (search == null)
                 {
-                    model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 5);
+                    model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 10);
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -955,6 +955,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
                 var employees = await this.GetBusinessEmployee(id.Value, TableType.AppointmentInvitee);
                 ViewBag.BusinessEmployeeId = employees;
+                response.Data.StartDate = response.Data.StartDate.Value;
+                response.Data.EndDate = response.Data.StartDate.Value;
                 return View(response);
             }
             else
@@ -1050,7 +1052,6 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                         result.Status = false;
                         result.Message = response.Message;
                     }
-
                 }
             }
             catch
@@ -1069,11 +1070,11 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
             var pageNumber = page ?? 1;
             var model = this.ResponseHelper.GetResponse<IPagedList<AppointmentDocumentViewModel>>();
-
+            ViewBag.BackLink = Request.UrlReferrer;
             var response = await this.AppointmentDocumentService.Gets(id.Value,TableType.AppointmentDocument);
             if (response.Status)
             {
-                model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 5);
+                model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 10);
                 model.Status = response.Status;
                 model.Message = response.Message;
             }
@@ -1200,7 +1201,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var response = await this.AppointmentFeedbackService.Gets(id.Value);
             if (response.Status)
             {
-                model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 5);
+                model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 10);
                 model.Status = response.Status;
                 model.Message = response.Message;
             }
@@ -1222,7 +1223,13 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var response = this.ResponseHelper.GetResponse<AppointmentFeedbackViewModel>();
             response.Data = new AppointmentFeedbackViewModel();
             response.Status = true;
-
+            var ratingValue = new List<object>();
+            ratingValue.Add(new { Value = 1, Text = "1 Star" });
+            ratingValue.Add(new { Value = 2, Text = "2 Star" });
+            ratingValue.Add(new { Value = 3, Text = "3 Star" });
+            ratingValue.Add(new { Value = 4, Text = "4 Star" });
+            ratingValue.Add(new { Value = 5, Text = "5 Star" });
+            ViewBag.Rating = new SelectList(ratingValue, "Value", "Text");
             response.Data.AppointmentId = id.Value;
             return View(response);
         }
@@ -1240,9 +1247,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             }
             else
             {
-                model.Data.IsEmployee = false;
+                model.Data.IsEmployee = true;
                 model.Data.BusinessEmployeeId = RegisterViewModel.Employee.Id;
-                model.Data.Rating = 0;
                 var response = await this.AppointmentFeedbackService.Add(model.Data);
                 if (response == null)
                 {
@@ -1356,35 +1362,57 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Reports([Bind(Include = "Data")] ResponseViewModel<ReportViewModel> model)
+        public async Task<ActionResult> Reports([Bind(Include = "Data")] ResponseViewModel<ReportViewModel> model)
         {
-            var result = new ResponseViewModel<ReportViewModel>();
+            var status = false;
             if (model != null && model.Data != null)
             {
                 if (model.Data.AppointmentStatusTypeId == null || model.Data.AppointmentStatusTypeId.Count < 0)
                 {
-                    result.Message = "Please select any one appointment status.";
+                    model.Message = "Please select any one appointment status.";
+                    status = true;
                 }
                 else if (model.Data.ReportTypeId == ReportType.Custom)
                 {
                     if (!model.Data.From.HasValue || !model.Data.To.HasValue)
                     {
-                        result.Message = "Please provide valid date.";
+                        model.Message = "Please provide valid custom from and to date.";
+                        status = true;
                     }
                 }
                 else
                 {
-                    result.Status = true;
-                    result.Message = "success";
+                    model.Status = true;
+                    model.Message = "success";
                 }
             }
             else
             {
-                result.Message = "Please try again later. Not a valid data.";
+                model.Message = "Please try again later. Not a valid data.";
+                status = true;
+            }
+            if (status)
+            {
+                model.Data.hasOnlyBusinessEmployeeId = new CheckSelectionBox { Id = 0, Name = "Business All Reports", Checked = true };
+                model.Data.ReportTypeId = ReportType.Custom;
+                model.Data.AppointmentStatusTypeId = this.CheckListOfAppointmentReportType();
+                var modelCustomer = await this.GetCustomers();
+                if (modelCustomer != null)
+                {
+                    model.Data.CustomerId = modelCustomer.Select(customer => new CheckSelectionBox
+                    {
+                        Id = customer.Id,
+                        Checked = true,
+                        Name = string.Format("{0} {1}", customer.FirstName, customer.LastName)
+                    }).ToList();
+                }
+                model.Status = false;
+                return View(model);
             }
             TempData["appointmentData"] = model.Data;
             return RedirectToAction("ReportsView");
         }
+        
 
         [ActionName("ReportsView")]
         public async Task<ActionResult> ReportsView()
@@ -1436,7 +1464,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
                 if (reportViewModel.ReportTypeId == (int)ReportType.Custom)
                 {
-                    start = reportViewModel.From.Value;
+                    start =  reportViewModel.From.Value;
                     end = reportViewModel.To.Value;
                     result.Data = result.Data.Where(d => d.StartDate >= start && d.StartDate <= end).ToList();
                 }

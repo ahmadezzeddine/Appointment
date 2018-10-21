@@ -114,7 +114,10 @@
                         {
                             <div class="col-lg-4">
                                 @Html.CheckBoxFor(d => d.Data.AppointmentStatusTypeId[i].Checked, new { Style = "vertical-align:3px}" })
+                                @if (Model.Data.AppointmentStatusTypeId[i].Name != null)
+                                {
                                 @Html.Label(Model.Data.AppointmentStatusTypeId[i].Name)
+                                }
                                 @Html.HiddenFor(d => d.Data.AppointmentStatusTypeId[i].Id)
                             </div>
                         }
@@ -131,7 +134,10 @@
                         {
                             <div class="col-lg-4">
                                 @Html.CheckBoxFor(d => d.Data.CustomerId[i].Checked, new { Style = "vertical-align:3px}" })
+                                @if (Model.Data.CustomerId[i].Name != null)
+                                {
                                 @Html.Label(Model.Data.CustomerId[i].Name)
+                                }
                                 @Html.HiddenFor(d => d.Data.CustomerId[i].Id)
                             </div>
                         }
@@ -141,7 +147,10 @@
             <div class="panel panel-default">
                 <div class="panel-body text-center">
                     @Html.CheckBoxFor(d => d.Data.hasOnlyBusinessEmployeeId.Checked, new { Style = "vertical-align:3px}" })
+                    @if (Model.Data.hasOnlyBusinessEmployeeId.Name != null)
+                    {
                     @Html.Label(Model.Data.hasOnlyBusinessEmployeeId.Name)
+                    }
                     <input type="submit" class="btn btn-info btn-sm" value="Search">
                 </div>
             </div>

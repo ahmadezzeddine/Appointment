@@ -28,10 +28,10 @@ namespace App.Schedule.Web.Areas.Customer.Controllers.Base
                 Session["aEmail"] = model.Customer.Email;
                 var customerSession = new HttpCookie(httpCookieKey);
 
-                if (isKeepLoggedIn)
-                    customerSession.Expires = DateTime.Now.AddDays(365);
-                else
-                    customerSession.Expires = DateTime.Now.AddDays(1);
+                //if (isKeepLoggedIn)
+                //    customerSession.Expires = DateTime.Now.AddDays(365);
+                //else
+                    //customerSession.Expires = DateTime.Now.AddHours(1);
 
                 customerSession.Values["aToken"] = token;
                 customerSession.Values["aEmail"] = model.Customer.Email;

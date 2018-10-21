@@ -29,11 +29,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
             {
                 if (type.HasValue)
                 {
-                    if (type.Value == AppointmentViewStatus.Canceled)
-                    {
-                        result.Data = result.Data.Where(d => d.StatusType == (int)StatusType.Canceled && d.IsActive == true).ToList();
-                    }
-                    else if (type.Value == AppointmentViewStatus.Completed)
+                    if (type.Value == AppointmentViewStatus.Completed)
                     {
                         result.Data = result.Data.Where(d => d.StatusType == (int)StatusType.Completed && d.IsActive == true).ToList();
                     }
@@ -43,7 +39,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
                     }
                     else if (type.Value == AppointmentViewStatus.Deactivate)
                     {
-                        result.Data = result.Data.Where(d => d.IsActive == false).ToList();
+                        result.Data = result.Data.Where(d => d.StatusType == (int)StatusType.Canceled || d.IsActive == false).ToList();
                     }
                     else if (type.Value == AppointmentViewStatus.CancelRequested)
                     {
@@ -51,7 +47,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
                     }
                     else
                     {
-                        result.Data = result.Data.ToList();
+                        result.Data = result.Data.Where(d => d.StatusType != (int)StatusType.Completed && d.StatusType != (int)StatusType.Canceled && d.IsActive == true).ToList();
                     }
                 }
                 else
@@ -63,11 +59,11 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
                 model.Message = result.Message;
                 if (search == null)
                 {
-                    model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 5);
+                    model.Data = data.ToPagedList<AppointmentViewModel>(pageNumber, 10);
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower()) && d.IsActive == true).ToList().ToPagedList(pageNumber, 5);
+                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower()) && d.IsActive == true).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -260,7 +256,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
             var response = await this.AppointmentDocumentService.Gets(id.Value,TableType.AppointmentDocument);
             if (response.Status)
             {
-                model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 5);
+                model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 10);
                 model.Status = response.Status;
                 model.Message = response.Message;
             }
@@ -285,7 +281,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
             var response = await this.AppointmentFeedbackService.Gets(id.Value);
             if (response.Status)
             {
-                model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 5);
+                model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 10);
                 model.Status = response.Status;
                 model.Message = response.Message;
             }

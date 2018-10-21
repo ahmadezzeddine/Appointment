@@ -29,11 +29,11 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 model.Message = result.Message;
                 if (search == null)
                 {
-                    model.Data = data.ToPagedList<BusinessCustomerViewModel>(pageNumber, 5);
+                    model.Data = data.ToPagedList<BusinessCustomerViewModel>(pageNumber, 10);
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.FirstName.ToLower().Contains(search.ToLower()) || d.LastName.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                    model.Data = data.Where(d => d.FirstName.ToLower().Contains(search.ToLower()) || d.LastName.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -307,7 +307,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                     }
                     else
                     {
-                        model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                        model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                         return View(model);
                     }
                 }
@@ -336,7 +336,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var response = await this.AppointmentDocumentService.Gets(id.Value, TableType.CustomerId);
             if (response.Status)
             {
-                model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 5);
+                model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 10);
                 model.Status = response.Status;
                 model.Message = response.Message;
             }
@@ -347,6 +347,5 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             }
             return View(model);
         }
-
     }
 }

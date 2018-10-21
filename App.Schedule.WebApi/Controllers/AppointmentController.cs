@@ -425,6 +425,7 @@ namespace App.Schedule.WebApi.Controllers
                             appointment.IsActive = false;
                         }
                         appointment.StatusType = (int)type;
+                        appointment.CancelReason = reason;
                         _db.Entry(appointment).State = EntityState.Modified;
                         _db.SaveChanges();
                         return Ok(new { status = true, data = appointment, message = "success" });
@@ -518,7 +519,12 @@ namespace App.Schedule.WebApi.Controllers
                                     .Include(i => i.tblServiceLocation)
                                     .Include(i => i.tblBusinessService)
                                     .Include(i => i.tblBusinessOffer)
-                                    .Include(i => i.tblBusinessCustomer).Select(s => new AppointmentViewModel
+                                    .Include(i => i.tblBusinessCustomer)
+                                    .Include(i => i.tblAppointmentPayments)
+                                    .Include(i => i.tblAppointmentInvitees)
+                                    .Include(i => i.tblAppointmentFeedbacks)
+                                    .Include(i => i.tblAppointmentDocuments)
+                                    .Select(s => new AppointmentViewModel
                                     {
                                         BackColor = s.BackColor,
                                         BusinessCustomerId = s.BusinessCustomerId,
@@ -547,7 +553,14 @@ namespace App.Schedule.WebApi.Controllers
                                         BusinessCustomerName = s.tblBusinessCustomer.FirstName + " " + s.tblBusinessCustomer.LastName,
                                         BusinessOfferName = s.tblBusinessOffer.Name,
                                         BusinessServiceName = s.tblBusinessService.Name,
-                                        ServiceLocationName = s.tblServiceLocation.Name
+                                        ServiceLocationName = s.tblServiceLocation.Name,
+                                        tblAppointmentDocuments = s.tblAppointmentDocuments,
+                                        tblAppointmentInvitees = s.tblAppointmentInvitees,
+                                        tblAppointmentPayments=s.tblAppointmentPayments,
+                                        tblBusinessCustomer=s.tblBusinessCustomer,
+                                        tblBusinessOffer=s.tblBusinessOffer,
+                                        tblBusinessService=s.tblBusinessService,
+                                        tblServiceLocation=s.tblServiceLocation
                                     }).ToList();
         }
     }

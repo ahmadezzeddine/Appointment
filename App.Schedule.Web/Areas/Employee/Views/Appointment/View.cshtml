@@ -15,115 +15,169 @@
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b class="text-left">Appointment View</b>
+                <b class="text-left">Information</b>
             </div>
             <div class="panel-body">
                 @if (Model == null || Model.Data == null)
                 {
                     <text>Please try again later.</text>
-                    return;
+
                 }
-                <div class="row">
-                    <div class="col-lg-12 text-right">
-                        #@Model.Data.GlobalAppointmentId
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label>Title</label>
-                        <div class="form-control">
-                            @Model.Data.Title
+                @using (Ajax.BeginForm("update", "appointment", new AjaxOptions { }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(d => d.Data.Id)
+                    @Html.HiddenFor(d => d.Data.BusinessCustomerId)
+                    <div class="row">
+                        <div class="col-lg-12 text-right">
+                            #@Model.Data.GlobalAppointmentId
                         </div>
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label>Service Type</label>
-                        <div class="form-control">
-                            @Model.Data.BusinessServiceName
-                        </div>
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label>Location</label>
-                        <div class="form-control">
-                            @Model.Data.ServiceLocationName
-                        </div>
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label>Offer</label>
-                        <div class="form-control">
-                            @Model.Data.BusinessOfferName
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="alert alert-success">
-                            Employee Information
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-lg-12">
-                        @customerWebGrid.GetHtml(htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
-                                    tableStyle: "table table-striped",
-                                    headerStyle: "active",
-                                    footerStyle: "webgrid-footer",
-                                    columns: customerWebGrid.Columns(
-                             customerWebGrid.Column("FirstName", "First Name"),
-                             customerWebGrid.Column("LastName", "Last Name"),
-                             customerWebGrid.Column("Email", "Email")))
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="alert alert-success">
-                            Schedule Information
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-lg-6">
-                        <label>Recurrence</label>
-                        <div class="form-control">
-                            @Enum.GetName(typeof(PatternType), (int)Model.Data.PatternType)
-                        </div>
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label>Is All Day</label>
-                        <div class="form-control">
-                            @Model.Data.IsAllDayEvent
-                        </div>
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label>Start Date</label>
-                        <div class="form-control">
-                            @string.Format("{0:MM/dd/yyyy}", Model.Data.StartDate.Value)
-                        </div>
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label>End Date</label>
-                        <div class="form-control">
-                            @string.Format("{0:MM/dd/yyyy}", Model.Data.EndDate.Value)
-                        </div>
-                    </div>
-                    <div id="timeView">
                         <div class="form-group col-lg-6">
-                            <label>Start</label>
+                            <label>Title</label>
                             <div class="form-control">
-                                @string.Format("{0:hh:mm tt}", Model.Data.StartTime.Value)
+                                @Model.Data.Title
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
-                            <label>End</label>
+                            <label>Service Type</label>
                             <div class="form-control">
-                                @string.Format("{0:hh:mm tt}", Model.Data.EndTime.Value)
+                                @Model.Data.BusinessServiceName
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label>Location</label>
+                            <div class="form-control">
+                                @Model.Data.ServiceLocationName
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label>Offer</label>
+                            <div class="form-control">
+                                @Model.Data.BusinessOfferName
                             </div>
                         </div>
                     </div>
-                    <div class="form-group col-lg-6">
-                        <label>Is Active</label>
-                        <div class="form-control">
-                            @Model.Data.IsActive
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="alert alert-success">
+                                Customer Information
+                            </div>
                         </div>
                     </div>
-                </div>
+                    if (Model.Data.tblBusinessCustomer != null)
+                    {
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <label>First Name</label>
+                                <div class="form-control">
+                                    @Model.Data.tblBusinessCustomer.FirstName
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Last Name</label>
+                                <div class="form-control">
+                                    @Model.Data.tblBusinessCustomer.LastName
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Email</label>
+                                <div class="form-control">
+                                    @Model.Data.tblBusinessCustomer.Email
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Phone Number</label>
+                                <div class="form-control">
+                                    @Model.Data.tblBusinessCustomer.PhoneNumber
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Address</label>
+                                <div class="form-control">
+                                    @Model.Data.tblBusinessCustomer.Add1 @Model.Data.tblBusinessCustomer.Add2
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Location</label>
+                                <div class="form-control">
+                                    @Model.Data.ServiceLocationName
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="alert alert-success">
+                                Employee Information
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-12">
+                            @customerWebGrid.GetHtml(htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
+                                   tableStyle: "table table-striped",
+                                   headerStyle: "active",
+                                   footerStyle: "webgrid-footer",
+                                   columns: customerWebGrid.Columns(
+                            customerWebGrid.Column("FirstName", "First Name"),
+                            customerWebGrid.Column("LastName", "Last Name"),
+                            customerWebGrid.Column("Email", "Email")))
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="alert alert-success">
+                                Schedule Information
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label>Recurrence</label>
+                            <div class="form-control">
+                                @Enum.GetName(typeof(PatternType), (int)Model.Data.PatternType)
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label>Is All Day</label>
+                            <div class="form-control">
+                                @Model.Data.IsAllDayEvent
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label>Start Date</label>
+                            <div class="form-control">
+                                @string.Format("{0:MM/dd/yyyy}", Model.Data.StartDate.Value)
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label>End Date</label>
+                            <div class="form-control">
+                                @string.Format("{0:MM/dd/yyyy}", Model.Data.EndDate.Value)
+                            </div>
+                        </div>
+                        <div id="timeView">
+                            <div class="form-group col-lg-6">
+                                <label>Start</label>
+                                <div class="form-control">
+                                    @string.Format("{0:hh:mm tt}", Model.Data.StartTime.Value)
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>End</label>
+                                <div class="form-control">
+                                    @string.Format("{0:hh:mm tt}", Model.Data.EndTime.Value)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label>Is Active</label>
+                            <div class="form-control">
+                                @Model.Data.IsActive
+                            </div>
+                        </div>
+                    </div>
+                }
                 <hr />
                 <div>
                     <span class="text-left">
@@ -133,6 +187,21 @@
                     </span>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
+@section scripts{
+    <script>
+        function isAllDay() {
+            var isChecked = $('#Data_IsAllDayEvent').prop('checked');
+            console.log('print:: ', isChecked);
+            if (isChecked) {
+                $("#timeView").attr('style', 'display: none;');
+            }
+            else {
+                $("#timeView").attr('style', 'display: block;');
+            }
+        }
+    </script>
+}

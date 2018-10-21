@@ -48,15 +48,53 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 Text = s.Value
             });
 
-            ViewBag.From = new SelectList(hours, "Value", "Text", SelectDate(hours,model.Data.From));
-            ViewBag.To = new SelectList(hours, "Value", "Text", SelectDate(hours,model.Data.To));
+            //ViewBag.From = new SelectList(hours, "Value", "Text", SelectDate(hours,model.Data.From));
+            //ViewBag.To = new SelectList(hours, "Value", "Text", SelectDate(hours,model.Data.To));
 
-            ViewBag.FromSplit1 = new SelectList(hours, "Value", "Text", model.Data.FromSplit1.HasValue ? SelectDate(hours, model.Data.FromSplit1.Value) : 1);
-            ViewBag.ToSplit1 = new SelectList(hours, "Value", "Text", model.Data.ToSplit1.HasValue ? SelectDate(hours, model.Data.ToSplit1.Value) : 1);
+            //ViewBag.FromSplit1 = new SelectList(hours, "Value", "Text", model.Data.FromSplit1.HasValue ? SelectDate(hours, model.Data.FromSplit1.Value) : 1);
+            //ViewBag.ToSplit1 = new SelectList(hours, "Value", "Text", model.Data.ToSplit1.HasValue ? SelectDate(hours, model.Data.ToSplit1.Value) : 1);
 
-            ViewBag.FromSplit2 = new SelectList(hours, "Value", "Text", model.Data.FromSplit2.HasValue ? SelectDate(hours, model.Data.FromSplit2.Value) : 1);
-            ViewBag.ToSplit2 = new SelectList(hours, "Value", "Text", model.Data.ToSplit2.HasValue ? SelectDate(hours, model.Data.ToSplit2.Value) : 1);
+            //ViewBag.FromSplit2 = new SelectList(hours, "Value", "Text", model.Data.FromSplit2.HasValue ? SelectDate(hours, model.Data.FromSplit2.Value) : 1);
+            //ViewBag.ToSplit2 = new SelectList(hours, "Value", "Text", model.Data.ToSplit2.HasValue ? SelectDate(hours, model.Data.ToSplit2.Value) : 1);
 
+            ViewBag.From = hours.Select(s => new SelectListItem()
+            {
+                Value = s.Value,
+                Text = s.Text,
+                Selected = s.Value == model.Data.From.ToString("hh:mm tt") ? true : false
+            });
+            ViewBag.To = hours.Select(s => new SelectListItem()
+            {
+                Value = s.Value,
+                Text = s.Text,
+                Selected = s.Value == model.Data.To.ToString("hh:mm tt") ? true : false
+            });
+
+            ViewBag.FromSplit1 = hours.Select(s => new SelectListItem()
+            {
+                Value = s.Value,
+                Text = s.Text,
+                Selected = model.Data.FromSplit1.HasValue && s.Value == model.Data.FromSplit1.Value.ToString("hh:mm tt") ? true : false
+            });
+            ViewBag.ToSplit1 = hours.Select(s => new SelectListItem()
+            {
+                Value = s.Value,
+                Text = s.Text,
+                Selected = model.Data.ToSplit1.HasValue && s.Value == model.Data.ToSplit1.Value.ToString("hh:mm tt") ? true : false
+            });
+
+            ViewBag.FromSplit2 = hours.Select(s => new SelectListItem()
+            {
+                Value = s.Value,
+                Text = s.Text,
+                Selected = model.Data.FromSplit2.HasValue && s.Value == model.Data.FromSplit2.Value.ToString("hh:mm tt") ? true : false
+            });
+            ViewBag.ToSplit2 = hours.Select(s => new SelectListItem()
+            {
+                Value = s.Value,
+                Text = s.Text,
+                Selected = model.Data.ToSplit2.HasValue && s.Value == model.Data.ToSplit2.Value.ToString("hh:mm tt") ? true : false
+            });
             return View(model);
         }
 
@@ -131,10 +169,10 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             {
                 if (model.IsSplit1.Value)
                 {
-                    if (model.To.Hour >= model.FromSplit1.Value.Hour)
+                    if (model.To.Hour > model.FromSplit1.Value.Hour)
                         return false;
 
-                    if (model.FromSplit1.Value.Hour >= model.ToSplit1.Value.Hour)
+                    if (model.FromSplit1.Value.Hour > model.ToSplit1.Value.Hour)
                         return false;
                 }
             }
@@ -143,9 +181,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             {
                 if (model.IsSplit2.Value)
                 {
-                    if (model.ToSplit1.Value.Hour >= model.FromSplit2.Value.Hour)
+                    if (model.ToSplit1.Value.Hour > model.FromSplit2.Value.Hour)
                         return false;
-                    if (model.FromSplit2.Value.Hour >= model.ToSplit2.Value.Hour)
+                    if (model.FromSplit2.Value.Hour > model.ToSplit2.Value.Hour)
                         return false;
                 }
             }

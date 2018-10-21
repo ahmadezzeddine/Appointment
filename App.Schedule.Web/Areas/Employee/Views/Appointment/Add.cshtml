@@ -83,9 +83,8 @@
                                     </div>
                                     <div class="form-group col-lg-6">
                                         <label>Start Date</label>
-                                        @Html.EditorFor(m => m.Data.StartDate, new { htmlAttributes = new { @class = "form-control", @type = "datetime", @readonly = "true", @placeholder = "Start Date" } })
+                                        @Html.EditorFor(m => m.Data.StartDate, new { htmlAttributes = new { @class = "form-control", @type = "date", @value = DateTime.Now, @placeholder = "Start Date" } })
                                     </div>
-
                                     <div class="form-group col-lg-6">
                                         <label>Is Active</label>
                                         <div class="form-control">
@@ -95,11 +94,27 @@
                                     <div id="timeView">
                                         <div class="form-group col-lg-6">
                                             <label>Start</label>
-                                            @Html.DropDownListFor(d => d.Data.StartTime, new SelectList(ViewBag.FromHours, "Value", "Text"), new { @class = "form-control" })
+                                            @*@Html.DropDownListFor(d => d.Data.StartTime, new SelectList(ViewBag.FromHours, "Value", "Text"), new { @class = "form-control" })*@
+                                            <select id="Data_StartTime" name="Data.StartTime" class="form-control">
+                                                @foreach (var fromsplit1 in (IEnumerable<SelectListItem>)ViewBag.FromHours)
+        {
+                                        <option value="@fromsplit1.Value" @(fromsplit1.Selected ? "selected" : "")>
+                                            @fromsplit1.Text
+                                        </option>
+}
+                                            </select>
                                         </div>
                                         <div class="form-group col-lg-6">
                                             <label>End</label>
-                                            @Html.DropDownListFor(d => d.Data.EndTime, new SelectList(ViewBag.ToHours, "Value", "Text"), new { @class = "form-control" })
+                                            @*@Html.DropDownListFor(d => d.Data.EndTime, new SelectList(ViewBag.ToHours, "Value", "Text"), new { @class = "form-control" })*@
+                                            <select id="Data_EndTime" name="Data.EndTime" class="form-control">
+                                                @foreach (var fromsplit1 in (IEnumerable<SelectListItem>)ViewBag.ToHours)
+        {
+                                        <option value="@fromsplit1.Value" @(fromsplit1.Selected ? "selected" : "")>
+                                            @fromsplit1.Text
+                                        </option>
+}
+                                            </select>
                                         </div>
                                     </div>
 

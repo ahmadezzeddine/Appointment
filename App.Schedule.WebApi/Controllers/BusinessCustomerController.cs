@@ -407,14 +407,21 @@ namespace App.Schedule.WebApi.Controllers
             {
                 if (id.HasValue)
                 {
-                    var businessCustomer = _db.tblBusinessCustomers.Find(id);
+                    var businessCustomer = _db.tblBusinessCustomers.Include(i=> i.tblAppointments).Where(d => d.Id == id.Value).SingleOrDefault();
                     if (businessCustomer != null)
                     {
-                        dbContext.Entry(businessCustomer).State = EntityState.Deleted;
-                        var response = dbContext.SaveChanges();
-                        data.Data = new BusinessCustomerViewModel() { Email = businessCustomer.Email, Id = businessCustomer.Id };
-                        data.Message = response > 0 ? "success" : "failed";
-                        data.Status = response > 0 ? true : false;
+                        if (businessCustomer.tblAppointments.Count < 0)
+                        {
+                            dbContext.Entry(businessCustomer).State = EntityState.Deleted;
+                            var response = dbContext.SaveChanges();
+                            data.Data = new BusinessCustomerViewModel() { Email = businessCustomer.Email, Id = businessCustomer.Id };
+                            data.Message = response > 0 ? "success" : "failed";
+                            data.Status = response > 0 ? true : false;
+                        }
+                        else
+                        {
+                            data.Message = "You can not remove. It is used in Appointmetns. Total booked Appointments: "+businessCustomer.tblAppointments.Count;
+                        }
                     }
                     else
                     {

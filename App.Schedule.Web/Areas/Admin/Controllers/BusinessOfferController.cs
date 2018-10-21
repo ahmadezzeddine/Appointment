@@ -31,11 +31,11 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 model.Message = result.Message;
                 if (search == null)
                 {
-                    model.Data = data.ToPagedList<BusinessOfferViewModel>(pageNumber, 5);
+                    model.Data = data.ToPagedList<BusinessOfferViewModel>(pageNumber, 10);
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.Name.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                    model.Data = data.Where(d => d.Name.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -210,11 +210,11 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                     {
                         if (search == null)
                         {
-                            model.Data = data.ToPagedList<BusinessOfferServiceLocationViewModel>(pageNumber, 5);
+                            model.Data = data.ToPagedList<BusinessOfferServiceLocationViewModel>(pageNumber, 10);
                         }
                         else
                         {
-                            model.Data = data.Where(d => d.ServiceLocationViewModel.Name.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 5);
+                            model.Data = data.Where(d => d.ServiceLocationViewModel.Name.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                         }
                     }
                 }

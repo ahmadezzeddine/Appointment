@@ -31,7 +31,7 @@
                 @if (Model == null || Model.Data == null)
                 {
                     <text>Please try again later.</text>
-                    return;
+                    
                 }
                 <div class="tab-content">
                     <div class="tab-pane active">
@@ -77,7 +77,7 @@
                                                     No document category has been created yet.
                                                 </td>
                                             </tr>
-                                            return;
+                                            
                                         }
                                         @foreach (var item in Model.Data)
                                         {
@@ -112,7 +112,7 @@
                                                     <a title="Update" onclick="@("window.location.href='" + @Url.Action("Edit", new { Id = item.Id }) + "'");" class="btn btn-default btn-xs">
                                                         <span class="fa fa-pencil"></span>
                                                     </a>
-                                                    <a title="Change Status" onclick="@("window.location.href='" + @Url.Action("Deactive",new { Id = item.Id }) + "'");" class="btn btn-xs btn-default">
+                                                    <a title="Active/Delete" onclick="@("window.location.href='" + @Url.Action("Deactive",new { Id = item.Id }) + "'");" class="btn btn-xs btn-default">
                                                         <span class="fa fa-minus-square"></span>
                                                     </a>
                                                     <a title="Delete" onclick="@("window.location.href='" + @Url.Action("Delete",new { Id = item.Id }) + "'");" class="btn btn-xs btn-default">

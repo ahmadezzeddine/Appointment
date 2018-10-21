@@ -23,37 +23,69 @@ namespace App.Schedule.WebApi.Controllers
         {
             try
             {
-                var model = _db.tblAppointmentFeedbacks.ToList();
+                var model = _db.tblAppointmentFeedbacks
+                    .Include(i => i.tblBusinessEmployee)
+                                .Include(i => i.tblBusinessCustomer)
+                                .Include(i => i.tblAppointment)
+                                .ToList();
                 return Ok(new { status = true, data = model, message = "success" });
             }
             catch (Exception ex)
             {
-                return Ok(new { status = true, data = "", message = "ex: "+ ex.Message.ToString() });
+                return Ok(new { status = true, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 
         // GET: api/AppointmentFeedback/5
         public IHttpActionResult Get(long? id, TableType type)
         {
+
             try
             {
                 if (!id.HasValue)
                     return Ok(new { status = false, data = "", message = "Please provide valid ID." });
                 else
                 {
-                    dynamic model;
-                    if(type == TableType.AppointmentFeedback)
+                    if (type == TableType.AppointmentFeedback)
                     {
-                        model = _db.tblAppointmentFeedbacks.Where(d => d.AppointmentId == id.Value).ToList();
-                    }
-                    else
-                    {
-                        model = _db.tblAppointmentFeedbacks.Find(id);
-                    }
-                    if (model != null)
+                        //var model = (from appfeed in this._db.tblAppointmentFeedbacks.ToList()
+                        //            join appoint in this._db.tblAppointments.ToList()
+                        //            on appfeed.AppointmentId equals appoint.Id
+                        //            join emp in this._db.tblBusinessEmployees.ToList()
+                        //            on appfeed.BusinessEmployeeId equals emp.Id
+                        //            join cust in this._db.tblBusinessCustomers.ToList()
+                        //            on appfeed.BusinessCustomerId equals cust.Id
+                        //            select new AppointmentFeedbackViewModel()
+                        //            {
+                        //                Id = appfeed.Id,
+                        //                AppointmentId = appfeed.AppointmentId,
+                        //                BusinessCustomerId = appfeed.BusinessCustomerId,
+                        //                BusinessEmployeeId = appfeed.BusinessEmployeeId,
+                        //                Created = appfeed.Created,
+                        //                Feedback = appfeed.Feedback ,
+                        //                IsActive = appfeed.IsActive,
+                        //                IsEmployee = appfeed.IsEmployee,
+                        //                Rating = appfeed.Rating,
+                        //                tblAppointment = appoint,
+                        //                tblBusinessCustomer = cust,
+                        //                tblBusinessEmployee = emp
+                        //            }).ToList();
+                        var model = _db.tblAppointmentFeedbacks
+                                .Include(i => i.tblBusinessEmployee)
+                                .Include(i => i.tblBusinessCustomer)
+                                .Include(i => i.tblAppointment)
+                                .Where(d => d.AppointmentId == id.Value).ToList();
                         return Ok(new { status = true, data = model, message = "success" });
+                    }
                     else
-                        return Ok(new { status = false, data = "", message = "Not found." });
+                    {
+                        var model = _db.tblAppointmentFeedbacks
+                                .Include(i => i.tblBusinessEmployee)
+                                .Include(i => i.tblBusinessCustomer)
+                                .Include(i => i.tblAppointment)
+                                .Where(d => d.Id == id.Value).SingleOrDefault();
+                        return Ok(new { status = true, data = model, message = "success" });
+                    }
                 }
             }
             catch (Exception ex)
@@ -71,7 +103,11 @@ namespace App.Schedule.WebApi.Controllers
                     return Ok(new { status = false, data = "", message = "Please provide valid ID." });
                 else
                 {
-                    var model = _db.tblAppointmentFeedbacks.Find(id);
+                    var model = _db.tblAppointmentFeedbacks
+                        .Include(i => i.tblBusinessEmployee)
+                                .Include(i => i.tblBusinessCustomer)
+                                .Include(i => i.tblAppointment)
+                                .Where(d => d.Id == id.Value).SingleOrDefault();
                     if (model != null)
                         return Ok(new { status = true, data = model, message = "success" });
                     else
@@ -146,7 +182,7 @@ namespace App.Schedule.WebApi.Controllers
                             _db.Entry(appointmentFeedback).State = EntityState.Modified;
                             var response = _db.SaveChanges();
                             if (response > 0)
-                                return Ok(new { status = true, data = appointmentFeedback, message = "success"});
+                                return Ok(new { status = true, data = appointmentFeedback, message = "success" });
                             else
                                 return Ok(new { status = false, data = "", message = "There was a problem to update the data." });
                         }

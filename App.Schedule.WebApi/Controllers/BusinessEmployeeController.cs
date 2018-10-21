@@ -472,11 +472,18 @@ namespace App.Schedule.WebApi.Controllers
                     var businessEmployee = _db.tblBusinessEmployees.Find(id);
                     if (businessEmployee != null)
                     {
-                        dbContext.Entry(businessEmployee).State = EntityState.Deleted;
-                        var response = dbContext.SaveChanges();
-                        data.Data = new BusinessEmployeeViewModel() { Email = businessEmployee.Email, Id = businessEmployee.Id };
-                        data.Message = response > 0 ? "success" : "failed";
-                        data.Status = response > 0 ? true : false;
+                        try
+                        {
+                            dbContext.Entry(businessEmployee).State = EntityState.Deleted;
+                            var response = dbContext.SaveChanges();
+                            data.Data = new BusinessEmployeeViewModel() { Email = businessEmployee.Email, Id = businessEmployee.Id };
+                            data.Message = response > 0 ? "success" : "failed";
+                            data.Status = response > 0 ? true : false;
+                        }
+                        catch
+                        {
+                            data.Message = "You can not delete. It is in use.";
+                        }
                     }
                     else
                     {
