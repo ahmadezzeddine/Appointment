@@ -29,7 +29,7 @@ namespace App.Schedule.Web.Admin.Controllers
                     }
                     else
                     {
-                        model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                        model.Data = data.Where(d => d.Title.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                         return View(model);
                     }
                 }

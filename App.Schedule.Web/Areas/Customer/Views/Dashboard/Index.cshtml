@@ -116,14 +116,14 @@
                         <div class="row">
                             <div class="col-xs-12 text-center">
                                 <div class="huge">
-                                    @{var totalAppointmentCanceledCount = (ViewBag.totalAppointmentCanceledCount != null) ? ViewBag.totalAppointmentCanceledCount : 0;}
-                                    @totalAppointmentCanceledCount
+                                    @{var totalAppointmentCanceledRequestCount = (ViewBag.totalAppointmentCanceledRequestCount != null) ? ViewBag.totalAppointmentCanceledRequestCount : 0;}
+                                    @totalAppointmentCanceledRequestCount
                                 </div>
-                                <div>Canceled</div>
+                                <div>Cancel Request</div>
                             </div>
                         </div>
                     </div>
-                    <a href="@Url.Action("index","appointment",new { area="customer", type = (int)AppointmentViewStatus.Canceled  })">
+                    <a href="@Url.Action("index","appointment",new { area="customer", type = (int)AppointmentViewStatus.CancelRequested  })">
                         <div class="panel-footer">
                             <span class="pull-left">View Details</span>
                             <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -161,6 +161,7 @@
                            settings.EventStartEditable = false;
                            settings.EventDurationEditable = false;
                            settings.SlotDuration = TimeSpan.FromMinutes(30);
+                           settings.ClientSideEvents.EventMouseover = $"function() {{ $(this).attr('title', $(this)[0].innerText.replace(/\\s/g,'')); }}";
                            settings.Events = new EventCollection(Url.Action("GetDiaryEvents", "Dashboard", new { area = "Customer" }), EventCollectionType.JsonFeed);
                            settings.BusinessHours = ViewBag.BusinessHours;
                        })
@@ -196,6 +197,7 @@
                                settings.EventStartEditable = false;
                                settings.EventDurationEditable = false;
                                settings.SlotDuration = TimeSpan.FromMinutes(30);
+                               settings.ClientSideEvents.EventMouseover = $"function() {{ $(this).attr('title', $(this)[0].innerText.replace(/\\s/g,'')); }}";
                                settings.Events = new EventCollection(Url.Action("GetDiaryEvents", "Dashboard", new { area = "Customer" }), EventCollectionType.JsonFeed);
                                settings.BusinessHours = ViewBag.BusinessHours;
                            })

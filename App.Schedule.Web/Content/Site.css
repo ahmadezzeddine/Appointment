@@ -206,3 +206,7 @@
 .checked {
     color: orange;
 }
+
+.disable-pointer {
+    pointer-events : none;
+}

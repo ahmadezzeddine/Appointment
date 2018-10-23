@@ -33,7 +33,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.FirstName.ToLower().Contains(search.ToLower()) || d.LastName.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                    model.Data = data.Where(d => d.FirstName.ToLower().StartsWith(search.ToLower()) || d.LastName.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -307,7 +307,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                     }
                     else
                     {
-                        model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                        model.Data = data.Where(d => d.Title.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                         return View(model);
                     }
                 }
@@ -325,7 +325,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Attachments(long? id, int? page)
+        public async Task<ActionResult> Attachments(long? id, int? page,string search)
         {
             if (!id.HasValue)
                 return RedirectToAction("index", "appointment", new { area = "admin" });
@@ -333,18 +333,24 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var pageNumber = page ?? 1;
             var model = this.ResponseHelper.GetResponse<IPagedList<AppointmentDocumentViewModel>>();
             ViewBag.Id = id.Value;
+            ViewBag.search = search;
             var response = await this.AppointmentDocumentService.Gets(id.Value, TableType.CustomerId);
             if (response.Status)
             {
                 model.Data = response.Data.OrderByDescending(d => d.Id).ToPagedList(pageNumber, 10);
                 model.Status = response.Status;
                 model.Message = response.Message;
+                if (search != null)
+                {
+                    model.Data = response.Data.Where(d => d.Title.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                }
             }
             else
             {
                 model.Status = false;
                 model.Message = response.Message;
             }
+            
             return View(model);
         }
     }

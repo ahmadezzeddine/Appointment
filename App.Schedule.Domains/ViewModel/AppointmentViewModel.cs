@@ -837,9 +837,11 @@ namespace App.Schedule.Domains.ViewModel
 
         //[Required(ErrorMessage ="Please provide a valid date.")]
         [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime? StartDate { get; set; }
 
         [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime? EndDate { get; set; }
 
         [DataType(DataType.Time)]
@@ -1209,6 +1211,7 @@ namespace App.Schedule.Domains.ViewModel
 
     public enum PatternTypeOnce
     {
+        [Display(Name ="One Time")]
         Once = 0,
     }
 

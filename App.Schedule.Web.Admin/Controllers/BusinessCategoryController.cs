@@ -31,7 +31,7 @@ namespace App.Schedule.Web.Admin.Controllers
                     }
                     else
                     {
-                        model.Data = data.Where(d => d.Name.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                        model.Data = data.Where(d => d.Name.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                         return View(model);
                     }
                 }
@@ -325,7 +325,7 @@ namespace App.Schedule.Web.Admin.Controllers
                     }
                     else
                     {
-                        model.Data = data.Where(d => d.Name.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                        model.Data = data.Where(d => d.Name.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                         return View(model);
                     }
                 }

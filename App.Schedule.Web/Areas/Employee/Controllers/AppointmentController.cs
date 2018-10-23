@@ -70,7 +70,7 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                    model.Data = data.Where(d => d.Title.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -107,7 +107,7 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                    model.Data = data.Where(d => d.Title.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -140,8 +140,8 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
 
                 var employees = await this.GetBusinessEmployee(id);
                 ViewBag.BusinessEmployeeId = employees;
-                response.Data.StartDate = response.Data.StartDate.Value;
-                response.Data.EndDate = response.Data.StartDate.Value;
+                response.Data.StartDate = response.Data.StartDate.Value.UtcToLocal();
+                response.Data.EndDate = response.Data.StartDate.Value.UtcToLocal();
                 return View(response);
             }
             catch(Exception ex)
@@ -385,7 +385,7 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
             }
             if (search != null)
             {
-                model.Data = model.Data.Where(d => d.Feedback.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                model.Data = model.Data.Where(d => d.Feedback.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
             }
             else
             {
@@ -638,22 +638,22 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
             //Hours
             var hourHelper = new BusinessHourHelper(this.Token, response.Data.ServiceLocationId.Value);
 
-            var fromHours = await hourHelper.GetHoursOfDay((int)response.Data.StartDate.Value.DayOfWeek);
+            var fromHours = await hourHelper.GetHoursOfDay((int)response.Data.StartDate.Value.UtcToLocal().DayOfWeek);
             ViewBag.FromHours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
                 Text = s.Value,
-                Selected = response.Data.StartTime.HasValue && s.Value == response.Data.StartTime.Value.ToString("hh:mm tt") ? true : false
+                Selected = response.Data.StartTime.HasValue && s.Value == response.Data.StartTime.Value.UtcToLocal().ToString("hh:mm tt") ? true : false
             });
             ViewBag.ToHours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
                 Text = s.Value,
-                Selected = response.Data.EndTime.HasValue && s.Value == response.Data.EndTime.Value.ToString("hh:mm tt") ? true : false
+                Selected = response.Data.EndTime.HasValue && s.Value == response.Data.EndTime.Value.UtcToLocal().ToString("hh:mm tt") ? true : false
 
             });
-            response.Data.StartDate = response.Data.StartDate.Value;
-            response.Data.EndDate = response.Data.StartDate.Value;
+            response.Data.StartDate = response.Data.StartDate.Value.UtcToLocal();
+            response.Data.EndDate = response.Data.StartDate.Value.UtcToLocal();
             //End
 
             //Pattern type
@@ -825,22 +825,22 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
 
             //Hours
             var fromHours = Hour.GetHoursOfDay();
-            var getFromHour = response.Data.StartDate.Value.ToShortTimeString();
+            var getFromHour = response.Data.StartDate.Value.UtcToLocal().ToShortTimeString();
             ViewBag.FromHours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
                 Text = s.Value,
                 Selected = s.Value == getFromHour ? true : false
             });
-            var getToHour = response.Data.EndDate.Value.ToShortTimeString();
+            var getToHour = response.Data.EndDate.Value.UtcToLocal().ToShortTimeString();
             ViewBag.ToHours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
                 Text = s.Value,
                 Selected = s.Value == getToHour ? true : false
             });
-            response.Data.StartDate = response.Data.StartDate.Value;
-            response.Data.EndDate = response.Data.StartDate.Value;
+            response.Data.StartDate = response.Data.StartDate.Value.UtcToLocal();
+            response.Data.EndDate = response.Data.StartDate.Value.UtcToLocal();
             //End
 
             //Pattern type
@@ -911,8 +911,8 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
                            };
             ViewBag.CardType = new SelectList(cardType, "Value", "Text");
 
-            response.Data.StartDate = response.Data.StartDate.Value;
-            response.Data.EndDate = response.Data.StartDate.Value;
+            response.Data.StartDate = response.Data.StartDate.Value.UtcToLocal();
+            response.Data.EndDate = response.Data.StartDate.Value.UtcToLocal();
             response.Data.Payment.IsPaid = true;
             //End
 

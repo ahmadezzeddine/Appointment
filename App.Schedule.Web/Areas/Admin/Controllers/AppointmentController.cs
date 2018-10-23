@@ -1,21 +1,21 @@
 ﻿using System;
-using PagedList;
-using System.Linq;
-using System.Web.Mvc;
-using System.Threading.Tasks;
-using App.Schedule.Web.Models;
-using System.Collections.Generic;
-using App.Schedule.Domains.Helpers;
-using App.Schedule.Web.Helpers;
-using System.Web.UI.WebControls;
 using System.IO;
-using System.Web.UI;
+using PagedList;
+using System.Web;
+using System.Linq;
 using System.Data;
 using System.Text;
-using iTextSharp.text.pdf;
+using System.Web.UI;
+using System.Web.Mvc;
 using iTextSharp.text;
-using System.Web;
 using iTextSharp.tool.xml;
+using iTextSharp.text.pdf;
+using System.Threading.Tasks;
+using App.Schedule.Web.Models;
+using App.Schedule.Web.Helpers;
+using System.Web.UI.WebControls;
+using System.Collections.Generic;
+using App.Schedule.Domains.Helpers;
 using App.Schedule.Domains.ViewModel;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
@@ -78,7 +78,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                    model.Data = data.Where(d => d.Title.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -114,7 +114,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 }
                 else
                 {
-                    model.Data = result.Data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                    model.Data = result.Data.Where(d => d.Title.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -152,7 +152,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 }
                 else
                 {
-                    model.Data = result.Data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                    model.Data = result.Data.Where(d => d.Title.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -215,7 +215,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 }
                 else
                 {
-                    model.Data = result.Data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                    model.Data = result.Data.Where(d => d.Title.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -407,21 +407,21 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             //Hours
             var hourHelper = new BusinessHourHelper(this.Token, response.Data.ServiceLocationId.Value);
 
-            var fromHours = await hourHelper.GetHoursOfDay((int)response.Data.StartDate.Value.DayOfWeek);
+            var fromHours = await hourHelper.GetHoursOfDay((int)response.Data.StartDate.Value.UtcToLocal().DayOfWeek);
             ViewBag.FromHours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
                 Text = s.Value,
-                Selected = (response.Data.StartTime.HasValue &&  s.Value.Contains(response.Data.StartTime.Value.ToString("hh:mm tt"))) ? true : false
+                Selected = (response.Data.StartTime.HasValue &&  s.Value.Contains(response.Data.StartTime.Value.UtcToLocal().ToString("hh:mm tt"))) ? true : false
             });
             ViewBag.ToHours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
                 Text = s.Value,
-                Selected = (response.Data.EndTime.HasValue && s.Value == response.Data.EndTime.Value.ToString("hh:mm tt")) ? true : false
+                Selected = (response.Data.EndTime.HasValue && s.Value.Contains(response.Data.EndTime.Value.UtcToLocal().ToString("hh:mm tt"))) ? true : false
             });
-            response.Data.StartDate = response.Data.StartDate.Value;
-            response.Data.EndDate = response.Data.StartDate.Value;
+            response.Data.StartDate = response.Data.StartDate.Value.UtcToLocal();
+            response.Data.EndDate = response.Data.StartDate.Value.UtcToLocal();
             //End
             //Pattern type
             var patternType = from PatternTypeOnce e in Enum.GetValues(typeof(PatternTypeOnce))
@@ -557,22 +557,22 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
             //Hours
             var fromHours = Hour.GetHoursOfDay();
-            var getFromHour = response.Data.StartDate.Value.ToShortTimeString();
+            var getFromHour = response.Data.StartDate.Value.UtcToLocal().ToShortTimeString();
             ViewBag.FromHours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
                 Text = s.Value,
                 Selected = s.Value == getFromHour ? true : false
             });
-            var getToHour = response.Data.EndDate.Value.ToShortTimeString();
+            var getToHour = response.Data.EndDate.Value.UtcToLocal().ToShortTimeString();
             ViewBag.ToHours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
                 Text = s.Value,
                 Selected = s.Value == getToHour ? true : false
             });
-            response.Data.StartDate = response.Data.StartDate.Value;
-            response.Data.EndDate = response.Data.StartDate.Value;
+            response.Data.StartDate = response.Data.StartDate.Value.UtcToLocal();
+            response.Data.EndDate = response.Data.StartDate.Value.UtcToLocal();
             //End
 
             //Pattern type
@@ -657,22 +657,22 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
             //Hours
             var fromHours = Hour.GetHoursOfDay();
-            var getFromHour = response.Data.StartDate.Value.ToShortTimeString();
+            var getFromHour = response.Data.StartDate.Value.UtcToLocal().ToShortTimeString();
             ViewBag.FromHours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
                 Text = s.Value,
                 Selected = s.Value == getFromHour ? true : false
             });
-            var getToHour = response.Data.EndDate.Value.ToShortTimeString();
+            var getToHour = response.Data.EndDate.Value.UtcToLocal().ToShortTimeString();
             ViewBag.ToHours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
                 Text = s.Value,
                 Selected = s.Value == getToHour ? true : false
             });
-            response.Data.StartDate = response.Data.StartDate.Value;
-            response.Data.EndDate = response.Data.StartDate.Value;
+            response.Data.StartDate = response.Data.StartDate.Value.UtcToLocal();
+            response.Data.EndDate = response.Data.StartDate.Value.UtcToLocal();
             //End
 
             //Pattern type
@@ -736,7 +736,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.GlobalAppointmentId.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                    model.Data = data.Where(d => d.GlobalAppointmentId.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -769,7 +769,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                    model.Data = data.Where(d => d.Title.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else
@@ -800,8 +800,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
         //    var BusinessServices = await this.GetBusinessServices();
         //    response.Data.BusinessServiceName = BusinessServices.Find(d => d.Id == response.Data.BusinessServiceId).Name;
 
-        //    response.Data.StartDate = response.Data.StartDate.Value;
-        //    response.Data.EndDate = response.Data.StartDate.Value;
+        //    response.Data.StartDate = response.Data.StartDate.Value.UtcToLocal();
+        //    response.Data.EndDate = response.Data.StartDate.Value.UtcToLocal();
 
         //    var employees = await this.GetBusinessEmployee(id.Value, TableType.AppointmentInvitee);
         //    ViewBag.BusinessEmployeeId = employees;
@@ -950,13 +950,13 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 {
                     response.Data.BusinessServiceName = serivce.Name;
                 }
-                response.Data.StartDate = response.Data.StartDate.Value;
-                response.Data.EndDate = response.Data.StartDate.Value;
+                response.Data.StartDate = response.Data.StartDate.Value.UtcToLocal();
+                response.Data.EndDate = response.Data.StartDate.Value.UtcToLocal();
 
                 var employees = await this.GetBusinessEmployee(id.Value, TableType.AppointmentInvitee);
                 ViewBag.BusinessEmployeeId = employees;
-                response.Data.StartDate = response.Data.StartDate.Value;
-                response.Data.EndDate = response.Data.StartDate.Value;
+                response.Data.StartDate = response.Data.StartDate.Value.UtcToLocal();
+                response.Data.EndDate = response.Data.StartDate.Value.UtcToLocal();
                 return View(response);
             }
             else
@@ -992,8 +992,8 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                            };
             ViewBag.CardType = new SelectList(cardType, "Value", "Text");
 
-            response.Data.StartDate = response.Data.StartDate.Value;
-            response.Data.EndDate = response.Data.StartDate.Value;
+            response.Data.StartDate = response.Data.StartDate.Value.UtcToLocal();
+            response.Data.EndDate = response.Data.StartDate.Value.UtcToLocal();
             response.Data.Payment.IsPaid = true;
             //End
 
@@ -1628,17 +1628,16 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                             sb.Append("<th colspan='5'>");
                             sb.Append("<table border='1' style='width: 100%; line-height: 0.5em; font-size:1em; border: 1px solid #f7f7f7; border-collapse: collapse;'>");
                             sb.Append("<tr>");
+                            sb.Append("<th style='text-align: left; padding: 10px;'>Phone Number.</th>");
                             sb.Append("<th style='text-align: left; padding: 10px;'>Fax Number.</th>");
-                            sb.Append("<th style='text-align: left; padding: 10px;'>Fax Number.</th>");
-                            sb.Append("<th style='text-align: left; padding: 10px;'>Fax Number.</th>");
-                            sb.Append("<th style='text-align: left; width:200px; padding: 10px;'>Email</th>");
+                            sb.Append("<th style='text-align: left; padding: 10px;'>Email</th>");
                             sb.Append("</tr>");
                             sb.Append("<tr>");
-                            sb.Append("<th colspan='3' style='text-align: left; padding:10px;'>Serivce</th>");
+                            sb.Append("<th colspan='2' style='text-align: left; padding:10px;'>Serivce</th>");
                             sb.Append("<th style='text-align: left; padding:10px;'>Location</th>");
                             sb.Append("</tr>");
                             sb.Append("<tr>");
-                            sb.Append("<th colspan='3' style='text-align: left; padding:10px;'>Offer Name</th>");
+                            sb.Append("<th colspan='2' style='text-align: left; padding:10px;'>Offer Name</th>");
                             sb.Append("<th style='text-align: left; padding:10px;'>Status</th>");
                             sb.Append("</tr>");
                             sb.Append("</table>");
@@ -1653,7 +1652,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                                 sb.Append("<table border='1' style='width: 100%; line-height: 0.5em; font-size:1em; border: 1px solid #f7f7f7; border-collapse: collapse;'>");
                                 sb.Append("<tr>");
                                 sb.Append("<td style='text-align: center;  width:200px; padding:10px; background-color: #d1d1d1; color:#000;'>");
-                                sb.Append(appointment.BusinessCustomerName);
+                                sb.Append(appointment.Title);
                                 sb.Append("</td>");
                                 sb.Append("<td colspan='5' style='padding-left:10px; text-align: left; padding:10px;'>");
                                 sb.Append(appointment.Title);
@@ -1661,20 +1660,19 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                                 sb.Append("</tr>");
                                 sb.Append("<tr style='background-color: #f7f7f7;'>");
                                 sb.Append("<td style='vertical-align: middle; width:200px; text-align: center;'>");
-                                var startDate = appointment.StartDate.Value.ToString("MMM, dd yyyy");
-                                var startTime = appointment.StartDate.Value.ToString("HH: MM tt");
-                                var endTime = appointment.EndDate.Value.ToString("HH: MM tt");
+                                var startDate = appointment.StartDate.Value.UtcToLocal().ToString("MMM, dd yyyy");
+                                var startTime = appointment.StartDate.Value.UtcToLocal().ToString("HH: MM tt");
+                                var endTime = appointment.EndDate.Value.UtcToLocal().ToString("HH: MM tt");
                                 var appointTime = string.Format("{0}<br /><br /><br />{1} to {2}", startDate, startTime, endTime);
                                 sb.Append(appointTime);
                                 sb.Append("</td>");
                                 sb.Append("<td colspan='5'>");
                                 sb.Append("<table border='1' style='width: 100%; line-height: 0.5em; font-size:1em; border: 1px solid #f7f7f7; border-collapse: collapse;'>");
                                 sb.Append("<tr>");
-                                var phoneNumber = appointment.BusinessCustomerName;
-                                var faxNumber = appointment.BusinessCustomerName;
-                                var Email = appointment.BusinessCustomerName;
+                                var phoneNumber = appointment.tblBusinessCustomer.PhoneNumber;
+                                var faxNumber = appointment.tblBusinessCustomer.PhoneNumber;
+                                var Email = appointment.tblBusinessCustomer.Email;
                                 sb.Append("<td style='text-align: left; padding: 10px;'>" + phoneNumber + "</td>");
-                                sb.Append("<td style='text-align: left; padding: 10px;'>" + faxNumber + "</td>");
                                 sb.Append("<td style='text-align: left; padding: 10px;'>" + faxNumber + "</td>");
                                 sb.Append("<td style='text-align: left; width:200px; padding: 10px;'>" + Email + "</td>");
                                 sb.Append("</tr>");
@@ -1682,11 +1680,11 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                                 var serviceName = appointment.BusinessServiceName;
                                 var locatioName = appointment.ServiceLocationName;
                                 var offerName = appointment.BusinessOfferName;
-                                sb.Append("<td colspan='3' style='text-align: left; padding:10px;'>" + serviceName + "</td>");
+                                sb.Append("<td colspan='2' style='text-align: left; padding:10px;'>" + serviceName + "</td>");
                                 sb.Append("<td style='text-align: left; padding:10px;'>" + locatioName + "</td>");
                                 sb.Append("</tr>");
                                 sb.Append("<tr>");
-                                sb.Append("<td colspan='3' style='text-align: left; padding:10px;'>" + offerName + "</td>");
+                                sb.Append("<td colspan='2' style='text-align: left; padding:10px;'>" + offerName + "</td>");
                                 var statusType = Enum.GetName(typeof(StatusType), appointment.StatusType);
                                 sb.Append("<td style='text-align: left; padding:10px;'>" + statusType + "</td>");
                                 sb.Append("</tr>");

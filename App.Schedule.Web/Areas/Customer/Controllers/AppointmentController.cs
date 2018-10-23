@@ -35,7 +35,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
                     }
                     else if (type.Value == AppointmentViewStatus.Pending)
                     {
-                        result.Data = result.Data.Where(d => d.StatusType != (int)StatusType.Canceled && d.StatusType != (int)StatusType.Completed && d.IsActive == true).ToList();
+                        result.Data = result.Data.Where(d => d.StatusType != (int)StatusType.Canceled && d.StatusType != (int)StatusType.Completed && d.StatusType != (int)StatusType.CancelRequest && d.IsActive == true).ToList();
                     }
                     else if (type.Value == AppointmentViewStatus.Deactivate)
                     {
@@ -43,17 +43,19 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
                     }
                     else if (type.Value == AppointmentViewStatus.CancelRequested)
                     {
-                        result.Data = result.Data.Where(d => d.StatusType == (int)StatusType.CancelRequest && d.IsActive == true).ToList();
+                        result.Data = result.Data.Where(d => d.StatusType == (int)StatusType.CancelRequest).ToList();
                     }
                     else
                     {
-                        result.Data = result.Data.Where(d => d.StatusType != (int)StatusType.Completed && d.StatusType != (int)StatusType.Canceled && d.IsActive == true).ToList();
+                        result.Data = result.Data.Where(d => d.StatusType != (int)StatusType.Canceled && d.StatusType != (int)StatusType.CancelRequest && d.IsActive == true).ToList();
                     }
                 }
                 else
                 {
-                    result.Data = result.Data.Where(d => d.IsActive == true).ToList();
+                    result.Data = result.Data.Where(d => d.StatusType != (int)StatusType.Canceled && d.StatusType != (int)StatusType.CancelRequest && d.IsActive == true).ToList();
+                    //result.Data = appointmentsModel.Where(d => d.StatusType != (int)StatusType.Completed && d.StatusType != (int)StatusType.Canceled && d.IsActive == true).ToList();
                 }
+
                 var data = result.Data.OrderByDescending(d => d.Id).ToList().OrderBy(d => d.StatusType).ToList();
                 model.Status = result.Status;
                 model.Message = result.Message;
@@ -63,7 +65,7 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower()) && d.IsActive == true).ToList().ToPagedList(pageNumber, 10);
+                    model.Data = data.Where(d => d.Title.ToLower().StartsWith(search.ToLower()) && d.IsActive == true).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else

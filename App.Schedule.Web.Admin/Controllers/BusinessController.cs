@@ -29,7 +29,7 @@ namespace App.Schedule.Web.Admin.Controllers
                     }
                     else
                     {
-                        model.Data = data.Where(d => d.Name.ToLower().Contains(search.ToLower())).OrderByDescending(d => d.IsActive).ToList().ToPagedList(pageNumber, 10);
+                        model.Data = data.Where(d => d.Name.ToLower().StartsWith(search.ToLower())).OrderByDescending(d => d.IsActive).ToList().ToPagedList(pageNumber, 10);
                         return View(model);
                     }
                 }
@@ -71,7 +71,7 @@ namespace App.Schedule.Web.Admin.Controllers
                     }
                     else
                     {
-                        model.Data = data.Where(d => d.FirstName.ToLower().Contains(search.ToLower()) || d.LastName.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                        model.Data = data.Where(d => d.FirstName.ToLower().StartsWith(search.ToLower()) || d.LastName.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                         return View(model);
                     }
                 }
@@ -110,7 +110,7 @@ namespace App.Schedule.Web.Admin.Controllers
                     }
                     else
                     {
-                        model.Data = data.Where(d => d.FirstName.ToLower().Contains(search.ToLower()) || d.LastName.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                        model.Data = data.Where(d => d.FirstName.ToLower().StartsWith(search.ToLower()) || d.LastName.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                         return View(model);
                     }
                 }
@@ -165,7 +165,7 @@ namespace App.Schedule.Web.Admin.Controllers
                     }
                     else
                     {
-                        model.Data = data.Where(d => d.Title.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                        model.Data = data.Where(d => d.Title.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                         return View(model);
                     }
                 }

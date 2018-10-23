@@ -24,16 +24,43 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // GET: api/business
+        [AllowAnonymous]
         public IHttpActionResult Get()
         {
             try
             {
-                var model = _db.tblBusinesses.ToList();
+                var model = (from business in _db.tblBusinesses.ToList()
+                              join country in _db.tblCountries.ToList()
+                              on business.CountryId equals country.Id
+                              select new BusinessViewModel
+                              {
+                                  Add1 = business.Add1,
+                                  Add2 = business.Add2,
+                                  BusinessCategoryId = business.BusinessCategoryId,
+                                  City = business.City,
+                                  CountryId =business.CountryId,
+                                  CountryName =country.Name,
+                                  Created =business.Created,
+                                  Email =business.Email,
+                                  FaxNumbers =business.Email,
+                                  Id =business.Id,
+                                  IsActive =business.IsActive,
+                                  IsInternational =business.IsInternational,
+                                  Logo =business.Logo,
+                                  MembershipId =business.MembershipId,
+                                  Name =business.Name,
+                                  PhoneNumbers =business.PhoneNumbers,
+                                  ShortName =business.ShortName,
+                                  State =business.State,
+                                  TimezoneId =business.TimezoneId,
+                                  Website =business.Website,
+                                  Zip =business.Zip
+                              }).ToList();
                 return Ok(new { status = true, data = model, message = "success" });
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return Ok(new { status = false, data = "", message = ex.Message.ToString() });
             }
         }
 
@@ -46,13 +73,46 @@ namespace App.Schedule.WebApi.Controllers
                     return Ok(new { status = false, data = "", message = "Please provide valid ID." });
                 else
                 {
-                    var model = _db.tblBusinesses.Find(id.Value);
-                    model.tblBusinessCategory = _db.tblBusinessCategories.Find(model.BusinessCategoryId);
-                    model.tblMembership = _db.tblMemberships.Find(model.MembershipId);
-                    model.tblTimezone = _db.tblTimezones.Find(model.TimezoneId);
-                    
+                    var model = _db.tblBusinesses
+                                .Include(i => i.tblBusinessCategory)
+                                .Include(i => i.tblMembership)
+                                .Include(i => i.tblServiceLocations)
+                                .Include(i => i.tblTimezone)
+                                .Join(_db.tblCountries.ToList(),
+                                    b => b.CountryId,
+                                    c => c.Id, (b, c) => new { business = b, country = c })
+                                .Where(d => d.business.Id == id.Value)
+                                .Select(s => new
+                                {
+                                    Add1 = s.business.Add1,
+                                    Add2 = s.business.Add2,
+                                    BusinessCategoryId = s.business.BusinessCategoryId,
+                                    City = s.business.City,
+                                    CountryId = s.business.CountryId,
+                                    CountryName = s.country.Name,
+                                    Created = s.business.Created,
+                                    Email = s.business.Email,
+                                    FaxNumbers = s.business.Email,
+                                    Id = s.business.Id,
+                                    IsActive = s.business.IsActive,
+                                    IsInternational = s.business.IsInternational,
+                                    Logo = s.business.Logo,
+                                    MembershipId = s.business.MembershipId,
+                                    Name = s.business.Name,
+                                    PhoneNumbers = s.business.PhoneNumbers,
+                                    ShortName = s.business.ShortName,
+                                    State = s.business.State,
+                                    tblBusinessCategory = s.business.tblBusinessCategory,
+                                    tblMembership = s.business.tblMembership,
+                                    tblTimezone = s.business.tblTimezone,
+                                    TimezoneId = s.business.TimezoneId,
+                                    Website = s.business.Website,
+                                    Zip = s.business.Zip
+                                }).SingleOrDefault();
                     if (model != null)
+                    {
                         return Ok(new { status = true, data = model, message = "success" });
+                    }
                     else
                         return Ok(new { status = false, data = "", message = "Not found" });
                 }
@@ -111,7 +171,7 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // PUT: api/business/5
-        public IHttpActionResult Put(long? id,FieldType type , [FromBody]BusinessViewModel model)
+        public IHttpActionResult Put(long? id, FieldType type, [FromBody]BusinessViewModel model)
         {
             try
             {
@@ -145,7 +205,8 @@ namespace App.Schedule.WebApi.Controllers
                             business.BusinessCategoryId = model.BusinessCategoryId;
                             business.TimezoneId = model.TimezoneId;
                         }
-                        else if(type == FieldType.Membership){
+                        else if (type == FieldType.Membership)
+                        {
                             business.MembershipId = model.MembershipId;
                         }
 
@@ -164,7 +225,7 @@ namespace App.Schedule.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(new { status = false, data = "", message = "ex: " +ex.Message.ToString() });
+                return Ok(new { status = false, data = "", message = "ex: " + ex.Message.ToString() });
             }
         }
 

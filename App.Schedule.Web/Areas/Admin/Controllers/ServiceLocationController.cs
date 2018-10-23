@@ -34,7 +34,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                 }
                 else
                 {
-                    model.Data = data.Where(d => d.Name.ToLower().Contains(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
+                    model.Data = data.Where(d => d.Name.ToLower().StartsWith(search.ToLower())).ToList().ToPagedList(pageNumber, 10);
                 }
             }
             else

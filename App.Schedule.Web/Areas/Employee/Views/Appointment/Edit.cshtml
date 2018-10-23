@@ -108,7 +108,7 @@
                                     </div>
                                     <div id="timeView">
                                         <div class="form-group col-lg-6">
-                                            <label>Start</label>
+                                            <label>Start Time</label>
                                             @*@Html.DropDownListFor(d => d.Data.StartTime, new SelectList(ViewBag.FromHours, "Value", "Text"), new { @class = "form-control" })*@
                                             <select id="Data_StartTime" name="Data.StartTime" class="form-control">
                                                 @foreach (var to in (IEnumerable<SelectListItem>)ViewBag.FromHours)
@@ -120,7 +120,7 @@
                                             </select>
                                         </div>
                                         <div class="form-group col-lg-6">
-                                            <label>End</label>
+                                            <label>End Time</label>
                                             @*@Html.DropDownListFor(d => d.Data.EndTime, new SelectList(ViewBag.ToHours, "Value", "Text"), new { @class = "form-control" })*@
                                             <select id="Data_EndTime" name="Data.EndTime" class="form-control">
                                                 @foreach (var to in (IEnumerable<SelectListItem>)ViewBag.ToHours)

@@ -121,7 +121,7 @@ Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
                             </div>
                         </div>
                     </div>
-                    <a href="@Url.Action("index","appointment",new { area="admin", type = (int)AppointmentViewStatus.CancelRequested  })">
+                    <a href="@Url.Action("cancelrequest","appointment",new { area="admin" })">
                         <div class="panel-footer">
                             <span class="pull-left">View Details</span>
                             <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -136,7 +136,12 @@ Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
         <div class="row">
             <div class="col-lg-6 col-md-6">
                 <div class="panel panel-success">
-                    <div class="panel-heading"><b>Appointment Calendar</b></div>
+                    <div class="panel-heading">
+                        <b>Appointment Calendar</b>
+                        <a href="@Url.Action("add", "appointment", new { area = "admin" })" class="btn btn-info btn-xs pull-right">
+                            <span class="glyphicon glyphicon-plus"></span> Add
+                        </a>
+                    </div>
                     <div class="panel-body">
                         @Html.FullCalendar(settings =>
                    {
@@ -158,6 +163,7 @@ Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
                        settings.NowIndicator = true;
                        settings.EventStartEditable = false;
                        settings.EventDurationEditable = false;
+                       settings.ClientSideEvents.EventMouseover = $"function() {{ $(this).attr('title', $(this)[0].innerText); }}";
                        settings.SlotDuration = TimeSpan.FromMinutes(30);
                        settings.Events = new EventCollection(Url.Action("GetDiaryEvents", "Dashboard", new { area = "Admin" }), EventCollectionType.JsonFeed);
                        settings.BusinessHours = ViewBag.BusinessHours;
@@ -193,6 +199,7 @@ Layout = "~/Views/Shared/_AfterLoginMaster.cshtml";
                            settings.NowIndicator = true;
                            settings.EventStartEditable = false;
                            settings.EventDurationEditable = false;
+                           settings.ClientSideEvents.EventMouseover = $"function() {{ $(this).attr('title', $(this)[0].innerText.replace(/\\s/g,'')); }}";
                            settings.SlotDuration = TimeSpan.FromMinutes(30);
                            settings.Events = new EventCollection(Url.Action("GetDiaryEvents", "Dashboard", new { area = "Admin" }), EventCollectionType.JsonFeed);
                            settings.BusinessHours = ViewBag.BusinessHours;

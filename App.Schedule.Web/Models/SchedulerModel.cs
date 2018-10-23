@@ -14,5 +14,6 @@ namespace App.Schedule.Web.Models
         public long someKey { get; set; }
         public bool allDay { get; set; }
         public string url { get; set; }
+        public string description { get; set; }
     }
 }

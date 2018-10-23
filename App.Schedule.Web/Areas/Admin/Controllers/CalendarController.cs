@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using App.Schedule.Domains.ViewModel;
+using App.Schedule.Web.Helpers;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
@@ -46,10 +47,10 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                     response.Data.ForEach(appointment =>
                     {
                         appointment.Created = appointment.Created.ToLocalTime();
-                        appointment.StartDate = appointment.StartDate.Value.ToLocalTime();
-                        appointment.StartTime = appointment.StartTime.Value.ToLocalTime();
-                        appointment.EndDate = appointment.EndDate.Value.ToLocalTime();
-                        appointment.EndTime = appointment.EndTime.Value.ToLocalTime();
+                        appointment.StartDate = appointment.StartDate.Value.UtcToLocal().UtcToLocal().ToLocalTime();
+                        appointment.StartTime = appointment.StartTime.Value.UtcToLocal().ToLocalTime();
+                        appointment.EndDate = appointment.EndDate.Value.UtcToLocal().UtcToLocal().ToLocalTime();
+                        appointment.EndTime = appointment.EndTime.Value.UtcToLocal().ToLocalTime();
                     });
                 }
                 data = response.Data;

@@ -42,7 +42,7 @@
                     <div class="form-group input-group input-group-sm">
                         <input type="text" class="form-control" id="searchKeyword" value="@ViewBag.search" placeholder="Search here" />
                         <div class="input-group-btn">
-                            <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index")?search=' + $('#searchKeyword').val()">
+                            <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("appointments")?search=' + $('#searchKeyword').val()">
                                 <i class="glyphicon glyphicon-search"></i>
                                 Search
                             </button>
@@ -131,7 +131,7 @@
                     <hr />
                     <div>
                         <span class="pull-left">
-                            <a href="@Url.Action("Index","Customer")" class="btn btn-default btn-sm">Back</a>
+                            <a href="@Url.Action("index","customer", new { area = "admin" })" class="btn btn-default btn-sm">Back</a>
                         </span>
                         <span class="pull-right">
                             @Html.PagedListPager(Model.Data, page => Url.Action("Appointments", new { page, id = ViewBag.Id }))

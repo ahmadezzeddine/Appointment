@@ -131,7 +131,12 @@
         <div class="row">
             <div class="col-lg-6 col-md-6">
                 <div class="panel panel-success">
-                    <div class="panel-heading"><b>Appointment Calendar</b></div>
+                    <div class="panel-heading">
+                        <b>Appointment Calendar</b>
+                        <a href="@Url.Action("add", "appointment", new { area = "employee" })" class="btn btn-info btn-xs pull-right">
+                            <span class="glyphicon glyphicon-plus"></span> Add
+                        </a>
+                    </div>
                     <div class="panel-body">
                         @Html.FullCalendar(settings =>
                    {
@@ -154,6 +159,7 @@
                        settings.EventStartEditable = false;
                        settings.EventDurationEditable = false;
                        settings.SlotDuration = TimeSpan.FromMinutes(30);
+                       settings.ClientSideEvents.EventMouseover = $"function() {{ $(this).attr('title', $(this)[0].innerText.replace(/\\s/g,'')); }}";
                        settings.Events = new EventCollection(Url.Action("getdiaryevents", "dashboard", new { area = "employee" }), EventCollectionType.JsonFeed);
                        settings.BusinessHours = ViewBag.BusinessHours;
                    })
@@ -189,6 +195,7 @@
                            settings.EventStartEditable = false;
                            settings.EventDurationEditable = false;
                            settings.SlotDuration = TimeSpan.FromMinutes(30);
+                           settings.ClientSideEvents.EventMouseover = $"function() {{ $(this).attr('title', $(this)[0].innerText.replace(/\\s/g,'')); }}";
                            settings.Events = new EventCollection(Url.Action("getdiaryevents", "dashboard", new { area = "employee" }), EventCollectionType.JsonFeed);
                            settings.BusinessHours = ViewBag.BusinessHours;
                        })

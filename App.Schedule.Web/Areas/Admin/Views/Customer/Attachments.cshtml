@@ -40,7 +40,7 @@
                     <div class="form-group input-group input-group-sm">
                         <input type="text" class="form-control" id="searchKeyword" value="@ViewBag.search" placeholder="Search here" />
                         <div class="input-group-btn">
-                            <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index")?search=' + $('#searchKeyword').val()">
+                            <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("attachments")?search=' + $('#searchKeyword').val()">
                                 <i class="glyphicon glyphicon-search"></i>
                                 Search
                             </button>
@@ -94,7 +94,7 @@
                     <hr />
                     <div>
                         <span class="text-left">
-                            <a href="@Request.UrlReferrer" class="btn btn-default btn-sm">
+                            <a href="@Url.Action("index","customer",new { area = "admin" })" class="btn btn-default btn-sm">
                                 Back
                             </a>
                         </span>

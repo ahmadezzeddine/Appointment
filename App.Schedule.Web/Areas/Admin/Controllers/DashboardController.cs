@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using App.Schedule.Web.Models;
 using FullCalendar;
 using System.Drawing;
+using App.Schedule.Web.Helpers;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
@@ -62,14 +63,15 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             var appoint = new SchedulerModel
             {
                 id = x.Id,
-                title = x.Title + " (" + x.BusinessCustomerName.ToUpper() + ")",
-                start = x.StartTime,
-                end = x.EndTime,
+                title = string.Format("{0}, ({1}), {2}", x.Title, x.BusinessCustomerName.ToUpper(), Enum.GetName(typeof(StatusType), x.StatusType.Value)),
+                start = x.StartTime.Value.UtcToLocal() ,
+                end = x.EndTime.Value.UtcToLocal(),
                 color = x.BackColor.HasValue ? Color.FromArgb(x.BackColor.Value).ToString() : SetBackColor(x.StatusType.Value, x.IsActive),
                 textColor = x.TextColor.HasValue ? Color.FromArgb(x.TextColor.Value).ToString() : SetTextColor(x.StatusType.Value, x.IsActive),
                 url = Url.Action("view", "appointment", new { area = "admin", id = x.Id }),
                 className = "",
                 someKey = x.Id,
+                description = string.Format("{0}, ({1}), {2}", x.Title, x.BusinessCustomerName.ToUpper(), Enum.GetName(typeof(StatusType), x.StatusType.Value)),
                 allDay = x.IsAllDayEvent
             };
             return appoint;
@@ -142,7 +144,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                     }
                     else if (type == (int)StatusType.Resheduled)
                     {
-                        color = "#fff";
+                        color = "#000";
                     }
                     else
                     {
@@ -172,9 +174,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                         appointments.Add(schedule);
                         break;
                     case (int)PatternType.Daily:
-                        getDifference = (appointment.EndTime.Value - appointment.StartTime.Value).Days;
-                        startDate = appointment.StartTime.Value;
-                        endDate = appointment.EndTime.Value;
+                        getDifference = (appointment.EndTime.Value.UtcToLocal() - appointment.StartTime.Value.UtcToLocal()).Days;
+                        startDate = appointment.StartTime.Value.UtcToLocal();
+                        endDate = appointment.EndTime.Value.UtcToLocal();
                         do
                         {
                             appointment.StartDate = startDate;
@@ -188,9 +190,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                         } while (getDifference > 0);
                         break;
                     case (int)PatternType.Weekly:
-                        getDifference = (appointment.EndTime.Value - appointment.StartTime.Value).Days;
-                        startDate = appointment.StartTime.Value;
-                        endDate = appointment.EndTime.Value;
+                        getDifference = (appointment.EndTime.Value.UtcToLocal() - appointment.StartTime.Value.UtcToLocal()).Days;
+                        startDate = appointment.StartTime.Value.UtcToLocal();
+                        endDate = appointment.EndTime.Value.UtcToLocal();
                         do
                         {
                             appointment.StartDate = startDate;
@@ -204,9 +206,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                         } while (getDifference > 0);
                         break;
                     case (int)PatternType.Monthly:
-                        getDifference = (appointment.EndTime.Value - appointment.StartTime.Value).Days;
-                        startDate = appointment.StartTime.Value;
-                        endDate = appointment.EndTime.Value;
+                        getDifference = (appointment.EndTime.Value.UtcToLocal() - appointment.StartTime.Value.UtcToLocal()).Days;
+                        startDate = appointment.StartTime.Value.UtcToLocal();
+                        endDate = appointment.EndTime.Value.UtcToLocal();
                         do
                         {
                             appointment.StartDate = startDate;
@@ -220,9 +222,9 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
                         } while (getDifference > 0);
                         break;
                     case (int)PatternType.Yearly:
-                        getDifference = (appointment.EndTime.Value - appointment.StartTime.Value).Days;
-                        startDate = appointment.StartTime.Value;
-                        endDate = appointment.EndTime.Value;
+                        getDifference = (appointment.EndTime.Value.UtcToLocal() - appointment.StartTime.Value.UtcToLocal()).Days;
+                        startDate = appointment.StartTime.Value.UtcToLocal();
+                        endDate = appointment.EndTime.Value.UtcToLocal();
                         do
                         {
                             appointment.StartDate = startDate;
