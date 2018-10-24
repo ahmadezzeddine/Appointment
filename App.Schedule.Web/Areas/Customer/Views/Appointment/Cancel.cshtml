@@ -1,4 +1,5 @@
 ﻿@using App.Schedule.Domains.ViewModel;
+@using App.Schedule.Web.Helpers;
 @model ResponseViewModel<AppointmentViewModel>
 
 @{
@@ -130,13 +131,13 @@
                                     <div class="form-group col-lg-6">
                                         <label>Start</label>
                                         <div class="form-control">
-                                            @string.Format("{0:hh:mm tt}", Model.Data.StartTime.Value)
+                                            @string.Format("{0:hh:mm tt}", Model.Data.StartTime.Value.UtcToLocal())
                                         </div>
                                     </div>
                                     <div class="form-group col-lg-6">
                                         <label>End</label>
                                         <div class="form-control">
-                                            @string.Format("{0:hh:mm tt}", Model.Data.EndTime.Value)
+                                            @string.Format("{0:hh:mm tt}", Model.Data.EndTime.Value.UtcToLocal())
                                         </div>
                                     </div>
                                 </div>

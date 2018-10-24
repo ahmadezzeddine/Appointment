@@ -48,13 +48,13 @@
                             <label>Short Name</label>
                             @Html.EditorFor(model => model.Data.ShortName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Short Name" } })
                         </div>
-                        <div class="form-group col-lg-6 required control-label">
-                            <label>Phone No.</label>
-                            @Html.EditorFor(model => model.Data.PhoneNumbers, new { htmlAttributes = new { @class = "form-control", min="0", @type="number", @placeholder = "Phone No." } })
-                        </div>
                         <div class="form-group col-lg-6">
                             <label>Fax No.</label>
                             @Html.EditorFor(model => model.Data.FaxNumbers, new { htmlAttributes = new { @class = "form-control", @placeholder = "Fax No." } })
+                        </div>
+                        <div class="form-group col-lg-6 required control-label">
+                            <label>Phone No.</label>
+                            @Html.EditorFor(model => model.Data.PhoneNumbers, new { htmlAttributes = new { @class = "form-control", min = "0", @type = "number", @placeholder = "Phone No." } })
                         </div>
                         <div class="form-group col-lg-6 required control-label">
                             <label>Email</label>
@@ -71,32 +71,40 @@
                             @Html.EditorFor(model => model.Data.Add1, new { htmlAttributes = new { @class = "form-control", @placeholder = "Address 1" } })
                         </div>
                         <div class="form-group col-lg-6 required control-label">
-                            <label>Address 2</label>
+                            <label>Location Type</label>
                             @Html.EditorFor(model => model.Data.Add2, new { htmlAttributes = new { @class = "form-control", @placeholder = "Address 2" } })
                         </div>
                         <div class="form-group col-lg-6 required control-label">
-                            <label>City</label>
+                            <label>Location Address</label>
                             @Html.EditorFor(model => model.Data.City, new { htmlAttributes = new { @class = "form-control", @placeholder = "City" } })
                         </div>
+                        @*<div class="form-group col-lg-6 required control-label">
+            <label>State</label>
+            @Html.EditorFor(model => model.Data.State, new { htmlAttributes = new { @class = "form-control", @placeholder = "State" } })
+        </div>*@
+                        @*<div class="form-group col-lg-6 required control-label">
+            <label>Zip code</label>
+            @Html.EditorFor(model => model.Data.Zip, new { htmlAttributes = new { @class = "form-control", @placeholder = "Zip Code" } })
+        </div>*@
                         <div class="form-group col-lg-6 required control-label">
                             <label>State</label>
-                            @Html.EditorFor(model => model.Data.State, new { htmlAttributes = new { @class = "form-control", @placeholder = "State" } })
+                            @Html.DropDownListFor(d => d.Data.State, new SelectList(ViewBag.State, "Value", "Text", "Group.Name", -1), "-- Select State --", new { @class = "form-control" })
                         </div>
                         <div class="form-group col-lg-6 required control-label">
-                            <label>Zip code</label>
-                            @Html.EditorFor(model => model.Data.Zip, new { htmlAttributes = new { @class = "form-control", @placeholder = "Zip Code" } })
+                            <label>Zip</label>
+                            @Html.DropDownListFor(d => d.Data.Zip, new SelectList(ViewBag.Zip, "Value", "Text", "Group.Name", -1), "-- Select Zip --", new { @class = "form-control" })
                         </div>
                         <div class="form-group col-lg-6 required control-label">
                             <label>Timezone</label>
                             @Html.DropDownListFor(d => d.Data.TimezoneId, new SelectList(ViewBag.TimezoneId, "Value", "Text"), "-- Select Timezone --", new { @class = "form-control" })
                         </div>
-                        <div class="form-group col-lg-6">
+                        @*<div class="form-group col-lg-6">
                             <label>Is International?</label>
                             <div class="form-control">
                                 @Html.CheckBoxFor(model => model.Data.IsInternational, new { htmlAttributes = new { @type = "checkbox" } })
-                                 <small>(If it is using internation timezone)</small>
+                                <small>(If it is using internation timezone)</small>
                             </div>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
             </div>

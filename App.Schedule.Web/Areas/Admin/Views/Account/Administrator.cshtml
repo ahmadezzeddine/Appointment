@@ -22,7 +22,7 @@
             <li class="active"><a href="@Url.Action("administrator", "account", new { area = "admin" })">Administrator</a></li>
             <li><a href="@Url.Action("security", "account", new { area = "admin" })">Security</a></li>
             <li><a href="@Url.Action("membership", "account", new { area = "admin" })">Membership</a></li>
-            <li><a href="@Url.Action("billing", "account", new { area = "admin" })">Billing</a></li>
+            @*<li><a href="@Url.Action("billing", "account", new { area = "admin" })">Billing</a></li>*@
         </ul>
         <div class="panel panel-default" style="border-top:0;">
             <div class="panel-body">
@@ -51,12 +51,12 @@
                                 @Model.Data.Email
                             </div>
                         </div>
-                        <div class="form-group col-lg-6">
+                        @*<div class="form-group col-lg-6">
                             <label>STD code</label>
                             <div class="form-control">
                                 @Model.Data.STD
                             </div>
-                        </div>
+                        </div>*@
                         <div class="form-group col-lg-6">
                             <label>Phone No.</label>
                             <div class="form-control">

@@ -129,7 +129,14 @@ namespace App.Schedule.WebApi.Controllers
                         {
                             loginSession.ServiceLocation = serviceLocation;
                             loginSession.Business = _db.tblBusinesses.Include(i => i.tblServiceLocations).Include(i => i.tblMembership).SingleOrDefault(d => d.Id == serviceLocation.BusinessId);
-                            return Ok(new { status = true, data = loginSession, message = "Valid credential" });
+                            if (loginSession.Business != null && loginSession.Business.IsActive)
+                            {
+                                return Ok(new { status = true, data = loginSession, message = "Valid credential" });
+                            }
+                            else
+                            {
+                                return Ok(new { status = false, data = "", message = "You subscription is deactivated. Please contact site admin to active your business." });
+                            }
                         }
                         else
                         {
@@ -138,7 +145,7 @@ namespace App.Schedule.WebApi.Controllers
                     }
                     else
                     {
-                        return Ok(new { status = false, data = "", message = "Not a valid credential" });
+                        return Ok(new { status = false, data = "", message = "Please contact site admin to active your login credential." });
                     }
                 }
                 else

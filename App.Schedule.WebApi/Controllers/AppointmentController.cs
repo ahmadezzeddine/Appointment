@@ -181,75 +181,91 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // POST: api/Appointment
+        [AllowAnonymous]
         public IHttpActionResult Post([FromBody]AppointmentViewModel model)
         {
             try
             {
                 if (model != null)
                 {
-                    using (var trans = _db.Database.BeginTransaction())
+                    var startTime = model.StartTime.Value.ToUniversalTime();
+                    var endTime = model.EndTime.Value.ToUniversalTime();
+                    var findAppointmentSlot = _db.tblAppointments
+                        .Where(d => d.StartTime.Value >= startTime
+                        && d.EndTime.Value <= endTime
+                        && d.BusinessEmployeeId == model.BusinessEmployeeId
+                        ).SingleOrDefault();
+                    if (findAppointmentSlot == null)
                     {
-                        try
+                        using (var trans = _db.Database.BeginTransaction())
                         {
-                            var appointment = new tblAppointment()
+                            try
                             {
-                                GlobalAppointmentId = model.GlobalAppointmentId,
-                                BusinessServiceId = model.BusinessServiceId,
-                                Title = model.Title,
-                                PatternType = model.PatternType,
-                                IsRecuring = model.IsRecuring,
-                                IsAllDayEvent = model.IsAllDayEvent,
-                                TextColor = model.TextColor,
-                                BackColor = model.BackColor,
-                                RecureEvery = model.RecureEvery,
-                                EndAfter = model.EndAfter,
-                                EndAfterDate = model.EndAfterDate,
-                                StatusType = model.StatusType,
-                                CancelReason = model.CancelReason,
-                                IsActive = model.IsActive,
-                                StartTime = model.StartTime.Value.ToUniversalTime(),
-                                EndTime = model.EndTime.Value.ToUniversalTime(),
-                                Created = model.Created.ToUniversalTime(),
-                                BusinessCustomerId = model.BusinessCustomerId,
-                                BusinessEmployeeId = model.BusinessEmployeeId,
-                                BusinessOfferId = model.BusinessOfferId,
-                                ServiceLocationId = model.ServiceLocationId
-                            };
-                            _db.tblAppointments.Add(appointment);
-                            var response = _db.SaveChanges();
-                            if (response > 0)
-                            {
-                                model.SelectedEmployeeIds.ForEach((id) =>
+                                var appointment = new tblAppointment()
                                 {
-                                    var invitees = new tblAppointmentInvitee()
+                                    GlobalAppointmentId = model.GlobalAppointmentId,
+                                    BusinessServiceId = model.BusinessServiceId,
+                                    Title = model.Title,
+                                    PatternType = model.PatternType,
+                                    IsRecuring = model.IsRecuring,
+                                    IsAllDayEvent = model.IsAllDayEvent,
+                                    TextColor = model.TextColor,
+                                    BackColor = model.BackColor,
+                                    RecureEvery = model.RecureEvery,
+                                    EndAfter = model.EndAfter,
+                                    EndAfterDate = model.EndAfterDate,
+                                    StatusType = model.StatusType,
+                                    CancelReason = model.CancelReason,
+                                    IsActive = model.IsActive,
+                                    StartTime = model.StartTime.Value.ToUniversalTime(),
+                                    EndTime = model.EndTime.Value.ToUniversalTime(),
+                                    Created = model.Created.ToUniversalTime(),
+                                    BusinessCustomerId = model.BusinessCustomerId,
+                                    BusinessEmployeeId = model.BusinessEmployeeId,
+                                    BusinessOfferId = model.BusinessOfferId,
+                                    ServiceLocationId = model.ServiceLocationId
+                                };
+                                _db.tblAppointments.Add(appointment);
+                                var response = _db.SaveChanges();
+                                if (response > 0)
+                                {
+                                    model.SelectedEmployeeIds.ForEach((id) =>
+                                    {
+                                        var invitees = new tblAppointmentInvitee()
+                                        {
+                                            AppointmentId = appointment.Id,
+                                            BusinessEmployeeId = id
+                                        };
+                                        _db.tblAppointmentInvitees.Add(invitees);
+                                    });
+                                    _db.SaveChanges();
+
+                                    var serviceCost = _db.tblBusinessServices.Find(model.BusinessServiceId).Cost;
+                                    var payment = new tblAppointmentPayment()
                                     {
                                         AppointmentId = appointment.Id,
-                                        BusinessEmployeeId = id
+                                        Amount = serviceCost,
+                                        Created = DateTime.UtcNow,
+                                        PaidDate = DateTime.UtcNow
                                     };
-                                    _db.tblAppointmentInvitees.Add(invitees);
-                                });
-                                _db.SaveChanges();
-
-                                var serviceCost = _db.tblBusinessServices.Find(model.BusinessServiceId).Cost;
-                                var payment = new tblAppointmentPayment()
-                                {
-                                    AppointmentId = appointment.Id,
-                                    Amount = serviceCost,
-                                    Created = DateTime.UtcNow,
-                                    PaidDate = DateTime.UtcNow
-                                };
-                                _db.tblAppointmentPayments.Add(payment);
-                                _db.SaveChanges();
-                                trans.Commit();
-                                return Ok(new { status = true, data = appointment, message = "" });
+                                    _db.tblAppointmentPayments.Add(payment);
+                                    _db.SaveChanges();
+                                    trans.Commit();
+                                    return Ok(new { status = true, data = appointment, message = "" });
+                                }
+                            }
+                            catch
+                            {
+                                trans.Rollback();
                             }
                         }
-                        catch
-                        {
-                            trans.Rollback();
-                        }
+                        return Ok(new { status = false, data = "", message = "There was a problem." });
                     }
-                    return Ok(new { status = false, data = "", message = "There was a problem." });
+                    else
+                    {
+                        //var message = string.Format("Slot has already been booked for {0} - {1}. please try another time slot.", findAppointmentSlot.StartTime.Value.ToString("hh:mm tt"), findAppointmentSlot.EndTime.Value.ToString("hh:mm tt"));
+                        return Ok(new { status = false, data = "", message = "Appointment slot has already booked. Please try another time slot." });
+                        }
                 }
                 else
                 {

@@ -24,6 +24,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Schedule.Web.Services",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestCases", "TestCases", "{FBFF3541-7B67-4838-AC54-FA2EE4BBFE95}"
 	ProjectSection(SolutionItems) = preProject
+		..\Testing\ezz-mail-suggession-list.docx = ..\Testing\ezz-mail-suggession-list.docx
 		..\Testing\AppointmentScheduler\Mirna-ApTesting.xlsx = ..\Testing\AppointmentScheduler\Mirna-ApTesting.xlsx
 	EndProjectSection
 EndProject

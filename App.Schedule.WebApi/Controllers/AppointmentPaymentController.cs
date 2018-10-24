@@ -49,6 +49,7 @@ namespace App.Schedule.WebApi.Controllers
                                  on appointment.BusinessCustomerId equals customer.Id
                                  join employee in _db.tblBusinessEmployees
                                  on appointment.BusinessEmployeeId equals employee.Id
+                                 where appointment.Id == id.Value
                                  select new CustomerAppointmentPaymentViewModel
                                  {
                                      Add1 = customer.Add1,

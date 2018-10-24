@@ -40,6 +40,7 @@
                settings.EventStartEditable = false;
                settings.EventDurationEditable = false;
                settings.SlotDuration = TimeSpan.FromMinutes(30);
+               settings.Timezone = "local";
                settings.ClientSideEvents.EventMouseover = $"function() {{ $(this).attr('title', $(this)[0].innerText.replace(/\\s/g,'')); }}";
                settings.Events = new EventCollection(Url.Action("getdiaryevents", "dashboard", new { area = "employee" }), EventCollectionType.JsonFeed);
                settings.BusinessHours = ViewBag.BusinessHours;

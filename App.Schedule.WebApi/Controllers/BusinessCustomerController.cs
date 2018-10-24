@@ -56,9 +56,13 @@ namespace App.Schedule.WebApi.Controllers
                         if (tblServiceLocations != null)
                         {
                             var tblBusinesses = _db.tblBusinesses.Find(tblServiceLocations.BusinessId);
-                            if (tblBusinesses != null)
+                            if (tblBusinesses != null && tblBusinesses.IsActive)
                             {
                                 return Ok(new { status = true, data = new { Customer = tblBusinessCustomer, ServiceLocation = tblServiceLocations, Business = tblBusinesses }, message = "Valid credential" });
+                            }
+                            else
+                            {
+                                return Ok(new { status = false, data = "", message = "You subscription is deactivated. Please contact admin to active your business." });
                             }
                         }
                         else
@@ -66,7 +70,7 @@ namespace App.Schedule.WebApi.Controllers
                             return Ok(new { status = false, data = "", message = "Not a valid credential" });
                         }
                     }
-                    return Ok(new { status = false, data = "", message = "Not a valid credential" });
+                    return Ok(new { status = false, data = "", message = "Please contact admin to active your login credential." });
                 }
                 else
                 {

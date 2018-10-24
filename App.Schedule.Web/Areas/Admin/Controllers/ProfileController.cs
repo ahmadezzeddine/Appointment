@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using App.Schedule.Domains.ViewModel;
+using App.Schedule.Web.Helpers;
 
 namespace App.Schedule.Web.Areas.Admin.Controllers
 {
@@ -64,6 +65,18 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
 
                 ViewBag.BusinessCategoryId = groupedData;
 
+                ViewBag.Zip = AppointmentHelper.GetListofZipcode().Select(s => new SelectListItem()
+                {
+                    Text = s.Text,
+                    Value = s.Value,
+                    Selected = s.Text.ToLower() == response.Data.Zip ? true : false
+                });
+                ViewBag.State = AppointmentHelper.GetListofState().Select(s => new SelectListItem()
+                {
+                    Text = s.Text,
+                    Value = s.Value,
+                    Selected = s.Text.ToLower() == response.Data.State ? true : false
+                });
                 return View(response);
             }
             else

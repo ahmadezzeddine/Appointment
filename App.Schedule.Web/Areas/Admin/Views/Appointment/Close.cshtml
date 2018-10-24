@@ -74,7 +74,7 @@
                                     <div class="panel-body">
                                         <div class="form-group col-lg-6 required control-label">
                                             <label>Amount</label>
-                                            @Html.EditorFor(d => d.Data.Payment.Amount, new { htmlAttributes = new { @class = "form-control", @placeholder = "Amount" } })
+                                            @Html.EditorFor(d => d.Data.Payment.Amount, new { htmlAttributes = new { @class = "form-control", @type="number", @placeholder = "Amount" } })
                                         </div>
                                         <div class="form-group col-lg-6 required control-label">
                                             <label>PO Number</label>

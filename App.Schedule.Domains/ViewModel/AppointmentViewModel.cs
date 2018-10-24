@@ -254,7 +254,7 @@ namespace App.Schedule.Domains.ViewModel
         public string ShortName { get; set; }
 
         public string Logo { get; set; }
-
+        
         [Required]
         [StringLength(250)]
         public string PhoneNumbers { get; set; }
@@ -850,7 +850,7 @@ namespace App.Schedule.Domains.ViewModel
 
         [DataType(DataType.Time)]
         [Required]
-        [CompareDate("StartTime")]
+        //[CompareDate("StartTime")]
         public DateTime? EndTime { get; set; }
 
         public bool IsRecuring { get; set; }

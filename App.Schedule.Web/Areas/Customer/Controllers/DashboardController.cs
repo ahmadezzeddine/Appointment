@@ -180,10 +180,10 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
                         endDate = appointment.EndTime.Value.UtcToLocal();
                         do
                         {
-                            appointment.StartDate = startDate;
-                            appointment.StartTime = appointment.StartDate;
+                            appointment.StartDate = startDate.UtcToLocal();
+                            appointment.StartTime = appointment.StartTime.HasValue ? appointment.StartDate.Value.UtcToLocal() : appointment.StartDate;
                             appointment.EndDate = new DateTime(startDate.Year, startDate.Month, startDate.Day, endDate.Hour, endDate.Minute, endDate.Second);
-                            appointment.EndTime = appointment.EndDate;
+                            appointment.EndTime = appointment.EndDate.HasValue ? appointment.EndDate.Value.UtcToLocal() : appointment.EndDate;
                             getDifference = (endDate - startDate).Days;
                             schedule = this.TransformAppointmentJson(appointment);
                             appointments.Add(schedule);
@@ -196,10 +196,10 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
                         endDate = appointment.EndTime.Value.UtcToLocal();
                         do
                         {
-                            appointment.StartDate = startDate;
-                            appointment.StartTime = appointment.StartDate;
+                            appointment.StartDate = startDate.UtcToLocal();
+                            appointment.StartTime = appointment.StartTime.HasValue ? appointment.StartDate.Value.UtcToLocal() : appointment.StartDate;
                             appointment.EndDate = new DateTime(startDate.Year, startDate.Month, startDate.Day, endDate.Hour, endDate.Minute, endDate.Second);
-                            appointment.EndTime = appointment.EndDate;
+                            appointment.EndTime = appointment.EndDate.HasValue ? appointment.EndDate.Value.UtcToLocal() : appointment.EndDate;
                             getDifference = (endDate - startDate).Days;
                             schedule = this.TransformAppointmentJson(appointment);
                             appointments.Add(schedule);
@@ -212,10 +212,10 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
                         endDate = appointment.EndTime.Value.UtcToLocal();
                         do
                         {
-                            appointment.StartDate = startDate;
-                            appointment.StartTime = appointment.StartDate;
+                            appointment.StartDate = startDate.UtcToLocal();
+                            appointment.StartTime = appointment.StartTime.HasValue ? appointment.StartDate.Value.UtcToLocal() : appointment.StartDate;
                             appointment.EndDate = new DateTime(startDate.Year, startDate.Month, startDate.Day, endDate.Hour, endDate.Minute, endDate.Second);
-                            appointment.EndTime = appointment.EndDate;
+                            appointment.EndTime = appointment.EndDate.HasValue ? appointment.EndDate.Value.UtcToLocal() : appointment.EndDate;
                             getDifference = (endDate - startDate).Days;
                             schedule = this.TransformAppointmentJson(appointment);
                             appointments.Add(schedule);
@@ -228,10 +228,10 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
                         endDate = appointment.EndTime.Value.UtcToLocal();
                         do
                         {
-                            appointment.StartDate = startDate;
-                            appointment.StartTime = appointment.StartDate;
+                            appointment.StartDate = startDate.UtcToLocal();
+                            appointment.StartTime = appointment.StartTime.HasValue ? appointment.StartDate.Value.UtcToLocal() : appointment.StartDate;
                             appointment.EndDate = new DateTime(startDate.Year, startDate.Month, startDate.Day, endDate.Hour, endDate.Minute, endDate.Second);
-                            appointment.EndTime = appointment.EndDate;
+                            appointment.EndTime = appointment.EndDate.HasValue ? appointment.EndDate.Value.UtcToLocal() : appointment.EndDate;
                             getDifference = (endDate - startDate).Days;
                             schedule = this.TransformAppointmentJson(appointment);
                             appointments.Add(schedule);

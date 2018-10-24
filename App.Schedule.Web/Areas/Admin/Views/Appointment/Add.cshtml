@@ -138,7 +138,7 @@
                                     </div>
 
                                     <span id="dateError" class="col-lg-12 text-danger">
-                                        @if (Model.Data.StartTime != null)
+                                        @if (((IEnumerable<SelectListItem>)ViewBag.FromHours).Count() <= 0)
                                         {
                                             <text>The date you have selected has holiday. Please select another date.</text>
                                         }
@@ -213,11 +213,11 @@
                                 <div class="row">
                                     <div class="form-group col-lg-12">
                                         @customerWebGrid.GetHtml(htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
-                                                  tableStyle: "table table-striped",
-                                                  headerStyle: "active",
-                                                  footerStyle: "webgrid-footer",
-                                                  columns: customerWebGrid.Columns(
-                                                  customerWebGrid.Column(format: @<text><input name="Data.SelectedEmployeeIds" value="@item.Id" type="checkbox" /></text>, header: "Select"), customerWebGrid.Column("FirstName", "First Name"), customerWebGrid.Column("LastName", "Last Name"), customerWebGrid.Column("Email", "Email")))
+                                                                      tableStyle: "table table-striped",
+                                                                      headerStyle: "active",
+                                                                      footerStyle: "webgrid-footer",
+                                                                      columns: customerWebGrid.Columns(
+                                                                      customerWebGrid.Column(format: @<text><input name="Data.SelectedEmployeeIds" value="@item.Id" type="checkbox" /></text>, header: "Select"), customerWebGrid.Column("FirstName", "First Name"), customerWebGrid.Column("LastName", "Last Name"), customerWebGrid.Column("Email", "Email")))
                                     </div>
                                 </div>
                             </div>
@@ -278,13 +278,13 @@
             //activeTab('homeTab');
 
 
-            //var dateStartTime = $('Data_StartTime option').val();
-            //if (!dateStartTime) {
-            //    $("#dateError").text("");
-            //}
-            //else {
-            //    $("#dateError").text("");
-            //}
+            var dateStartTime = $('Data_StartTime option').val();
+            if (!dateStartTime) {
+                $("#dateError").text("");
+            }
+            else {
+                $("#dateError").text("");
+            }
               $('input[type=date]').datepicker({
                   dateFormat: "yy-mm-dd",
                     changeMonth: true,
@@ -330,7 +330,7 @@
                       let data = { Id: id };
                       onGetData(data, '@Url.Action("GetCustomerById", "appointment", new { area = "admin" })').then((res) => {
                           if (res && res.status) {
-                              console.log(res);
+                              //console.log(res);
                               setCustomer(res.data);
                           }
                       }).catch((error) => {

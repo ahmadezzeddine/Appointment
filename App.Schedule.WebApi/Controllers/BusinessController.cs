@@ -24,7 +24,6 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // GET: api/business
-        [AllowAnonymous]
         public IHttpActionResult Get()
         {
             try
@@ -65,6 +64,7 @@ namespace App.Schedule.WebApi.Controllers
         }
 
         // GET: api/business/5
+        [AllowAnonymous]
         public IHttpActionResult Get(long? id)
         {
             try
@@ -73,42 +73,60 @@ namespace App.Schedule.WebApi.Controllers
                     return Ok(new { status = false, data = "", message = "Please provide valid ID." });
                 else
                 {
-                    var model = _db.tblBusinesses
-                                .Include(i => i.tblBusinessCategory)
-                                .Include(i => i.tblMembership)
-                                .Include(i => i.tblServiceLocations)
-                                .Include(i => i.tblTimezone)
-                                .Join(_db.tblCountries.ToList(),
-                                    b => b.CountryId,
-                                    c => c.Id, (b, c) => new { business = b, country = c })
-                                .Where(d => d.business.Id == id.Value)
-                                .Select(s => new
-                                {
-                                    Add1 = s.business.Add1,
-                                    Add2 = s.business.Add2,
-                                    BusinessCategoryId = s.business.BusinessCategoryId,
-                                    City = s.business.City,
-                                    CountryId = s.business.CountryId,
-                                    CountryName = s.country.Name,
-                                    Created = s.business.Created,
-                                    Email = s.business.Email,
-                                    FaxNumbers = s.business.Email,
-                                    Id = s.business.Id,
-                                    IsActive = s.business.IsActive,
-                                    IsInternational = s.business.IsInternational,
-                                    Logo = s.business.Logo,
-                                    MembershipId = s.business.MembershipId,
-                                    Name = s.business.Name,
-                                    PhoneNumbers = s.business.PhoneNumbers,
-                                    ShortName = s.business.ShortName,
-                                    State = s.business.State,
-                                    tblBusinessCategory = s.business.tblBusinessCategory,
-                                    tblMembership = s.business.tblMembership,
-                                    tblTimezone = s.business.tblTimezone,
-                                    TimezoneId = s.business.TimezoneId,
-                                    Website = s.business.Website,
-                                    Zip = s.business.Zip
-                                }).SingleOrDefault();
+                    var model = (from business in _db.tblBusinesses.ToList()
+                                 join country in _db.tblCountries.ToList()
+                                 on business.CountryId equals country.Id
+                                 join category in _db.tblBusinessCategories.ToList()
+                                 on business.BusinessCategoryId equals category.Id
+                                 join timezone in _db.tblTimezones.ToList()
+                                 on business.TimezoneId equals timezone.Id
+                                 where business.Id == id.Value
+                                 select new BusinessViewModel
+                                 {
+                                     Add1 = business.Add1,
+                                     Add2 = business.Add2,
+                                     BusinessCategoryId = business.BusinessCategoryId,
+                                     City = business.City,
+                                     CountryId = business.CountryId,
+                                     CountryName = country.Name,
+                                     Created = business.Created,
+                                     Email = business.Email,
+                                     FaxNumbers = business.Email,
+                                     Id = business.Id,
+                                     IsActive = business.IsActive,
+                                     IsInternational = business.IsInternational,
+                                     Logo = business.Logo,
+                                     MembershipId = business.MembershipId,
+                                     Name = business.Name,
+                                     PhoneNumbers = business.PhoneNumbers,
+                                     ShortName = business.ShortName,
+                                     State = business.State,
+                                     TimezoneId = business.TimezoneId,
+                                     Website = business.Website,
+                                     Zip = business.Zip,
+                                     tblBusinessCategory = new BusinessCategoryViewModel()
+                                     {
+                                         AdministratorId = category.AdministratorId,
+                                         Created = category.Created,
+                                         Description = category.Description,
+                                         Id = category.Id,
+                                         IsActive = category.IsActive,
+                                         Name = category.Name,
+                                         OrderNumber = category.OrderNumber,
+                                         ParentId = category.ParentId,
+                                         PictureLink = category.PictureLink,
+                                         Type = category.Type
+                                     },
+                                     tblTimezone = new TimezoneViewModel()
+                                     {
+                                         AdministratorId = timezone.AdministratorId,
+                                         CountryId = timezone.CountryId,
+                                         Id = timezone.Id,
+                                         IsDST = timezone.IsDST,
+                                         Title = timezone.Title,
+                                         UtcOffset = timezone.UtcOffset
+                                     }
+                                 }).SingleOrDefault();
                     if (model != null)
                     {
                         return Ok(new { status = true, data = model, message = "success" });

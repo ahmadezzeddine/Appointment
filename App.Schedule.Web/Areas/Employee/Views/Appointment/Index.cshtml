@@ -87,6 +87,9 @@
                                                                 @item.Title
                                                             </div>
                                                             <div class="col-lg-12">
+                                                                <small>@item.BusinessCustomerName</small>
+                                                            </div>
+                                                            <div class="col-lg-12">
                                                                 <small>
                                                                     <a href="@Url.Action("view", "appointment", new { id = item.Id})">
                                                                         @item.GlobalAppointmentId
@@ -97,17 +100,17 @@
                                                                 <small>@item.BusinessServiceName</small>
                                                             </div>
                                                             @if (!string.IsNullOrWhiteSpace(item.CancelReason))
-                                                            {
-                                                                <div class="col-lg-12">
-                                                                    <small><b>Reason: </b>@item.CancelReason</small>
-                                                                </div>
-                                                            }
+    {
+                                                        <div class="col-lg-12">
+                                                            <small><b>Reason: </b>@item.CancelReason</small>
+                                                        </div>
+}
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="row">
                                                             <div class="col-lg-12">
-                                                                @String.Format("From: {0} To: {1}", item.StartTime.Value.UtcToLocal().ToShortDateString(), item.EndTime.Value.UtcToLocal().ToShortDateString())
+                                                                @String.Format("Date: {0}", item.StartTime.Value.UtcToLocal().ToShortDateString())
                                                             </div>
                                                             <div class="col-lg-12">
                                                                 <small>

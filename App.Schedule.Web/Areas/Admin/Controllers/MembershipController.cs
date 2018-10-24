@@ -31,7 +31,7 @@ namespace App.Schedule.Web.Areas.Admin.Controllers
             ViewBag.MembershipId = Memberships.Select(s => new SelectListItem()
             {
                 Value = Convert.ToString(s.Id),
-                Text = s.Title
+                Text = string.Format("{0} - ( $.{1} )", s.Title, Math.Round(s.Price.Value,2))
             });
 
             var result = await BusinessService.Get(RegisterViewModel.Business.Id);

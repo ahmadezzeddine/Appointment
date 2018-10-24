@@ -18,11 +18,10 @@ namespace App.Schedule.Web.Areas.Customer.Controllers
             var model = this.ResponseHelper.GetResponse<IPagedList<AppointmentViewModel>>();
             var pageNumber = page ?? 1;
             ViewBag.search = search;
-
             ViewBag.CustomerId = RegisterCustomerViewModel.Customer.Id;
             ViewBag.BusinessId = RegisterCustomerViewModel.Business.Id;
             ViewBag.ServiceLocationId = RegisterCustomerViewModel.Customer.ServiceLocationId;
-            ViewBag.Type = type.HasValue ? (int)type.Value : 0;
+            ViewBag.type = type.HasValue ? (int)type.Value : 0;
 
             var result = await AppointmentService.Gets(RegisterCustomerViewModel.Customer.Id, TableType.CustomerId);
             if (result.Status)

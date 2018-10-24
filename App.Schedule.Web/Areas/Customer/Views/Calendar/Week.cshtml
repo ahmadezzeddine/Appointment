@@ -36,6 +36,7 @@
                settings.NowIndicator = true;
                settings.EventStartEditable = false;
                settings.EventDurationEditable = false;
+               settings.Timezone = "local";
                settings.SlotDuration = TimeSpan.FromMinutes(30);
                settings.Events = new EventCollection(Url.Action("GetDiaryEvents", "Dashboard", new { area = "customer" }), EventCollectionType.JsonFeed);
                settings.BusinessHours = ViewBag.BusinessHours;

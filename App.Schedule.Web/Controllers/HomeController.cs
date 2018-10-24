@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using App.Schedule.Domains.ViewModel;
+using App.Schedule.Web.Helpers;
 
 namespace App.Schedule.Web.Controllers
 {
@@ -86,6 +87,17 @@ namespace App.Schedule.Web.Controllers
                 {
                     Value = Convert.ToString(s.Id),
                     Text = s.Title
+                });
+
+                ViewBag.Zip = AppointmentHelper.GetListofZipcode().Select(s => new SelectListItem()
+                {
+                    Text = s.Text,
+                    Value = s.Value
+                });
+                ViewBag.State = AppointmentHelper.GetListofState().Select(s => new SelectListItem()
+                {
+                    Text = s.Text,
+                    Value = s.Value
                 });
 
                 return View(result);

@@ -643,14 +643,13 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
             {
                 Value = s.Value,
                 Text = s.Value,
-                Selected = response.Data.StartTime.HasValue && s.Value == response.Data.StartTime.Value.UtcToLocal().ToString("hh:mm tt") ? true : false
+                Selected = (response.Data.StartTime.HasValue && s.Value.Contains(response.Data.StartTime.Value.UtcToLocal().ToString("hh:mm tt"))) ? true : false
             });
             ViewBag.ToHours = fromHours.Select(s => new SelectListItem()
             {
                 Value = s.Value,
                 Text = s.Value,
-                Selected = response.Data.EndTime.HasValue && s.Value == response.Data.EndTime.Value.UtcToLocal().ToString("hh:mm tt") ? true : false
-
+                Selected = (response.Data.EndTime.HasValue && s.Value.Contains(response.Data.EndTime.Value.UtcToLocal().ToString("hh:mm tt"))) ? true : false
             });
             response.Data.StartDate = response.Data.StartDate.Value.UtcToLocal();
             response.Data.EndDate = response.Data.StartDate.Value.UtcToLocal();
@@ -709,12 +708,13 @@ namespace App.Schedule.Web.Areas.Employee.Controllers
                         result.Message = "Please select a customer.";
                         return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
                     }
-                    if (model.Data.SelectedEmployeeIds == null || model.Data.SelectedEmployeeIds.Count <= 0)
-                    {
-                        result.Status = false;
-                        result.Message = "Please select at least one invitee.";
-                        return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
-                    }
+                    model.Data.SelectedEmployeeIds = new List<long>() { model.Data.BusinessEmployeeId.Value };
+                    //if (model.Data.SelectedEmployeeIds == null || model.Data.SelectedEmployeeIds.Count <= 0)
+                    //{
+                    //    result.Status = false;
+                    //    result.Message = "Please select at least one invitee.";
+                    //    return Json(new { status = result.Status, message = result.Message }, JsonRequestBehavior.AllowGet);
+                    //}
                     model.Data.StatusType = (int)StatusType.Resheduled;
 
                     var startdate = model.Data.StartDate.HasValue ? model.Data.StartDate.Value : DateTime.Now;

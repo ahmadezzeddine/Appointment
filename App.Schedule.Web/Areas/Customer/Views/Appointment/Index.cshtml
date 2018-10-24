@@ -40,7 +40,7 @@
                                 <div class="form-group input-group input-group-sm">
                                     <input type="text" class="form-control" id="searchKeyword" value="@ViewBag.search" placeholder="Search here" />
                                     <div class="input-group-btn">
-                                        <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index")?search=' + $('#searchKeyword').val()">
+                                        <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index")?type=@ViewBag.type&search=' + $('#searchKeyword').val()">
                                             <i class="glyphicon glyphicon-search"></i>
                                             Search
                                         </button>
@@ -89,6 +89,9 @@
                                                                 @item.Title
                                                             </div>
                                                             <div class="col-lg-12">
+                                                                <small>@item.BusinessCustomerName</small>
+                                                            </div>
+                                                            <div class="col-lg-12">
                                                                 <small>
                                                                     <a href="@Url.Action("view", "appointment", new { id = item.Id})">
                                                                         @item.GlobalAppointmentId
@@ -104,12 +107,13 @@
                                                                     <small><b>Reason: </b>@item.CancelReason</small>
                                                                 </div>
                                                             }
+
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="row">
                                                             <div class="col-lg-12">
-                                                                @String.Format("From: {0} To: {1}",item.StartTime.Value.UtcToLocal().ToShortDateString(), item.EndTime.Value.UtcToLocal().ToShortDateString())
+                                                                @String.Format("From: {0} To: {1}", item.StartTime.Value.UtcToLocal().ToShortDateString(), item.EndTime.Value.UtcToLocal().ToShortDateString())
                                                             </div>
                                                             <div class="col-lg-12">
                                                                 <small>
